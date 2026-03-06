@@ -347,7 +347,7 @@ export const profileConfig: ProfileConfig = {
 		},
 		{
 			name: "知乎",
-			icon: "fa7-brands:zhihu",
+			icon: "/assets/icons/zhihu-logo.png",
 			url: "https://www.zhihu.com/people/80-57-6-25",
 		},
 		{
