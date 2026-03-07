@@ -75,36 +75,29 @@ $$V = \frac{NOI}{r_f + r_p - g} + U$$
   </div>
 </div>
 
-<script is:inline>
-  (function() {
-    function updateCalc() {
-      var rent = parseFloat(document.getElementById('pc-rent').value) || 0;
-      var uVal = parseFloat(document.getElementById('pc-u').value) || 0;
-      var rf = parseFloat(document.getElementById('pc-rf').value) || 0;
-      var g = parseFloat(document.getElementById('pc-g').value) || 0;
-
-      var NOI = rent * 12 - 4000;
-      var rfRate = rf / 100;
-      var rpRate = 0.01;
-      var gRate = g / 100;
-      var U = uVal * 10000;
-
-      var denom = rfRate + rpRate - gRate;
-      var V = denom > 0 ? (NOI / denom) + U : 0;
-
-      document.getElementById('pc-result').textContent = (V / 10000).toFixed(2);
-    }
-
-    ['pc-rent', 'pc-u', 'pc-rf', 'pc-g'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('input', updateCalc);
-        el.addEventListener('change', updateCalc);
-      }
-    });
-
-    updateCalc();
-  })();
+<!-- Calculator Script -->
+<script type="text/javascript">
+(function() {
+  function updateCalc() {
+    var rent = parseFloat(document.getElementById('pc-rent').value) || 0;
+    var uVal = parseFloat(document.getElementById('pc-u').value) || 0;
+    var rf = parseFloat(document.getElementById('pc-rf').value) || 0;
+    var g = parseFloat(document.getElementById('pc-g').value) || 0;
+    var NOI = rent * 12 - 4000;
+    var rfRate = rf / 100;
+    var rpRate = 0.01;
+    var gRate = g / 100;
+    var U = uVal * 10000;
+    var denom = rfRate + rpRate - gRate;
+    var V = denom > 0 ? (NOI / denom) + U : 0;
+    document.getElementById('pc-result').textContent = (V / 10000).toFixed(2);
+  }
+  document.getElementById('pc-rent').addEventListener('input', updateCalc);
+  document.getElementById('pc-u').addEventListener('input', updateCalc);
+  document.getElementById('pc-rf').addEventListener('input', updateCalc);
+  document.getElementById('pc-g').addEventListener('input', updateCalc);
+  updateCalc();
+})();
 </script>
 
 ---
