@@ -356,9 +356,9 @@ export const profileConfig: ProfileConfig = {
 			url: "https://github.com/ChaoNous",
 		},
 		{
-			name: "Codeberg",
-			icon: "simple-icons:codeberg",
-			url: "https://codeberg.org",
+			name: "X",
+			icon: "simple-icons:x",
+			url: "https://x.com/ChaoNous_",
 		},
 		{
 			name: "Discord",
