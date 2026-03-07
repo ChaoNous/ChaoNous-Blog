@@ -81,6 +81,7 @@ export type SiteConfig = {
 		text: string; // 顶栏标题文本
 		icon?: string; // 顶栏标题图标路径
 		logo?: string; // 网站Logo图片路径
+		textImage?: string; // 文字图片路径（当需要将文字显示为图片时）
 	};
 
 	// 页面自动缩放配置

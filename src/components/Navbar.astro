@@ -40,6 +40,9 @@ const logoSrc = rawLogo.match(/^(http|https|\/\/)/) ? rawLogo : url(rawLogo);
 
 const rawIcon = siteConfig.navbarTitle?.icon || "/assets/home/home.png";
 const iconSrc = rawIcon.match(/^(http|https|\/\/)/) ? rawIcon : url(rawIcon);
+
+const rawTextImage = siteConfig.navbarTitle?.textImage || "";
+const textImageSrc = rawTextImage.match(/^(http|https|\/\/)/) ? rawTextImage : (rawTextImage ? url(rawTextImage) : "");
 ---
 <div id="navbar" class="z-50 onload-animation group" data-transparent-mode={navbarTransparentMode} data-is-home={isHomePage}>
     <div class="absolute h-8 left-0 right-0 -top-8 bg-(--card-bg) transition"></div> <!-- used for onload animation -->
@@ -53,7 +56,11 @@ const iconSrc = rawIcon.match(/^(http|https|\/\/)/) ? rawIcon : url(rawIcon);
                     ) : (
                         <>
                             <img src={iconSrc} alt={siteConfig.navbarTitle.text} class="h-7 w-7 mr-2 object-contain" loading="lazy" />
-                            <span>{siteConfig.navbarTitle.text}</span>
+                            {textImageSrc ? (
+                                <img src={textImageSrc} alt={siteConfig.navbarTitle.text} class="h-7 object-contain" loading="lazy" />
+                            ) : (
+                                <span>{siteConfig.navbarTitle.text}</span>
+                            )}
                         </>
                     )
                 ) : (

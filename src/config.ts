@@ -58,6 +58,8 @@ export const siteConfig: SiteConfig = {
 		icon: "assets/home/home.png",
 		// 网站Logo图片路径
 		logo: "assets/home/default-logo.png",
+		// 文字图片路径（当需要将文字显示为图片时）
+		textImage: "assets/home/text-logo.png",
 	},
 
 	// 页面自动缩放配置
