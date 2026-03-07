@@ -39,76 +39,72 @@ $$V = \frac{NOI}{r_f + r_p - g} + U$$
 
 你可以根据自己关注的片区，调整下方参数。看看在理性的财务视角下，这套房产究竟值多少钱。
 
-<div class="not-prose my-8 p-6 bg-slate-50 border border-slate-200 rounded-xl shadow-sm property-calc">
-  <h4 class="text-xl font-bold mb-4 text-slate-800">🏠 价值试算工具</h4>
+<div style="margin: 2rem 0; padding: 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+  <h4 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; color: #1e293b;">🏠 价值试算工具</h4>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-    <div class="flex flex-col gap-2">
-      <label class="text-slate-600">月租金 (元)</label>
-      <input type="number" data-calc="rent" value="4500" class="p-2 border rounded border-slate-300 calc-input" />
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.875rem;">
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <label style="color: #475569;">月租金 (元)</label>
+      <input type="number" id="pc-rent" value="4500" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.875rem;">
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label class="text-slate-600">无形价值 U (万元)</label>
-      <input type="number" data-calc="uvalue" value="50" class="p-2 border rounded border-slate-300 calc-input" />
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <label style="color: #475569;">无形价值 U (万元)</label>
+      <input type="number" id="pc-u" value="50" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.875rem;">
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label class="text-slate-600">无风险利率 rf (%)</label>
-      <input type="number" data-calc="rf" value="1.8" step="0.1" class="p-2 border rounded border-slate-300 calc-input" />
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <label style="color: #475569;">无风险利率 rf (%)</label>
+      <input type="number" id="pc-rf" value="1.8" step="0.1" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.875rem;">
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label class="text-slate-600">预期增长率 g (%)</label>
-      <input type="number" data-calc="growth" value="0" step="0.1" class="p-2 border rounded border-slate-300 calc-input" />
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <label style="color: #475569;">预期增长率 g (%)</label>
+      <input type="number" id="pc-g" value="0" step="0.1" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.875rem;">
     </div>
   </div>
 
-  <div class="mt-6 pt-4 border-t border-slate-200 text-center">
-    <span class="text-slate-500 italic text-sm">估算真实价值 (V)</span>
-    <div class="text-3xl font-serif font-bold text-blue-600 mt-1">
-      <span class="calc-result">178.57</span> <span class="text-lg">万元</span>
+  <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; text-align: center;">
+    <span style="color: #64748b; font-style: italic; font-size: 0.875rem;">估算真实价值 (V)</span>
+    <div style="font-size: 1.875rem; font-family: serif; font-weight: bold; color: #2563eb; margin-top: 0.25rem;">
+      <span id="pc-result">178.57</span> <span style="font-size: 1.125rem;">万元</span>
+    </div>
+    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;">
+      公式: V = NOI/(rf+rp-g) + U
     </div>
   </div>
 </div>
 
 <script is:inline>
-  window.addEventListener('load', function() {
-    var container = document.querySelector('.property-calc');
-    if (!container) return;
+  (function() {
+    function updateCalc() {
+      var rent = parseFloat(document.getElementById('pc-rent').value) || 0;
+      var uVal = parseFloat(document.getElementById('pc-u').value) || 0;
+      var rf = parseFloat(document.getElementById('pc-rf').value) || 0;
+      var g = parseFloat(document.getElementById('pc-g').value) || 0;
 
-    var getVal = function(name) {
-      var el = container.querySelector('[data-calc="' + name + '"]');
-      return el ? (parseFloat(el.value) || 0) : 0;
-    };
-
-    var calc = function() {
-      var rent = getVal('rent');
-      var uvalue = getVal('uvalue');
-      var rf = getVal('rf');
-      var growth = getVal('growth');
-
-      var NOI = (rent * 12) - 4000;
+      var NOI = rent * 12 - 4000;
       var rfRate = rf / 100;
       var rpRate = 0.01;
-      var gRate = growth / 100;
-      var U = uvalue * 10000;
+      var gRate = g / 100;
+      var U = uVal * 10000;
 
-      var denominator = (rfRate + rpRate) - gRate;
-      var V = denominator > 0 ? (NOI / denominator) + U : 0;
+      var denom = rfRate + rpRate - gRate;
+      var V = denom > 0 ? (NOI / denom) + U : 0;
 
-      var resultEl = container.querySelector('.calc-result');
-      if (resultEl) {
-        resultEl.textContent = (V / 10000).toFixed(2);
-      }
-    };
-
-    var inputs = container.querySelectorAll('.calc-input');
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].addEventListener('input', calc);
+      document.getElementById('pc-result').textContent = (V / 10000).toFixed(2);
     }
-    calc();
-  });
+
+    ['pc-rent', 'pc-u', 'pc-rf', 'pc-g'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', updateCalc);
+        el.addEventListener('change', updateCalc);
+      }
+    });
+
+    updateCalc();
+  })();
 </script>
 
 ---
