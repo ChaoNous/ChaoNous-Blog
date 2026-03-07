@@ -5,9 +5,8 @@ published: 2026-03-07
 author: "ChaoNous"
 tags: ["投资", "房产", "财务模型"]
 category: "投资"
+pinned: true
 ---
-
-import PropertyCalculator from "../../components/PropertyCalculator.astro";
 
 在过去长达二十年的地产黄金时代，我们习惯了用"涨幅"来掩盖一切定价逻辑。但当预期收益趋于平缓，房产正在回归其金融本质：**一种能够产生长期现金流的生息资产。**
 
@@ -41,7 +40,71 @@ $$\large V = \frac{NOI}{r_f + r_p - g} + U$$
 
 你可以根据自己关注的片区，调整下方参数。看看在理性的财务视角下，这套房产究竟值多少钱。
 
-<PropertyCalculator />
+<div class="calc-wrapper">
+  <div class="calc-box">
+    <h4>🏠 价值试算工具</h4>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>月租金 (元)</label>
+        <input type="number" class="calc-input" data-calc="rent" value="4500">
+      </div>
+      <div class="calc-field">
+        <label>无形价值 U (万元)</label>
+        <input type="number" class="calc-input" data-calc="u" value="50">
+      </div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>无风险利率 rf (%)</label>
+        <input type="number" class="calc-input" data-calc="rf" value="1.8" step="0.1">
+      </div>
+      <div class="calc-field">
+        <label>预期增长率 g (%)</label>
+        <input type="number" class="calc-input" data-calc="g" value="0" step="0.1">
+      </div>
+    </div>
+    <div class="calc-output">
+      <span class="output-label">估算真实价值 (V)</span>
+      <div class="output-value"><span class="output-number">178.57</span> <span class="output-unit">万元</span></div>
+      <div class="output-formula">公式: V = NOI/(rf+rp-g) + U</div>
+    </div>
+  </div>
+</div>
+
+<style>
+.calc-wrapper { margin: 2rem 0; }
+.calc-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.calc-box h4 { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; color: #1e293b; }
+.calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.calc-field { display: flex; flex-direction: column; gap: 0.25rem; }
+.calc-field label { font-size: 0.875rem; color: #475569; }
+.calc-input { padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.875rem; }
+.calc-output { text-align: center; padding-top: 1rem; border-top: 1px solid #e2e8f0; margin-top: 1rem; }
+.output-label { color: #64748b; font-style: italic; font-size: 0.875rem; }
+.output-value { font-size: 1.875rem; font-family: serif; font-weight: bold; color: #2563eb; margin-top: 0.25rem; }
+.output-unit { font-size: 1.125rem; }
+.output-formula { font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem; }
+@media (max-width: 640px) { .calc-row { grid-template-columns: 1fr; } }
+</style>
+
+<script type="module">
+  const box = document.querySelector('.calc-box');
+  if (box) {
+    const inputs = box.querySelectorAll('.calc-input');
+    const output = box.querySelector('.output-number');
+    function calc() {
+      const rent = parseFloat(box.querySelector('[data-calc="rent"]').value) || 0;
+      const u = parseFloat(box.querySelector('[data-calc="u"]').value) || 0;
+      const rf = parseFloat(box.querySelector('[data-calc="rf"]').value) || 0;
+      const g = parseFloat(box.querySelector('[data-calc="g"]').value) || 0;
+      const NOI = rent * 12 - 4000;
+      const V = ((NOI / ((rf/100) + 0.01 - (g/100))) + (u * 10000)) / 10000;
+      output.textContent = V > 0 ? V.toFixed(2) : '0.00';
+    }
+    inputs.forEach(inp => inp.addEventListener('input', calc));
+    calc();
+  }
+</script>
 
 ---
 
