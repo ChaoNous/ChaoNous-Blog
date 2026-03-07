@@ -39,60 +39,76 @@ $$V = \frac{NOI}{r_f + r_p - g} + U$$
 
 你可以根据自己关注的片区，调整下方参数。看看在理性的财务视角下，这套房产究竟值多少钱。
 
-<div class="not-prose my-8 p-6 bg-slate-50 border border-slate-200 rounded-xl shadow-sm">
+<div class="not-prose my-8 p-6 bg-slate-50 border border-slate-200 rounded-xl shadow-sm property-calc">
   <h4 class="text-xl font-bold mb-4 text-slate-800">🏠 价值试算工具</h4>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
     <div class="flex flex-col gap-2">
       <label class="text-slate-600">月租金 (元)</label>
-      <input type="number" id="monthlyRent" value="4500" class="p-2 border rounded border-slate-300" />
+      <input type="number" data-calc="rent" value="4500" class="p-2 border rounded border-slate-300 calc-input" />
     </div>
 
     <div class="flex flex-col gap-2">
       <label class="text-slate-600">无形价值 U (万元)</label>
-      <input type="number" id="uValue" value="50" class="p-2 border rounded border-slate-300" />
+      <input type="number" data-calc="uvalue" value="50" class="p-2 border rounded border-slate-300 calc-input" />
     </div>
 
     <div class="flex flex-col gap-2">
       <label class="text-slate-600">无风险利率 rf (%)</label>
-      <input type="number" id="rf" value="1.8" step="0.1" class="p-2 border rounded border-slate-300" />
+      <input type="number" data-calc="rf" value="1.8" step="0.1" class="p-2 border rounded border-slate-300 calc-input" />
     </div>
 
     <div class="flex flex-col gap-2">
       <label class="text-slate-600">预期增长率 g (%)</label>
-      <input type="number" id="g" value="0" step="0.1" class="p-2 border rounded border-slate-300" />
+      <input type="number" data-calc="growth" value="0" step="0.1" class="p-2 border rounded border-slate-300 calc-input" />
     </div>
   </div>
 
   <div class="mt-6 pt-4 border-t border-slate-200 text-center">
     <span class="text-slate-500 italic text-sm">估算真实价值 (V)</span>
     <div class="text-3xl font-serif font-bold text-blue-600 mt-1">
-      <span id="totalValue">--</span> <span class="text-lg">万元</span>
+      <span class="calc-result">178.57</span> <span class="text-lg">万元</span>
     </div>
   </div>
 </div>
 
 <script is:inline>
-  (function() {
-    const calc = function() {
-      const getVal = function(id) { return parseFloat(document.getElementById(id).value) || 0; };
-      const NOI = (getVal('monthlyRent') * 12) - 4000;
-      const rf = getVal('rf') / 100;
-      const rp = 0.01;
-      const g = getVal('g') / 100;
-      const U = getVal('uValue') * 10000;
+  window.addEventListener('load', function() {
+    var container = document.querySelector('.property-calc');
+    if (!container) return;
 
-      const denominator = (rf + rp) - g;
-      const V = denominator > 0 ? (NOI / denominator) + U : 0;
-
-      document.getElementById('totalValue').innerText = (V / 10000).toFixed(2);
+    var getVal = function(name) {
+      var el = container.querySelector('[data-calc="' + name + '"]');
+      return el ? (parseFloat(el.value) || 0) : 0;
     };
 
-    document.querySelectorAll('#monthlyRent, #uValue, #rf, #g').forEach(function(el) {
-      el.addEventListener('input', calc);
-    });
+    var calc = function() {
+      var rent = getVal('rent');
+      var uvalue = getVal('uvalue');
+      var rf = getVal('rf');
+      var growth = getVal('growth');
+
+      var NOI = (rent * 12) - 4000;
+      var rfRate = rf / 100;
+      var rpRate = 0.01;
+      var gRate = growth / 100;
+      var U = uvalue * 10000;
+
+      var denominator = (rfRate + rpRate) - gRate;
+      var V = denominator > 0 ? (NOI / denominator) + U : 0;
+
+      var resultEl = container.querySelector('.calc-result');
+      if (resultEl) {
+        resultEl.textContent = (V / 10000).toFixed(2);
+      }
+    };
+
+    var inputs = container.querySelectorAll('.calc-input');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('input', calc);
+    }
     calc();
-  })();
+  });
 </script>
 
 ---
