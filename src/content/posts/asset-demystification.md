@@ -1,5 +1,5 @@
 ---
-title: "资产祛魅：用财务模型看透房产的"真实价值""
+title: "资产祛魅：用财务模型看透房产的真实价值"
 description: "通过 NOI 现金流折现模型与 Gordon Growth Model，理清房产定价的底层逻辑。"
 published: 2026-03-07
 author: "ChaoNous"
