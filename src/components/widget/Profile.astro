@@ -38,15 +38,23 @@ import { i18n } from "../../i18n/translation";
         
         <div class="flex flex-wrap gap-2 justify-center mb-1">
             {profileConfig.links.length > 1 && profileConfig.links.map(item =>
-                <a rel="me" aria-label={item.name} href={item.url} target="_blank" 
+                <a rel="me" aria-label={item.name} href={item.url} target="_blank"
                    class="btn-regular rounded-lg h-10 w-10 active:scale-90">
-                    <Icon name={item.icon} class="text-[1.5rem]"></Icon>
+                    {item.icon.startsWith('/') ? (
+                        <img src={item.icon} alt={item.name} class="w-6 h-6 object-contain" />
+                    ) : (
+                        <Icon name={item.icon} class="text-[1.5rem]"></Icon>
+                    )}
                 </a>
             )}
-            {profileConfig.links.length == 1 && 
+            {profileConfig.links.length == 1 &&
                 <a rel="me" aria-label={profileConfig.links[0].name} href={profileConfig.links[0].url} target="_blank"
                    class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
-                    <Icon name={profileConfig.links[0].icon} class="text-[1.5rem]"></Icon>
+                    {profileConfig.links[0].icon.startsWith('/') ? (
+                        <img src={profileConfig.links[0].icon} alt={profileConfig.links[0].name} class="w-6 h-6 object-contain" />
+                    ) : (
+                        <Icon name={profileConfig.links[0].icon} class="text-[1.5rem]"></Icon>
+                    )}
                     {profileConfig.links[0].name}
                 </a>
             }
