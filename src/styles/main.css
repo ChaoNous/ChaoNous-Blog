@@ -1,14 +1,14 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* 导入相册样式 */
-@import './albums.css';
+@import "./albums.css";
 /* 导入追番页面样式 */
-@import './anime.css';
+@import "./anime.css";
 /* 导入动画样式 */
-@import './transition.css';
-@import './animation-enhancements.css';
+@import "./transition.css";
+@import "./animation-enhancements.css";
 /* 导入渐变按钮样式 */
-@import './gradient-buttons.css';
+@import "./gradient-buttons.css";
 /* 加密内容样式已移除，现在直接使用非加密文章的样式 */
 
 @plugin "@tailwindcss/typography";
@@ -17,9 +17,7 @@
 
 /* Migrate from v3 config */
 @theme {
-  --font-sans:
-    'Roboto', 'sans-serif', ui-sans-serif, system-ui, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: "Roboto", "sans-serif", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
@@ -51,12 +49,12 @@
 
 /* 确保平滑滚动 */
 html {
-	@apply scroll-smooth;
-	@apply text-black/80;
+  @apply scroll-smooth;
+  @apply text-black/80;
 
-	&.dark {
-		@apply text-white/80;
-	}
+  &.dark {
+    @apply text-white/80;
+  }
 }
 
 /* 页面顶部渐变高光效果 */

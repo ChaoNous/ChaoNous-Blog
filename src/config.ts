@@ -220,7 +220,8 @@ export const siteConfig: SiteConfig = {
 		},
 		cjkFont: {
 			// 中日韩字体 - 使用系统明朝体
-			fontFamily: "Mincho, MS Mincho, SimSun, Noto Serif CJK SC, Source Han Serif SC, serif",
+			fontFamily:
+				"Mincho, MS Mincho, SimSun, Noto Serif CJK SC, Source Han Serif SC, serif",
 			fontWeight: "400",
 			localFonts: [], // 使用系统自带字体
 			enableCompress: false,
