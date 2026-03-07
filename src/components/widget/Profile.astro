@@ -42,6 +42,8 @@ import { i18n } from "../../i18n/translation";
                    class="btn-regular rounded-lg h-10 w-10 active:scale-90">
                     {item.icon.startsWith('/') ? (
                         <img src={item.icon} alt={item.name} class="w-6 h-6 object-contain" />
+                    ) : item.icon === 'simple-icons:zhihu' ? (
+                        <Icon name={item.icon} class="text-[1.5rem] text-[#0084ff]"></Icon>
                     ) : (
                         <Icon name={item.icon} class="text-[1.5rem]"></Icon>
                     )}
@@ -52,6 +54,8 @@ import { i18n } from "../../i18n/translation";
                    class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
                     {profileConfig.links[0].icon.startsWith('/') ? (
                         <img src={profileConfig.links[0].icon} alt={profileConfig.links[0].name} class="w-6 h-6 object-contain" />
+                    ) : profileConfig.links[0].icon === 'simple-icons:zhihu' ? (
+                        <Icon name={profileConfig.links[0].icon} class="text-[1.5rem] text-[#0084ff]"></Icon>
                     ) : (
                         <Icon name={profileConfig.links[0].icon} class="text-[1.5rem]"></Icon>
                     )}
