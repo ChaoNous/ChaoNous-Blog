@@ -58,7 +58,7 @@ export const en: Translation = {
 	[Key.publishedAt]: "Published at",
 	[Key.license]: "License",
 	[Key.anime]: "Anime",
-	[Key.diary]: "Diary",
+	[Key.diary]: "Game",
 
 	// Anime Page
 	[Key.animeTitle]: "My Anime List",
@@ -83,11 +83,11 @@ export const en: Translation = {
 	[Key.animeConfigBangumi]:
 		"Please set your Bangumi userId in the src/config.ts file",
 
-	// Diary Page
-	[Key.diarySubtitle]: "Share life, anytime, anywhere",
-	[Key.diaryCount]: "diary entries",
+	// Game Page
+	[Key.diarySubtitle]: "Record my gaming world",
+	[Key.diaryCount]: "games",
 	[Key.diaryReply]: "Reply",
-	[Key.diaryTips]: "Only show the latest 30 diary entries",
+	[Key.diaryTips]: "Only show the latest 30 game entries",
 	[Key.diaryMinutesAgo]: "minutes ago",
 	[Key.diaryHoursAgo]: "hours ago",
 	[Key.diaryDaysAgo]: "days ago",

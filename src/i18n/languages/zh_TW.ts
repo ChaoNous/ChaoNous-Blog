@@ -58,7 +58,7 @@ export const zh_TW: Translation = {
 	[Key.publishedAt]: "發布於",
 	[Key.license]: "許可協議",
 	[Key.anime]: "追番",
-	[Key.diary]: "日記",
+	[Key.diary]: "遊戲",
 
 	// 設備頁面
 	[Key.devices]: "我的設備",
@@ -85,11 +85,11 @@ export const zh_TW: Translation = {
 	[Key.animeConfigBangumi]:
 		"請在 src/config.ts 檔案中設定您的 Bangumi userId",
 
-	// 短文頁面
-	[Key.diarySubtitle]: "隨時隨地，分享生活",
-	[Key.diaryCount]: "條短文",
+	// 遊戲頁面
+	[Key.diarySubtitle]: "記錄我的遊戲世界",
+	[Key.diaryCount]: "個遊戲",
 	[Key.diaryReply]: "回復",
-	[Key.diaryTips]: "只展示最近30條日記",
+	[Key.diaryTips]: "只展示最近30條遊戲記錄",
 	[Key.diaryMinutesAgo]: "分鐘前",
 	[Key.diaryHoursAgo]: "小時前",
 	[Key.diaryDaysAgo]: "天前",
