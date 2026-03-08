@@ -1,6 +1,6 @@
 ---
 title: 深夜对自己处理异性聊天的思考
-published: 2026-03-06
+published: 2026-03-04
 image: "./guide/cover.webp"
 description: 关于"人机感"、实用主义与情绪价值的深夜碎碎念。
 tags: [随笔, 思考, 生活]
