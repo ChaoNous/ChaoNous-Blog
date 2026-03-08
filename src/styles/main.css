@@ -24,6 +24,12 @@
   --breakpoint-xl: 1920px;
 }
 
+:root {
+  --font-geek-body: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei", sans-serif;
+  --font-geek-display: "Maple Mono CN", "Sarasa Mono SC", "JetBrains Mono Variable", "JetBrains Mono", "Cascadia Mono", "IBM Plex Mono", "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --font-geek-mono: "Maple Mono CN", "Sarasa Mono SC", "JetBrains Mono Variable", "JetBrains Mono", "Cascadia Mono", "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+}
+
 /* Migrated css */
 @utility expand-animation {
   @apply relative before:ease-out before:duration-75 before:transition-all active:bg-none hover:before:bg-(--btn-plain-bg-hover) active:before:bg-(--btn-plain-bg-active) z-0
@@ -55,6 +61,54 @@ html {
   &.dark {
     @apply text-white/80;
   }
+}
+
+body {
+  font-family: var(--font-geek-body);
+  letter-spacing: 0.01em;
+  text-rendering: optimizeLegibility;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-geek-mono);
+}
+
+.navbar-brand-text,
+.nav-pill,
+.nav-dropdown-item,
+.dropdown-item,
+.meta-icon + span,
+.with-divider,
+widget-layout > div:first-child,
+.post-card-item a[href],
+.custom-md h1,
+.custom-md h2,
+.custom-md h3,
+.custom-md h4,
+.custom-md blockquote strong,
+#post-list-container a[href].font-bold,
+#post-list-container .btn-regular,
+#post-list-container .link-lg,
+#share-component .text-\[1\.0rem\],
+#license-component .font-bold {
+  font-family: var(--font-geek-display);
+  letter-spacing: 0.02em;
+}
+
+.custom-md h1,
+.custom-md h2,
+.custom-md h3,
+.custom-md h4 {
+  font-weight: 800;
+}
+
+.custom-md p,
+.custom-md li,
+.custom-md blockquote {
+  font-family: var(--font-geek-body);
 }
 
 /* 页面顶部渐变高光效果 */

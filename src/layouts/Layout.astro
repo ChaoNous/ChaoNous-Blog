@@ -160,6 +160,46 @@ if (siteConfig.font) {
 	// 组合成完整的 font-family 字符串
 	bodyFontFamily = fonts.join(", ");
 }
+
+const geekBodyFontFamily = [
+	'"MiSans"',
+	'"HarmonyOS Sans SC"',
+	'"PingFang SC"',
+	'"Hiragino Sans GB"',
+	'"Microsoft YaHei"',
+	'"Noto Sans CJK SC"',
+	'"Source Han Sans SC"',
+	'"WenQuanYi Micro Hei"',
+	"sans-serif",
+].join(", ");
+const geekDisplayFontFamily = [
+	'"Maple Mono CN"',
+	'"Sarasa Mono SC"',
+	'"JetBrains Mono Variable"',
+	'"JetBrains Mono"',
+	'"Cascadia Mono"',
+	'"IBM Plex Mono"',
+	'"MiSans"',
+	'"HarmonyOS Sans SC"',
+	'"PingFang SC"',
+	'"Microsoft YaHei"',
+	'"Noto Sans CJK SC"',
+	'"Source Han Sans SC"',
+	"sans-serif",
+].join(", ");
+const geekMonoFontFamily = [
+	'"Maple Mono CN"',
+	'"Sarasa Mono SC"',
+	'"JetBrains Mono Variable"',
+	'"JetBrains Mono"',
+	'"Cascadia Mono"',
+	'"IBM Plex Mono"',
+	'"SFMono-Regular"',
+	"Consolas",
+	"monospace",
+].join(", ");
+
+bodyFontFamily = geekBodyFontFamily;
 ---
 
 <!doctype html>
@@ -380,7 +420,9 @@ if (siteConfig.font) {
 		class:list={[
 			{ "is-home": isHomePage, "enable-banner": enableBanner },
 		]}
-		style={bodyFontFamily ? `font-family: ${bodyFontFamily};` : ""}
+		style={bodyFontFamily
+			? `font-family: ${bodyFontFamily}; --font-geek-body: ${geekBodyFontFamily}; --font-geek-display: ${geekDisplayFontFamily}; --font-geek-mono: ${geekMonoFontFamily};`
+			: ""}
 		data-overlayscrollbars-initialize
 	>
 		<noscript
