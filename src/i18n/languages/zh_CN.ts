@@ -58,7 +58,7 @@ export const zh_CN: Translation = {
 	[Key.publishedAt]: "发布于",
 	[Key.license]: "许可协议",
 	[Key.anime]: "追番",
-	[Key.diary]: "游戏",
+	[Key.diary]: "我的游戏记录",
 
 	// 番剧页面
 	[Key.animeTitle]: "我的追番记录",
@@ -81,7 +81,7 @@ export const zh_CN: Translation = {
 		"请在 src/config.ts 文件中设置您的 Bangumi userId",
 
 	// 游戏页面
-	[Key.diarySubtitle]: "记录我的游戏世界",
+	[Key.diarySubtitle]: "记录我的游戏世界与冒险旅程",
 	[Key.diaryCount]: "个游戏",
 	[Key.diaryReply]: "回复",
 	[Key.diaryTips]: "只展示最近30条游戏记录",
