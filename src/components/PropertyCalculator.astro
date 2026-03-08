@@ -107,7 +107,7 @@ const {
 
 		<article class="metric-card">
 			<span class="metric-card__label">NOI</span>
-			<strong class="metric-card__value"><span id="pc-noi">5.13</span> 万元</strong>
+			<strong class="metric-card__value"><span id="pc-noi">5.00</span> 万元</strong>
 			<p class="metric-card__hint">年租金扣除运营成本后的净经营收入。</p>
 		</article>
 
@@ -124,10 +124,13 @@ const {
 			<p id="pc-summary">
 				以当前假设看，挂牌价高于模型估值，意味着买方在为未来增长预期或更高的无形价值支付额外溢价。
 			</p>
+			<p class="valuation-lab__note">
+				安全边际价格按“估算真实价值 × 0.9”计算，默认预留 10% 的误差缓冲，用来覆盖租金波动、成本偏差和增长假设不准带来的风险。
+			</p>
 		</div>
 		<ul class="valuation-lab__bullets">
 			<li><span>资本化折现率</span><strong id="pc-discount">2.80%</strong></li>
-			<li><span>租售比倒数</span><strong id="pc-payback">58.5 年</strong></li>
+			<li><span>租售比倒数</span><strong id="pc-payback">60.0 年</strong></li>
 			<li><span>安全边际价格</span><strong id="pc-margin">205.71 万元</strong></li>
 		</ul>
 	</div>
@@ -140,15 +143,7 @@ const {
 <script>
 	if (typeof window !== "undefined") {
 		const initPropertyCalculator = () => {
-			const ids = [
-				"pc-rent",
-				"pc-cost",
-				"pc-rf",
-				"pc-rp",
-				"pc-g",
-				"pc-u",
-				"pc-price",
-			];
+			const ids = ["pc-rent", "pc-cost", "pc-rf", "pc-rp", "pc-g", "pc-u", "pc-price"];
 
 			const inputs = ids
 				.map((id) => document.getElementById(id))
@@ -513,6 +508,12 @@ const {
 	.valuation-lab__summary p {
 		line-height: 1.7;
 		color: var(--text-normal);
+	}
+
+	.valuation-lab__note {
+		margin-top: 0.85rem !important;
+		font-size: 0.84rem;
+		color: var(--text-muted) !important;
 	}
 
 	.valuation-lab__bullets {
