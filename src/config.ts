@@ -335,7 +335,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.webp", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
 	name: "ChaoNous",
-	bio: "网站由qwen3.5-plus、glm-5和kimi-k2.5辅助生成",
+	bio: "网站由GPT-5.4、Claude Opus-4.6和Kimi-K2.5辅助生成",
 	typewriter: {
 		enable: true, // 启用个人简介打字机效果
 		speed: 80, // 打字速度（毫秒）
