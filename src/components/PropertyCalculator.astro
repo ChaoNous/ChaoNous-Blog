@@ -50,19 +50,25 @@
   }
 
   function initCalculator() {
-    const rentInput = document.getElementById('pc-rent');
-    const uInput = document.getElementById('pc-u');
-    const rfInput = document.getElementById('pc-rf');
-    const gInput = document.getElementById('pc-g');
+    const rentInput = document.getElementById('pc-rent') as HTMLInputElement | null;
+    const uInput = document.getElementById('pc-u') as HTMLInputElement | null;
+    const rfInput = document.getElementById('pc-rf') as HTMLInputElement | null;
+    const gInput = document.getElementById('pc-g') as HTMLInputElement | null;
     const resultEl = document.getElementById('pc-result');
 
-    if (!rentInput || !resultEl) return;
+    if (!rentInput || !uInput || !rfInput || !gInput || !resultEl) return;
+
+    const rentField = rentInput;
+    const uField = uInput;
+    const rfField = rfInput;
+    const gField = gInput;
+    const resultNode = resultEl;
 
     function updateCalc() {
-      const rent = parseFloat(rentInput.value) || 0;
-      const uVal = parseFloat(uInput.value) || 0;
-      const rf = parseFloat(rfInput.value) || 0;
-      const g = parseFloat(gInput.value) || 0;
+      const rent = parseFloat(rentField.value) || 0;
+      const uVal = parseFloat(uField.value) || 0;
+      const rf = parseFloat(rfField.value) || 0;
+      const g = parseFloat(gField.value) || 0;
 
       const NOI = rent * 12 - 4000;
       const rfRate = rf / 100;
@@ -73,13 +79,13 @@
       const denom = rfRate + rpRate - gRate;
       const V = denom > 0 ? (NOI / denom) + U : 0;
 
-      resultEl.textContent = (V / 10000).toFixed(2);
+      resultNode.textContent = (V / 10000).toFixed(2);
     }
 
-    rentInput.addEventListener('input', updateCalc);
-    uInput.addEventListener('input', updateCalc);
-    rfInput.addEventListener('input', updateCalc);
-    gInput.addEventListener('input', updateCalc);
+    rentField.addEventListener('input', updateCalc);
+    uField.addEventListener('input', updateCalc);
+    rfField.addEventListener('input', updateCalc);
+    gField.addEventListener('input', updateCalc);
 
     updateCalc();
   }
