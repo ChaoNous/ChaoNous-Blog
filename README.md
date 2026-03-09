@@ -342,7 +342,6 @@ This project is based on [Fuwari](https://github.com/saicaca/fuwari), which is l
 - Based on the original [Fuwari](https://github.com/saicaca/fuwari) template
 - Inspired by [Yukina](https://github.com/WhitePaper233/yukina) - a beautiful and elegant blog template
 - Some designs are inspired by [Firefly](https://github.com/CuteLeaf/Firefly) & [Twilight](https://github.com/spr-aachen/Twilight) templates
-- Uses [Pio](https://github.com/Dreamer-Paul/Pio) to implement the adorable Live2D mascot plugin
 - Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
 - Icons from [Iconify](https://iconify.design/)
 
