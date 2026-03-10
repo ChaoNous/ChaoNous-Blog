@@ -283,9 +283,9 @@ export const navBarConfig: NavBarConfig = {
 					icon: "material-symbols:photo-library",
 				},
 				{
-					name: "Devices",
+					name: "书籍",
 					url: "devices/",
-					icon: "material-symbols:devices",
+					icon: "material-symbols:menu-book",
 					external: false,
 				},
 			],

@@ -61,8 +61,8 @@ export const zh_TW: Translation = {
 	[Key.diary]: "遊戲",
 
 	// 設備頁面
-	[Key.devices]: "我的設備",
-	[Key.devicesSubtitle]: "這裡展示了我日常使用的各類設備",
+	[Key.devices]: "書籍",
+	[Key.devicesSubtitle]: "這裡展示了我收藏的書籍",
 	[Key.devicesViewDetails]: "查看詳情",
 
 	// 番劇頁面
