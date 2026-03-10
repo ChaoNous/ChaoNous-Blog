@@ -194,20 +194,19 @@ const isCurrentLink =
 	}
 
 	.nav-pill.is-active {
-		color: white !important;
 		background:
-			linear-gradient(135deg, color-mix(in oklab, var(--primary) 88%, white 10%), color-mix(in oklab, var(--primary) 74%, black 10%)),
+			linear-gradient(135deg, rgb(15 23 42 / 0.7), rgb(15 23 42 / 0.4)),
 			repeating-linear-gradient(
 				90deg,
-				rgb(255 255 255 / 0.1) 0,
-				rgb(255 255 255 / 0.1) 1px,
+				rgb(148 163 184 / 0.1) 0,
+				rgb(148 163 184 / 0.1) 1px,
 				transparent 1px,
 				transparent 12px
 			);
-		border: 1px solid color-mix(in oklab, var(--primary) 66%, white 12%);
+		border-color: rgb(148 163 184 / 0.2);
 		box-shadow:
-			0 12px 28px color-mix(in oklab, var(--primary) 30%, transparent),
-			inset 0 1px 0 rgb(255 255 255 / 0.25);
+			inset 0 1px 0 rgb(255 255 255 / 0.08),
+			0 8px 24px rgb(2 6 23 / 0.25);
 	}
 
 	:root.dark .nav-pill.is-active {
