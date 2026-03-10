@@ -50,14 +50,14 @@ export const siteConfig: SiteConfig = {
 
 	// 顶栏标题配置
 	navbarTitle: {
-		// 显示模式："text-icon" 显示图标+文本，"logo" 仅显示Logo
+		// 显示模式："text-icon" 显示图标 + 文本，"logo" 仅显示 Logo
 		mode: "text-icon",
 		// 顶栏标题文本
 		text: "ChaoNous",
-		// 顶栏标题图标路径，默认使用 public/assets/home/home.png
+		// 顶栏标题图标路径
 		icon: "",
-		// 网站Logo图片路径
-		logo: "assets/home/default-logo.png",
+		// 网站 Logo 图片路径（留空使用默认样式）
+		logo: "",
 	},
 
 	// 页面自动缩放配置

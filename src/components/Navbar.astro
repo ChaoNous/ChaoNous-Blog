@@ -47,20 +47,18 @@ const textImageSrc = rawTextImage.match(/^(http|https|\/\/)/) ? rawTextImage : (
 <div id="navbar" class="z-50 onload-animation group" data-transparent-mode={navbarTransparentMode} data-is-home={isHomePage}>
     <div class="absolute h-8 left-0 right-0 -top-8 bg-(--card-bg) transition"></div> <!-- used for onload animation -->
     <div class:list={[className, "overflow-visible! max-w-(--page-width) h-18 mx-auto flex items-center justify-between px-4"]}>
-        <a href={url('/')} class="navbar-brand scale-animation h-10 md:h-13 md:in-[.enable-banner]:h-10 md:in-[.enable-banner]:group-[.scrolled]:h-13 shrink-0 transition-all duration-300" aria-label={siteConfig.navbarTitle?.text || siteConfig.title}>
+        <a href={url('/')} class="navbar-brand scale-animation shrink-0 transition-all duration-300" aria-label={siteConfig.navbarTitle?.text || siteConfig.title}>
             <div class="navbar-brand-inner">
 				{/* 使用 navbarTitle 配置或默认配置 */}
                 {siteConfig.navbarTitle ? (
                     siteConfig.navbarTitle.mode === "logo" ? (
-                        <img src={logoSrc} alt={siteConfig.navbarTitle.text} class="h-10 md:h-13 md:in-[.enable-banner]:h-10 md:in-[.enable-banner]:group-[.scrolled]:h-13 max-w-full object-contain transition-all duration-300" loading="lazy" />
+                        <img src={logoSrc} alt={siteConfig.navbarTitle.text} class="h-10 md:h-13 max-w-full object-contain transition-all duration-300" loading="lazy" />
                     ) : (
                         <>
-                            <span class="navbar-brand-mark" aria-hidden="true"></span>
-                            {iconSrc && <img src={iconSrc} alt="" class="navbar-brand-icon" loading="lazy" aria-hidden="true" />}
                             {textImageSrc ? (
                                 <img src={textImageSrc} alt={siteConfig.navbarTitle.text} class="h-8 object-contain" loading="lazy" />
                             ) : (
-                                <span class="navbar-brand-text kawaii-bounce font-bold tracking-wide" data-text={siteConfig.navbarTitle.text}>
+                                <span class="navbar-brand-text font-bold">
                                     {siteConfig.navbarTitle.text}
                                 </span>
                             )}
@@ -307,179 +305,55 @@ if (document.readyState === 'loading') {
 	.navbar-brand {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.1rem;
-		padding: 0 1rem 0 0.42rem;
-		border-radius: 1rem;
-		color: rgb(15 23 42 / 0.96);
+		padding: 0.5rem 1rem;
+		border-radius: 0.75rem;
+		color: rgb(255 255 255 / 0.95);
 		text-decoration: none;
-		background:
-			linear-gradient(135deg, rgb(255 255 255 / 0.85), rgb(226 232 240 / 0.65)),
-			repeating-linear-gradient(
-				90deg,
-				rgb(148 163 184 / 0.08) 0,
-				rgb(148 163 184 / 0.08) 1px,
-				transparent 1px,
-				transparent 14px
-			);
-		border: 1px solid rgb(255 255 255 / 0.8);
-		box-shadow:
-			0 15px 35px rgb(15 23 42 / 0.1),
-			0 0 15px color-mix(in srgb, var(--primary) 20%, transparent),
-			inset 0 2px 4px rgb(255 255 255 / 0.8),
-			inset 0 -1px 2px rgb(255 255 255 / 0.4);
-		backdrop-filter: blur(20px) saturate(1.2);
-		-webkit-backdrop-filter: blur(20px) saturate(1.2);
-		transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-		transform-origin: center left;
+		background: rgba(15 23 42 / 0.4);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(255 255 255 / 0.15);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	.navbar-brand:hover,
-	.navbar-brand:focus-visible,
-	.navbar-brand:active {
-		color: var(--primary);
-		background:
-			linear-gradient(135deg, rgb(255 255 255 / 0.98), rgb(241 245 249 / 0.85)),
-			repeating-linear-gradient(
-				90deg,
-				color-mix(in oklab, var(--primary) 18%, transparent) 0,
-				color-mix(in oklab, var(--primary) 18%, transparent) 1px,
-				transparent 1px,
-				transparent 14px
-			);
-		border-color: color-mix(in oklab, var(--primary) 40%, rgb(255 255 255 / 0.8));
-		box-shadow:
-			0 20px 40px rgb(15 23 42 / 0.15),
-			0 0 25px color-mix(in oklab, var(--primary) 40%, transparent),
-			inset 0 2px 5px rgb(255 255 255 / 0.9);
-		outline: none;
-		transform: scale(1.04) translateX(2px);
+	.navbar-brand:hover {
+		background: rgba(15 23 42 / 0.55);
+		border-color: rgba(255 255 255 / 0.25);
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+		transform: translateY(-1px);
 	}
 
 	:root.dark .navbar-brand {
-		color: rgb(255 255 255 / 0.98);
-		background:
-			linear-gradient(135deg, rgb(15 23 42 / 0.88), rgb(15 23 42 / 0.6)),
-			repeating-linear-gradient(
-				90deg,
-				rgb(148 163 184 / 0.1) 0,
-				rgb(148 163 184 / 0.1) 1px,
-				transparent 1px,
-				transparent 14px
-			);
-		border-color: rgb(148 163 184 / 0.3);
-		box-shadow:
-			0 15px 35px rgb(2 6 23 / 0.4),
-			0 0 15px color-mix(in srgb, var(--primary) 20%, transparent),
-			inset 0 1px 2px rgb(255 255 255 / 0.1);
+		background: rgba(255 255 255 / 0.1);
+		border-color: rgba(255 255 255 / 0.1);
 	}
-	
+
 	:root.dark .navbar-brand:hover {
-		box-shadow:
-			0 20px 40px rgb(2 6 23 / 0.5),
-			0 0 25px color-mix(in oklab, var(--primary) 45%, transparent),
-			inset 0 1px 2px rgb(255 255 255 / 0.15);
+		background: rgba(255 255 255 / 0.15);
 	}
 
 	.navbar-brand-inner {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.75rem;
-		min-width: 0;
-	}
-
-	.navbar-brand-mark {
-		position: relative;
-		width: 1rem;
-		height: 1rem;
-		border-radius: 0.28rem;
-		flex-shrink: 0;
-		background:
-			linear-gradient(135deg, oklch(0.78 0.18 var(--hue)), oklch(0.62 0.2 calc(var(--hue) + 28)));
-		box-shadow:
-			0 0 0 0.2rem color-mix(in oklab, var(--primary) 16%, transparent),
-			0 8px 18px color-mix(in oklab, var(--primary) 30%, transparent);
-		overflow: hidden;
-	}
-
-	.navbar-brand-mark::before,
-	.navbar-brand-mark::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-	}
-
-	.navbar-brand-mark::before {
-		background:
-			linear-gradient(90deg, transparent 0 24%, rgb(255 255 255 / 0.32) 24% 28%, transparent 28% 52%, rgb(255 255 255 / 0.24) 52% 56%, transparent 56% 100%),
-			linear-gradient(180deg, transparent 0 36%, rgb(15 23 42 / 0.14) 36% 40%, transparent 40% 100%);
-	}
-
-	.navbar-brand-mark::after {
-		inset: auto 0.18rem 0.18rem auto;
-		width: 0.26rem;
-		height: 0.26rem;
-		border-radius: 999px;
-		background: rgb(255 255 255 / 0.88);
-		box-shadow: 0 0 10px rgb(255 255 255 / 0.6);
-	}
-
-	.navbar-brand-icon {
-		width: 1.6rem;
-		height: 1.6rem;
-		object-fit: contain;
-		flex-shrink: 0;
+		gap: 0.5rem;
 	}
 
 	.navbar-brand-text {
-		font-size: clamp(1.4rem, 1.08rem + 0.72vw, 1.8rem);
-		font-weight: 800;
+		font-size: 1.125rem;
+		font-weight: 700;
 		line-height: 1;
-		letter-spacing: 0.08em;
-		text-shadow: none;
-		white-space: nowrap;
-		font-family: "JetBrains Mono Variable", "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-		text-transform: uppercase;
-	}
-
-	.kawaii-bounce {
-		position: relative;
-		color: white;
-		text-shadow: 
-			-2px -2px 0 var(--primary),  
-			 2px -2px 0 var(--primary),
-			-2px  2px 0 var(--primary),
-			 2px  2px 0 var(--primary),
-			 0px  4px 10px color-mix(in srgb, var(--primary) 65%, transparent);
-		transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.4s ease, letter-spacing 0.4s ease;
-		display: inline-block;
-		transform-origin: center bottom;
-	}
-
-	.kawaii-bounce:hover,
-	.navbar-brand:hover .kawaii-bounce {
-		transform: scale(1.15) translateY(-4px) rotate(-4deg);
-		letter-spacing: 0.12em;
-		text-shadow: 
-			-2px -2px 0 var(--primary),  
-			 2px -2px 0 var(--primary),
-			-2px  2px 0 var(--primary),
-			 2px  2px 0 var(--primary),
-			 0px  8px 20px color-mix(in srgb, var(--primary) 85%, transparent),
-			 0px  0px 15px color-mix(in srgb, white 50%, transparent);
+		letter-spacing: 0.05em;
+		font-family: "ZenMaruGothic-Medium", "JetBrains Mono Variable", "JetBrains Mono", system-ui, sans-serif;
 	}
 
 	@media (max-width: 640px) {
 		.navbar-brand {
-			padding-right: 0.82rem;
-		}
-
-		.navbar-brand-mark {
-			width: 0.84rem;
-			height: 0.84rem;
+			padding: 0.375rem 0.75rem;
 		}
 
 		.navbar-brand-text {
-			font-size: 1.14rem;
+			font-size: 1rem;
 		}
 	}
 </style>
