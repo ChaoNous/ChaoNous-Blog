@@ -10,6 +10,7 @@ interface Props {
 	basePath?: string;
 	loading?: "eager" | "lazy";
 	fetchPriority?: "high" | "low" | "auto";
+	width?: number;
 }
 
 import { Image } from "astro:assets";
@@ -23,6 +24,7 @@ const {
 	basePath = "/",
 	loading = "lazy",
 	fetchPriority = "auto",
+	width,
 } = Astro.props;
 const className = Astro.props.class;
 
@@ -65,6 +67,6 @@ const referrerPolicy = !isLocal && isBilibiliImage ? "no-referrer" : undefined;
 ---
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
     <div class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"></div>
-    {isLocal && img && <Image src={img} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchPriority} />}
+    {isLocal && img && <Image src={img} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchPriority} {...(width ? { width } : {})} />}
     {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle} loading={loading} fetchpriority={fetchPriority} decoding="async" referrerpolicy={referrerPolicy} crossorigin={isBilibiliImage ? "anonymous" : undefined}/>}
 </div>
