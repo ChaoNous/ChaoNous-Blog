@@ -581,7 +581,8 @@ onDestroy(() => {
                     <Icon icon="material-symbols:visibility-off" class="text-lg" />
                 </button>
                 <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
-                        on:click|stopPropagation={toggleExpanded}>
+                        on:click|stopPropagation={toggleExpanded}
+                        aria-label={i18n(Key.musicPlayerExpand)}>
                     <Icon icon="material-symbols:expand-less" class="text-lg" />
                 </button>
             </div>
@@ -650,17 +651,20 @@ onDestroy(() => {
                     class:btn-regular={isShuffled}
                     class:btn-plain={!isShuffled}
                     on:click={toggleShuffle}
-                    disabled={playlist.length <= 1}>
+                    disabled={playlist.length <= 1}
+                    aria-label={i18n(Key.musicPlayerShuffle)}>
                 <Icon icon="material-symbols:shuffle" class="text-lg" />
             </button>
             <button class="btn-plain w-10 h-10 rounded-lg" on:click={previousSong}
-                    disabled={playlist.length <= 1}>
+                    disabled={playlist.length <= 1}
+                    aria-label={i18n(Key.musicPlayerPrevious)}>
                 <Icon icon="material-symbols:skip-previous" class="text-xl" />
             </button>
             <button class="btn-regular w-12 h-12 rounded-full"
                     class:opacity-50={isLoading}
                     disabled={isLoading}
-                    on:click={togglePlay}>
+                    on:click={togglePlay}
+                    aria-label={isPlaying ? i18n(Key.musicPlayerPause) : i18n(Key.musicPlayerPlay)}>
                 {#if isLoading}
                     <Icon icon="eos-icons:loading" class="text-xl" />
                 {:else if isPlaying}
@@ -670,13 +674,15 @@ onDestroy(() => {
                 {/if}
             </button>
             <button class="btn-plain w-10 h-10 rounded-lg" on:click={() => nextSong()}
-                    disabled={playlist.length <= 1}>
+                    disabled={playlist.length <= 1}
+                    aria-label={i18n(Key.musicPlayerNext)}>
                 <Icon icon="material-symbols:skip-next" class="text-xl" />
             </button>
             <button class="w-10 h-10 rounded-lg"
                     class:btn-regular={isRepeating > 0}
                     class:btn-plain={isRepeating === 0}
-                    on:click={toggleRepeat}>
+                    on:click={toggleRepeat}
+                    aria-label={isRepeating === 1 ? i18n(Key.musicPlayerRepeatOne) : i18n(Key.musicPlayerRepeat)}>
                 {#if isRepeating === 1}
                     <Icon icon="material-symbols:repeat-one" class="text-lg" />
                 {:else if isRepeating === 2}
@@ -687,7 +693,8 @@ onDestroy(() => {
             </button>
         </div>
         <div class="bottom-controls flex items-center gap-2">
-            <button class="btn-plain w-8 h-8 rounded-lg" on:click={toggleMute}>
+            <button class="btn-plain w-8 h-8 rounded-lg" on:click={toggleMute}
+                    aria-label={isMuted ? i18n(Key.musicPlayerPlay) : i18n(Key.musicPlayerVolume)}>
                 {#if isMuted || volume === 0}
                     <Icon icon="material-symbols:volume-off" class="text-lg" />
                 {:else if volume < 0.5}
@@ -728,7 +735,8 @@ onDestroy(() => {
              transition:slide={{ duration: 300, axis: 'y' }}>
             <div class="playlist-header flex items-center justify-between p-4 border-b border-(--line-divider)">
                 <h3 class="text-lg font-semibold text-90">{i18n(Key.musicPlayerPlaylist)}</h3>
-                <button class="btn-plain w-8 h-8 rounded-lg" on:click={togglePlaylist}>
+                <button class="btn-plain w-8 h-8 rounded-lg" on:click={togglePlaylist}
+                        aria-label={i18n(Key.musicPlayerPlaylist)}>
                     <Icon icon="material-symbols:close" class="text-lg" />
                 </button>
             </div>
