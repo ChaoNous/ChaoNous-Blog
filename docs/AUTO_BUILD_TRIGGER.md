@@ -1,6 +1,6 @@
 # 内容仓库更新自动触发构建 - 快速参考
 
-> 当前代码仓库主分支为 `master`。若你直接复用本文示例，请把 `main` 改成 `master`。
+> 当前代码仓库主分支为 `master`。
 
 ## 🎯 问题
 
@@ -8,7 +8,9 @@
 
 ## ✅ 解决方案 (推荐)
 
-使用 **Repository Dispatch** 让内容更新时自动触发构建,适用于所有部署平台。
+对当前仓库，推荐使用 **Repository Dispatch + Cloudflare Deploy Hook**：
+- 内容仓库推送后，先用 `repository_dispatch` 通知代码仓库
+- 代码仓库再通过 GitHub Actions 调用 Cloudflare Pages 的 Deploy Hook
 
 ---
 
@@ -48,17 +50,23 @@ repository: your-username/Mizuki  # 改为你的
 
 编辑**代码仓库**中新建的工作流文件,例如 `.github/workflows/content-sync.yml`
 
-在 `on:` 部分添加:
+在代码仓库 Secrets 中先添加 `CLOUDFLARE_DEPLOY_HOOK`，然后使用如下工作流：
 
 ```yaml
+name: Trigger Cloudflare Pages
+
 on:
-  push:
-    branches:
-      - master
   repository_dispatch:  # 👈 添加这个
     types:
       - content-updated
   workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages Deploy Hook
+        run: curl -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}"
 ```
 
 ### Step 5: 测试
@@ -73,7 +81,8 @@ git push
 
 查看:
 1. 内容仓库 Actions - 确认触发器运行
-2. 代码仓库 Actions - 确认部署被触发
+2. 代码仓库 Actions - 确认 `Trigger Cloudflare Pages` 被触发
+3. Cloudflare Pages - 确认出现新的部署记录
 
 ---
 
@@ -101,6 +110,7 @@ git push
 
 **检查**:
 - [ ] 新建的 GitHub Actions 工作流包含 `repository_dispatch`
+- [ ] 已在代码仓库中配置 `CLOUDFLARE_DEPLOY_HOOK`
 - [ ] Event type 为 `content-updated`
 - [ ] 代码仓库 Actions 已启用
 

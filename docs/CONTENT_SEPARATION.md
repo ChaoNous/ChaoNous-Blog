@@ -342,7 +342,6 @@ CONTENT_REPO_URL=https://YOUR_TOKEN@github.com/your-username/Mizuki-Content-Priv
 
 ### 支持的平台
 
-- ✅ **GitHub Pages** - 使用 GitHub Actions
 - ✅ **Vercel** - 环境变量配置
 - ✅ **Netlify** - 环境变量配置
 - ✅ **Cloudflare Pages** - 环境变量配置
@@ -352,10 +351,9 @@ CONTENT_REPO_URL=https://YOUR_TOKEN@github.com/your-username/Mizuki-Content-Priv
 不同平台的具体配置步骤、私有仓库认证、故障排查等详细信息，请查看：
 
 📖 **[部署指南](./DEPLOYMENT.md)** - 完整的部署文档，包含：
-- GitHub Pages 自动部署配置
 - Vercel 部署详细步骤
 - Netlify 部署配置
-- Cloudflare Pages 部署
+- Cloudflare Pages 部署（当前仓库默认）
 - 私有仓库认证配置
 - 常见问题故障排查
 
@@ -498,7 +496,7 @@ git clone https://github.com/your-username/Mizuki-Content.git content
 
 1. **使用独立仓库模式** - 清晰的版本控制
 2. **内容仓库添加 CI** - 自动检查文章格式、图片优化等
-3. **分支管理** - main 分支用于生产,develop 用于预览
+3. **分支管理** - master 分支用于生产,develop 用于预览
 
 ### 团队协作
 

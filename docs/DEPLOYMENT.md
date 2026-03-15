@@ -2,7 +2,7 @@
 
 本文档提供 Mizuki 博客在各个平台的部署配置说明。
 
-> 当前仓库实际主分支为 `master`。若文中示例仍出现 `main`，请替换为 `master` 使用。
+> 当前仓库实际主分支为 `master`。
 
 ## 📖 目录
 
@@ -39,7 +39,7 @@ export default defineConfig({
 
 ---
 
-## 📦 GitHub Pages 部署
+## 📦 GitHub Pages 部署（已弃用）
 
 此仓库已不再使用 GitHub Pages，也不再维护 `pages` 分支发布链路。
 
@@ -390,7 +390,7 @@ fatal: could not read Username for 'https://github.com'
 
 | 方案 | 难度 | 推荐度 | 适用平台 |
 |------|------|--------|----------|
-| **Repository Dispatch** | ⭐ 简单 | ⭐⭐⭐⭐⭐ | GitHub Pages, Vercel, Netlify, CF Pages |
+| **Repository Dispatch** | ⭐ 简单 | ⭐⭐⭐⭐⭐ | Cloudflare Pages, Vercel, Netlify |
 | **Webhook + Deploy Hook** | ⭐⭐ 中等 | ⭐⭐⭐⭐ | Vercel, Netlify, CF Pages |
 | **定时构建** | ⭐ 简单 | ⭐⭐⭐ | 所有平台 |
 
@@ -437,7 +437,7 @@ name: Trigger Main Repo Build
 on:
   push:
     branches:
-      - main  # 或你使用的主分支名称
+      - master  # 或你使用的主分支名称
     paths:
       - 'posts/**'
       - 'spec/**'
@@ -466,30 +466,37 @@ jobs:
 - 将 `your-username/Mizuki` 替换为你的代码仓库完整名称
 - 可以根据需要调整 `paths`，只在特定文件变化时触发
 
-**Step 4: 在代码仓库更新 GitHub Actions 工作流**
+**Step 4: 在代码仓库新增 Cloudflare 触发工作流**
 
-如果你仍然需要由 GitHub Actions 接收 `repository_dispatch` 事件，请在现有工作流中新增专用构建文件；本仓库的 `.github/workflows/deploy.yml` 已移除，不再使用 `pages` 分支发布。
+当前仓库使用 Cloudflare Pages 直接监听 `master` 分支，因此推荐新增一个专用工作流来接收 `repository_dispatch` 并调用 Cloudflare Deploy Hook。
 
 ```yaml
-name: Deploy to GitHub Pages
+name: Trigger Cloudflare Pages
 
 on:
-  push:
-    branches:
-      - main
   repository_dispatch:  # 添加这个触发器
     types:
       - content-updated
+  workflow_dispatch:
 
-# ...其余配置保持不变
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages Deploy Hook
+        run: curl -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}"
 ```
+
+在代码仓库的 Secrets 中添加：
+- `CLOUDFLARE_DEPLOY_HOOK`: Cloudflare Pages 项目的 Deploy Hook URL
 
 **Step 5: 测试**
 
 1. 在内容仓库编辑一篇文章
-2. 提交并推送到 `main` 分支
+2. 提交并推送到 `master` 分支
 3. 查看内容仓库的 Actions 页面，确认 "Trigger Main Repo Build" 工作流运行
-4. 查看代码仓库的 Actions 页面，确认部署工作流被触发
+4. 查看代码仓库的 Actions 页面，确认 `Trigger Cloudflare Pages` 被触发
+5. 查看 Cloudflare Pages 部署历史，确认新构建开始执行
 
 ---
 
@@ -503,7 +510,6 @@ on:
 
 **缺点**:
 - ⚠️ 需要为每个部署平台单独配置
-- ⚠️ 不适用于 GitHub Pages
 
 #### Vercel 配置
 
@@ -513,7 +519,7 @@ on:
 2. Settings → Git → Deploy Hooks
 3. 创建新的 Hook:
    - Name: `Content Update`
-   - Git Branch: `main` (或你的主分支)
+   - Git Branch: `master` (或你的主分支)
 4. 点击 **Create Hook**，复制生成的 URL
 
 **Step 2: 在内容仓库配置 Webhook**
@@ -526,7 +532,7 @@ name: Trigger Vercel Deployment
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'posts/**'
       - 'spec/**'
@@ -556,7 +562,7 @@ jobs:
 2. Site settings → Build & deploy → Continuous deployment → Build hooks
 3. 点击 **Add build hook**:
    - Build hook name: `Content Update`
-   - Branch to build: `main`
+   - Branch to build: `master`
 4. 保存并复制生成的 URL
 
 **Step 2: 配置 GitHub Actions**
@@ -569,7 +575,7 @@ name: Trigger Netlify Deployment
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'posts/**'
       - 'spec/**'
@@ -598,7 +604,7 @@ jobs:
 2. Settings → Builds & deployments → Deploy hooks
 3. 创建 Deploy Hook:
    - Hook name: `Content Update`
-   - Branch: `main`
+   - Branch: `master`
 4. 保存并复制 URL
 
 **Step 2: 配置类似于 Vercel/Netlify**
@@ -621,20 +627,22 @@ jobs:
 
 #### GitHub Actions 配置
 
-如果你需要定时触发额外任务，请新增独立工作流文件，不要恢复旧的 `.github/workflows/deploy.yml`:
+如果你需要定时触发 Cloudflare Pages 构建，请新增独立工作流文件，不要恢复旧的 `.github/workflows/deploy.yml`:
 
 ```yaml
-name: Deploy to GitHub Pages
+name: Scheduled Cloudflare Pages Trigger
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '0 2 * * *'  # 每天凌晨 2 点 (UTC 时间)
   workflow_dispatch:  # 支持手动触发
 
-# ...其余配置
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages Deploy Hook
+        run: curl -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}"
 ```
 
 **Cron 表达式示例**:
@@ -681,6 +689,13 @@ on:
   schedule:
     - cron: '0 2 * * *'
   workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages Deploy Hook
+        run: curl -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}"
 ```
 
 **优势**:

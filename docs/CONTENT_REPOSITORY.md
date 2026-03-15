@@ -69,8 +69,8 @@ git commit -m "Initial commit: Add blog content"
 
 # 添加远程仓库并推送
 git remote add origin https://github.com/your-username/Mizuki-Content.git
-git branch -M main
-git push -u origin main
+git branch -M master
+git push -u origin master
 ```
 
 ## 🔗 连接到 Mizuki 代码仓库

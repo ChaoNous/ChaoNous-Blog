@@ -41,7 +41,7 @@
 ### 部署相关
 
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - 部署完整指南 ⭐
-  - 各平台部署配置 (GitHub Pages / Vercel / Netlify / Cloudflare Pages)
+  - 各平台部署配置 (Cloudflare Pages / Vercel / Netlify)
   - 内容仓库更新自动触发构建
   - 私有仓库认证
   - 故障排查
