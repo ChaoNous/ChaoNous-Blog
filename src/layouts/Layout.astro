@@ -1,8 +1,10 @@
 ---
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
+import Pio from "@components/widget/Pio.svelte"; // 使用 Svelte 版本的 Pio 组件
 import {
 	musicPlayerConfig,
+	pioConfig,
 	profileConfig,
 	siteConfig,
 } from "@/config";
@@ -158,44 +160,6 @@ if (siteConfig.font) {
 	// 组合成完整的 font-family 字符串
 	bodyFontFamily = fonts.join(", ");
 }
-
-const geekBodyFontFamily = [
-	"system-ui",
-	"-apple-system",
-	"BlinkMacSystemFont",
-	"'Segoe UI'",
-	"Roboto",
-	"'Helvetica Neue'",
-	"Arial",
-	"'PingFang SC'",
-	"'Hiragino Sans GB'",
-	"'Microsoft YaHei'",
-	"sans-serif",
-].join(", ");
-const geekDisplayFontFamily = [
-	"system-ui",
-	"-apple-system",
-	"BlinkMacSystemFont",
-	"'Segoe UI'",
-	"Roboto",
-	"'Helvetica Neue'",
-	"Arial",
-	"'PingFang SC'",
-	"'Hiragino Sans GB'",
-	"'Microsoft YaHei'",
-	"sans-serif",
-].join(", ");
-const geekMonoFontFamily = [
-	"ui-monospace",
-	"SFMono-Regular",
-	"'SF Mono'",
-	"Menlo",
-	"Consolas",
-	"'Liberation Mono'",
-	"monospace",
-].join(", ");
-
-bodyFontFamily = geekBodyFontFamily;
 ---
 
 <!doctype html>
@@ -247,14 +211,6 @@ bodyFontFamily = geekBodyFontFamily;
 				setTimeout(loadAnalytics, 3000);
 			}
 		</script>
-
-		<link rel="preconnect" href="https://i0.hdslb.com" />
-		<link rel="dns-prefetch" href="https://i0.hdslb.com" />
-		<link rel="preconnect" href="https://www.googletagmanager.com" />
-		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-		<link rel="preconnect" href="https://www.clarity.ms" />
-		<link rel="dns-prefetch" href="https://www.clarity.ms" />
-
 
 		<title>{pageTitle}</title>
 		<meta charset="UTF-8" />
@@ -374,16 +330,12 @@ bodyFontFamily = geekBodyFontFamily;
 							document.documentElement.style.fontSize = "";
 							return;
 						}
-						
-						// 使用 requestAnimationFrame 避免强制重排
-						requestAnimationFrame(() => {
-							const targetWidth = pageScaling.targetWidth || 2000;
-							const currentWidth = document.documentElement.clientWidth;
-							let scale = currentWidth / targetWidth;
-							if (scale > 1) scale = 1;
-							if (scale < 0.85) scale = 0.85;
-							document.documentElement.style.fontSize = `${scale * 100}%`;
-						});
+						const targetWidth = pageScaling.targetWidth || 2000;
+						const currentWidth = document.documentElement.clientWidth;
+						let scale = currentWidth / targetWidth;
+						if (scale > 1) scale = 1;
+						if (scale < 0.85) scale = 0.85;
+						document.documentElement.style.fontSize = `${scale * 100}%`;
 					}
 
 					// 立即执行一次
@@ -408,7 +360,12 @@ bodyFontFamily = geekBodyFontFamily;
 		<!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
 		<slot name="head" />
 
-
+		<!-- Pio 看板娘样式 - 仅在启用时加载 -->
+		{
+			pioConfig.enable && (
+				<link rel="stylesheet" href="/pio/static/pio.css" />
+			)
+		}
 
 		<link
 			rel="alternate"
@@ -423,9 +380,7 @@ bodyFontFamily = geekBodyFontFamily;
 		class:list={[
 			{ "is-home": isHomePage, "enable-banner": enableBanner },
 		]}
-		style={bodyFontFamily
-			? `font-family: ${bodyFontFamily}; --font-geek-body: ${geekBodyFontFamily}; --font-geek-display: ${geekDisplayFontFamily}; --font-geek-mono: ${geekMonoFontFamily};`
-			: ""}
+		style={bodyFontFamily ? `font-family: ${bodyFontFamily};` : ""}
 		data-overlayscrollbars-initialize
 	>
 		<noscript
@@ -444,7 +399,8 @@ bodyFontFamily = geekBodyFontFamily;
 		<!-- Music Player - 仅在启用时加载 -->
 		{musicPlayerConfig.enable && <MusicPlayer client:idle />}
 
-
+		<!-- Pio 看板娘组件 - 仅在启用时加载 -->
+		{pioConfig.enable && <Pio client:idle />}
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>

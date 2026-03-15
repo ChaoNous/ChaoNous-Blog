@@ -188,19 +188,6 @@
     padding-right: 3rem;
     box-sizing: border-box;
   }
-
-  /* 高亮重要公式 */
-  .katex-display.formula-highlight {
-    background: #f1f5f9;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin: 1.5rem 0;
-  }
-
-  .katex-display.formula-highlight .katex {
-    font-size: 1.75rem;
-    font-weight: bold;
-  }
 }
 
 /* 外部覆盖样式 */

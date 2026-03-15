@@ -38,18 +38,6 @@ const children =
 	) ?? [];
 
 const hasChildren = children.length > 0;
-const currentPath = Astro.url.pathname;
-const normalizedLinkUrl =
-	!hasChildren && !link.external ? url(link.url) : "";
-const hasActiveChild = children.some(
-	(child) => !child.external && currentPath.startsWith(url(child.url)),
-);
-const isCurrentLink =
-	!hasChildren &&
-	!link.external &&
-	(normalizedLinkUrl === "/"
-		? currentPath === "/"
-		: currentPath.startsWith(normalizedLinkUrl));
 ---
 
 <div class:list={["dropdown-container group", className]} data-dropdown>
@@ -57,13 +45,9 @@ const isCurrentLink =
 		hasChildren ? (
 			<>
 				<button
-					class:list={[
-						"nav-pill btn-plain scale-animation rounded-full h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 dropdown-trigger flex items-center justify-center lg:justify-start whitespace-nowrap",
-						hasActiveChild && "is-active",
-					]}
+					class="btn-plain scale-animation rounded-lg h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 dropdown-trigger flex items-center justify-center lg:justify-start whitespace-nowrap"
 					aria-expanded="false"
 					aria-haspopup="true"
-					aria-label={getLocalizedName(link.name)}
 					data-dropdown-trigger
 				>
 					{link.icon && (
@@ -77,7 +61,7 @@ const isCurrentLink =
 				</button>
 
 				<div class="dropdown-menu" data-dropdown-menu>
-					<div class="dropdown-content nav-dropdown-content bg-(--float-panel-bg) rounded-(--radius-large) shadow-xl dark:shadow-none border border-black/5 dark:border-white/10 p-2 min-w-52">
+					<div class="dropdown-content bg-(--float-panel-bg) rounded-(--radius-large) shadow-xl dark:shadow-none border border-black/5 dark:border-white/10 p-2 min-w-48">
 						{children.map((child) => (
 							<a
 								href={
@@ -89,10 +73,7 @@ const isCurrentLink =
 										? "noopener noreferrer"
 										: null
 								}
-								class:list={[
-									"dropdown-item nav-dropdown-item flex items-center justify-between px-4 py-2.5 transition-colors duration-150 font-medium rounded-xl",
-									!child.external && currentPath.startsWith(url(child.url)) && "is-active",
-								]}
+								class="dropdown-item flex items-center justify-between px-4 py-2.5 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium rounded-lg"
 								aria-label={child.name}
 							>
 								<div class="flex items-center">
@@ -121,10 +102,7 @@ const isCurrentLink =
 				href={link.external ? link.url : url(link.url)}
 				target={link.external ? "_blank" : null}
 				rel={link.external ? "noopener noreferrer" : null}
-				class:list={[
-					"nav-pill btn-plain scale-animation rounded-full h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 flex items-center justify-center lg:justify-start whitespace-nowrap",
-					isCurrentLink && "is-active",
-				]}
+				class="btn-plain scale-animation rounded-lg h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 flex items-center justify-center lg:justify-start whitespace-nowrap"
 			>
 				{link.icon && (
 					<Icon name={link.icon} class="text-[1.1rem] lg:mr-2 shrink-0" />
@@ -148,116 +126,8 @@ const isCurrentLink =
 		@apply relative;
 	}
 
-	.nav-pill {
-		@apply relative overflow-hidden;
-	}
-
-	.nav-pill {
-		@apply relative overflow-hidden;
-		background: transparent;
-		border: 1px solid transparent;
-		box-shadow: none;
-		backdrop-filter: none;
-		-webkit-backdrop-filter: none;
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-		letter-spacing: 0.03em;
-		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	.nav-pill:hover,
-	.nav-pill:focus-visible,
-	.nav-pill:has(.dropdown-trigger[aria-expanded="true"]) {
-		background:
-			linear-gradient(135deg, rgb(255 255 255 / 0.15), rgb(241 245 249 / 0.08));
-		border-color: rgba(255 255 255 / 0.2);
-		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 0.1),
-			0 4px 12px rgb(0 0 0 / 0.1);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		transform: translateY(-1px);
-	}
-
-	:root.dark .nav-pill:hover,
-	:root.dark .nav-pill:focus-visible,
-	:root.dark .nav-pill:has(.dropdown-trigger[aria-expanded="true"]) {
-		background:
-			linear-gradient(135deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.05));
-		border-color: rgba(255 255 255 / 0.15);
-		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 0.05),
-			0 4px 12px rgb(0 0 0 / 0.2);
-	}
-
-	.nav-pill.is-active {
-		background: transparent;
-		border-color: transparent;
-		box-shadow: none;
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-		letter-spacing: 0.03em;
-	}
-
-	.nav-pill.is-active:hover {
-		background:
-			linear-gradient(135deg, rgb(255 255 255 / 0.15), rgb(241 245 249 / 0.08));
-		border-color: rgba(255 255 255 / 0.2);
-		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 0.1),
-			0 4px 12px rgb(0 0 0 / 0.1);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-	}
-
-	:root.dark .nav-pill.is-active {
-		color: rgb(255 255 255 / 0.96) !important;
-	}
-
 	.dropdown-menu {
 		@apply absolute top-full left-0 pt-2 opacity-0 invisible pointer-events-none translate-y-[-8px] transition-all duration-200 ease-out z-50;
-	}
-
-	.nav-dropdown-content {
-		background:
-			linear-gradient(180deg, rgb(255 255 255 / 0.94), rgb(248 250 252 / 0.84)),
-			repeating-linear-gradient(
-				90deg,
-				rgb(148 163 184 / 0.05) 0,
-				rgb(148 163 184 / 0.05) 1px,
-				transparent 1px,
-				transparent 14px
-			);
-		backdrop-filter: blur(18px);
-		-webkit-backdrop-filter: blur(18px);
-		box-shadow: 0 20px 45px rgb(15 23 42 / 0.12);
-	}
-
-	:root.dark .nav-dropdown-content {
-		background:
-			linear-gradient(180deg, rgb(15 23 42 / 0.92), rgb(15 23 42 / 0.84)),
-			repeating-linear-gradient(
-				90deg,
-				rgb(148 163 184 / 0.06) 0,
-				rgb(148 163 184 / 0.06) 1px,
-				transparent 1px,
-				transparent 14px
-			);
-		box-shadow: 0 20px 45px rgb(2 6 23 / 0.35);
-	}
-
-	.nav-dropdown-item:hover,
-	.nav-dropdown-item:focus-visible {
-		@apply text-(--primary);
-		background: color-mix(in oklab, var(--primary) 10%, transparent);
-	}
-
-	.nav-dropdown-item.is-active {
-		@apply text-(--primary);
-		background: color-mix(in oklab, var(--primary) 14%, transparent);
-	}
-
-	.nav-dropdown-item {
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-		letter-spacing: 0.02em;
 	}
 
 	.dropdown-container:hover .dropdown-menu,

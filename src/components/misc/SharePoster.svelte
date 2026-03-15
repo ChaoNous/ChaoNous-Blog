@@ -1,5 +1,5 @@
 <script lang="ts">
-import Icon from "../IconSvg.svelte";
+import Icon from "@iconify/svelte";
 import QRCode from "qrcode";
 import { onMount } from "svelte";
 import I18nKey from "../../i18n/i18nKey";

@@ -58,7 +58,7 @@ export const zh_CN: Translation = {
 	[Key.publishedAt]: "发布于",
 	[Key.license]: "许可协议",
 	[Key.anime]: "追番",
-	[Key.diary]: "游戏",
+	[Key.diary]: "日记",
 
 	// 番剧页面
 	[Key.animeTitle]: "我的追番记录",
@@ -80,11 +80,11 @@ export const zh_CN: Translation = {
 	[Key.animeConfigBangumi]:
 		"请在 src/config.ts 文件中设置您的 Bangumi userId",
 
-	// 游戏页面
-	[Key.diarySubtitle]: "记录我的游戏世界",
-	[Key.diaryCount]: "个游戏",
+	// 短文页面
+	[Key.diarySubtitle]: "随时随地，分享生活",
+	[Key.diaryCount]: "条短文",
 	[Key.diaryReply]: "回复",
-	[Key.diaryTips]: "只展示最近30条游戏记录",
+	[Key.diaryTips]: "只展示最近30条日记",
 	[Key.diaryMinutesAgo]: "分钟前",
 	[Key.diaryHoursAgo]: "小时前",
 	[Key.diaryDaysAgo]: "天前",
@@ -129,8 +129,8 @@ export const zh_CN: Translation = {
 	[Key.albumsPhotosCount]: "张照片",
 
 	// 设备页面
-	[Key.devices]: "书籍",
-	[Key.devicesSubtitle]: "这里展示了我收藏的书籍",
+	[Key.devices]: "我的设备",
+	[Key.devicesSubtitle]: "这里展示了我日常使用的各类设备",
 	[Key.devicesViewDetails]: "查看详情",
 
 	// 项目展示页面

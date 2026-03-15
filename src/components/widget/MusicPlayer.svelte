@@ -1,5 +1,5 @@
 <script lang="ts">
-import Icon from "../IconSvg.svelte";
+import Icon from "@iconify/svelte";
 import { onDestroy, onMount } from "svelte";
 import { slide } from "svelte/transition";
 // 从配置文件中导入音乐播放器配置
@@ -79,51 +79,27 @@ let volumeBar: HTMLElement;
 const localPlaylist = [
 	{
 		id: 1,
-		title: "China (The Atomic Era)",
-		artist: "Unknown",
-		cover: "assets/music/cover/default.jpg",
-		url: "assets/music/url/china-atomic-era.ogg",
-		duration: 200,
+		title: "ひとり上手",
+		artist: "Kaya",
+		cover: "assets/music/cover/hitori.jpg",
+		url: "assets/music/url/hitori.mp3",
+		duration: 240,
 	},
 	{
 		id: 2,
-		title: "尘世闲游",
-		artist: "Rex Incognito",
-		cover: "assets/music/cover/default.jpg",
-		url: "assets/music/url/rex-incognito.flac",
-		duration: 300,
-	},
-	{
-		id: 3,
-		title: "The Stonemasons",
-		artist: "Unknown",
-		cover: "assets/music/cover/default.jpg",
-		url: "assets/music/url/the-stonemasons.ogg",
-		duration: 220,
-	},
-	{
-		id: 4,
-		title: "阿里郎",
-		artist: "Unknown",
-		cover: "assets/music/cover/default.jpg",
-		url: "assets/music/url/alilang.mp3",
+		title: "眩耀夜行",
+		artist: "スリーズブーケ",
+		cover: "assets/music/cover/xryx.jpg",
+		url: "assets/music/url/xryx.mp3",
 		duration: 180,
 	},
 	{
-		id: 5,
-		title: "满庭芳",
-		artist: "Unknown",
-		cover: "assets/music/cover/default.jpg",
-		url: "assets/music/url/mantingfang.mp3",
-		duration: 210,
-	},
-	{
-		id: 6,
-		title: "王进打高俅",
-		artist: "Unknown",
-		cover: "assets/music/cover/default.jpg",
-		url: "assets/music/url/wangjindagaoqiu.flac",
-		duration: 240,
+		id: 3,
+		title: "春雷の頃",
+		artist: "22/7",
+		cover: "assets/music/cover/cl.jpg",
+		url: "assets/music/url/cl.mp3",
+		duration: 200,
 	},
 ];
 
@@ -357,9 +333,8 @@ function hideError() {
 
 function setProgress(event: MouseEvent) {
 	if (!audio || !progressBar) return;
-	// 如果由于某种原因 rect 没被初始化或需要更新，可以在交互开始时读取
 	const rect = progressBar.getBoundingClientRect();
-	const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+	const percent = (event.clientX - rect.left) / rect.width;
 	const newTime = percent * duration;
 	audio.currentTime = newTime;
 	currentTime = newTime;
@@ -582,8 +557,7 @@ onDestroy(() => {
                     <Icon icon="material-symbols:visibility-off" class="text-lg" />
                 </button>
                 <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
-                        on:click|stopPropagation={toggleExpanded}
-                        aria-label={i18n(Key.musicPlayerExpand)}>
+                        on:click|stopPropagation={toggleExpanded}>
                     <Icon icon="material-symbols:expand-less" class="text-lg" />
                 </button>
             </div>
@@ -652,20 +626,17 @@ onDestroy(() => {
                     class:btn-regular={isShuffled}
                     class:btn-plain={!isShuffled}
                     on:click={toggleShuffle}
-                    disabled={playlist.length <= 1}
-                    aria-label={i18n(Key.musicPlayerShuffle)}>
+                    disabled={playlist.length <= 1}>
                 <Icon icon="material-symbols:shuffle" class="text-lg" />
             </button>
             <button class="btn-plain w-10 h-10 rounded-lg" on:click={previousSong}
-                    disabled={playlist.length <= 1}
-                    aria-label={i18n(Key.musicPlayerPrevious)}>
+                    disabled={playlist.length <= 1}>
                 <Icon icon="material-symbols:skip-previous" class="text-xl" />
             </button>
             <button class="btn-regular w-12 h-12 rounded-full"
                     class:opacity-50={isLoading}
                     disabled={isLoading}
-                    on:click={togglePlay}
-                    aria-label={isPlaying ? i18n(Key.musicPlayerPause) : i18n(Key.musicPlayerPlay)}>
+                    on:click={togglePlay}>
                 {#if isLoading}
                     <Icon icon="eos-icons:loading" class="text-xl" />
                 {:else if isPlaying}
@@ -675,15 +646,13 @@ onDestroy(() => {
                 {/if}
             </button>
             <button class="btn-plain w-10 h-10 rounded-lg" on:click={() => nextSong()}
-                    disabled={playlist.length <= 1}
-                    aria-label={i18n(Key.musicPlayerNext)}>
+                    disabled={playlist.length <= 1}>
                 <Icon icon="material-symbols:skip-next" class="text-xl" />
             </button>
             <button class="w-10 h-10 rounded-lg"
                     class:btn-regular={isRepeating > 0}
                     class:btn-plain={isRepeating === 0}
-                    on:click={toggleRepeat}
-                    aria-label={isRepeating === 1 ? i18n(Key.musicPlayerRepeatOne) : i18n(Key.musicPlayerRepeat)}>
+                    on:click={toggleRepeat}>
                 {#if isRepeating === 1}
                     <Icon icon="material-symbols:repeat-one" class="text-lg" />
                 {:else if isRepeating === 2}
@@ -694,8 +663,7 @@ onDestroy(() => {
             </button>
         </div>
         <div class="bottom-controls flex items-center gap-2">
-            <button class="btn-plain w-8 h-8 rounded-lg" on:click={toggleMute}
-                    aria-label={isMuted ? i18n(Key.musicPlayerPlay) : i18n(Key.musicPlayerVolume)}>
+            <button class="btn-plain w-8 h-8 rounded-lg" on:click={toggleMute}>
                 {#if isMuted || volume === 0}
                     <Icon icon="material-symbols:volume-off" class="text-lg" />
                 {:else if volume < 0.5}
@@ -736,8 +704,7 @@ onDestroy(() => {
              transition:slide={{ duration: 300, axis: 'y' }}>
             <div class="playlist-header flex items-center justify-between p-4 border-b border-(--line-divider)">
                 <h3 class="text-lg font-semibold text-90">{i18n(Key.musicPlayerPlaylist)}</h3>
-                <button class="btn-plain w-8 h-8 rounded-lg" on:click={togglePlaylist}
-                        aria-label={i18n(Key.musicPlayerPlaylist)}>
+                <button class="btn-plain w-8 h-8 rounded-lg" on:click={togglePlaylist}>
                     <Icon icon="material-symbols:close" class="text-lg" />
                 </button>
             </div>

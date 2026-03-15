@@ -344,6 +344,7 @@ pnpm run sync-content
 - 基於原始 [Fuwari](https://github.com/saicaca/fuwari) 模板
 - 靈感來源於 [Yukina](https://github.com/WhitePaper233/yukina) - 一個美麗優雅的部落格模板
 - 部分設計靈感來源於 [Firefly](https://github.com/CuteLeaf/Firefly) 和 [Twilight](https://github.com/spr-aachen/Twilight) 模板
+- 使用 [Pio](https://github.com/Dreamer-Paul/Pio) 實現可愛的 Live2D 看板娘外掛程式
 - 使用 [Astro](https://astro.build) 和 [Tailwind CSS](https://tailwindcss.com) 構建
 - 圖標來自 [Iconify](https://iconify.design/)
 

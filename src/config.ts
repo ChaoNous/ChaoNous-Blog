@@ -568,12 +568,37 @@ export const sakuraConfig: SakuraConfig = {
 
 
 // 导出所有配置的统一接口
+export const pioConfig: import("./types/config").PioConfig = {
+	enable: true,
+	models: ["/pio/models/pio/model.json"],
+	position: "left",
+	width: 280,
+	height: 250,
+	mode: "draggable",
+	hiddenOnMobile: true,
+	dialog: {
+		welcome: "Welcome to Mizuki Website!",
+		touch: [
+			"What are you doing?",
+			"Stop touching me!",
+			"HENTAI!",
+			"Don't bully me like that!",
+		],
+		home: "Click here to go back to homepage!",
+		skin: ["Want to see my new outfit?", "The new outfit looks great~"],
+		close: "QWQ See you next time~",
+		link: "https://github.com/matsuzaka-yuki/Mizuki",
+	},
+};
+
 export const widgetConfigs = {
 	profile: profileConfig,
 	announcement: announcementConfig,
 	music: musicPlayerConfig,
 	layout: sidebarLayoutConfig,
 	sakura: sakuraConfig,
+	fullscreenWallpaper: fullscreenWallpaperConfig,
+	pio: pioConfig,
 	share: shareConfig,
 } as const;
 

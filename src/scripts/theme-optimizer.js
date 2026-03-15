@@ -126,8 +126,8 @@ class ThemeOptimizer {
 				block.classList.remove("hide-during-transition");
 			}
 
-			// 移除强制同步布局调用，改为在下个帧执行
-			// void block.offsetWidth;
+			// 强制重新计算样式
+			void block.offsetWidth;
 		});
 
 		// 检查当前是否处于主题切换状态
@@ -456,33 +456,24 @@ class ThemeOptimizer {
 		const scrollTop = window.scrollY;
 
 		this.hiddenElements = [];
-		
-		// 1. 批量读取几何属性，避免读写交替导致的强制同步重排
-		const elementLayouts = [];
+
 		this.heavySelectors.forEach((selector) => {
 			const elements = document.querySelectorAll(selector);
 			elements.forEach((element) => {
-				elementLayouts.push({
-					element,
-					rect: element.getBoundingClientRect()
-				});
+				const rect = element.getBoundingClientRect();
+				const elementTop = rect.top + scrollTop;
+				const elementBottom = elementTop + rect.height;
+
+				// 完全在视口外（增加200px边距）
+				if (
+					elementBottom < scrollTop - 200 ||
+					elementTop > scrollTop + viewportHeight + 200
+				) {
+					const originalVisibility = element.style.contentVisibility;
+					element.style.contentVisibility = "hidden";
+					this.hiddenElements.push({ element, originalVisibility });
+				}
 			});
-		});
-
-		// 2. 批量处理样式更新
-		elementLayouts.forEach(({ element, rect }) => {
-			const elementTop = rect.top + scrollTop;
-			const elementBottom = elementTop + rect.height;
-
-			// 完全在视口外（增加200px边距）
-			if (
-				elementBottom < scrollTop - 200 ||
-				elementTop > scrollTop + viewportHeight + 200
-			) {
-				const originalVisibility = element.style.contentVisibility;
-				element.style.contentVisibility = "hidden";
-				this.hiddenElements.push({ element, originalVisibility });
-			}
 		});
 	}
 

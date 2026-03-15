@@ -112,14 +112,27 @@
     font-size: 0.75rem;
   }
 
-  .btn-stack-mobile,
+  /* 在小屏幕上堆叠按钮 */
+  .btn-stack-mobile {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .btn-stack-mobile .btn-gradient {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* 为移动端堆叠按钮添加类 */
+@media (max-width: 768px) {
   .md\:btn-stack-mobile {
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
   }
 
-  .btn-stack-mobile .btn-gradient,
   .md\:btn-stack-mobile .btn-gradient {
     width: 100%;
     justify-content: center;

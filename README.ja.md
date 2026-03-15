@@ -341,6 +341,7 @@ pnpm run sync-content
 - オリジナルの[Fuwari](https://github.com/saicaca/fuwari)テンプレートをベースにしています
 - [Yukina](https://github.com/WhitePaper233/yukina) - 美しくエレガントなブログテンプレートにインスパイアされました
 - 一部のデザインは [Firefly](https://github.com/CuteLeaf/Firefly) と [Twilight](https://github.com/spr-aachen/Twilight) テンプレートからインスピレーションを得ています
+- [Pio](https://github.com/Dreamer-Paul/Pio)を使用してかわいいLive2D看板娘プラグインを実装
 - [Astro](https://astro.build)と[Tailwind CSS](https://tailwindcss.com)で構築
 - アイコンは[Iconify](https://iconify.design/)から
 
