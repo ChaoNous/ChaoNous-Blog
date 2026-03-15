@@ -1,10 +1,8 @@
 ---
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
-import Pio from "@components/widget/Pio.svelte"; // 使用 Svelte 版本的 Pio 组件
 import {
 	musicPlayerConfig,
-	pioConfig,
 	profileConfig,
 	siteConfig,
 } from "@/config";
@@ -360,13 +358,6 @@ if (siteConfig.font) {
 		<!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
 		<slot name="head" />
 
-		<!-- Pio 看板娘样式 - 仅在启用时加载 -->
-		{
-			pioConfig.enable && (
-				<link rel="stylesheet" href="/pio/static/pio.css" />
-			)
-		}
-
 		<link
 			rel="alternate"
 			type="application/rss+xml"
@@ -398,9 +389,6 @@ if (siteConfig.font) {
 
 		<!-- Music Player - 仅在启用时加载 -->
 		{musicPlayerConfig.enable && <MusicPlayer client:idle />}
-
-		<!-- Pio 看板娘组件 - 仅在启用时加载 -->
-		{pioConfig.enable && <Pio client:idle />}
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
