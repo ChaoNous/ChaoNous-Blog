@@ -273,7 +273,7 @@ export const navBarConfig: NavBarConfig = {
 				},
 				{
 					name: "游戏",
-					url: "/diary/",
+					url: "/game/",
 					icon: "material-symbols:sports-esports",
 				},
 				{

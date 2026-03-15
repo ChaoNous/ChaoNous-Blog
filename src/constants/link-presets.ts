@@ -30,8 +30,8 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 	},
 	[LinkPreset.Diary]: {
 		name: i18n(I18nKey.diary),
-		url: "/diary/",
-		icon: "material-symbols:book",
+		url: "/game/",
+		icon: "material-symbols:sports-esports",
 	},
 	[LinkPreset.Albums]: {
 		name: i18n(I18nKey.albums),
