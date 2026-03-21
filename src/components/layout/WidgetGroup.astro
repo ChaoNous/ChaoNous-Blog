@@ -1,0 +1,57 @@
+---
+import type { MarkdownHeading } from "astro";
+import type { WidgetComponentConfig } from "../../types/config";
+import Announcement from "@components/widget/Announcement.astro";
+import Calendar from "@components/widget/Calendar.astro";
+import Categories from "@components/widget/Categories.astro";
+import MusicPlayer from "@components/widget/MusicPlayer.svelte";
+import Profile from "@components/widget/Profile.astro";
+import SiteStats from "@components/widget/SiteStats.astro";
+import TOC from "@components/widget/TOC.astro";
+import { widgetManager } from "@utils/widget-manager";
+
+interface Props {
+	id?: string;
+	components: WidgetComponentConfig[];
+	headings?: MarkdownHeading[];
+	wrapperClass?: string;
+}
+
+const { id, components, headings, wrapperClass } = Astro.props;
+
+const componentMap = {
+	profile: Profile,
+	announcement: Announcement,
+	categories: Categories,
+	toc: TOC,
+	"music-player": MusicPlayer,
+	"site-stats": SiteStats,
+	calendar: Calendar,
+};
+---
+
+<div id={id} class:list={wrapperClass}>
+	{
+		components.map((component, index) => {
+			const ComponentToRender = componentMap[
+				component.type as keyof typeof componentMap
+			] as any;
+
+			if (!ComponentToRender) {
+				return null;
+			}
+
+			const sharedProps = {
+				class: widgetManager.getComponentClass(component, index),
+				style: widgetManager.getComponentStyle(component, index),
+				...component.customProps,
+			};
+
+			if (component.type === "toc" && headings) {
+				return <ComponentToRender {...sharedProps} headings={headings} />;
+			}
+
+			return <ComponentToRender {...sharedProps} />;
+		})
+	}
+</div>

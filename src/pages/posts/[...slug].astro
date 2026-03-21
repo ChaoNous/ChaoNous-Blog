@@ -1,0 +1,181 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import License from "@components/misc/License.astro";
+import Markdown from "@components/misc/Markdown.astro";
+import PostDetailLayout from "@components/post/PostDetailLayout.astro";
+import SharePanel from "@components/post/SharePanel.astro";
+import Encryptor from "@components/Encryptor.astro";
+import Giscus from "@components/comment/Giscus.astro";
+import { getSortedPosts } from "@utils/content-utils";
+import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
+import { hasCustomPermalink, initPostIdMap } from "@utils/permalink-utils";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { commentConfig, licenseConfig, permalinkConfig, shareConfig } from "src/config";
+import { profileConfig, siteConfig } from "../../config";
+import { formatDateToYYYYMMDD } from "../../utils/date-utils";
+import { buildBlogPostingJsonLd } from "../../utils/blog-schema";
+import { resolveSharePosterImage } from "../../utils/share-poster-assets";
+
+export async function getStaticPaths() {
+	const blogEntries = await getSortedPosts();
+
+	initPostIdMap(blogEntries);
+
+	const paths: {
+		params: { slug: string };
+		props: { entry: CollectionEntry<"posts"> };
+	}[] = [];
+
+	for (const entry of blogEntries) {
+		const defaultSlug = removeFileExtension(entry.id);
+
+		if (hasCustomPermalink(entry)) {
+			paths.push({
+				params: { slug: defaultSlug },
+				props: { entry },
+			});
+			continue;
+		}
+
+		if (permalinkConfig.enable) {
+			paths.push({
+				params: { slug: defaultSlug },
+				props: { entry },
+			});
+		} else {
+			paths.push({
+				params: { slug: defaultSlug },
+				props: { entry },
+			});
+
+			if (entry.data.alias) {
+				let alias = entry.data.alias
+					.replace(/^\/+/, "")
+					.replace(/\/+$/, "");
+				if (alias.startsWith("posts/")) {
+					alias = alias.replace(/^posts\//, "");
+				}
+				paths.push({
+					params: { slug: alias },
+					props: { entry },
+				});
+			}
+		}
+	}
+
+	return paths;
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { remarkPluginFrontmatter } = await render(entry);
+
+const posterCoverUrl = await resolveSharePosterImage({
+	src: entry.data.image,
+	basePath: getFileDirFromPath(entry.filePath || ""),
+});
+
+const posterAvatarUrl = await resolveSharePosterImage({
+	src: profileConfig.avatar,
+});
+
+const isEncrypted = Boolean(entry.data.encrypted && entry.data.password);
+
+dayjs.extend(utc);
+const lastModified = dayjs(entry.data.updated || entry.data.published)
+	.utc()
+	.format("YYYY-MM-DDTHH:mm:ss");
+
+const jsonLd = buildBlogPostingJsonLd({
+	title: entry.data.title,
+	description: entry.data.description,
+	published: entry.data.published,
+	lang: entry.data.lang,
+	authorName: profileConfig.name,
+	siteUrl: Astro.site,
+	defaultLang: siteConfig.lang,
+});
+---
+
+<PostDetailLayout
+	entry={entry}
+	headings={headings}
+	jsonLd={jsonLd}
+	remarkPluginFrontmatter={remarkPluginFrontmatter}
+	lastModified={lastModified}
+>
+	{
+		isEncrypted ? (
+			<Encryptor password={entry.data.password}>
+				<Markdown class="mb-6 markdown-content onload-animation">
+					<Content />
+				</Markdown>
+			</Encryptor>
+		) : (
+			<Markdown class="mb-6 markdown-content onload-animation">
+				<Content />
+			</Markdown>
+		)
+	}
+
+	{
+		shareConfig.enable && (
+			<SharePanel
+				slot="post-actions"
+				class="encrypted-hidden"
+				title={entry.data.title}
+				author={entry.data.author || profileConfig.name}
+				description={entry.data.description || ""}
+				pubDate={formatDateToYYYYMMDD(entry.data.published)}
+				coverImage={posterCoverUrl}
+				url={Astro.url.toString()}
+				siteTitle={siteConfig.title}
+				avatar={posterAvatarUrl}
+			/>
+		)
+	}
+
+	{
+		licenseConfig.enable && (
+			<div
+				slot="post-actions"
+				id="license-component"
+				class:list={[
+					"encrypted-hidden-wrapper",
+					{ "encrypted-hidden": isEncrypted },
+				]}
+			>
+				<License
+					title={entry.data.title}
+					id={entry.id}
+					pubDate={entry.data.published}
+					author={entry.data.author}
+					sourceLink={entry.data.sourceLink}
+					licenseName={entry.data.licenseName}
+					licenseUrl={entry.data.licenseUrl}
+					class="mb-6 rounded-xl license-container onload-animation"
+				/>
+			</div>
+		)
+	}
+
+	{
+		commentConfig.enable && !isEncrypted && (
+			<div slot="post-actions" class="comment-wrapper">
+				<Giscus
+					repo={commentConfig.repo}
+					repoId={commentConfig.repoId}
+					category={commentConfig.category}
+					categoryId={commentConfig.categoryId}
+					mapping={commentConfig.mapping}
+					reactionsEnabled={commentConfig.reactionsEnabled}
+					emitMetadata={commentConfig.emitMetadata}
+					inputPosition={commentConfig.inputPosition}
+					loading={commentConfig.loading}
+				/>
+			</div>
+		)
+	}
+</PostDetailLayout>

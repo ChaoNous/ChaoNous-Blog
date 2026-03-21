@@ -1,0 +1,247 @@
+---
+/**
+ * Giscus 评论组件
+ * 基于 GitHub Discussions 的评论系统，融入现有设计风格
+ */
+import { Icon } from "astro-icon/components";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
+
+interface Props {
+	repo?: string;
+	repoId?: string;
+	category?: string;
+	categoryId?: string;
+	mapping?: "pathname" | "url" | "title" | "og:title" | "specific";
+	term?: string;
+	theme?: string;
+	lang?: string;
+	reactionsEnabled?: boolean;
+	emitMetadata?: boolean;
+	inputPosition?: "top" | "bottom";
+	loading?: "lazy" | "eager";
+}
+
+const {
+	repo = "ChaoNous/ChaoNous-Blog",
+	repoId = "R_kgDORfrllQ",
+	category = "Announcements",
+	categoryId = "DIC_kwDORfrllc4C4vsF",
+	mapping = "pathname",
+	term = "",
+	theme = "preferred_color_scheme",
+	lang = "zh-CN",
+	reactionsEnabled = false,
+	emitMetadata = false,
+	inputPosition = "top",
+	loading = "lazy",
+} = Astro.props;
+---
+
+<div class="giscus-wrapper mt-8 mb-6">
+	<!-- 评论区域标题 -->
+	<div class="comment-header flex items-center gap-3 mb-5 onload-animation">
+		<div class="comment-icon-wrapper relative">
+			<div class="absolute inset-0 bg-gradient-to-br from-(--primary)/20 to-(--primary)/5 rounded-xl blur-sm"></div>
+			<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-(--primary)/15 to-transparent border border-(--primary)/20">
+				<Icon name="material-symbols:chat-bubble-outline-rounded" class="text-xl text-(--primary)" />
+			</div>
+		</div>
+		<div class="flex-1">
+			<h3 class="text-xl font-semibold text-90 tracking-wide">
+				{i18n(I18nKey.comments) || "评论"}
+			</h3>
+			<p class="text-xs text-50 mt-0.5">欢迎留言交流，分享你的想法</p>
+		</div>
+	</div>
+
+	<!-- Giscus 容器 -->
+	<div class="giscus-container relative rounded-2xl overflow-hidden onload-animation">
+		<!-- 顶部装饰条 -->
+		<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-(--primary)/30 to-transparent"></div>
+		
+		<!-- Giscus iframe 容器 -->
+		<div
+			class="giscus relative z-10"
+			data-repo={repo}
+			data-repo-id={repoId}
+			data-category={category}
+			data-category-id={categoryId}
+			data-mapping={mapping}
+			data-term={term}
+			data-strict="0"
+			data-reactions-enabled={reactionsEnabled ? "1" : "0"}
+			data-emit-metadata={emitMetadata ? "1" : "0"}
+			data-input-position={inputPosition}
+			data-theme={theme}
+			data-lang={lang}
+			data-loading={loading}
+		>
+		</div>
+
+		<!-- 加载占位符 -->
+		<div class="giscus-loading absolute inset-0 flex flex-col items-center justify-center bg-(--card-bg) z-20">
+			<div class="loading-spinner w-10 h-10 mb-3">
+				<svg class="animate-spin text-(--primary)" viewBox="0 0 24 24" fill="none">
+					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+					<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+				</svg>
+			</div>
+			<p class="text-sm text-50">正在加载评论...</p>
+		</div>
+	</div>
+</div>
+
+<style>
+	.giscus-wrapper {
+		--card-bg: var(--page-bg);
+		--line-divider: var(--line-divider);
+	}
+
+	.giscus-container {
+		min-height: 280px;
+		border: 1px solid var(--line-divider);
+		background: var(--card-bg);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03);
+		transition: box-shadow 0.3s ease, border-color 0.3s ease;
+	}
+
+	.giscus-container:hover {
+		border-color: color-mix(in oklab, var(--primary) 30%, var(--line-divider));
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04);
+	}
+
+	.comment-icon-wrapper {
+		transition: transform 0.3s ease;
+	}
+
+	.giscus-wrapper:hover .comment-icon-wrapper {
+		transform: scale(1.05);
+	}
+
+	.giscus-loading {
+		opacity: 1;
+		transition: opacity 0.3s ease;
+	}
+
+	.giscus-loading.hidden {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	@keyframes spin {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
+	}
+
+	.animate-spin {
+		animation: spin 1s linear infinite;
+	}
+
+	:global(.dark) .giscus-container {
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	:global(.dark) .giscus-container:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.15);
+	}
+
+	@media (max-width: 640px) {
+		.giscus-container {
+			border-radius: 1rem;
+		}
+	}
+</style>
+
+<script>
+	// 动态加载 Giscus 脚本
+	function initGiscus() {
+		const giscusContainer = document.querySelector(".giscus");
+		const loadingEl = document.querySelector(".giscus-loading");
+		if (!giscusContainer || giscusContainer.querySelector("iframe")) return;
+
+		const isDark = document.documentElement.classList.contains("dark");
+		const currentTheme = isDark ? "dark" : "light";
+
+		const script = document.createElement("script");
+		script.src = "https://giscus.app/client.js";
+		script.setAttribute("data-repo", giscusContainer.getAttribute("data-repo") || "");
+		script.setAttribute("data-repo-id", giscusContainer.getAttribute("data-repo-id") || "");
+		script.setAttribute("data-category", giscusContainer.getAttribute("data-category") || "");
+		script.setAttribute("data-category-id", giscusContainer.getAttribute("data-category-id") || "");
+		script.setAttribute("data-mapping", giscusContainer.getAttribute("data-mapping") || "pathname");
+		script.setAttribute("data-strict", "0");
+		script.setAttribute("data-reactions-enabled", giscusContainer.getAttribute("data-reactions-enabled") || "0");
+		script.setAttribute("data-emit-metadata", giscusContainer.getAttribute("data-emit-metadata") || "0");
+		script.setAttribute("data-input-position", giscusContainer.getAttribute("data-input-position") || "top");
+		script.setAttribute("data-theme", currentTheme);
+		script.setAttribute("data-lang", giscusContainer.getAttribute("data-lang") || "zh-CN");
+		script.setAttribute("data-loading", giscusContainer.getAttribute("data-loading") || "lazy");
+		script.setAttribute("crossorigin", "anonymous");
+		script.async = true;
+
+		script.onload = () => {
+			const checkIframe = setInterval(() => {
+				const iframe = giscusContainer.querySelector("iframe");
+				if (iframe) {
+					clearInterval(checkIframe);
+					if (loadingEl) {
+						loadingEl.classList.add("hidden");
+					}
+				}
+			}, 100);
+		};
+
+		giscusContainer.appendChild(script);
+	}
+
+	// 主题切换时更新 Giscus 主题
+	function updateGiscusTheme() {
+		const isDark = document.documentElement.classList.contains("dark");
+		const theme = isDark ? "dark" : "light";
+		const iframe = document.querySelector(".giscus iframe") as HTMLIFrameElement;
+		if (iframe) {
+			iframe.contentWindow?.postMessage(
+				{ giscus: { setConfig: { theme } } },
+				"https://giscus.app"
+			);
+		}
+	}
+
+	// 使用 IntersectionObserver 延迟加载评论
+	const giscusObserver = new IntersectionObserver((entries) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				initGiscus();
+				giscusObserver.disconnect();
+			}
+		});
+	}, { rootMargin: '200px' });
+
+	// 监听主题变化 - 使用节流
+	let themeChangeTimer: number | null = null;
+	const themeObserver = new MutationObserver(() => {
+		if (themeChangeTimer) return;
+		themeChangeTimer = window.setTimeout(() => {
+			themeChangeTimer = null;
+			updateGiscusTheme();
+		}, 100);
+	});
+
+	// 初始化
+	document.addEventListener('DOMContentLoaded', () => {
+		const giscusContainer = document.querySelector(".giscus");
+		if (giscusContainer) {
+			giscusObserver.observe(giscusContainer);
+		}
+		themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+	});
+
+	// 页面导航后重新初始化
+	document.addEventListener("astro:page-load", () => {
+		const giscusContainer = document.querySelector(".giscus");
+		if (giscusContainer && !giscusContainer.querySelector("iframe")) {
+			giscusObserver.observe(giscusContainer);
+		}
+	});
+</script>
