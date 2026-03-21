@@ -37,9 +37,8 @@ const {
 	loading = "lazy",
 } = Astro.props;
 
-// 自定义主题 URL
-const customThemeLight = "https://chaonous.com/giscus-theme.css";
-const customThemeDark = "https://chaonous.com/giscus-theme.css";
+// 自定义主题 URL - 暗金风格
+const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 ---
 
 <div class="giscus-wrapper mt-8 mb-6">
@@ -71,9 +70,7 @@ const customThemeDark = "https://chaonous.com/giscus-theme.css";
 			data-reactions-enabled={reactionsEnabled ? "1" : "0"}
 			data-emit-metadata={emitMetadata ? "1" : "0"}
 			data-input-position={inputPosition}
-			data-theme="custom"
-			data-theme-light={customThemeLight}
-			data-theme-dark={customThemeDark}
+			data-theme={customThemeUrl}
 			data-lang={lang}
 			data-loading={loading}
 		>
@@ -138,18 +135,14 @@ const customThemeDark = "https://chaonous.com/giscus-theme.css";
 </style>
 
 <script>
-	// 自定义主题 URL
-	const customThemeLight = "https://chaonous.com/giscus-theme.css";
-	const customThemeDark = "https://chaonous.com/giscus-theme.css";
+	// 自定义主题 URL - 暗金风格
+	const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 
 	// 动态加载 Giscus 脚本
 	function initGiscus() {
 		const giscusContainer = document.querySelector(".giscus");
 		const loadingEl = document.querySelector(".giscus-loading");
 		if (!giscusContainer || giscusContainer.querySelector("iframe")) return;
-
-		const isDark = document.documentElement.classList.contains("dark");
-		const currentTheme = isDark ? customThemeDark : customThemeLight;
 
 		const script = document.createElement("script");
 		script.src = "https://giscus.app/client.js";
@@ -186,7 +179,7 @@ const customThemeDark = "https://chaonous.com/giscus-theme.css";
 			"data-input-position",
 			giscusContainer.getAttribute("data-input-position") || "top",
 		);
-		script.setAttribute("data-theme", currentTheme);
+		script.setAttribute("data-theme", customThemeUrl);
 		script.setAttribute(
 			"data-lang",
 			giscusContainer.getAttribute("data-lang") || "zh-CN",
@@ -213,21 +206,6 @@ const customThemeDark = "https://chaonous.com/giscus-theme.css";
 		giscusContainer.appendChild(script);
 	}
 
-	// 主题切换时更新 Giscus 主题
-	function updateGiscusTheme() {
-		const isDark = document.documentElement.classList.contains("dark");
-		const theme = isDark ? customThemeDark : customThemeLight;
-		const iframe = document.querySelector(
-			".giscus iframe",
-		) as HTMLIFrameElement;
-		if (iframe) {
-			iframe.contentWindow?.postMessage(
-				{ giscus: { setConfig: { theme } } },
-				"https://giscus.app",
-			);
-		}
-	}
-
 	// 使用 IntersectionObserver 延迟加载评论
 	const giscusObserver = new IntersectionObserver(
 		(entries) => {
@@ -241,26 +219,12 @@ const customThemeDark = "https://chaonous.com/giscus-theme.css";
 		{ rootMargin: "200px" },
 	);
 
-	// 监听主题变化 - 使用节流
-	let themeChangeTimer: number | null = null;
-	const themeObserver = new MutationObserver(() => {
-		if (themeChangeTimer) return;
-		themeChangeTimer = window.setTimeout(() => {
-			themeChangeTimer = null;
-			updateGiscusTheme();
-		}, 100);
-	});
-
 	// 初始化
 	document.addEventListener("DOMContentLoaded", () => {
 		const giscusContainer = document.querySelector(".giscus");
 		if (giscusContainer) {
 			giscusObserver.observe(giscusContainer);
 		}
-		themeObserver.observe(document.documentElement, {
-			attributes: true,
-			attributeFilter: ["class"],
-		});
 	});
 
 	// 页面导航后重新初始化
