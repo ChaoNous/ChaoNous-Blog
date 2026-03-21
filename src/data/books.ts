@@ -99,14 +99,16 @@ export const booksData: BookCategory = {
 			name: "三体全集 : 地球往事三部曲",
 			image: "https://cdn.weread.qq.com/weread/cover/80/yuewen_695233/t6_yuewen_6952331740758482.jpg",
 			specs: "刘慈欣 · 科幻小说",
-			description: "中国科幻的巅峰之作，讲述人类文明与三体文明的宏大对决。",
+			description:
+				"中国科幻的巅峰之作，讲述人类文明与三体文明的宏大对决。",
 			link: "https://weread.qq.com/web/bookDetail/ce032b305a9bc1ce0b0dd2a",
 		},
 		{
 			name: "献给阿尔吉侬的花束",
 			image: "https://cdn.weread.qq.com/weread/cover/11/yuewen_857863/t6_yuewen_8578631681827306.jpg",
 			specs: "丹尼尔·凯斯 · 科幻小说",
-			description: "智力提升实验下，一个人从弱智到天才再到失落的心路历程。",
+			description:
+				"智力提升实验下，一个人从弱智到天才再到失落的心路历程。",
 			link: "https://weread.qq.com/web/bookDetail/03b326005d170703ba15f85",
 		},
 	],

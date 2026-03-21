@@ -48,7 +48,9 @@ const componentMap = {
 			};
 
 			if (component.type === "toc" && headings) {
-				return <ComponentToRender {...sharedProps} headings={headings} />;
+				return (
+					<ComponentToRender {...sharedProps} headings={headings} />
+				);
 			}
 
 			return <ComponentToRender {...sharedProps} />;

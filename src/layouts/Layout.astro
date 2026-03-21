@@ -85,11 +85,13 @@ const getDesktopBanner = (): string => {
 	const src = siteConfig.banner.src;
 	if (!src) return "/assets/desktop-banner/banner1.webp";
 	if (typeof src === "string") return src;
-	if (Array.isArray(src)) return src[0] || "/assets/desktop-banner/banner1.webp";
+	if (Array.isArray(src))
+		return src[0] || "/assets/desktop-banner/banner1.webp";
 	if (typeof src === "object") {
 		const desktopSrc = src.desktop;
 		if (typeof desktopSrc === "string") return desktopSrc;
-		if (Array.isArray(desktopSrc) && desktopSrc.length > 0) return desktopSrc[0];
+		if (Array.isArray(desktopSrc) && desktopSrc.length > 0)
+			return desktopSrc[0];
 	}
 	return "/assets/desktop-banner/banner1.webp";
 };
@@ -99,11 +101,13 @@ const getMobileBanner = (): string => {
 	const src = siteConfig.banner.src;
 	if (!src) return "/assets/mobile-banner/banner1.webp";
 	if (typeof src === "string") return src;
-	if (Array.isArray(src)) return src[0] || "/assets/mobile-banner/banner1.webp";
+	if (Array.isArray(src))
+		return src[0] || "/assets/mobile-banner/banner1.webp";
 	if (typeof src === "object") {
 		const mobileSrc = src.mobile;
 		if (typeof mobileSrc === "string") return mobileSrc;
-		if (Array.isArray(mobileSrc) && mobileSrc.length > 0) return mobileSrc[0];
+		if (Array.isArray(mobileSrc) && mobileSrc.length > 0)
+			return mobileSrc[0];
 	}
 	return "/assets/mobile-banner/banner1.webp";
 };
@@ -403,27 +407,44 @@ if (siteConfig.font) {
 
 		<!-- Clarity 分析 - 延迟到用户交互后加载 -->
 		<script is:inline>
-			(function() {
+			(function () {
 				var loaded = false;
 				function loadClarity() {
 					if (loaded) return;
 					loaded = true;
-					(function(c,l,a,r,i,t,y){
-						c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-						t=l.createElement(r);t.async=1;
-						t.src="https://www.clarity.ms/tag/tjr3vkhj8i";
-						y=l.getElementsByTagName(r)[0];
-						y.parentNode.insertBefore(t,y);
-					})(window,document,"clarity","script");
+					(function (c, l, a, r, i, t, y) {
+						c[a] =
+							c[a] ||
+							function () {
+								(c[a].q = c[a].q || []).push(arguments);
+							};
+						t = l.createElement(r);
+						t.async = 1;
+						t.src = "https://www.clarity.ms/tag/tjr3vkhj8i";
+						y = l.getElementsByTagName(r)[0];
+						y.parentNode.insertBefore(t, y);
+					})(window, document, "clarity", "script");
 				}
-				var events = ['scroll','click','keydown','touchstart','mousemove'];
+				var events = [
+					"scroll",
+					"click",
+					"keydown",
+					"touchstart",
+					"mousemove",
+				];
 				var timer = setTimeout(loadClarity, 3000);
-				events.forEach(function(e) {
-					document.addEventListener(e, function handler() {
-						clearTimeout(timer);
-						loadClarity();
-						events.forEach(function(ev) { document.removeEventListener(ev, handler); });
-					}, {once: true, passive: true});
+				events.forEach(function (e) {
+					document.addEventListener(
+						e,
+						function handler() {
+							clearTimeout(timer);
+							loadClarity();
+							events.forEach(function (ev) {
+								document.removeEventListener(ev, handler);
+							});
+						},
+						{ once: true, passive: true },
+					);
 				});
 			})();
 		</script>
@@ -1098,7 +1119,6 @@ if (siteConfig.font) {
 					}
 				});
 			}
-
 		});
 
 		window.swup.hooks.on("visit:end", (_visit: { to: { url: string } }) => {

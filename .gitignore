@@ -48,3 +48,6 @@ src/data/bilibili-data.json
 
 # Vercel
 .vercel
+
+# Lighthouse reports
+lighthouse-report.json

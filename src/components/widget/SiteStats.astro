@@ -3,10 +3,7 @@ import { Icon } from "astro-icon/components";
 import { siteConfig } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
-import {
-	getCategoryList,
-	getSortedPosts,
-} from "../../utils/content-utils";
+import { getCategoryList, getSortedPosts } from "../../utils/content-utils";
 import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
@@ -129,7 +126,7 @@ const stats = [
 			'[data-stat-id="running-days"]',
 		);
 		if (runningDaysElements.length > 0) {
-			runningDaysElements.forEach(element => {
+			runningDaysElements.forEach((element) => {
 				element.textContent = diffDays.toString();
 			});
 		}
@@ -137,5 +134,4 @@ const stats = [
 
 	updateDynamicStats();
 	setInterval(updateDynamicStats, 60 * 60 * 1000);
-
 </script>

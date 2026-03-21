@@ -12,7 +12,12 @@ import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
 import { hasCustomPermalink, initPostIdMap } from "@utils/permalink-utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { commentConfig, licenseConfig, permalinkConfig, shareConfig } from "src/config";
+import {
+	commentConfig,
+	licenseConfig,
+	permalinkConfig,
+	shareConfig,
+} from "src/config";
 import { profileConfig, siteConfig } from "../../config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
 import { buildBlogPostingJsonLd } from "../../utils/blog-schema";

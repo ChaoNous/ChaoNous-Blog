@@ -321,7 +321,7 @@ const transparentClass = shouldEnableTransparency
 			// 婵犵妲呴崑澶愵敋瑜嶉崨顓犳噺濡瑩鏌ｉ弽瑙勫灱閸氾箑宕熼悽銊╁櫚婵☆偅顕ｉ崐鐔虹杸闁哄啠鍋撶粭鎴︽⒑閸涘﹥澧?
 			var retryCount = 0;
 			var maxRetries = 10;
-			var checkInterval = setInterval(function() {
+			var checkInterval = setInterval(function () {
 				var fullscreenWallpaper = document.querySelector(
 					"[data-fullscreen-wallpaper]",
 				);
@@ -336,7 +336,10 @@ const transparentClass = shouldEnableTransparency
 		}
 
 		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", initWallpaperModeWithRetry);
+			document.addEventListener(
+				"DOMContentLoaded",
+				initWallpaperModeWithRetry,
+			);
 		} else {
 			initWallpaperModeWithRetry();
 		}
@@ -631,7 +634,12 @@ const transparentClass = shouldEnableTransparency
 		<!-- Home page text overlay -->
 		{
 			siteConfig.banner.homeText?.enable && (
-				<div class:list={["banner-text-overlay absolute inset-0 z-20 flex items-center justify-center", { hidden: !showHomeText }]}>
+				<div
+					class:list={[
+						"banner-text-overlay absolute inset-0 z-20 flex items-center justify-center",
+						{ hidden: !showHomeText },
+					]}
+				>
 					<div class="max-w-(--page-width) w-full px-0 md:px-4 mx-auto flex items-center justify-center h-full">
 						<div class="w-4/5 lg:w-3/4 text-center mb-0">
 							<div class="flex flex-col">

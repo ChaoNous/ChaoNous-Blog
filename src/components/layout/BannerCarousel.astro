@@ -102,7 +102,10 @@ const count = Math.max(desktopImages.length, mobileImages.length);
 					currentIndex = Number(savedIndex);
 				} else {
 					currentIndex = Math.floor(Math.random() * items.length);
-					sessionStorage.setItem("banner_index", String(currentIndex));
+					sessionStorage.setItem(
+						"banner_index",
+						String(currentIndex),
+					);
 				}
 			}
 
@@ -139,7 +142,9 @@ const count = Math.max(desktopImages.length, mobileImages.length);
 
 				if (immediate) {
 					requestAnimationFrame(() => {
-						items.forEach((item) => item.style.removeProperty("transition"));
+						items.forEach((item) =>
+							item.style.removeProperty("transition"),
+						);
 					});
 				}
 			};
@@ -176,7 +181,10 @@ const count = Math.max(desktopImages.length, mobileImages.length);
 			showItem(currentIndex, true);
 			start();
 
-			document.addEventListener("visibilitychange", handleVisibilityChange);
+			document.addEventListener(
+				"visibilitychange",
+				handleVisibilityChange,
+			);
 
 			container.__bannerCarouselCleanup = () => {
 				stop();

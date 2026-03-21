@@ -25,13 +25,13 @@ const categories = [
 ---
 
 <MainGridLayout title={i18n(I18nKey.archive)}>
-    <script>
-        import("../scripts/right-sidebar-layout.js");
-    </script>
+	<script>
+		import("../scripts/right-sidebar-layout.js");
+	</script>
 
-    <ArchivePanel
-            sortedPosts={posts}
-            categories={categories}
-            client:only="svelte"
-    ></ArchivePanel>
+	<ArchivePanel
+		sortedPosts={posts}
+		categories={categories}
+		client:only="svelte"
+	/>
 </MainGridLayout>

@@ -28,10 +28,7 @@ export const skillsData: Skill[] = [
 		category: "frontend",
 		level: "advanced",
 		experience: { years: 3, months: 6 },
-		projects: [
-			"portfolio-website",
-			"data-visualization-tool",
-		],
+		projects: ["portfolio-website", "data-visualization-tool"],
 		color: "#F7DF1E",
 	},
 	{

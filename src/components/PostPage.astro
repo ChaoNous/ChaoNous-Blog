@@ -29,10 +29,19 @@ const { page } = Astro.props;
 
 <script>
 	function initPostList() {
-		const postListContainer = document.getElementById("post-list-container");
+		const postListContainer = document.getElementById(
+			"post-list-container",
+		);
 		if (!postListContainer) return;
 
-		postListContainer.classList.remove("grid-mode", "grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-2", "gap-6");
+		postListContainer.classList.remove(
+			"grid-mode",
+			"grid",
+			"grid-cols-1",
+			"md:grid-cols-2",
+			"lg:grid-cols-2",
+			"gap-6",
+		);
 		postListContainer.classList.add("list-mode", "js-initialized");
 		postListContainer.dataset.layout = "list";
 
@@ -102,7 +111,9 @@ const { page } = Astro.props;
 		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 		opacity: 0;
 		animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-		animation-delay: calc(var(--content-delay) + var(--i) * var(--interval));
+		animation-delay: calc(
+			var(--content-delay) + var(--i) * var(--interval)
+		);
 	}
 
 	@keyframes fadeInSlide {

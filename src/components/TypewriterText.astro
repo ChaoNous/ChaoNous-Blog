@@ -17,141 +17,165 @@ const {
 const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 ---
 
-<span class={`typewriter ${className}`} data-text={textData} data-speed={speed} data-delete-speed={deleteSpeed} data-pause-time={pauseTime}></span>
+<span
+	class={`typewriter ${className}`}
+	data-text={textData}
+	data-speed={speed}
+	data-delete-speed={deleteSpeed}
+	data-pause-time={pauseTime}></span>
 
 <script>
-class TypewriterEffect {
-    private element: HTMLElement;
-    private texts: string[];
-    private currentTextIndex: number = 0;
-    private speed: number;
-    private deleteSpeed: number;
-    private pauseTime: number;
-    private currentIndex: number = 0;
-    private isDeleting: boolean = false;
-    private rafId: number | null = null;
-    private lastTime: number = 0;
+	class TypewriterEffect {
+		private element: HTMLElement;
+		private texts: string[];
+		private currentTextIndex: number = 0;
+		private speed: number;
+		private deleteSpeed: number;
+		private pauseTime: number;
+		private currentIndex: number = 0;
+		private isDeleting: boolean = false;
+		private rafId: number | null = null;
+		private lastTime: number = 0;
 
-    constructor(element: HTMLElement) {
-        this.element = element;
-        const textData = element.dataset.text || '';
+		constructor(element: HTMLElement) {
+			this.element = element;
+			const textData = element.dataset.text || "";
 
-        try {
-            const parsed = JSON.parse(textData);
-            this.texts = Array.isArray(parsed) ? parsed : [textData];
-        } catch {
-            this.texts = [textData];
-        }
+			try {
+				const parsed = JSON.parse(textData);
+				this.texts = Array.isArray(parsed) ? parsed : [textData];
+			} catch {
+				this.texts = [textData];
+			}
 
-        this.speed = parseInt(element.dataset.speed || '100');
-        this.deleteSpeed = parseInt(element.dataset.deleteSpeed || '50');
-        this.pauseTime = parseInt(element.dataset.pauseTime || '2000');
+			this.speed = parseInt(element.dataset.speed || "100");
+			this.deleteSpeed = parseInt(element.dataset.deleteSpeed || "50");
+			this.pauseTime = parseInt(element.dataset.pauseTime || "2000");
 
-        if (this.texts.length > 1 && !this.isTypewriterEnabled()) {
-            this.showRandomText();
-        } else {
-            this.start();
-        }
-    }
+			if (this.texts.length > 1 && !this.isTypewriterEnabled()) {
+				this.showRandomText();
+			} else {
+				this.start();
+			}
+		}
 
-    private isTypewriterEnabled(): boolean {
-        return this.element.dataset.speed !== undefined ||
-               this.element.dataset.deleteSpeed !== undefined ||
-               this.element.dataset.pauseTime !== undefined;
-    }
+		private isTypewriterEnabled(): boolean {
+			return (
+				this.element.dataset.speed !== undefined ||
+				this.element.dataset.deleteSpeed !== undefined ||
+				this.element.dataset.pauseTime !== undefined
+			);
+		}
 
-    private showRandomText() {
-        const randomIndex = Math.floor(Math.random() * this.texts.length);
-        this.element.textContent = this.texts[randomIndex];
-    }
+		private showRandomText() {
+			const randomIndex = Math.floor(Math.random() * this.texts.length);
+			this.element.textContent = this.texts[randomIndex];
+		}
 
-    private start() {
-        if (this.texts.length === 0) return;
-        this.lastTime = performance.now();
-        this.scheduleNextFrame();
-    }
+		private start() {
+			if (this.texts.length === 0) return;
+			this.lastTime = performance.now();
+			this.scheduleNextFrame();
+		}
 
-    private getCurrentText(): string {
-        return this.texts[this.currentTextIndex] || '';
-    }
+		private getCurrentText(): string {
+			return this.texts[this.currentTextIndex] || "";
+		}
 
-    private scheduleNextFrame() {
-        this.rafId = requestAnimationFrame((timestamp) => this.tick(timestamp));
-    }
+		private scheduleNextFrame() {
+			this.rafId = requestAnimationFrame((timestamp) =>
+				this.tick(timestamp),
+			);
+		}
 
-    private tick(timestamp: number) {
-        const currentText = this.getCurrentText();
-        const delay = this.isDeleting ? this.deleteSpeed : this.speed;
+		private tick(timestamp: number) {
+			const currentText = this.getCurrentText();
+			const delay = this.isDeleting ? this.deleteSpeed : this.speed;
 
-        if (timestamp - this.lastTime >= delay) {
-            this.lastTime = timestamp;
+			if (timestamp - this.lastTime >= delay) {
+				this.lastTime = timestamp;
 
-            if (this.isDeleting) {
-                if (this.currentIndex > 0) {
-                    this.currentIndex--;
-                    this.element.textContent = currentText.substring(0, this.currentIndex);
-                } else {
-                    this.isDeleting = false;
-                    this.currentTextIndex = (this.currentTextIndex + 1) % this.texts.length;
-                }
-            } else {
-                if (this.currentIndex < currentText.length) {
-                    this.currentIndex++;
-                    this.element.textContent = currentText.substring(0, this.currentIndex);
-                } else {
-                    if (this.texts.length > 1) {
-                        this.isDeleting = true;
-                        // 暂停后继续
-                        setTimeout(() => this.scheduleNextFrame(), this.pauseTime);
-                        return;
-                    }
-                }
-            }
-        }
+				if (this.isDeleting) {
+					if (this.currentIndex > 0) {
+						this.currentIndex--;
+						this.element.textContent = currentText.substring(
+							0,
+							this.currentIndex,
+						);
+					} else {
+						this.isDeleting = false;
+						this.currentTextIndex =
+							(this.currentTextIndex + 1) % this.texts.length;
+					}
+				} else {
+					if (this.currentIndex < currentText.length) {
+						this.currentIndex++;
+						this.element.textContent = currentText.substring(
+							0,
+							this.currentIndex,
+						);
+					} else {
+						if (this.texts.length > 1) {
+							this.isDeleting = true;
+							// 暂停后继续
+							setTimeout(
+								() => this.scheduleNextFrame(),
+								this.pauseTime,
+							);
+							return;
+						}
+					}
+				}
+			}
 
-        this.scheduleNextFrame();
-    }
+			this.scheduleNextFrame();
+		}
 
-    public destroy() {
-        if (this.rafId) {
-            cancelAnimationFrame(this.rafId);
-        }
-    }
-}
+		public destroy() {
+			if (this.rafId) {
+				cancelAnimationFrame(this.rafId);
+			}
+		}
+	}
 
-// 使用 IntersectionObserver 延迟初始化
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            const el = entry.target as HTMLElement;
-            if (!el.dataset.initialized) {
-                el.dataset.initialized = 'true';
-                new TypewriterEffect(el);
-            }
-        }
-    });
-}, { rootMargin: '50px' });
+	// 使用 IntersectionObserver 延迟初始化
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					const el = entry.target as HTMLElement;
+					if (!el.dataset.initialized) {
+						el.dataset.initialized = "true";
+						new TypewriterEffect(el);
+					}
+				}
+			});
+		},
+		{ rootMargin: "50px" },
+	);
 
-function initTypewriters() {
-    document.querySelectorAll('.typewriter:not([data-initialized])').forEach((el) => {
-        observer.observe(el);
-    });
-}
+	function initTypewriters() {
+		document
+			.querySelectorAll(".typewriter:not([data-initialized])")
+			.forEach((el) => {
+				observer.observe(el);
+			});
+	}
 
-document.addEventListener('DOMContentLoaded', initTypewriters);
-document.addEventListener('swup:contentReplaced', initTypewriters);
+	document.addEventListener("DOMContentLoaded", initTypewriters);
+	document.addEventListener("swup:contentReplaced", initTypewriters);
 </script>
 
 <style>
-.typewriter {
-    position: relative;
-    min-height: 1.5em;
-    display: inline-block;
-    vertical-align: baseline;
-}
+	.typewriter {
+		position: relative;
+		min-height: 1.5em;
+		display: inline-block;
+		vertical-align: baseline;
+	}
 
-.typewriter:empty::before {
-    content: '\00A0';
-    visibility: hidden;
-}
+	.typewriter:empty::before {
+		content: "\00A0";
+		visibility: hidden;
+	}
 </style>

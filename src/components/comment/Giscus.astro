@@ -42,9 +42,17 @@ const {
 	<!-- 评论区域标题 -->
 	<div class="comment-header flex items-center gap-3 mb-5 onload-animation">
 		<div class="comment-icon-wrapper relative">
-			<div class="absolute inset-0 bg-gradient-to-br from-(--primary)/20 to-(--primary)/5 rounded-xl blur-sm"></div>
-			<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-(--primary)/15 to-transparent border border-(--primary)/20">
-				<Icon name="material-symbols:chat-bubble-outline-rounded" class="text-xl text-(--primary)" />
+			<div
+				class="absolute inset-0 bg-gradient-to-br from-(--primary)/20 to-(--primary)/5 rounded-xl blur-sm"
+			>
+			</div>
+			<div
+				class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-(--primary)/15 to-transparent border border-(--primary)/20"
+			>
+				<Icon
+					name="material-symbols:chat-bubble-outline-rounded"
+					class="text-xl text-(--primary)"
+				/>
 			</div>
 		</div>
 		<div class="flex-1">
@@ -56,10 +64,15 @@ const {
 	</div>
 
 	<!-- Giscus 容器 -->
-	<div class="giscus-container relative rounded-2xl overflow-hidden onload-animation">
+	<div
+		class="giscus-container relative rounded-2xl overflow-hidden onload-animation"
+	>
 		<!-- 顶部装饰条 -->
-		<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-(--primary)/30 to-transparent"></div>
-		
+		<div
+			class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-(--primary)/30 to-transparent"
+		>
+		</div>
+
 		<!-- Giscus iframe 容器 -->
 		<div
 			class="giscus relative z-10"
@@ -80,11 +93,27 @@ const {
 		</div>
 
 		<!-- 加载占位符 -->
-		<div class="giscus-loading absolute inset-0 flex flex-col items-center justify-center bg-(--card-bg) z-20">
+		<div
+			class="giscus-loading absolute inset-0 flex flex-col items-center justify-center bg-(--card-bg) z-20"
+		>
 			<div class="loading-spinner w-10 h-10 mb-3">
-				<svg class="animate-spin text-(--primary)" viewBox="0 0 24 24" fill="none">
-					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
-					<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+				<svg
+					class="animate-spin text-(--primary)"
+					viewBox="0 0 24 24"
+					fill="none"
+				>
+					<circle
+						class="opacity-25"
+						cx="12"
+						cy="12"
+						r="10"
+						stroke="currentColor"
+						stroke-width="3"></circle>
+					<path
+						class="opacity-75"
+						fill="currentColor"
+						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+					></path>
 				</svg>
 			</div>
 			<p class="text-sm text-50">正在加载评论...</p>
@@ -102,13 +131,23 @@ const {
 		min-height: 280px;
 		border: 1px solid var(--line-divider);
 		background: var(--card-bg);
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03);
-		transition: box-shadow 0.3s ease, border-color 0.3s ease;
+		box-shadow:
+			0 1px 3px rgba(0, 0, 0, 0.05),
+			0 4px 12px rgba(0, 0, 0, 0.03);
+		transition:
+			box-shadow 0.3s ease,
+			border-color 0.3s ease;
 	}
 
 	.giscus-container:hover {
-		border-color: color-mix(in oklab, var(--primary) 30%, var(--line-divider));
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04);
+		border-color: color-mix(
+			in oklab,
+			var(--primary) 30%,
+			var(--line-divider)
+		);
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.06),
+			0 8px 24px rgba(0, 0, 0, 0.04);
 	}
 
 	.comment-icon-wrapper {
@@ -130,8 +169,12 @@ const {
 	}
 
 	@keyframes spin {
-		from { transform: rotate(0deg); }
-		to { transform: rotate(360deg); }
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
 	}
 
 	.animate-spin {
@@ -139,11 +182,15 @@ const {
 	}
 
 	:global(.dark) .giscus-container {
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+		box-shadow:
+			0 1px 3px rgba(0, 0, 0, 0.2),
+			0 4px 12px rgba(0, 0, 0, 0.1);
 	}
 
 	:global(.dark) .giscus-container:hover {
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.15);
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.25),
+			0 8px 24px rgba(0, 0, 0, 0.15);
 	}
 
 	@media (max-width: 640px) {
@@ -165,18 +212,48 @@ const {
 
 		const script = document.createElement("script");
 		script.src = "https://giscus.app/client.js";
-		script.setAttribute("data-repo", giscusContainer.getAttribute("data-repo") || "");
-		script.setAttribute("data-repo-id", giscusContainer.getAttribute("data-repo-id") || "");
-		script.setAttribute("data-category", giscusContainer.getAttribute("data-category") || "");
-		script.setAttribute("data-category-id", giscusContainer.getAttribute("data-category-id") || "");
-		script.setAttribute("data-mapping", giscusContainer.getAttribute("data-mapping") || "pathname");
+		script.setAttribute(
+			"data-repo",
+			giscusContainer.getAttribute("data-repo") || "",
+		);
+		script.setAttribute(
+			"data-repo-id",
+			giscusContainer.getAttribute("data-repo-id") || "",
+		);
+		script.setAttribute(
+			"data-category",
+			giscusContainer.getAttribute("data-category") || "",
+		);
+		script.setAttribute(
+			"data-category-id",
+			giscusContainer.getAttribute("data-category-id") || "",
+		);
+		script.setAttribute(
+			"data-mapping",
+			giscusContainer.getAttribute("data-mapping") || "pathname",
+		);
 		script.setAttribute("data-strict", "0");
-		script.setAttribute("data-reactions-enabled", giscusContainer.getAttribute("data-reactions-enabled") || "0");
-		script.setAttribute("data-emit-metadata", giscusContainer.getAttribute("data-emit-metadata") || "0");
-		script.setAttribute("data-input-position", giscusContainer.getAttribute("data-input-position") || "top");
+		script.setAttribute(
+			"data-reactions-enabled",
+			giscusContainer.getAttribute("data-reactions-enabled") || "0",
+		);
+		script.setAttribute(
+			"data-emit-metadata",
+			giscusContainer.getAttribute("data-emit-metadata") || "0",
+		);
+		script.setAttribute(
+			"data-input-position",
+			giscusContainer.getAttribute("data-input-position") || "top",
+		);
 		script.setAttribute("data-theme", currentTheme);
-		script.setAttribute("data-lang", giscusContainer.getAttribute("data-lang") || "zh-CN");
-		script.setAttribute("data-loading", giscusContainer.getAttribute("data-loading") || "lazy");
+		script.setAttribute(
+			"data-lang",
+			giscusContainer.getAttribute("data-lang") || "zh-CN",
+		);
+		script.setAttribute(
+			"data-loading",
+			giscusContainer.getAttribute("data-loading") || "lazy",
+		);
 		script.setAttribute("crossorigin", "anonymous");
 		script.async = true;
 
@@ -199,24 +276,29 @@ const {
 	function updateGiscusTheme() {
 		const isDark = document.documentElement.classList.contains("dark");
 		const theme = isDark ? "dark" : "light";
-		const iframe = document.querySelector(".giscus iframe") as HTMLIFrameElement;
+		const iframe = document.querySelector(
+			".giscus iframe",
+		) as HTMLIFrameElement;
 		if (iframe) {
 			iframe.contentWindow?.postMessage(
 				{ giscus: { setConfig: { theme } } },
-				"https://giscus.app"
+				"https://giscus.app",
 			);
 		}
 	}
 
 	// 使用 IntersectionObserver 延迟加载评论
-	const giscusObserver = new IntersectionObserver((entries) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				initGiscus();
-				giscusObserver.disconnect();
-			}
-		});
-	}, { rootMargin: '200px' });
+	const giscusObserver = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					initGiscus();
+					giscusObserver.disconnect();
+				}
+			});
+		},
+		{ rootMargin: "200px" },
+	);
 
 	// 监听主题变化 - 使用节流
 	let themeChangeTimer: number | null = null;
@@ -229,12 +311,15 @@ const {
 	});
 
 	// 初始化
-	document.addEventListener('DOMContentLoaded', () => {
+	document.addEventListener("DOMContentLoaded", () => {
 		const giscusContainer = document.querySelector(".giscus");
 		if (giscusContainer) {
 			giscusObserver.observe(giscusContainer);
 		}
-		themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+		themeObserver.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ["class"],
+		});
 	});
 
 	// 页面导航后重新初始化

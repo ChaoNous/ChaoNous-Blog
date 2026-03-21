@@ -138,7 +138,6 @@
   }
 }
 
-
 /* 平板设备优化 */
 @media (min-width: 768px) and (max-width: 1279px) {
   #navbar > div {

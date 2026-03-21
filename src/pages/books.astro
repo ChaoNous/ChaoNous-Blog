@@ -22,7 +22,9 @@ const initialCategory = categories[0];
 		import("../scripts/right-sidebar-layout.js");
 	</script>
 
-	<div class="flex w-full overflow-hidden relative min-h-32 rounded-(--radius-large)">
+	<div
+		class="flex w-full overflow-hidden relative min-h-32 rounded-(--radius-large)"
+	>
 		<div class="card-base z-10 px-9 py-6 relative w-full">
 			<div class="flex flex-col items-start justify-center mb-8">
 				<h1
@@ -50,7 +52,10 @@ const initialCategory = categories[0];
 				</div>
 			</div>
 
-			<div id="books-container" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+			<div
+				id="books-container"
+				class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+			>
 				{
 					initialCategory &&
 						booksData[initialCategory].map((book, index) => (
@@ -63,7 +68,7 @@ const initialCategory = categories[0];
 							>
 								<div class="relative p-6 pb-0">
 									<div class="flex justify-center items-center h-56 bg-linear-to-br from-(--card-bg) to-(--btn-regular-bg) rounded-lg overflow-hidden relative">
-										<div class="absolute inset-0 bg-(--primary)/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+										<div class="absolute inset-0 bg-(--primary)/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 										<img
 											src={book.image}
 											alt={book.name}
@@ -78,14 +83,22 @@ const initialCategory = categories[0];
 											{book.name}
 										</h3>
 										<div class="p-1.5 rounded-full bg-(--primary)/10 text-(--primary) opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-											<Icon name="material-symbols:open-in-new" class="text-lg" />
+											<Icon
+												name="material-symbols:open-in-new"
+												class="text-lg"
+											/>
 										</div>
 									</div>
 
 									<div class="mb-4">
 										<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-(--btn-regular-bg) text-70 text-sm mb-3">
-											<Icon name="material-symbols:menu-book-outline" class="text-sm" />
-											<span class="font-medium">{book.specs}</span>
+											<Icon
+												name="material-symbols:menu-book-outline"
+												class="text-sm"
+											/>
+											<span class="font-medium">
+												{book.specs}
+											</span>
 										</div>
 
 										<p class="text-sm text-60 leading-relaxed line-clamp-2">
@@ -94,8 +107,13 @@ const initialCategory = categories[0];
 									</div>
 
 									<div class="flex items-center justify-between pt-3 border-t border-(--line-divider) border-dashed opacity-0 group-hover:opacity-100 transition-all duration-300">
-										<span class="text-sm font-medium text-(--primary)">{viewDetailsText}</span>
-										<Icon name="material-symbols:arrow-forward-rounded" class="text-lg text-(--primary)" />
+										<span class="text-sm font-medium text-(--primary)">
+											{viewDetailsText}
+										</span>
+										<Icon
+											name="material-symbols:arrow-forward-rounded"
+											class="text-lg text-(--primary)"
+										/>
 									</div>
 								</div>
 							</a>
@@ -238,7 +256,11 @@ const initialCategory = categories[0];
 			position: absolute;
 			inset: 0;
 			border-radius: 0.75rem;
-			background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05), transparent);
+			background: linear-gradient(
+				135deg,
+				rgba(var(--color-primary-rgb), 0.05),
+				transparent
+			);
 			opacity: 0;
 			transition: opacity 0.4s ease;
 			pointer-events: none;

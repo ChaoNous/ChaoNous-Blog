@@ -46,8 +46,7 @@ export const timelineData: TimelineItem[] = [
 	{
 		id: "summer-internship-2024",
 		title: "前端开发实习生",
-		description:
-			"在一家互联网公司进行暑期实习，参与 Web 应用的前端开发。",
+		description: "在一家互联网公司进行暑期实习，参与 Web 应用的前端开发。",
 		type: "work",
 		startDate: "2024-07-01",
 		endDate: "2024-08-31",
@@ -92,8 +91,7 @@ export const timelineData: TimelineItem[] = [
 	{
 		id: "student-management-system",
 		title: "学生管理系统课程设计",
-		description:
-			"数据库课程的期末结课项目，开发了完整的学生信息管理系统。",
+		description: "数据库课程的期末结课项目，开发了完整的学生信息管理系统。",
 		type: "project",
 		startDate: "2023-11-01",
 		endDate: "2023-12-15",
@@ -109,8 +107,7 @@ export const timelineData: TimelineItem[] = [
 	{
 		id: "programming-contest",
 		title: "校级编程竞赛",
-		description:
-			"参加了由大学举办的编程竞赛，提高了算法与编程能力。",
+		description: "参加了由大学举办的编程竞赛，提高了算法与编程能力。",
 		type: "achievement",
 		startDate: "2023-10-20",
 		location: "北京理工大学",
@@ -127,8 +124,7 @@ export const timelineData: TimelineItem[] = [
 	{
 		id: "part-time-tutor",
 		title: "兼职编程导师",
-		description:
-			"为高中生提供编程辅导，帮助他们学习 Python 基础。",
+		description: "为高中生提供编程辅导，帮助他们学习 Python 基础。",
 		type: "work",
 		startDate: "2023-09-01",
 		endDate: "2024-01-31",
