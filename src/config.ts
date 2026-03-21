@@ -79,16 +79,16 @@ export const siteConfig: SiteConfig = {
 		// 横幅图片配置，数量大于 1 时自动启用轮播
 		src: {
 			desktop: [
-				"/assets/desktop-banner/banner1.webp",
-				"/assets/desktop-banner/banner2.webp",
-				"/assets/desktop-banner/banner3.webp",
-				"/assets/desktop-banner/banner4.webp",
+				"assets/desktop-banner/banner1.webp",
+				"assets/desktop-banner/banner2.webp",
+				"assets/desktop-banner/banner3.webp",
+				"assets/desktop-banner/banner4.webp",
 			],
 			mobile: [
-				"/assets/mobile-banner/banner1.webp",
-				"/assets/mobile-banner/banner2.webp",
-				"/assets/mobile-banner/banner3.webp",
-				"/assets/mobile-banner/banner4.webp",
+				"assets/mobile-banner/banner1.webp",
+				"assets/mobile-banner/banner2.webp",
+				"assets/mobile-banner/banner3.webp",
+				"assets/mobile-banner/banner4.webp",
 			],
 		},
 
@@ -179,8 +179,8 @@ export const siteConfig: SiteConfig = {
 			fontFamily:
 				"'Zhuque Fangsong', 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', 'STSong', 'SimSun', serif",
 			fontWeight: "400",
-			localFonts: [ "/assets/fonts/ZhuqueFangsong-Regular.ttf" ], // 本地字体文件
-			enableCompress: false,
+			localFonts: [ "ZhuqueFangsong-Regular.ttf" ], // 本地字体文件（相对于 public/assets/font/）
+			enableCompress: true,
 		},
 	},
 	showLastModified: false, // 是否显示"最后修改时间"
@@ -189,16 +189,16 @@ export const siteConfig: SiteConfig = {
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
 		desktop: [
-			"/assets/desktop-banner/banner1.webp",
-			"/assets/desktop-banner/banner2.webp",
-			"/assets/desktop-banner/banner3.webp",
-			"/assets/desktop-banner/banner4.webp",
+			"assets/desktop-banner/banner1.webp",
+			"assets/desktop-banner/banner2.webp",
+			"assets/desktop-banner/banner3.webp",
+			"assets/desktop-banner/banner4.webp",
 		],
 		mobile: [
-			"/assets/mobile-banner/banner1.webp",
-			"/assets/mobile-banner/banner2.webp",
-			"/assets/mobile-banner/banner3.webp",
-			"/assets/mobile-banner/banner4.webp",
+			"assets/mobile-banner/banner1.webp",
+			"assets/mobile-banner/banner2.webp",
+			"assets/mobile-banner/banner3.webp",
+			"assets/mobile-banner/banner4.webp",
 		],
 	},
 	position: "center", // 壁纸位置，对应 object-position
@@ -230,7 +230,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "/assets/images/avatar.webp", // 头像路径，以 '/' 开头表示 public 目录
+	avatar: "assets/images/avatar.webp", // 头像路径，不以 '/' 开头表示 src 目录
 	name: "ChaoNous",
 	bio: "即使在他人看来是多么愚蠢和荒谬，然而只有遵循自己的选择，才能找到无怨无悔的人生。",
 	typewriter: {
