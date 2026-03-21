@@ -491,11 +491,11 @@
 </script>
 
 <button
-	class="btn-regular px-6 py-3 rounded-lg inline-flex items-center gap-2"
+	class="w-12 h-12 rounded-lg bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) flex items-center justify-center transition-all duration-150 cursor-pointer"
 	on:click={generatePoster}
-	aria-label="Generate Share Poster"
+	aria-label="分享文章"
 >
-	<span>{i18n(I18nKey.shareArticle)}</span>
+	<Icon icon="material-symbols:share" width="22" height="22" class="text-(--primary)" />
 </button>
 
 {#if showModal}
@@ -570,23 +570,3 @@
 		</div>
 	</div>
 {/if}
-
-<style lang="css">
-	button.btn-regular {
-		transition:
-			background-color 150ms,
-			color 150ms;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		background-color: var(--btn-regular-bg);
-	}
-
-	button.btn-regular:hover {
-		background-color: var(--btn-regular-bg-hover);
-	}
-
-	button.btn-regular:active {
-		background-color: var(--btn-regular-bg-active);
-	}
-</style>

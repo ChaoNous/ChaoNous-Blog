@@ -18,6 +18,8 @@ import utc from "dayjs/plugin/utc";
 import { licenseConfig } from "src/config";
 import { profileConfig, siteConfig } from "../config";
 import { buildBlogPostingJsonLd } from "../utils/blog-schema";
+import { resolveSharePosterImage } from "../utils/share-poster-assets";
+import { getFileDirFromPath } from "../utils/url-utils";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
@@ -63,6 +65,15 @@ const encryptedContent = isEncrypted
 		).toString()
 	: "";
 
+const posterCoverUrl = await resolveSharePosterImage({
+	src: entry.data.image,
+	basePath: getFileDirFromPath(entry.filePath || ""),
+});
+
+const posterAvatarUrl = await resolveSharePosterImage({
+	src: profileConfig.avatar,
+});
+
 dayjs.extend(utc);
 const lastModified = dayjs(entry.data.updated || entry.data.published)
 	.utc()
@@ -107,6 +118,9 @@ const jsonLd = buildBlogPostingJsonLd({
 				sourceLink={entry.data.sourceLink}
 				licenseName={entry.data.licenseName}
 				licenseUrl={entry.data.licenseUrl}
+				description={entry.data.description}
+				coverImage={posterCoverUrl}
+				avatar={posterAvatarUrl}
 				class="mb-6 rounded-xl license-container onload-animation"
 			/>
 		)
