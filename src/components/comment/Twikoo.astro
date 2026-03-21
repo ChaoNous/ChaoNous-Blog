@@ -17,7 +17,7 @@ interface Props {
 const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 ---
 
-<div class="twikoo-wrapper mt-8 mb-6 card-base p-6 md:p-8">
+<div class="twikoo-wrapper mt-8 mb-6">
 	<!-- 评论区域标题 -->
 	<div class="comment-header flex items-center gap-3 mb-4 onload-animation">
 		<div class="flex items-center justify-center w-9 h-9 rounded-lg bg-(--btn-regular-bg)">
@@ -64,6 +64,11 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	:global(.tk-comments .tk-header) {
 		display: none !important;
+	}
+
+	/* 增加输入框与评论列表的间距 */
+	:global(.tk-comments .tk-main-nav) {
+		margin-top: 2.5rem !important;
 	}
 
 	/* 输入框与预览框 */
