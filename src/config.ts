@@ -177,9 +177,9 @@ export const siteConfig: SiteConfig = {
 		cjkFont: {
 			// CJK 字体 - 用于中日韩文字
 			fontFamily:
-				"'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', 'STSong', 'SimSun', serif",
+				"'Zhuque Fangsong', 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', 'STSong', 'SimSun', serif",
 			fontWeight: "400",
-			localFonts: [], // 本地字体文件
+			localFonts: [ "/assets/fonts/ZhuqueFangsong-Regular.ttf" ], // 本地字体文件
 			enableCompress: false,
 		},
 	},
