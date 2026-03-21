@@ -169,7 +169,7 @@ export const siteConfig: SiteConfig = {
 		asciiFont: {
 			// ASCII 字体 - 用于英文字符
 			fontFamily:
-				"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+				"Georgia, 'Times New Roman', Times, serif",
 			fontWeight: "400",
 			localFonts: [], // 本地字体文件
 			enableCompress: false,
@@ -177,7 +177,7 @@ export const siteConfig: SiteConfig = {
 		cjkFont: {
 			// CJK 字体 - 用于中日韩文字
 			fontFamily:
-				"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif",
+				"'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', 'STSong', 'SimSun', serif",
 			fontWeight: "400",
 			localFonts: [], // 本地字体文件
 			enableCompress: false,
