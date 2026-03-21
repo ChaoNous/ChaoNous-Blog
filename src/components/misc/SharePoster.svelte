@@ -421,14 +421,10 @@
 			ctx.font = `700 ${20 * SCALE}px ${FONT_FAMILY}`;
 			ctx.fillText(author, textX, footerY + 20 * SCALE);
 
-			// Site title
-			ctx.fillStyle = "#9ca3af";
-			ctx.font = `${12 * SCALE}px ${FONT_FAMILY}`;
-			ctx.fillText(i18n(I18nKey.scanToRead), textX, footerY + 44 * SCALE);
-
+			// Scan to read
 			ctx.fillStyle = "#1f2937";
-			ctx.font = `700 ${20 * SCALE}px ${FONT_FAMILY}`;
-			ctx.fillText(siteTitle, textX, footerY + 60 * SCALE);
+			ctx.font = `700 ${18 * SCALE}px ${FONT_FAMILY}`;
+			ctx.fillText(i18n(I18nKey.scanToRead), textX, footerY + 50 * SCALE);
 
 			posterImage = canvas.toDataURL("image/png");
 		} catch (error) {
