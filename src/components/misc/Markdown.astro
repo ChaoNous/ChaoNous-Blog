@@ -106,12 +106,8 @@ const className = Astro.props.class;
 					textArea.select();
 
 					try {
-						// @ts-ignore
-						// const successful = document.execCommand('copy');
-						const successful = true; // document.execCommand is deprecated
-						if (!successful) {
-							throw new Error("execCommand 返回 false");
-						}
+						// execCommand 已废弃，但作为备用方案
+						document.execCommand('copy');
 					} catch (execErr) {
 						console.error("execCommand 也失败了:", execErr);
 						throw new Error("所有复制方法都失败了");

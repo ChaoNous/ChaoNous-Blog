@@ -44,29 +44,24 @@ export async function getStaticPaths() {
 			continue;
 		}
 
-		if (permalinkConfig.enable) {
-			paths.push({
-				params: { slug: defaultSlug },
-				props: { entry },
-			});
-		} else {
-			paths.push({
-				params: { slug: defaultSlug },
-				props: { entry },
-			});
+		// 添加默认 slug 路径
+		paths.push({
+			params: { slug: defaultSlug },
+			props: { entry },
+		});
 
-			if (entry.data.alias) {
-				let alias = entry.data.alias
-					.replace(/^\/+/, "")
-					.replace(/\/+$/, "");
-				if (alias.startsWith("posts/")) {
-					alias = alias.replace(/^posts\//, "");
-				}
-				paths.push({
-					params: { slug: alias },
-					props: { entry },
-				});
+		// 仅当 permalink 未启用时，处理 alias 路径
+		if (!permalinkConfig.enable && entry.data.alias) {
+			let alias = entry.data.alias
+				.replace(/^\/+/, "")
+				.replace(/\/+$/, "");
+			if (alias.startsWith("posts/")) {
+				alias = alias.replace(/^posts\//, "");
 			}
+			paths.push({
+				params: { slug: alias },
+				props: { entry },
+			});
 		}
 	}
 
