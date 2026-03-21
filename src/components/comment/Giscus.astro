@@ -135,31 +135,194 @@ const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 </style>
 
 <script>
-	// 基础主题 CSS URL
-	const baseThemeUrl = "https://chaonous.com/giscus-theme.css";
-
-	// 获取当前主题色
+	// 获取当前主题色 hue
 	function getThemeHue(): number {
 		const hue = getComputedStyle(document.documentElement).getPropertyValue('--hue');
 		return hue ? parseFloat(hue.trim()) : 70;
 	}
 
-	// 生成动态主题 CSS
+	// 生成完整的主题 CSS（内联所有样式）
 	function generateThemeCss(hue: number): string {
 		const primary = `oklch(0.70 0.14 ${hue})`;
-		const primaryLight = `oklch(0.75 0.14 ${hue})`;
-		const primaryDark = `oklch(0.65 0.14 ${hue})`;
 
 		return `
-			:root {
-				--giscus-primary: ${primary};
-				--giscus-primary-light: ${primaryLight};
-				--giscus-primary-dark: ${primaryDark};
-				--giscus-text: rgba(255, 255, 255, 0.85);
-				--giscus-muted: rgba(255, 255, 255, 0.5);
-				--giscus-border: rgba(255, 255, 255, 0.1);
-			}
-		`;
+/* 隐藏预览按钮 */
+.gsc-comment-box-tab-link[href*="preview"],
+.gsc-comment-box-tab-link[data-tab="preview"],
+.gsc-comment-box-tabs button:nth-child(2) {
+  display: none !important;
+}
+
+/* 隐藏 Powered by giscus */
+.gsc-powered-by {
+  display: none !important;
+}
+
+/* 整体容器：透明背景 */
+.gsc-main, .gsc-comment-box, .gsc-comments, .gsc-header, .gsc-footer {
+  background: transparent !important;
+}
+
+/* 评论输入框 */
+.gsc-comment-box {
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden;
+}
+
+.gsc-comment-box-tabs {
+  border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.gsc-comment-box-tab-link {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+.gsc-comment-box-tab-link.selected,
+.gsc-comment-box-tab-link[aria-selected="true"] {
+  border-bottom-color: ${primary} !important;
+  color: ${primary} !important;
+}
+
+.gsc-comment-box-textarea {
+  background: rgba(0,0,0,0.3) !important;
+  color: rgba(255,255,255,0.85) !important;
+  border: none !important;
+  font-family: 'Cinzel','Noto Serif SC',Georgia,serif !important;
+}
+
+.gsc-comment-box-textarea::placeholder {
+  color: rgba(255,255,255,0.4) !important;
+}
+
+/* 评论卡片 */
+.gsc-comment {
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 0.75rem !important;
+  background: rgba(0,0,0,0.2) !important;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.gsc-comment:hover {
+  border-color: ${primary} !important;
+}
+
+.gsc-comment-header {
+  background: rgba(255,255,255,0.03) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.gsc-comment-author a {
+  color: rgba(255,255,255,0.85) !important;
+  text-decoration: none !important;
+}
+
+.gsc-comment-author a:hover {
+  color: ${primary} !important;
+}
+
+.gsc-comment-time, .gsc-comment-time a {
+  color: rgba(255,255,255,0.5) !important;
+}
+
+.gsc-comment-content {
+  color: rgba(255,255,255,0.85) !important;
+  font-family: 'Cinzel','Noto Serif SC',Georgia,serif !important;
+}
+
+.gsc-comment-content a {
+  color: ${primary} !important;
+}
+
+/* 回复区域 */
+.gsc-replies {
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+  background: rgba(0,0,0,0.1) !important;
+}
+
+.gsc-reply {
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0.5rem !important;
+  background: rgba(0,0,0,0.15) !important;
+}
+
+/* 按钮 */
+.gsc-comment-box-buttons button,
+.gsc-pagination button,
+.gsc-replies-count,
+.gsc-reply-count {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: rgba(255,255,255,0.85) !important;
+  border-radius: 0.5rem !important;
+}
+
+.gsc-comment-box-buttons button:hover,
+.gsc-pagination button:hover,
+.gsc-replies-count:hover {
+  background: rgba(255,255,255,0.1) !important;
+  border-color: ${primary} !important;
+}
+
+.gsc-comment-box-buttons button.btn-primary,
+.gsc-comment-box-buttons button[type="submit"] {
+  background: ${primary} !important;
+  border-color: ${primary} !important;
+  color: #000 !important;
+}
+
+.gsc-login-button {
+  background: ${primary} !important;
+  border-color: ${primary} !important;
+  color: #000 !important;
+}
+
+/* 字体 */
+.gsc-main, .gsc-comment-box, .gsc-comments {
+  font-family: 'Cinzel','Noto Serif SC',Georgia,serif !important;
+}
+
+/* 代码块 */
+.gsc-comment-content code {
+  background: rgba(255,255,255,0.08) !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 0.25rem !important;
+  font-family: 'JetBrains Mono',monospace !important;
+}
+
+.gsc-comment-content pre {
+  background: rgba(0,0,0,0.3) !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+}
+
+/* 引用 */
+.gsc-comment-content blockquote {
+  border-left: 3px solid ${primary} !important;
+  padding-left: 1rem !important;
+  color: rgba(255,255,255,0.6) !important;
+}
+
+/* 表情反应 */
+.gsc-social-reaction-summary-item {
+  border-color: rgba(255,255,255,0.15) !important;
+  color: rgba(255,255,255,0.6) !important;
+}
+
+.gsc-social-reaction-summary-item:hover,
+.gsc-social-reaction-summary-item.has-reacted {
+  background: rgba(255,255,255,0.1) !important;
+  border-color: ${primary} !important;
+  color: ${primary} !important;
+}
+`;
+	}
+
+	// 创建 data URL 主题
+	function createThemeUrl(hue: number): string {
+		const css = generateThemeCss(hue);
+		return 'data:text/css;base64,' + btoa(unescape(encodeURIComponent(css)));
 	}
 
 	// 动态加载 Giscus 脚本
@@ -169,53 +332,22 @@ const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 		if (!giscusContainer || giscusContainer.querySelector("iframe")) return;
 
 		const hue = getThemeHue();
-		const dynamicCss = generateThemeCss(hue);
-		const themeUrl = `${baseThemeUrl}?inline=${encodeURIComponent(dynamicCss)}`;
+		const themeUrl = createThemeUrl(hue);
 
 		const script = document.createElement("script");
 		script.src = "https://giscus.app/client.js";
-		script.setAttribute(
-			"data-repo",
-			giscusContainer.getAttribute("data-repo") || "",
-		);
-		script.setAttribute(
-			"data-repo-id",
-			giscusContainer.getAttribute("data-repo-id") || "",
-		);
-		script.setAttribute(
-			"data-category",
-			giscusContainer.getAttribute("data-category") || "",
-		);
-		script.setAttribute(
-			"data-category-id",
-			giscusContainer.getAttribute("data-category-id") || "",
-		);
-		script.setAttribute(
-			"data-mapping",
-			giscusContainer.getAttribute("data-mapping") || "pathname",
-		);
+		script.setAttribute("data-repo", giscusContainer.getAttribute("data-repo") || "");
+		script.setAttribute("data-repo-id", giscusContainer.getAttribute("data-repo-id") || "");
+		script.setAttribute("data-category", giscusContainer.getAttribute("data-category") || "");
+		script.setAttribute("data-category-id", giscusContainer.getAttribute("data-category-id") || "");
+		script.setAttribute("data-mapping", giscusContainer.getAttribute("data-mapping") || "pathname");
 		script.setAttribute("data-strict", "0");
-		script.setAttribute(
-			"data-reactions-enabled",
-			giscusContainer.getAttribute("data-reactions-enabled") || "0",
-		);
-		script.setAttribute(
-			"data-emit-metadata",
-			giscusContainer.getAttribute("data-emit-metadata") || "0",
-		);
-		script.setAttribute(
-			"data-input-position",
-			giscusContainer.getAttribute("data-input-position") || "top",
-		);
+		script.setAttribute("data-reactions-enabled", giscusContainer.getAttribute("data-reactions-enabled") || "0");
+		script.setAttribute("data-emit-metadata", giscusContainer.getAttribute("data-emit-metadata") || "0");
+		script.setAttribute("data-input-position", giscusContainer.getAttribute("data-input-position") || "top");
 		script.setAttribute("data-theme", themeUrl);
-		script.setAttribute(
-			"data-lang",
-			giscusContainer.getAttribute("data-lang") || "zh-CN",
-		);
-		script.setAttribute(
-			"data-loading",
-			giscusContainer.getAttribute("data-loading") || "lazy",
-		);
+		script.setAttribute("data-lang", giscusContainer.getAttribute("data-lang") || "zh-CN");
+		script.setAttribute("data-loading", giscusContainer.getAttribute("data-loading") || "lazy");
 		script.setAttribute("crossorigin", "anonymous");
 		script.async = true;
 
@@ -224,9 +356,7 @@ const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 				const iframe = giscusContainer.querySelector("iframe");
 				if (iframe) {
 					clearInterval(checkIframe);
-					if (loadingEl) {
-						loadingEl.classList.add("hidden");
-					}
+					if (loadingEl) loadingEl.classList.add("hidden");
 				}
 			}, 100);
 		};
@@ -240,21 +370,15 @@ const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 		if (!iframe) return;
 
 		const hue = getThemeHue();
-		const primary = `oklch(0.70 0.14 ${hue})`;
+		const themeUrl = createThemeUrl(hue);
 
 		iframe.contentWindow?.postMessage(
-			{
-				giscus: {
-					setConfig: {
-						theme: `${baseThemeUrl}?inline=${encodeURIComponent(generateThemeCss(hue))}`
-					}
-				}
-			},
+			{ giscus: { setConfig: { theme: themeUrl } } },
 			"https://giscus.app",
 		);
 	}
 
-	// 使用 IntersectionObserver 延迟加载评论
+	// IntersectionObserver 延迟加载
 	const giscusObserver = new IntersectionObserver(
 		(entries) => {
 			entries.forEach((entry) => {
@@ -280,10 +404,7 @@ const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 	// 初始化
 	document.addEventListener("DOMContentLoaded", () => {
 		const giscusContainer = document.querySelector(".giscus");
-		if (giscusContainer) {
-			giscusObserver.observe(giscusContainer);
-		}
-		// 监听 style 属性变化（主题色可能通过 style 更新）
+		if (giscusContainer) giscusObserver.observe(giscusContainer);
 		styleObserver.observe(document.documentElement, {
 			attributes: true,
 			attributeFilter: ["style", "class"],

@@ -30,32 +30,32 @@
 }
 
 .gsc-comment-box-tabs {
-  border-bottom: 1px solid var(--giscus-border, rgba(255, 255, 255, 0.1)) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .gsc-comment-box-tab-link {
-  color: var(--giscus-muted, rgba(255, 255, 255, 0.6)) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
 }
 
 .gsc-comment-box-tab-link.selected,
 .gsc-comment-box-tab-link[aria-selected="true"] {
-  border-bottom-color: var(--giscus-primary, #c9a84c) !important;
-  color: var(--giscus-primary, #c9a84c) !important;
+  border-bottom-color: var(--giscus-primary) !important;
+  color: var(--giscus-primary) !important;
 }
 
 .gsc-comment-box-textarea {
   background: rgba(0, 0, 0, 0.3) !important;
-  color: var(--giscus-text, rgba(255, 255, 255, 0.85)) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
   border: none !important;
 }
 
 .gsc-comment-box-textarea::placeholder {
-  color: var(--giscus-muted, rgba(255, 255, 255, 0.4)) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* 评论卡片 */
 .gsc-comment {
-  border: 1px solid var(--giscus-border, rgba(255, 255, 255, 0.1)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 0.75rem !important;
   background: rgba(0, 0, 0, 0.2) !important;
   margin-bottom: 1rem;
@@ -63,43 +63,43 @@
 }
 
 .gsc-comment:hover {
-  border-color: var(--giscus-primary, rgba(255, 255, 255, 0.2)) !important;
+  border-color: var(--giscus-primary) !important;
 }
 
 .gsc-comment-header {
   background: rgba(255, 255, 255, 0.03) !important;
-  border-bottom: 1px solid var(--giscus-border, rgba(255, 255, 255, 0.08)) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 .gsc-comment-author a {
-  color: var(--giscus-text, rgba(255, 255, 255, 0.85)) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .gsc-comment-author a:hover {
-  color: var(--giscus-primary, #c9a84c) !important;
+  color: var(--giscus-primary) !important;
 }
 
 .gsc-comment-time,
 .gsc-comment-time a {
-  color: var(--giscus-muted, rgba(255, 255, 255, 0.5)) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .gsc-comment-content {
-  color: var(--giscus-text, rgba(255, 255, 255, 0.85)) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .gsc-comment-content a {
-  color: var(--giscus-primary, #c9a84c) !important;
+  color: var(--giscus-primary) !important;
 }
 
 /* 回复区域 */
 .gsc-replies {
-  border-top: 1px solid var(--giscus-border, rgba(255, 255, 255, 0.08)) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
   background: rgba(0, 0, 0, 0.1) !important;
 }
 
 .gsc-reply {
-  border: 1px solid var(--giscus-border, rgba(255, 255, 255, 0.08)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 0.5rem !important;
   background: rgba(0, 0, 0, 0.15) !important;
 }
@@ -110,8 +110,8 @@
 .gsc-replies-count,
 .gsc-reply-count {
   background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid var(--giscus-border, rgba(255, 255, 255, 0.1)) !important;
-  color: var(--giscus-text, rgba(255, 255, 255, 0.85)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
   border-radius: 0.5rem !important;
 }
 
@@ -119,20 +119,20 @@
 .gsc-pagination button:hover,
 .gsc-replies-count:hover {
   background: rgba(255, 255, 255, 0.1) !important;
-  border-color: var(--giscus-primary, rgba(255, 255, 255, 0.2)) !important;
+  border-color: var(--giscus-primary) !important;
 }
 
 .gsc-comment-box-buttons button.btn-primary,
 .gsc-comment-box-buttons button[type="submit"] {
-  background: var(--giscus-primary, #c9a84c) !important;
-  border-color: var(--giscus-primary, #c9a84c) !important;
+  background: var(--giscus-primary) !important;
+  border-color: var(--giscus-primary) !important;
   color: #000 !important;
 }
 
 /* 登录按钮 */
 .gsc-login-button {
-  background: var(--giscus-primary, #c9a84c) !important;
-  border-color: var(--giscus-primary, #c9a84c) !important;
+  background: var(--giscus-primary) !important;
+  border-color: var(--giscus-primary) !important;
   color: #000 !important;
 }
 
@@ -160,7 +160,25 @@
 
 /* 引用 */
 .gsc-comment-content blockquote {
-  border-left: 3px solid var(--giscus-primary, #c9a84c) !important;
+  border-left: 3px solid var(--giscus-primary) !important;
   padding-left: 1rem !important;
-  color: var(--giscus-muted, rgba(255, 255, 255, 0.6)) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* 用户名链接 */
+.gsc-comment-author a {
+  text-decoration: none !important;
+}
+
+/* 表情反应 */
+.gsc-social-reaction-summary-item {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.gsc-social-reaction-summary-item:hover,
+.gsc-social-reaction-summary-item.has-reacted {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: var(--giscus-primary) !important;
+  color: var(--giscus-primary) !important;
 }
