@@ -36,9 +36,6 @@ const {
 	inputPosition = "top",
 	loading = "lazy",
 } = Astro.props;
-
-// 自定义主题 URL - 暗金风格
-const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 ---
 
 <div class="giscus-wrapper mt-8 mb-6">
@@ -70,7 +67,6 @@ const customThemeUrl = "https://chaonous.com/giscus-theme.css";
 			data-reactions-enabled={reactionsEnabled ? "1" : "0"}
 			data-emit-metadata={emitMetadata ? "1" : "0"}
 			data-input-position={inputPosition}
-			data-theme={customThemeUrl}
 			data-lang={lang}
 			data-loading={loading}
 		>
