@@ -346,7 +346,7 @@ export const footerConfig: FooterConfig = {
 // 评论配置 - Twikoo
 export const commentConfig = {
 	enable: true,
-	envId: "", // Twikoo 环境 ID，从 Twikoo 控制台获取
+	envId: "https://twikoo-cloudflare.198665x.workers.dev", // Twikoo 环境 ID，从 Twikoo 控制台获取
 	region: "", // 环境地域，默认为空，可选 "ap-shanghai" 等
 	lang: "zh-CN", // 语言
 };
