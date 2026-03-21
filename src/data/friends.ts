@@ -16,15 +16,6 @@ export interface FriendLink {
 }
 
 export const friendsData: FriendLink[] = [
-	// 我的网站
-	{
-		name: "ChaoNous",
-		url: "https://chaonous.com",
-		avatar: "/assets/images/avatar.webp",
-		description: "人是万物的尺度。",
-		tags: ["生活", "随笔"],
-		status: "active",
-	},
 	// 添加友链示例：
 	// {
 	//   name: "友站名称",

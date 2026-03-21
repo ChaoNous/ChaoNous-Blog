@@ -1,22 +1,18 @@
-这个网站是 **ChaoNous Blog**，基于 **Astro** 框架构建。
+这个网站是 **ChaoNous Blog**，基于 Astro 框架构建的个人博客。
+
+## 关于我
+
+一个对技术和设计有兴趣的人，喜欢折腾静态网站和开源项目。
 
 ## 网站特点
-- 简洁的个人静态博客结构
-- 支持深色 / 浅色模式切换
-- 支持文章归档、标签、分类与搜索
-- 支持游戏、书籍、相册等独立页面
-- 支持 RSS、Atom 与 Sitemap 输出
 
-## 内容方向
-- 个人记录
-- 文章写作
-- 兴趣整理
-- 静态站点维护与设计调整
+- Material Design 3 设计风格
+- 深色 / 浅色模式切换
+- 文章归档、标签、分类与全文搜索
+- 相册、书籍、时间线等独立页面
+- RSS、Atom 与 Sitemap 输出
 
-## 技术栈
-- Astro
-- TypeScript
-- Svelte
-- Tailwind CSS
+## 联系方式
 
-这个站点会继续按当前内容与展示需求持续调整。
+- 网站：[chaonous.com](https://chaonous.com)
+- GitHub：[github.com/ChaoNous](https://github.com/ChaoNous)

@@ -1,7 +1,15 @@
 {
 	"name": "chaonous-blog",
-	"type": "module",
 	"version": "8.3",
+	"description": "下一代 Material Design 3 博客主题，由 Astro 驱动",
+	"author": "ChaoNous",
+	"license": "Apache-2.0",
+	"type": "module",
+	"homepage": "https://chaonous.com",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ChaoNous/ChaoNous-Blog"
+	},
 	"scripts": {
 		"sync-content": "node scripts/sync-content.js",
 		"init-content": "node scripts/init-content-repo.js",
@@ -19,8 +27,7 @@
 		"format": "prettier --write ./src",
 		"lint": "eslint ./src --fix",
 		"preinstall": "npx only-allow pnpm",
-		"compress-fonts": "node scripts/compress-fonts.js",
-		"test-font-compression": "node scripts/test-font-compression.js"
+		"compress-fonts": "node scripts/compress-fonts.js"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.7",
