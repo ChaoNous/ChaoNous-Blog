@@ -57,7 +57,7 @@ const customThemeDark = "https://chaonous.com/giscus-theme.css";
 	</div>
 
 	<!-- Giscus 容器 -->
-	<div class="giscus-container relative rounded-xl overflow-hidden onload-animation">
+	<div class="giscus-container relative onload-animation">
 		<!-- Giscus iframe 容器 -->
 		<div
 			class="giscus relative z-10"
@@ -109,16 +109,8 @@ const customThemeDark = "https://chaonous.com/giscus-theme.css";
 </div>
 
 <style>
-	.giscus-wrapper {
-		--card-bg: var(--page-bg);
-		--line-divider: var(--line-divider);
-	}
-
 	.giscus-container {
 		min-height: 200px;
-		border: 1px solid var(--line-divider);
-		background: var(--card-bg);
-		border-radius: var(--radius-large);
 	}
 
 	.giscus-loading {

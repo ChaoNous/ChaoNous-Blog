@@ -1,92 +1,267 @@
 /* Giscus 自定义主题 - 与 ChaoNous Blog 风格统一 */
 
-/* 基础变量 */
+/* ==================== 浅色模式 ==================== */
 :root {
-  --color-border-default: var(--border-color, #d0d7de);
-  --color-border-muted: var(--border-color, #d0d7de);
-  --color-accent-fg: var(--primary, #558e88);
-  --color-accent-emphasis: var(--primary, #558e88);
-  --color-btn-bg: var(--btn-regular-bg, #f6f8fa);
-  --color-btn-border: var(--border-color, #d0d7de);
-  --color-btn-hover-bg: var(--btn-regular-bg-hover, #f3f4f6);
-  --color-fg-default: var(--text-color, #24292f);
-  --color-fg-muted: var(--text-muted, #57606a);
-  --color-canvas-default: var(--card-bg, #ffffff);
-  --color-canvas-subtle: var(--bg-subtle, #f6f8fa);
+  --color-border-default: rgba(0, 0, 0, 0.08);
+  --color-border-muted: rgba(0, 0, 0, 0.06);
+  --color-accent-fg: oklch(0.70 0.14 var(--hue, 70));
+  --color-accent-emphasis: oklch(0.70 0.14 var(--hue, 70));
+  --color-btn-bg: oklch(0.95 0.025 var(--hue, 70));
+  --color-btn-border: rgba(0, 0, 0, 0.08);
+  --color-btn-hover-bg: oklch(0.90 0.05 var(--hue, 70));
+  --color-btn-active-bg: oklch(0.85 0.08 var(--hue, 70));
+  --color-fg-default: rgba(0, 0, 0, 0.85);
+  --color-fg-muted: rgba(0, 0, 0, 0.6);
+  --color-canvas-default: transparent;
+  --color-canvas-subtle: oklch(0.97 0.01 var(--hue, 70));
+  --color-canvas-inset: oklch(0.98 0.005 var(--hue, 70));
+  --color-primer-border-active: oklch(0.70 0.14 var(--hue, 70));
+  --color-success-fg: oklch(0.55 0.15 140);
+  --color-danger-fg: oklch(0.55 0.2 25);
+  --color-attention-subtle: oklch(0.95 0.05 60);
 }
 
-/* 隐藏 Powered by giscus */
+/* ==================== 暗色模式 ==================== */
+[data-theme="dark"] {
+  --color-border-default: rgba(255, 255, 255, 0.1);
+  --color-border-muted: rgba(255, 255, 255, 0.08);
+  --color-accent-fg: oklch(0.75 0.14 var(--hue, 70));
+  --color-accent-emphasis: oklch(0.75 0.14 var(--hue, 70));
+  --color-btn-bg: oklch(0.33 0.035 var(--hue, 70));
+  --color-btn-border: rgba(255, 255, 255, 0.1);
+  --color-btn-hover-bg: oklch(0.38 0.04 var(--hue, 70));
+  --color-btn-active-bg: oklch(0.43 0.045 var(--hue, 70));
+  --color-fg-default: rgba(255, 255, 255, 0.85);
+  --color-fg-muted: rgba(255, 255, 255, 0.6);
+  --color-canvas-default: transparent;
+  --color-canvas-subtle: oklch(0.20 0.015 var(--hue, 70));
+  --color-canvas-inset: oklch(0.18 0.015 var(--hue, 70));
+  --color-primer-border-active: oklch(0.75 0.14 var(--hue, 70));
+  --color-success-fg: oklch(0.70 0.15 140);
+  --color-danger-fg: oklch(0.65 0.2 25);
+  --color-attention-subtle: oklch(0.25 0.05 60);
+}
+
+/* ==================== 隐藏不需要的元素 ==================== */
 .gsc-powered-by,
 .gsc-homepage,
-a[href*="giscus.app"] {
+a[href*="giscus.app"],
+.gsc-reactions,
+.gsc-reactions-button {
   display: none !important;
   visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
-/* 隐藏反应按钮区域 */
-.gsc-reactions {
-  display: none !important;
-}
-
-/* 评论输入框样式 */
+/* ==================== 整体布局 ==================== */
+.gsc-comments,
+.gsc-comment,
 .gsc-comment-box {
-  border-radius: 12px !important;
-  border-color: var(--color-border-default) !important;
+  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', Times, serif !important;
 }
 
-.gsc-comment-box textarea {
-  border-radius: 8px !important;
-  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
-}
-
-/* 按钮样式 */
-.gsc-comment-box .gsc-comment-box-buttons button {
-  border-radius: 8px !important;
-  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
-}
-
-/* 评论列表样式 */
 .gsc-comments {
-  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+  padding: 0 !important;
 }
 
-.gsc-comment {
-  border-radius: 12px !important;
+/* ==================== 评论输入框 ==================== */
+.gsc-comment-box {
+  border: 1px solid var(--color-border-default) !important;
+  border-radius: 1rem !important;
+  background: var(--color-canvas-default) !important;
+  margin-bottom: 1.5rem !important;
 }
 
-/* 评论内容样式 */
-.gsc-comment-content {
-  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+.gsc-comment-box-editor {
+  background: var(--color-canvas-default) !important;
+}
+
+.gsc-comment-box-textarea {
+  background: var(--color-canvas-inset) !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid var(--color-border-muted) !important;
+  font-family: inherit !important;
   line-height: 1.7 !important;
+  padding: 1rem !important;
+  min-height: 100px !important;
+}
+
+.gsc-comment-box-textarea:focus {
+  border-color: var(--color-accent-fg) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px oklch(0.70 0.14 var(--hue, 70) / 0.2) !important;
+}
+
+/* ==================== 按钮样式 ==================== */
+.gsc-comment-box-buttons button,
+.gsc-pagination button,
+button.gsc-reply {
+  background: var(--color-btn-bg) !important;
+  border: 1px solid var(--color-btn-border) !important;
+  border-radius: 0.5rem !important;
+  font-family: inherit !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.15s ease !important;
+  color: var(--color-fg-default) !important;
+}
+
+.gsc-comment-box-buttons button:hover,
+.gsc-pagination button:hover,
+button.gsc-reply:hover {
+  background: var(--color-btn-hover-bg) !important;
+  border-color: var(--color-accent-fg) !important;
+}
+
+.gsc-comment-box-buttons button:active,
+.gsc-pagination button:active,
+button.gsc-reply:active {
+  background: var(--color-btn-active-bg) !important;
+}
+
+/* 主要按钮 */
+.gsc-comment-box-buttons button.btn-primary,
+.gsc-comment-box-buttons button[type="submit"] {
+  background: var(--color-accent-fg) !important;
+  border-color: var(--color-accent-fg) !important;
+  color: white !important;
+}
+
+.gsc-comment-box-buttons button.btn-primary:hover,
+.gsc-comment-box-buttons button[type="submit"]:hover {
+  filter: brightness(1.1) !important;
+}
+
+/* ==================== 评论卡片 ==================== */
+.gsc-comment {
+  border: 1px solid var(--color-border-default) !important;
+  border-radius: 1rem !important;
+  background: var(--color-canvas-default) !important;
+  margin-bottom: 1rem !important;
+  overflow: hidden !important;
+}
+
+.gsc-comment:hover {
+  border-color: oklch(0.70 0.14 var(--hue, 70) / 0.3) !important;
 }
 
 /* 评论头部 */
 .gsc-comment-header {
-  border-radius: 12px 12px 0 0 !important;
+  background: var(--color-canvas-subtle) !important;
+  border-bottom: 1px solid var(--color-border-muted) !important;
+  padding: 0.75rem 1rem !important;
 }
 
-/* 回复区域 */
+.gsc-comment-author {
+  font-weight: 600 !important;
+}
+
+.gsc-comment-author a {
+  color: var(--color-fg-default) !important;
+  text-decoration: none !important;
+}
+
+.gsc-comment-author a:hover {
+  color: var(--color-accent-fg) !important;
+}
+
+/* 评论内容 */
+.gsc-comment-content {
+  padding: 1rem !important;
+  line-height: 1.8 !important;
+  color: var(--color-fg-default) !important;
+}
+
+.gsc-comment-content p {
+  margin: 0 0 0.75rem 0 !important;
+}
+
+.gsc-comment-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 评论时间 */
+.gsc-comment-time,
+.gsc-comment-time a {
+  color: var(--color-fg-muted) !important;
+  font-size: 0.85rem !important;
+}
+
+/* ==================== 回复区域 ==================== */
 .gsc-replies {
-  border-radius: 0 0 12px 12px !important;
+  background: var(--color-canvas-subtle) !important;
+  border-top: 1px solid var(--color-border-muted) !important;
+  padding: 0.75rem !important;
 }
 
-/* 分页按钮 */
+.gsc-reply {
+  padding: 0.75rem !important;
+  border-radius: 0.75rem !important;
+  background: var(--color-canvas-default) !important;
+  border: 1px solid var(--color-border-muted) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.gsc-reply:last-child {
+  margin-bottom: 0 !important;
+}
+
+.gsc-reply:hover {
+  border-color: var(--color-border-default) !important;
+}
+
+/* ==================== 分页 ==================== */
+.gsc-pagination {
+  padding: 1rem 0 !important;
+}
+
 .gsc-pagination button {
-  border-radius: 8px !important;
-  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+  min-width: 100px !important;
 }
 
-/* 暗色模式 */
-[data-theme="dark"] {
-  --color-border-default: var(--border-color, #30363d);
-  --color-border-muted: var(--border-color, #30363d);
-  --color-accent-fg: var(--primary, #6db3a8);
-  --color-accent-emphasis: var(--primary, #6db3a8);
-  --color-btn-bg: var(--btn-regular-bg, #21262d);
-  --color-btn-border: var(--border-color, #30363d);
-  --color-btn-hover-bg: var(--btn-regular-bg-hover, #30363d);
-  --color-fg-default: var(--text-color, #c9d1d9);
-  --color-fg-muted: var(--text-muted, #8b949e);
-  --color-canvas-default: var(--card-bg, #0d1117);
-  --color-canvas-subtle: var(--bg-subtle, #161b22);
+/* ==================== 链接样式 ==================== */
+.gsc-comment-content a {
+  color: var(--color-accent-fg) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 0.2em !important;
+}
+
+.gsc-comment-content a:hover {
+  filter: brightness(1.1) !important;
+}
+
+/* ==================== 代码块 ==================== */
+.gsc-comment-content code {
+  background: var(--color-canvas-subtle) !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.9em !important;
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+}
+
+.gsc-comment-content pre {
+  background: var(--color-canvas-subtle) !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  overflow-x: auto !important;
+}
+
+.gsc-comment-content pre code {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* ==================== 引用 ==================== */
+.gsc-comment-content blockquote {
+  border-left: 3px solid var(--color-accent-fg) !important;
+  padding-left: 1rem !important;
+  margin: 0.75rem 0 !important;
+  color: var(--color-fg-muted) !important;
+}
+
+/* ==================== 图片 ==================== */
+.gsc-comment-content img {
+  border-radius: 0.5rem !important;
+  max-width: 100% !important;
 }
