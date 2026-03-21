@@ -37,7 +37,13 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			id="twikoo-comment"
 			data-env-id={envId}
 			data-region={region}
-			dat<style>
+			data-path={path}
+			data-lang={lang}
+		></div>
+	</div>
+</div>
+
+<style>
 	.twikoo-container {
 		min-height: 200px;
 	}
