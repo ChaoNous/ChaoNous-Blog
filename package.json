@@ -16,7 +16,7 @@
 		"predev": "node scripts/sync-content.js || true",
 		"prebuild": "node scripts/sync-content.js || true",
 		"dev": "astro dev",
-		"start": "astro dev",
+		"start": "astro preview",
 		"check": "astro check",
 		"build": "astro build && node scripts/run-pagefind.js && node scripts/compress-fonts.js",
 		"submit": "node scripts/indexnow-submit.js",
