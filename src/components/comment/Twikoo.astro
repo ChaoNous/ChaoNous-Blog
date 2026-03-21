@@ -251,9 +251,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		const path = container.getAttribute("data-path") || window.location.pathname;
 		const lang = container.getAttribute("data-lang") || "zh-CN";
 
-		// 加载 Twikoo 脚本
+		// 加载 Twikoo 脚本 (使用本地化文件以防止被拦截)
 		const script = document.createElement("script");
-		script.src = "https://cdn.staticfile.net/twikoo/1.6.44/twikoo.all.min.js";
+		script.src = "/assets/js/twikoo.all.min.js";
 		script.async = true;
 
 		script.onload = () => {
