@@ -395,3 +395,13 @@ export type FullscreenWallpaperConfig = {
 export type ShareConfig = {
 	enable: boolean; // 閺勵垰鎯侀崥顖滄暏閸掑棔闊╅崝鐔诲厴
 };
+
+/**
+ * Twikoo 评论配置
+ */
+export type CommentConfig = {
+	enable: boolean;
+	envId: string;
+	region?: string;
+	lang?: string;
+};

@@ -6,7 +6,7 @@ import Markdown from "@components/misc/Markdown.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
 import SharePanel from "@components/post/SharePanel.astro";
 import Encryptor from "@components/Encryptor.astro";
-import Giscus from "@components/comment/Giscus.astro";
+import Twikoo from "@components/comment/Twikoo.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
 import { hasCustomPermalink, initPostIdMap } from "@utils/permalink-utils";
@@ -172,16 +172,10 @@ const jsonLd = buildBlogPostingJsonLd({
 	{
 		commentConfig.enable && !isEncrypted && (
 			<div slot="post-actions" class="comment-wrapper">
-				<Giscus
-					repo={commentConfig.repo}
-					repoId={commentConfig.repoId}
-					category={commentConfig.category}
-					categoryId={commentConfig.categoryId}
-					mapping={commentConfig.mapping}
-					reactionsEnabled={commentConfig.reactionsEnabled}
-					emitMetadata={commentConfig.emitMetadata}
-					inputPosition={commentConfig.inputPosition}
-					loading={commentConfig.loading}
+				<Twikoo
+					envId={commentConfig.envId}
+					region={commentConfig.region}
+					lang={commentConfig.lang}
 				/>
 			</div>
 		)

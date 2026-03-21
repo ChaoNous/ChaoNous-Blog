@@ -1,0 +1,303 @@
+---
+/**
+ * Twikoo 评论组件
+ * 基于 Twikoo 的评论系统，融入现有设计风格
+ */
+import { Icon } from "astro-icon/components";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
+
+interface Props {
+	envId: string;
+	region?: string;
+	path?: string;
+	lang?: string;
+}
+
+const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
+---
+
+<div class="twikoo-wrapper mt-8 mb-6">
+	<!-- 评论区域标题 -->
+	<div class="comment-header flex items-center gap-3 mb-4 onload-animation">
+		<div class="flex items-center justify-center w-9 h-9 rounded-lg bg-(--btn-regular-bg)">
+			<Icon
+				name="material-symbols:chat-bubble-outline-rounded"
+				class="text-lg text-(--primary)"
+			/>
+		</div>
+		<h3 class="text-lg font-semibold text-90">
+			{i18n(I18nKey.comments) || "评论"}
+		</h3>
+	</div>
+
+	<!-- Twikoo 容器 -->
+	<div class="twikoo-container relative onload-animation">
+		<div
+			id="twikoo-comment"
+			data-env-id={envId}
+			data-region={region}
+			data-path={path}
+			data-lang={lang}
+		></div>
+	</div>
+</div>
+
+<style>
+	.twikoo-container {
+		min-height: 200px;
+	}
+
+	/* Twikoo 样式覆盖 - 深色主题风格 */
+	:global(.tk-comments) {
+		--twikoo-primary: var(--primary);
+	}
+
+	:global(.tk-comments .tk-container) {
+		background: transparent !important;
+	}
+
+	:global(.tk-comments .tk-header) {
+		display: none !important;
+	}
+
+	:global(.tk-comments .tk-input) {
+		background: rgba(0, 0, 0, 0.3) !important;
+		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+		border-radius: 0.75rem !important;
+		color: rgba(255, 255, 255, 0.85) !important;
+		font-family: "Cinzel", "Noto Serif SC", Georgia, serif !important;
+	}
+
+	:global(.tk-comments .tk-input::placeholder) {
+		color: rgba(255, 255, 255, 0.4) !important;
+	}
+
+	:global(.tk-comments .tk-input:focus) {
+		border-color: var(--primary) !important;
+	}
+
+	:global(.tk-comments .tk-preview) {
+		background: rgba(0, 0, 0, 0.2) !important;
+		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+		border-radius: 0.75rem !important;
+		color: rgba(255, 255, 255, 0.85) !important;
+	}
+
+	:global(.tk-comments .tk-actions) {
+		background: rgba(255, 255, 255, 0.03) !important;
+		border-radius: 0 0 0.75rem 0.75rem !important;
+	}
+
+	:global(.tk-comments .tk-action-btn) {
+		color: rgba(255, 255, 255, 0.6) !important;
+	}
+
+	:global(.tk-comments .tk-action-btn:hover) {
+		color: var(--primary) !important;
+	}
+
+	:global(.tk-comments .tk-submit) {
+		background: var(--primary) !important;
+		color: #000 !important;
+		border-radius: 0.5rem !important;
+	}
+
+	:global(.tk-comments .tk-submit:hover) {
+		filter: brightness(1.1) !important;
+	}
+
+	/* 评论卡片 */
+	:global(.tk-comments .tk-comment) {
+		background: rgba(0, 0, 0, 0.2) !important;
+		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+		border-radius: 0.75rem !important;
+		margin-bottom: 1rem !important;
+		overflow: hidden !important;
+	}
+
+	:global(.tk-comments .tk-comment:hover) {
+		border-color: var(--primary) !important;
+	}
+
+	:global(.tk-comments .tk-avatar) {
+		border-radius: 50% !important;
+	}
+
+	:global(.tk-comments .tk-nick) {
+		color: rgba(255, 255, 255, 0.85) !important;
+		font-weight: 600 !important;
+	}
+
+	:global(.tk-comments .tk-nick:hover) {
+		color: var(--primary) !important;
+	}
+
+	:global(.tk-comments .tk-time) {
+		color: rgba(255, 255, 255, 0.5) !important;
+	}
+
+	:global(.tk-comments .tk-content) {
+		color: rgba(255, 255, 255, 0.85) !important;
+		font-family: "Cinzel", "Noto Serif SC", Georgia, serif !important;
+	}
+
+	:global(.tk-comments .tk-content a) {
+		color: var(--primary) !important;
+	}
+
+	/* 回复区域 */
+	:global(.tk-comments .tk-replies) {
+		border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+		background: rgba(0, 0, 0, 0.1) !important;
+	}
+
+	:global(.tk-comments .tk-reply) {
+		border: 1px solid rgba(255, 255, 255, 0.08) !important;
+		border-radius: 0.5rem !important;
+		background: rgba(0, 0, 0, 0.15) !important;
+	}
+
+	/* 按钮 */
+	:global(.tk-comments .tk-action) {
+		color: rgba(255, 255, 255, 0.6) !important;
+	}
+
+	:global(.tk-comments .tk-action:hover) {
+		color: var(--primary) !important;
+	}
+
+	:global(.tk-comments .tk-icon) {
+		color: rgba(255, 255, 255, 0.6) !important;
+	}
+
+	:global(.tk-comments .tk-icon:hover) {
+		color: var(--primary) !important;
+	}
+
+	/* 分页 */
+	:global(.tk-comments .tk-expand) {
+		background: rgba(255, 255, 255, 0.05) !important;
+		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+		color: rgba(255, 255, 255, 0.85) !important;
+		border-radius: 0.5rem !important;
+	}
+
+	:global(.tk-comments .tk-expand:hover) {
+		background: rgba(255, 255, 255, 0.1) !important;
+		border-color: var(--primary) !important;
+	}
+
+	/* 表情面板 */
+	:global(.tk-comments .tk-owo-popup) {
+		background: rgba(30, 30, 30, 0.95) !important;
+		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+		border-radius: 0.75rem !important;
+	}
+
+	/* 登录相关 */
+	:global(.tk-comments .tk-login) {
+		color: var(--primary) !important;
+	}
+
+	:global(.tk-comments .tk-user) {
+		color: rgba(255, 255, 255, 0.6) !important;
+	}
+
+	/* 代码块 */
+	:global(.tk-comments .tk-content code) {
+		background: rgba(255, 255, 255, 0.08) !important;
+		padding: 0.2em 0.4em !important;
+		border-radius: 0.25rem !important;
+		font-family: "JetBrains Mono", monospace !important;
+	}
+
+	:global(.tk-comments .tk-content pre) {
+		background: rgba(0, 0, 0, 0.3) !important;
+		padding: 1rem !important;
+		border-radius: 0.5rem !important;
+	}
+
+	:global(.tk-comments .tk-content blockquote) {
+		border-left: 3px solid var(--primary) !important;
+		padding-left: 1rem !important;
+		color: rgba(255, 255, 255, 0.6) !important;
+	}
+
+	/* 加载状态 */
+	:global(.tk-loading) {
+		color: rgba(255, 255, 255, 0.5) !important;
+	}
+
+	/* Meta 信息 */
+	:global(.tk-comments .tk-meta) {
+		color: rgba(255, 255, 255, 0.5) !important;
+	}
+
+	/* 表情 */
+	:global(.tk-comments .tk-owo-emotion) {
+		display: inline-block !important;
+	}
+</style>
+
+<script>
+	// 动态加载 Twikoo
+	function initTwikoo() {
+		const container = document.getElementById("twikoo-comment");
+		if (!container || container.querySelector("tk-time")) return;
+
+		const envId = container.getAttribute("data-env-id") || "";
+		const region = container.getAttribute("data-region") || "";
+		const path = container.getAttribute("data-path") || window.location.pathname;
+		const lang = container.getAttribute("data-lang") || "zh-CN";
+
+		// 加载 Twikoo 脚本
+		const script = document.createElement("script");
+		script.src = "https://cdn.jsdelivr.net/npm/twikoo@1.6.41/dist/twikoo.all.min.js";
+		script.async = true;
+
+		script.onload = () => {
+			// @ts-ignore
+			twikoo.init({
+				envId,
+				region,
+				path,
+				lang,
+				onCommentLoaded: () => {
+					// 评论加载完成后的回调
+				},
+			});
+		};
+
+		document.head.appendChild(script);
+	}
+
+	// IntersectionObserver 延迟加载
+	const twikooObserver = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					initTwikoo();
+					twikooObserver.disconnect();
+				}
+			});
+		},
+		{ rootMargin: "200px" },
+	);
+
+	// 初始化
+	document.addEventListener("DOMContentLoaded", () => {
+		const container = document.getElementById("twikoo-comment");
+		if (container) {
+			twikooObserver.observe(container);
+		}
+	});
+
+	// 页面导航后重新初始化
+	document.addEventListener("astro:page-load", () => {
+		const container = document.getElementById("twikoo-comment");
+		if (container && !container.querySelector("tk-time")) {
+			twikooObserver.observe(container);
+		}
+	});
+</script>

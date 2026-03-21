@@ -343,18 +343,12 @@ export const footerConfig: FooterConfig = {
  * sidebar: 默认显示位置，left 或 right，左右都显示时配置 layout.position 为 "both"
  */
 
-// 评论配置 - Giscus
+// 评论配置 - Twikoo
 export const commentConfig = {
 	enable: true,
-	repo: "ChaoNous/ChaoNous-Blog",
-	repoId: "R_kgDORfrllQ",
-	category: "Announcements",
-	categoryId: "DIC_kwDORfrllc4C4vsF",
-	mapping: "pathname" as const,
-	reactionsEnabled: false,
-	emitMetadata: false,
-	inputPosition: "top" as const,
-	loading: "lazy" as const,
+	envId: "", // Twikoo 环境 ID，从 Twikoo 控制台获取
+	region: "", // 环境地域，默认为空，可选 "ap-shanghai" 等
+	lang: "zh-CN", // 语言
 };
 
 export const sidebarLayoutConfig: SidebarLayoutConfig = {
