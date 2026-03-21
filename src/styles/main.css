@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 导入 Cinzel 字体 (Trajan 替代) */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+
 /* 导入相册样式 */
 @import "./albums.css";
 /* 导入动画样式 */
@@ -15,7 +18,7 @@
 
 /* Migrate from v3 config */
 @theme {
-  --font-sans: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", "STSong", "SimSun", "Microsoft YaHei", Georgia, "Times New Roman", Times, serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "Cinzel", "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", "STSong", "SimSun", Georgia, "Times New Roman", Times, serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;

@@ -37,21 +37,29 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	});
 };
 
-let fontCache: { regular: Buffer | null; bold: Buffer | null } | null = null;
+let fontCache: { regular: Buffer | null; bold: Buffer | null; cjkRegular: Buffer | null; cjkBold: Buffer | null } | null = null;
 
-async function fetchNotoSansSCFonts() {
+async function fetchSerifFonts() {
 	if (fontCache) {
 		return fontCache;
 	}
 
 	try {
-		const cssResp = await fetch(
-			"https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap",
+		// Fetch Cinzel for ASCII
+		const cinzelCssResp = await fetch(
+			"https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap",
 		);
-		if (!cssResp.ok) throw new Error("Failed to fetch Google Fonts CSS");
-		const cssText = await cssResp.text();
+		if (!cinzelCssResp.ok) throw new Error("Failed to fetch Cinzel CSS");
+		const cinzelCssText = await cinzelCssResp.text();
 
-		const getUrlForWeight = (weight: number) => {
+		// Fetch Noto Serif SC for CJK
+		const notoCssResp = await fetch(
+			"https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap",
+		);
+		if (!notoCssResp.ok) throw new Error("Failed to fetch Noto Serif SC CSS");
+		const notoCssText = await notoCssResp.text();
+
+		const getUrlForWeight = (cssText: string, weight: number) => {
 			const blockRe = new RegExp(
 				`@font-face\\s*{[^}]*font-weight:\\s*${weight}[^}]*}`,
 				"g",
@@ -62,37 +70,43 @@ async function fetchNotoSansSCFonts() {
 			return urlMatch ? urlMatch[1] : null;
 		};
 
-		const regularUrl = getUrlForWeight(400);
-		const boldUrl = getUrlForWeight(700);
+		const cinzelRegularUrl = getUrlForWeight(cinzelCssText, 400);
+		const cinzelBoldUrl = getUrlForWeight(cinzelCssText, 700);
+		const notoRegularUrl = getUrlForWeight(notoCssText, 400);
+		const notoBoldUrl = getUrlForWeight(notoCssText, 700);
 
-		if (!regularUrl || !boldUrl) {
+		if (!cinzelRegularUrl || !cinzelBoldUrl || !notoRegularUrl || !notoBoldUrl) {
 			console.warn(
 				"Could not find font urls in Google Fonts CSS; falling back to no fonts.",
 			);
-			fontCache = { regular: null, bold: null };
+			fontCache = { regular: null, bold: null, cjkRegular: null, cjkBold: null };
 			return fontCache;
 		}
 
-		const [rResp, bResp] = await Promise.all([
-			fetch(regularUrl),
-			fetch(boldUrl),
+		const [crResp, cbResp, nrResp, nbResp] = await Promise.all([
+			fetch(cinzelRegularUrl),
+			fetch(cinzelBoldUrl),
+			fetch(notoRegularUrl),
+			fetch(notoBoldUrl),
 		]);
-		if (!rResp.ok || !bResp.ok) {
+		if (!crResp.ok || !cbResp.ok || !nrResp.ok || !nbResp.ok) {
 			console.warn(
 				"Failed to download font files from Google; falling back to no fonts.",
 			);
-			fontCache = { regular: null, bold: null };
+			fontCache = { regular: null, bold: null, cjkRegular: null, cjkBold: null };
 			return fontCache;
 		}
 
-		const rBuf = Buffer.from(await rResp.arrayBuffer());
-		const bBuf = Buffer.from(await bResp.arrayBuffer());
+		const crBuf = Buffer.from(await crResp.arrayBuffer());
+		const cbBuf = Buffer.from(await cbResp.arrayBuffer());
+		const nrBuf = Buffer.from(await nrResp.arrayBuffer());
+		const nbBuf = Buffer.from(await nbResp.arrayBuffer());
 
-		fontCache = { regular: rBuf, bold: bBuf };
+		fontCache = { regular: crBuf, bold: cbBuf, cjkRegular: nrBuf, cjkBold: nbBuf };
 		return fontCache;
 	} catch (err) {
 		console.warn("Error fetching fonts:", err);
-		fontCache = { regular: null, bold: null };
+		fontCache = { regular: null, bold: null, cjkRegular: null, cjkBold: null };
 		return fontCache;
 	}
 }
@@ -103,8 +117,8 @@ export async function GET({
 	const { post } = props;
 
 	// Try to fetch fonts from Google Fonts (woff2) at runtime.
-	const { regular: fontRegular, bold: fontBold } =
-		await fetchNotoSansSCFonts();
+	const { regular: fontRegular, bold: fontBold, cjkRegular, cjkBold } =
+		await fetchSerifFonts();
 
 	// Avatar + icon: still read from disk (small assets)
 	const avatarBuffer = fs.readFileSync(`./src${profileConfig.avatar}`);
@@ -142,7 +156,7 @@ export async function GET({
 				flexDirection: "column",
 				backgroundColor: backgroundColor,
 				fontFamily:
-					'"Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+					'"Cinzel", "Noto Serif SC", Georgia, "Times New Roman", Times, serif',
 				padding: "60px",
 			},
 			children: [
@@ -317,7 +331,7 @@ export async function GET({
 	const fonts: FontOptions[] = [];
 	if (fontRegular) {
 		fonts.push({
-			name: "Noto Sans SC",
+			name: "Cinzel",
 			data: fontRegular,
 			weight: 400,
 			style: "normal",
@@ -325,8 +339,24 @@ export async function GET({
 	}
 	if (fontBold) {
 		fonts.push({
-			name: "Noto Sans SC",
+			name: "Cinzel",
 			data: fontBold,
+			weight: 700,
+			style: "normal",
+		});
+	}
+	if (cjkRegular) {
+		fonts.push({
+			name: "Noto Serif SC",
+			data: cjkRegular,
+			weight: 400,
+			style: "normal",
+		});
+	}
+	if (cjkBold) {
+		fonts.push({
+			name: "Noto Serif SC",
+			data: cjkBold,
 			weight: 700,
 			style: "normal",
 		});

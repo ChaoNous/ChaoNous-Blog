@@ -169,7 +169,7 @@ export const siteConfig: SiteConfig = {
 		asciiFont: {
 			// ASCII 字体 - 用于英文字符
 			fontFamily:
-				"Georgia, 'Times New Roman', Times, serif",
+				"'Cinzel', Georgia, 'Times New Roman', Times, serif",
 			fontWeight: "400",
 			localFonts: [], // 本地字体文件
 			enableCompress: false,

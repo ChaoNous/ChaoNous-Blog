@@ -19,7 +19,7 @@
 	const WIDTH = 425 * SCALE;
 	const PADDING = 24 * SCALE;
 	const CONTENT_WIDTH = WIDTH - PADDING * 2;
-	const FONT_FAMILY = "'Roboto', sans-serif";
+	const FONT_FAMILY = "'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif";
 
 	// State
 	let showModal = false;
