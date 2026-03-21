@@ -29,50 +29,35 @@ const {
 	categoryId = "DIC_kwDORfrllc4C4vsF",
 	mapping = "pathname",
 	term = "",
-	theme = "preferred_color_scheme",
+	theme = "",
 	lang = "zh-CN",
 	reactionsEnabled = false,
 	emitMetadata = false,
 	inputPosition = "top",
 	loading = "lazy",
 } = Astro.props;
+
+// 自定义主题 URL
+const customThemeLight = "https://chaonous.com/giscus-theme.css";
+const customThemeDark = "https://chaonous.com/giscus-theme.css";
 ---
 
 <div class="giscus-wrapper mt-8 mb-6">
 	<!-- 评论区域标题 -->
-	<div class="comment-header flex items-center gap-3 mb-5 onload-animation">
-		<div class="comment-icon-wrapper relative">
-			<div
-				class="absolute inset-0 bg-gradient-to-br from-(--primary)/20 to-(--primary)/5 rounded-xl blur-sm"
-			>
-			</div>
-			<div
-				class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-(--primary)/15 to-transparent border border-(--primary)/20"
-			>
-				<Icon
-					name="material-symbols:chat-bubble-outline-rounded"
-					class="text-xl text-(--primary)"
-				/>
-			</div>
+	<div class="comment-header flex items-center gap-3 mb-4 onload-animation">
+		<div class="flex items-center justify-center w-9 h-9 rounded-lg bg-(--btn-regular-bg)">
+			<Icon
+				name="material-symbols:chat-bubble-outline-rounded"
+				class="text-lg text-(--primary)"
+			/>
 		</div>
-		<div class="flex-1">
-			<h3 class="text-xl font-semibold text-90 tracking-wide">
-				{i18n(I18nKey.comments) || "评论"}
-			</h3>
-			<p class="text-xs text-50 mt-0.5">欢迎留言交流，分享你的想法</p>
-		</div>
+		<h3 class="text-lg font-semibold text-90">
+			{i18n(I18nKey.comments) || "评论"}
+		</h3>
 	</div>
 
 	<!-- Giscus 容器 -->
-	<div
-		class="giscus-container relative rounded-2xl overflow-hidden onload-animation"
-	>
-		<!-- 顶部装饰条 -->
-		<div
-			class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-(--primary)/30 to-transparent"
-		>
-		</div>
-
+	<div class="giscus-container relative rounded-xl overflow-hidden onload-animation">
 		<!-- Giscus iframe 容器 -->
 		<div
 			class="giscus relative z-10"
@@ -86,7 +71,9 @@ const {
 			data-reactions-enabled={reactionsEnabled ? "1" : "0"}
 			data-emit-metadata={emitMetadata ? "1" : "0"}
 			data-input-position={inputPosition}
-			data-theme={theme}
+			data-theme="custom"
+			data-theme-light={customThemeLight}
+			data-theme-dark={customThemeDark}
 			data-lang={lang}
 			data-loading={loading}
 		>
@@ -96,7 +83,7 @@ const {
 		<div
 			class="giscus-loading absolute inset-0 flex flex-col items-center justify-center bg-(--card-bg) z-20"
 		>
-			<div class="loading-spinner w-10 h-10 mb-3">
+			<div class="loading-spinner w-8 h-8 mb-3">
 				<svg
 					class="animate-spin text-(--primary)"
 					viewBox="0 0 24 24"
@@ -128,34 +115,10 @@ const {
 	}
 
 	.giscus-container {
-		min-height: 280px;
+		min-height: 200px;
 		border: 1px solid var(--line-divider);
 		background: var(--card-bg);
-		box-shadow:
-			0 1px 3px rgba(0, 0, 0, 0.05),
-			0 4px 12px rgba(0, 0, 0, 0.03);
-		transition:
-			box-shadow 0.3s ease,
-			border-color 0.3s ease;
-	}
-
-	.giscus-container:hover {
-		border-color: color-mix(
-			in oklab,
-			var(--primary) 30%,
-			var(--line-divider)
-		);
-		box-shadow:
-			0 2px 8px rgba(0, 0, 0, 0.06),
-			0 8px 24px rgba(0, 0, 0, 0.04);
-	}
-
-	.comment-icon-wrapper {
-		transition: transform 0.3s ease;
-	}
-
-	.giscus-wrapper:hover .comment-icon-wrapper {
-		transform: scale(1.05);
+		border-radius: var(--radius-large);
 	}
 
 	.giscus-loading {
@@ -180,27 +143,13 @@ const {
 	.animate-spin {
 		animation: spin 1s linear infinite;
 	}
-
-	:global(.dark) .giscus-container {
-		box-shadow:
-			0 1px 3px rgba(0, 0, 0, 0.2),
-			0 4px 12px rgba(0, 0, 0, 0.1);
-	}
-
-	:global(.dark) .giscus-container:hover {
-		box-shadow:
-			0 2px 8px rgba(0, 0, 0, 0.25),
-			0 8px 24px rgba(0, 0, 0, 0.15);
-	}
-
-	@media (max-width: 640px) {
-		.giscus-container {
-			border-radius: 1rem;
-		}
-	}
 </style>
 
 <script>
+	// 自定义主题 URL
+	const customThemeLight = "https://chaonous.com/giscus-theme.css";
+	const customThemeDark = "https://chaonous.com/giscus-theme.css";
+
 	// 动态加载 Giscus 脚本
 	function initGiscus() {
 		const giscusContainer = document.querySelector(".giscus");
@@ -208,7 +157,7 @@ const {
 		if (!giscusContainer || giscusContainer.querySelector("iframe")) return;
 
 		const isDark = document.documentElement.classList.contains("dark");
-		const currentTheme = isDark ? "dark" : "light";
+		const currentTheme = isDark ? customThemeDark : customThemeLight;
 
 		const script = document.createElement("script");
 		script.src = "https://giscus.app/client.js";
@@ -275,7 +224,7 @@ const {
 	// 主题切换时更新 Giscus 主题
 	function updateGiscusTheme() {
 		const isDark = document.documentElement.classList.contains("dark");
-		const theme = isDark ? "dark" : "light";
+		const theme = isDark ? customThemeDark : customThemeLight;
 		const iframe = document.querySelector(
 			".giscus iframe",
 		) as HTMLIFrameElement;

@@ -1,0 +1,92 @@
+/* Giscus 自定义主题 - 与 ChaoNous Blog 风格统一 */
+
+/* 基础变量 */
+:root {
+  --color-border-default: var(--border-color, #d0d7de);
+  --color-border-muted: var(--border-color, #d0d7de);
+  --color-accent-fg: var(--primary, #558e88);
+  --color-accent-emphasis: var(--primary, #558e88);
+  --color-btn-bg: var(--btn-regular-bg, #f6f8fa);
+  --color-btn-border: var(--border-color, #d0d7de);
+  --color-btn-hover-bg: var(--btn-regular-bg-hover, #f3f4f6);
+  --color-fg-default: var(--text-color, #24292f);
+  --color-fg-muted: var(--text-muted, #57606a);
+  --color-canvas-default: var(--card-bg, #ffffff);
+  --color-canvas-subtle: var(--bg-subtle, #f6f8fa);
+}
+
+/* 隐藏 Powered by giscus */
+.gsc-powered-by,
+.gsc-homepage,
+a[href*="giscus.app"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* 隐藏反应按钮区域 */
+.gsc-reactions {
+  display: none !important;
+}
+
+/* 评论输入框样式 */
+.gsc-comment-box {
+  border-radius: 12px !important;
+  border-color: var(--color-border-default) !important;
+}
+
+.gsc-comment-box textarea {
+  border-radius: 8px !important;
+  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+}
+
+/* 按钮样式 */
+.gsc-comment-box .gsc-comment-box-buttons button {
+  border-radius: 8px !important;
+  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+}
+
+/* 评论列表样式 */
+.gsc-comments {
+  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+}
+
+.gsc-comment {
+  border-radius: 12px !important;
+}
+
+/* 评论内容样式 */
+.gsc-comment-content {
+  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+  line-height: 1.7 !important;
+}
+
+/* 评论头部 */
+.gsc-comment-header {
+  border-radius: 12px 12px 0 0 !important;
+}
+
+/* 回复区域 */
+.gsc-replies {
+  border-radius: 0 0 12px 12px !important;
+}
+
+/* 分页按钮 */
+.gsc-pagination button {
+  border-radius: 8px !important;
+  font-family: 'Cinzel', 'Noto Serif SC', Georgia, 'Times New Roman', serif !important;
+}
+
+/* 暗色模式 */
+[data-theme="dark"] {
+  --color-border-default: var(--border-color, #30363d);
+  --color-border-muted: var(--border-color, #30363d);
+  --color-accent-fg: var(--primary, #6db3a8);
+  --color-accent-emphasis: var(--primary, #6db3a8);
+  --color-btn-bg: var(--btn-regular-bg, #21262d);
+  --color-btn-border: var(--border-color, #30363d);
+  --color-btn-hover-bg: var(--btn-regular-bg-hover, #30363d);
+  --color-fg-default: var(--text-color, #c9d1d9);
+  --color-fg-muted: var(--text-muted, #8b949e);
+  --color-canvas-default: var(--card-bg, #0d1117);
+  --color-canvas-subtle: var(--bg-subtle, #161b22);
+}
