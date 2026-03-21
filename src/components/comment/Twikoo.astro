@@ -48,9 +48,14 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		min-height: 200px;
 	}
 
-	/* Twikoo 样式覆盖 - 深色主题风格 */
+	/* Twikoo 样式覆盖 - 完美融入主题色与亮暗模式 */
 	:global(.tk-comments) {
 		--twikoo-primary: var(--primary);
+	}
+
+	:global(.tk-comments *::selection) {
+		background: var(--selection-bg, var(--primary));
+		color: inherit;
 	}
 
 	:global(.tk-comments .tk-container) {
@@ -61,72 +66,83 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		display: none !important;
 	}
 
-	:global(.tk-comments .tk-input) {
-		background: rgba(0, 0, 0, 0.3) !important;
-		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	/* 输入框与预览框 */
+	:global(.tk-comments .tk-input),
+	:global(.tk-comments .tk-preview) {
+		background: var(--card-bg, rgba(128, 128, 128, 0.05)) !important;
+		border: 1px solid rgba(128, 128, 128, 0.15) !important;
 		border-radius: 0.75rem !important;
-		color: rgba(255, 255, 255, 0.85) !important;
-		font-family: "Cinzel", "Noto Serif SC", Georgia, serif !important;
+		color: inherit !important;
+		font-family: inherit !important;
+		transition: all 0.3s ease;
 	}
 
 	:global(.tk-comments .tk-input::placeholder) {
-		color: rgba(255, 255, 255, 0.4) !important;
+		color: rgba(128, 128, 128, 0.5) !important;
 	}
 
 	:global(.tk-comments .tk-input:focus) {
 		border-color: var(--primary) !important;
+		box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 20%, transparent);
 	}
 
-	:global(.tk-comments .tk-preview) {
-		background: rgba(0, 0, 0, 0.2) !important;
-		border: 1px solid rgba(255, 255, 255, 0.1) !important;
-		border-radius: 0.75rem !important;
-		color: rgba(255, 255, 255, 0.85) !important;
-	}
-
+	/* 操作栏 */
 	:global(.tk-comments .tk-actions) {
-		background: rgba(255, 255, 255, 0.03) !important;
+		background: rgba(128, 128, 128, 0.05) !important;
 		border-radius: 0 0 0.75rem 0.75rem !important;
 	}
 
 	:global(.tk-comments .tk-action-btn) {
-		color: rgba(255, 255, 255, 0.6) !important;
+		color: inherit !important;
+		opacity: 0.6;
+		transition: all 0.2s;
 	}
 
 	:global(.tk-comments .tk-action-btn:hover) {
 		color: var(--primary) !important;
+		opacity: 1;
 	}
 
+	/* 提交按钮 */
 	:global(.tk-comments .tk-submit) {
 		background: var(--primary) !important;
-		color: #000 !important;
+		color: #ffffff !important;
 		border-radius: 0.5rem !important;
+		font-weight: 500 !important;
+		transition: all 0.3s;
+	}
+
+	:global(html.dark .tk-comments .tk-submit) {
+		color: #000000 !important;
 	}
 
 	:global(.tk-comments .tk-submit:hover) {
 		filter: brightness(1.1) !important;
 	}
 
-	/* 评论卡片 */
+	/* 评论卡片本体 */
 	:global(.tk-comments .tk-comment) {
-		background: rgba(0, 0, 0, 0.2) !important;
-		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+		background: var(--card-bg, rgba(128, 128, 128, 0.05)) !important;
+		border: 1px solid rgba(128, 128, 128, 0.15) !important;
 		border-radius: 0.75rem !important;
 		margin-bottom: 1rem !important;
 		overflow: hidden !important;
+		transition: all 0.3s ease;
 	}
 
 	:global(.tk-comments .tk-comment:hover) {
-		border-color: var(--primary) !important;
+		border-color: color-mix(in oklch, var(--primary) 50%, transparent) !important;
 	}
 
 	:global(.tk-comments .tk-avatar) {
 		border-radius: 50% !important;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	}
 
 	:global(.tk-comments .tk-nick) {
-		color: rgba(255, 255, 255, 0.85) !important;
+		color: inherit !important;
 		font-weight: 600 !important;
+		transition: color 0.2s;
 	}
 
 	:global(.tk-comments .tk-nick:hover) {
@@ -134,109 +150,100 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	}
 
 	:global(.tk-comments .tk-time) {
-		color: rgba(255, 255, 255, 0.5) !important;
+		color: inherit !important;
+		opacity: 0.5;
 	}
 
 	:global(.tk-comments .tk-content) {
-		color: rgba(255, 255, 255, 0.85) !important;
-		font-family: "Cinzel", "Noto Serif SC", Georgia, serif !important;
+		color: inherit !important;
+		margin-top: 0.5rem !important;
 	}
 
 	:global(.tk-comments .tk-content a) {
 		color: var(--primary) !important;
+		text-decoration: underline;
+		text-decoration-style: dashed;
+		text-underline-offset: 4px;
 	}
 
-	/* 回复区域 */
+	/* 回复区域的嵌套处理 */
 	:global(.tk-comments .tk-replies) {
-		border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-		background: rgba(0, 0, 0, 0.1) !important;
+		border-top: 1px solid rgba(128, 128, 128, 0.1) !important;
+		background: rgba(128, 128, 128, 0.03) !important;
 	}
 
 	:global(.tk-comments .tk-reply) {
-		border: 1px solid rgba(255, 255, 255, 0.08) !important;
+		border: 1px solid rgba(128, 128, 128, 0.1) !important;
 		border-radius: 0.5rem !important;
-		background: rgba(0, 0, 0, 0.15) !important;
+		background: rgba(128, 128, 128, 0.04) !important;
 	}
 
-	/* 按钮 */
-	:global(.tk-comments .tk-action) {
-		color: rgba(255, 255, 255, 0.6) !important;
-	}
-
-	:global(.tk-comments .tk-action:hover) {
-		color: var(--primary) !important;
-	}
-
+	/* 小按钮与图标 */
+	:global(.tk-comments .tk-action),
 	:global(.tk-comments .tk-icon) {
-		color: rgba(255, 255, 255, 0.6) !important;
+		color: inherit !important;
+		opacity: 0.6;
+		transition: all 0.2s;
 	}
 
+	:global(.tk-comments .tk-action:hover),
 	:global(.tk-comments .tk-icon:hover) {
 		color: var(--primary) !important;
+		opacity: 1;
 	}
 
-	/* 分页 */
+	/* 展开分页按钮 */
 	:global(.tk-comments .tk-expand) {
-		background: rgba(255, 255, 255, 0.05) !important;
-		border: 1px solid rgba(255, 255, 255, 0.1) !important;
-		color: rgba(255, 255, 255, 0.85) !important;
+		background: var(--card-bg, rgba(128, 128, 128, 0.05)) !important;
+		border: 1px solid rgba(128, 128, 128, 0.15) !important;
+		color: inherit !important;
 		border-radius: 0.5rem !important;
+		transition: all 0.3s;
 	}
 
 	:global(.tk-comments .tk-expand:hover) {
-		background: rgba(255, 255, 255, 0.1) !important;
+		background: rgba(128, 128, 128, 0.1) !important;
 		border-color: var(--primary) !important;
+		color: var(--primary) !important;
 	}
 
 	/* 表情面板 */
 	:global(.tk-comments .tk-owo-popup) {
-		background: rgba(30, 30, 30, 0.95) !important;
-		border: 1px solid rgba(255, 255, 255, 0.1) !important;
+		background: var(--card-bg, rgba(255, 255, 255, 0.95)) !important;
+		border: 1px solid rgba(128, 128, 128, 0.15) !important;
 		border-radius: 0.75rem !important;
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(10px);
 	}
 
-	/* 登录相关 */
-	:global(.tk-comments .tk-login) {
-		color: var(--primary) !important;
-	}
-
-	:global(.tk-comments .tk-user) {
-		color: rgba(255, 255, 255, 0.6) !important;
-	}
-
-	/* 代码块 */
+	/* 代码块风格 */
 	:global(.tk-comments .tk-content code) {
-		background: rgba(255, 255, 255, 0.08) !important;
+		background: rgba(128, 128, 128, 0.1) !important;
 		padding: 0.2em 0.4em !important;
 		border-radius: 0.25rem !important;
-		font-family: "JetBrains Mono", monospace !important;
+		font-family: inherit !important;
 	}
 
 	:global(.tk-comments .tk-content pre) {
-		background: rgba(0, 0, 0, 0.3) !important;
+		background: rgba(128, 128, 128, 0.08) !important;
 		padding: 1rem !important;
 		border-radius: 0.5rem !important;
+		border: 1px solid rgba(128, 128, 128, 0.1) !important;
 	}
 
 	:global(.tk-comments .tk-content blockquote) {
 		border-left: 3px solid var(--primary) !important;
 		padding-left: 1rem !important;
-		color: rgba(255, 255, 255, 0.6) !important;
+		color: inherit !important;
+		opacity: 0.8;
+		background: rgba(128, 128, 128, 0.05) !important;
 	}
 
-	/* 加载状态 */
-	:global(.tk-loading) {
-		color: rgba(255, 255, 255, 0.5) !important;
-	}
-
-	/* Meta 信息 */
+	/* 加载状态文字等 */
+	:global(.tk-loading),
 	:global(.tk-comments .tk-meta) {
-		color: rgba(255, 255, 255, 0.5) !important;
-	}
-
-	/* 表情 */
-	:global(.tk-comments .tk-owo-emotion) {
-		display: inline-block !important;
+		color: inherit !important;
+		opacity: 0.5;
 	}
 </style>
 
