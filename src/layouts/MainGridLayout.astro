@@ -1,4 +1,4 @@
-﻿---
+---
 import BackToTop from "@components/control/BackToTop.astro";
 import FloatingTOC from "@components/control/FloatingTOC.astro";
 import Footer from "@components/Footer.astro";
@@ -18,7 +18,6 @@ import { resolveBannerImages } from "../utils/banner-utils";
 import { widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
 
-// TOC婵犵妲呴崹顏堝焵椤掆偓绾绢厾娑甸埀顒勬⒒娴ｈ绶茬紒澶婄埣閹?
 const tocMode = siteConfig.toc.mode || "float";
 const isFloatTOC = tocMode === "float";
 const isSidebarTOC = tocMode === "sidebar";
@@ -33,7 +32,7 @@ interface Props {
 	headings?: MarkdownHeading[];
 }
 
-// 缂傚倷绶￠崑澶愵敋瑜旈幃妤侇槹鎼存ê浜鹃柣鐔稿婢ф洜鈧娲栭妶绋跨暦濞嗘挻鍤嶉柕澶涢檮椤?
+// 检查 banner 是否为对象格式的工具函数（暂时注释）
 // const isBannerSrcObject = (
 // 	src:
 // 		| string
@@ -65,70 +64,53 @@ const {
 const hasBannerCredit = siteConfig.banner.credit.enable;
 const hasBannerLink = !!siteConfig.banner.credit.url;
 
-// 婵犵妲呴崑鈧柛瀣崌閺岋紕浠︾拠鎻掑濠碘€冲级閹倸鐣烽妷鈺傛櫆闁兼剚鍨抽ˇ鐗堜繆椤愵剛绋婚柣妤冨█婵?
 const isHomePage = Astro.url.pathname === "/" || Astro.url.pathname === "";
 const showHomeText = siteConfig.banner.homeText?.enable && isHomePage;
 
-// 闂佽崵濮崇欢銈囨閺囥垺鍋╃紓浣诡焽閳绘棃鎮归崶銊ョ祷闁轰礁鐖奸幃妤呭捶椤撶喎娈岄柣蹇撴禋閸ㄨ泛鐣峰ú顏呭亜闁告挷鑳跺瓭缂傚倸鍊搁崰姘跺闯椤栨粍顫曟繝闈涱儐閸も偓闂佸憡鍔﹂崢浠嬵敁濮樿埖鐓欓梻鍫熶緱閸庢劖绻濊閸嬫挾绱撴担瑙勵棓闁搞劏娉涢…鍥敂閸滃啰纾鹃梺鍝勭▉閸樺綊鍩€椤掆偓椤﹂潧顕ｉ鍓х焿缂佹柨顔唍er闂佽崵鍋為崙褰掑磻婵犲倵鏋旈柨婵嗩槹鐎?
-// 闁荤喐绮庢晶妤呭箲閸モ晛鍨濇い鏍ㄧ矋婵ジ鏌曢崼婵囩仾濞达絽澹婇崵鏇㈢叓閸パ勫攭缂佲偓?banner 闂備礁鎼崯鎶筋敊閹邦喗顫曟繝闈涙处婵挳鎮归幁鎺戝闁哄棗妲恆nner濠德板€曢崐褰掓晪闁诲氦顫夋繛濠囧极瀹ュ應妲堟俊顖濐嚙閸撱劑姊洪崨濠傜瑲闁荤喆鍊栫换娑㈠炊椤掍礁浠洪梺闈浥堥弬鍌炲焵椤掆偓閿曨亜顕ｉ崐鐔虹杸婵炴垶鑹鹃拏瀣煙?
-// 闂佽崵濮崇拋鏌ュ疾濞嗘垟鍋撻棃娑氱劯鐎规洘锕㈠畷銊╊敇瑜嶉弲锝夋⒑閸涘﹦澧柟纰卞亰閹€斥枎閹寸儐娼熼悷婊勫灴瀹曟艾鈽夊Ο閿嬬亙闂侀潧绻嗛崜婵嬫偉鏉堚晝纾奸柟顖嗕椒绮х紓浣诡殔閹虫ê顕ｉ鍕剬闁告縿鍎抽ˇ顔尖攽閻愬樊妲堕柛銊ユ惈椤繈顢欓崜褎锛忛梺绉嗗嫷娈樼憸閭﹀灦楠炴牗娼忛幆褜娲柣搴ｎ攰濞呮洜绮?0-15vh闂備焦瀵х粙鎴﹀嫉椤掍焦娅犵€广儱妫涢々鐑芥煏婢跺牆鈧洟鎯佸鍫熺厱闁归偊鍓氶崳瑙勩亜閺冣偓閸旀牜绮嬮幒鎴晠闁告帞鍔唍er濠碉紕鍋戦崐鏇㈡偉婵傜纾块柡澶嬪焾閸ゆ洟鏌嶈閸撴岸骞?
 const mainPanelTop =
 	siteConfig.wallpaperMode.defaultMode === "banner"
 		? `${BANNER_HEIGHT}vh`
 		: "5.5rem";
 // const mobileNonHomeMainTop = !isHomePage ? "5.5rem" : mainPanelTop;
 
-// 闁荤喐绮庢晶妤呭箲閸モ晛鍨濇い鏍ㄧ矋婵ジ鏌曢崼婵囩仾濞达絽澹婇崵鏇㈢叓閸パ勬崳闁荤喐绻堥弻?banner 闂備礁鎼崯鎶筋敊閹邦喗顫曟繝闈涙川閳绘棃鎮归崶銊ョ祷闁轰礁鐖奸幃妤呭捶椤撶喎娈岄柣蹇撴禋閸ㄨ泛鐣峰ú顏呭亜濡炲楠搁悾銊╂煟閻樺弶鍌ㄩ柛搴ㄤ憾閿濈偤骞囬鍓э紲闂佸壊鍋呯划搴ㄦ儗閵堝拋娓婚柕鍫濈墕閻撴劙鏌ｉ弽鏉戞灍缂佸顦遍埀顒婄秵閸犳顩奸妸褉鍋撳▓鍨灀闁稿鎸搁埞?
 const finalMainPanelTop =
 	siteConfig.wallpaperMode.defaultMode === "banner" ? mainPanelTop : "5.5rem";
 
-// 婵犵妲呴崑鈧柛瀣崌閺岋紕浠︾拠鎻掑婵炴垶鏌ㄧ换鎴犵箔閻旀椿妯佺紓浣规⒒閸犳牕顕ｉ崐鐔虹杸闁哄啠鍋撶粭鎴︽⒑閸涘﹦鍟查梻鍕閿曘垺鎷呴搹鍦紲闂佸憡娲︽禍婵嬵敃?
 const hasLeftSidebarComponents =
 	widgetManager.getComponentsByPosition("top", "left", "desktop").length >
 		0 ||
 	widgetManager.getComponentsByPosition("sticky", "left", "desktop").length >
 		0;
 
-// 婵犵妲呴崑鈧柛瀣崌閺岋紕浠︾拠鎻掑閻熸粍婢橀幉锛勭箔閻旀椿妯佺紓浣规⒒閸犳牕顕ｉ崐鐔虹杸闁哄啠鍋撶粭鎴︽⒑閸涘﹦鍟查梻鍕閿曘垺鎷呴搹鍦紲闂佸憡娲︽禍婵嬵敃?
 const hasRightSidebarComponents =
 	widgetManager.getComponentsByPosition("top", "right", "desktop").length >
 		0 ||
 	widgetManager.getComponentsByPosition("sticky", "right", "desktop").length >
 		0;
 
-// 婵犵妲呴崑鈧柛瀣崌閺岋紕浠︾拠鎻掑婵犫拃鍕煉鐎殿喚鏁婚幖鍦嫚閳ヨ尙纾?drawer 闂備礁鎼€氱兘宕规导鏉戠畾濞撴埃鍋撶€殿喖鐏氬鍕暆閳ь剟鎯岀€ｎ€?
 const hasMobileDrawerComponents =
 	widgetManager.getComponentsByPosition("top", "drawer", "mobile").length >
 		0 ||
 	widgetManager.getComponentsByPosition("sticky", "drawer", "mobile").length >
 		0;
 
-// 婵°倗濮烽崑鐘测枍閺囩儐鐔嗘俊顖濆亹閸楁碍銇勯弽銊р姇缁楁垿姊洪崨濠勫暡闂傚嫬瀚敃銏℃媴閾忓湱锛滈梺鍛婃处娴滄繈顢曟禒瀣叆婵炴垶顭囨晶锝夋煃瑜滈崜娆撳疮閸愬樊鐎跺┑鐘崇閸ゅ﹥銇勮箛鎾愁仼鐞氱喓绱撴担鍓叉Ъ妞ゆ泦鍕弿闁冲搫鎳忛悞濠氭煛閸曨偆绠抽悽顖氭閺?
 const hasTabletLeftSidebarComponents =
 	widgetManager.getComponentsByPosition("top", "left", "tablet").length > 0 ||
 	widgetManager.getComponentsByPosition("sticky", "left", "tablet").length >
 		0;
 
-// 婵犵妲呴崑鈧柛瀣崌閺岋紕浠︾拠鎻掑闂佸搫鎳撻崺鏍ь焽韫囨洘鍠嗛柛鏇ㄥ幖閻掑潡姊洪崫鍕伌闁搞劋鍗抽獮鍡樼瑹閳ь剙鐣烽妷鈺婃晬婵犲﹤瀚▓銏ゆ⒑閹稿海鈽夐柤娲诲灡閹便劑鍩￠崨顓犵暠婵炶揪绲块弲顐⑩枔閸洘鐓涘ù锝呭閸ょ喓绱撳鍜佹█鐎殿喕绮欓幃鈩冩償閿濆簼绱濋梺璇茬箳閸嬫劙宕?
 const mobileShowSidebar = hasMobileDrawerComponents;
 const tabletShowSidebar = hasTabletLeftSidebarComponents;
 const desktopShowSidebar =
 	hasLeftSidebarComponents || hasRightSidebarComponents;
 
-// 婵犵鍓濋〃鍛存儗閸屾凹鐒介柟娈垮枤閸楁碍銇勯弽銊ф噭婵炲懐濞€瀵爼宕奸敐搴㈢秷闂佺粯鐗崳锝咁嚕閻㈢鐒垫い鎺戝€荤壕濂告煕椤愩倕鏋戦柍缁樻⒒缁辨帡鍩€椤掑嫭鎯為柣鐔兼緩閿曞倹鐓欐い鎴ｆ硶缁涘繒绱掓潏銊ф噰闁硅櫕鎹囧畷姗€顢橀悤浣插亾濮樿埖鐓涢柛鏇㈡涧閻忕娀鏌熼娆戠獢鐎殿喖鐏氬鍕暆閳ь剟鎯岀€ｎ€㈠綊鎮╂笟顖氭櫍缂?
 const desktopShowLeftSidebar = hasLeftSidebarComponents;
 const desktopShowRightSidebar = hasRightSidebarComponents;
 
-// 婵°倗濮烽崑鐘测枍閺囩儐鐔嗘俊顖濆亹閸楁碍銇勯弽銊ф噭婵炲懐濞€瀵爼宕奸敐搴㈢秷闂佺粯鐗崳锝咁嚕閻㈢鐒垫い鎺戝€荤壕濂告煕椤愩倕鏋戦柍缁樻⒒缁辨帡鍩€椤掑嫭鎯為柣鐔兼緩閿曞倹鐓?
 const tabletShowLeftSidebar = hasTabletLeftSidebarComponents;
-// 濠电姷顣介埀顒€鍟块埀顒€缍婇幃妯诲緞婵犲骸鏅犻梺鎸庢⒐鐎笛冣枍閻樼粯鐓涢柛顐ｇ箥濡茶櫣绱掗鑲┬ｇ紒鍌涘笧閹峰宕烽鐙€妲烽梻浣告啞鐢鎮烽妷鈺傜參闁冲搫鎳庣痪褔鎮规笟顖滃帥濞寸厧鍊搁埥澶愬箻瀹曞泦锝嗕繆椤栨凹妲虹紒顔肩墦瀹曨偊宕熼銈庢М濠电偞鎸婚惃婊堝磼濞戞瑧褰块梻浣告惈缁夊瓨顨ヨ箛鏇燁潟闂侇剙绉撮惌妤併亜韫囨挻鍣虹紒鐘冲笧閹叉悂鎮ч崼鐔风婵炴垶鏌ㄧ换鎴犵箔閻旀椿妲洪柣鐘冲姉閸犳挾鍒掑顓熷闁规鍠氶幊宥夋⒑閸涘﹦鎳冮柛妯荤墵瀵煡宕奸弴鐐茬彉婵犮垼娉涢惉濂告儗鐎ｎ€㈠綊鎮╅崫鍕帿濠碉紕鍋涢崐鍧楀极瀹ュ洣娌柟顖嗗本鐎梻浣告惈鐎氼剚鏅舵禒瀣︽慨妯挎硾閻鏌涜箛鎾村櫤婵炲懐濮撮妴鎺戭潩閳ь剟宕熼鐐靛姽闂備焦瀵х粙鎴︽偋閸涱垱顫曢柟娈垮枟閸嬫牗銇勯幇鈺€绱楅柍鍝勬噹缁€鍡涙煛婢跺浠掔紒鐙€鍨伴妴鎺戭潩閳ь剙顓奸崶鈺婃Т
-// 婵犵數鍋涢ˇ顓㈠礉瀹ュ绀堝ù鐓庣摠閺咁剚鎱ㄥΟ鍝勮埞缂佺姵鐩弻?getComponentsByPosition("left", "tablet") 闁诲氦顫夐悺鏇犱焊濞嗘垵鍨濋柨鐔哄Т缁€宀勬煕濞戝崬骞楅柛搴㈡尭闇夋繝濠傚暞椤ワ紕绱掔紒妯煎缂佸顦甸、鏃堝醇濮橆兛澹曢梺鍝勫缁绘帞鏁?
 const tabletShowRightSidebar = false; // 婵°倗濮烽崑鐘测枍閺囩儐鐔嗘俊顖濆亹閸楁碍銇勯弽銊ф噮闁荤喐绻堥弻娑㈠箛椤掑倐锝嗙節閳ь剚绗熼埀顒勫箖椤忓牜鏁嗛柛灞剧矊缂嶅嫰姊哄Ч鍥у閻庢凹鍓濋妵鎰板川婵犲嫮鎳濋悷婊冮叄閹儵顢氶埀顒勫极瀹ュ洣娌紒娑橆儐閹兼劙姊洪崫鍕靛剱缂侇喖鐭侀妵鎰板传閵壯呯厠闁荤姴娲╁鎾剁不椤栨鐟邦煥閸愨晪绱ㄧ紓浣介哺缁诲嫰鍩€椤掑倹鍤€闁哥噥鍋勯～婵嬪Ω閳轰焦宓?tabletShowLeftSidebar 濠电偞鍨堕幖鈺呭储閽樺）鐔稿緞瀹€鈧惌?
 const tabletAnySidebar = tabletShowLeftSidebar;
 
-// 婵犵妲呴崑鈧柛瀣崌閺岋紕浠︾拠鎻掑Е缂備緡鍣崹鎶藉箯鐎ｎ喖围闁告侗鍨兼导宀勬煟韫囨洖浜归柛瀣尰娣囧﹪顢涘璇蹭壕鐎规洖娲ㄩ、鍛存⒑閹稿海鈽夐柤娲诲灦閵嗗懓顦圭€殿喚顭堥…銊╁礋椤?grid 婵犵妲呴崹顏堝焵椤掆偓绾绢厾娑甸埀顒勬⒑閹稿海鈽夐柤娲诲灥閵囨劙宕ㄦ繝鍕嚌閻熸粍鍨圭划鈺呮偄閻撳骸鍞ㄩ棅顐㈡处閹告悂鎮橀妷銉㈡斀妞ゆ梻鈷堥崕蹇旀叏濡濡介柟顖涙瀵噣宕剁捄鐑樼暯闂傚倸鍊搁幊蹇涘礉濡綍?
-
-// 闂備礁鎲￠弻锝夊礉瀹ュ鐒垫い鎴ｅ劵閸忓瞼绱撳鍜佹█鐎殿喕绮欓幃鈩冩償閿濆簼绱濋梺璇茬箳閸嬫劙宕戦幘鍓佺＜妞ゆ劑鍎洪崵娆撴煙?- 闂備礁鎼粔鐑斤綖婢跺﹦鏆ゅù锝呮贡閻熷湱鎲搁幋鐘靛崥闁绘梻鍘ч崘鈧棅顐㈡处閺嬪懏鎷呴崜鎻掓闂婎偄娲﹂幐鑽も偓姘叀閺岋繝宕熼棃娑氫哗闂佽鍨欢姘嚕閸偄绶炵€光偓閳ь剟鎯岀€ｎ€㈠綊鎮╅崘鎻掑Ц闂佹眹鍔庨崰鏍ь嚕椤愶箑绾ч柟瀛樼箘娴犳岸鏌?
 let desktopGridCols = "lg:grid-cols-1";
 if (desktopShowLeftSidebar && desktopShowRightSidebar) {
 	desktopGridCols = "lg:grid-cols-[17.5rem_1fr_17.5rem]";
@@ -146,7 +128,6 @@ const gridCols = `
 	.trim()
 	.replace(/\s+/g, " ");
 
-// 濠电偞鎸婚惃婊堝幢濞嗘垵楠勯梻浣告惈缁夊鎹㈤幇閭︽晩闁圭増婢橀梻顖炴煏婵炑冩－濞煎爼姊?- 濠电姵顔栭崰鏍敄閸モ晛鍨濋柟鎹愵嚙閹瑰爼鏌曟繛鍨姍缂佺媭鍨伴妴?
 const sidebarClass = `
 	onload-animation
 	${mobileShowSidebar && hasMobileDrawerComponents ? "block" : "hidden"}
@@ -156,11 +137,6 @@ const sidebarClass = `
 	.trim()
 	.replace(/\s+/g, " ");
 
-// 闂備礁鎲￠悷銉╁储閺嶎厼鐤鹃柤绋跨仛缂嶅洭鎮峰▎蹇擃伀闁糕晛顦甸幃妤呭捶椤撶喎娈屽┑鐐叉噺鐢偤鎮崜褎瀚氶柛娆忣槸閳?
-// 闂備礁缍婂褔顢栭崱妞绘敠闁逞屽墰缁辨帡寮幋婵堜紙缂備礁褰夐崡鍐差潖妤ｅ啫绠涙い鏍ㄤ緱濡繘姊洪幐搴ｂ槈闁绘锕ラ弲璺侯煥閸繂鐝橀梺鎯х箺椤曟牗瀵奸崒鐐寸厱婵炲棙眉闁垶鏌嶈閸撴碍绌遍搹瑙勫床?drawer 闂備礁鎼€氼剚鏅舵禒瀣︽慨妯夸含绾惧ジ鏌涢弴銊ょ凹妞ゆ劒绮欓弻?
-// 婵°倗濮烽崑鐘测枍閺囩儐鐔嗘俊顖濆亹閸楁碍銇勯弽銉モ偓妤冪玻濡ゅ懏鐓涚€广儱鐗滃鎰偓瑙勬尫閼冲墎鍒掓繝姘劦妞ゆ帒瀚粈宀勬煛瀹ュ骸骞愰柛瀣崌瀵媽绠涢弴鐐殿伖闂備礁鎼€氼剚鏅舵禒瀣︽慨妯垮煐閺咁剟鏌涢锝囩畵婵炴嚪鍥ㄧ厸闁割偅绻嶅Σ鍝ョ磽瀹ュ拋鍎忔い鏂跨箻閺佸倿骞愭惔銏㈠娇濠电偞鍨堕幑浣糕枍閿濆鐓橀柡宥庡幖缁秹鏌ら幖浣规锭妞ゃ倕鎳橀弻锟犲礋椤愨懇鎸冮梺闈涙处瀹€鎼佹偘椤曗偓瀹曟粍鎷呴崶锝嗘珚鐎规洘宀稿鑸靛緞閸濄儺鍞靛┑鐐存尰閻ㄦ粌顓奸崶鈺婃Т
-// 婵犵鍓濋〃鍛存儗閸屾凹鐒介柟娈垮枤閸楁碍銇勯弽銉モ偓妤冪玻濡ゅ懏鍊甸悷娆忓閻擃垳绱撳鍛殗鐎规洘宀搁獮宥夘敊閸擃灝褔姊洪崫鍕㈤柛姘儏閵嗘帡宕奸弴鐐缎曢柟鐓庣摠缁诲嫰顢旈柆宥嗙厱闁圭儤鎼╁▓锝囩磼鏉堛劎鎳囩€规洩缍佸畷妤呭川椤旂晫褰块梻?
-// 濠电姷顣介埀顒€鍟块埀顒€缍婇幃妯诲緞鐎ｅ灚浠樺┑鈽嗗灡椤戞瑩宕ラ崶顒佺厸?grid 婵犵妲呴崹顏堝焵椤掆偓绾绢厾娑甸埀顒勬⒑閹稿海鈽夐柤娲诲灦瀹曞綊宕归锝呭伎闁诲函缍嗘禍婵嬫儍閹达附鈷掗柛娑卞枛婵本淇?
 const rightSidebarClass = `
 	onload-animation
 	hidden
@@ -171,9 +147,6 @@ const rightSidebarClass = `
 	.trim()
 	.replace(/\s+/g, " ");
 
-// 濠电偞鍨堕幑渚€顢氳瀹曨剛鈧數纭堕崑鎾诲捶椤撶喎娈岄柣蹇撴禋閸ㄨ泛鐣峰ú顏呭亜濡わ附顑欏鍫曟⒑?- 闂備礁鎼粔鐑斤綖婢跺﹦鏆ゅù锝呮贡閻熷湱鎲搁幋鐘靛崥闁绘梻鍘ч崘鈧棅顐㈡处閺嬪懏鎷呴崜鎻掓闂婎偄娲﹀銊モ枔閸洘鐓涘ù锝勮濡墔id-column
-// 婵°倗濮烽崑鐘测枍閺囩儐鐔嗘俊顖氬悑婵ジ鏌熼鍡楁湰鏍￠梻浣告啞缁矂寮甸浣规珷婵犲﹤鐗嗙€氬鏌ц箛姘煎殐濞寸厧鍊块弻銊モ槈濞嗘垹鍙濋柣搴ㄦ涧閻倸鐣峰鈧畷銊╊敇瑜嶉弲锝夋⒑闂堚晞绀嬮柛鏂跨Т閵嗘帡鎳滈悽纰樻灃婵犵數濮撮崯顖炴偂濡炬獣w-1闂備焦瀵х粙鎴炵附閺冨牆鐤鹃柤绋跨仛缂嶅洭鎮峰▎蹇擃伀闁糕晛顦甸弻娑㈡晜閸濆嫬顬嗙紓浣诡殔閹虫ê顕?
-// 婵犵鍓濋〃鍛存儗閸屾凹鐒介柟娈垮枤閸楁碍銇勯弽銉モ偓妤冪玻濡も偓閳藉骞樼拠鈥虫闂佸摜鍋涢顓㈠焵椤掆偓濠€閬嶅箠閹捐绠柣妤€鐗忛悷鍦喐閹寸姷鍗氶柣鏃傚帶閸愨偓闂婎偄娲﹂幑浣衡偓姘懇閺岀喖鎮滃Ο铏圭懖濠碘槅鍨伴ˇ杈╁垝?
 let desktopMainPos = "lg:col-span-1";
 if (desktopShowLeftSidebar && desktopShowRightSidebar) {
 	desktopMainPos = "lg:col-start-2 lg:col-end-3";
@@ -192,11 +165,9 @@ const mainContentClass = `
 	.trim()
 	.replace(/\s+/g, " ");
 
-// 婵犵妲呴崑鈧柛瀣崌閺岋紕浠︾拠鎻掑濠碘€冲级閹倸鐣烽妷鈺傛櫇闁逞屽墰閼洪亶鎳犻浣哥彴闂侀潧顦崕鏌ュ磿濞嗘挻鐓熸い顐墮婵¤偐鈧娲橀崝娆撳蓟閸涙壆鐤€闁哄啠鍋撴い顐ｇ墵閺屸剝鎷呴崫銉ヮ杸闂佽绻愰ˇ鐢稿极瀹ュ閱囨繝闈涚墢姝囧┑顔藉笚缁嬫帡鈥﹂崼銉晣閻犲洤寮悢鐓庣伋鐎规洖娲ㄩ、鍛箾?fullscreen 闂備礁鎼崯鎶筋敊閹邦喗顫?
 const shouldEnableTransparency =
 	siteConfig.wallpaperMode.defaultMode === "fullscreen";
 
-// 濠电偞鍨堕幑浣糕枍閿濆洤鍨濈€广儱妫涢々鐑芥煠閹间焦娑ф繛鍏煎灴閺屾盯寮崒姣裤垻鈧娲橀崝娆撳蓟閸涙壆鐤€闁哄啠鍋撴い顐ｇ墵閺屸剝鎷呴崫銉ヮ杸闂佽绻愰ˇ鐢稿箚閸愵喖绀勬繛锝囧瘲缂?
 const transparentClass = shouldEnableTransparency
 	? "wallpaper-transparent"
 	: "";
@@ -221,19 +192,16 @@ const transparentClass = shouldEnableTransparency
 			pageScaling: siteConfig.pageScaling,
 		}}
 	>
-		// 缂傚倷鐒﹂弻銊╊敄閸涱厾鏆ら柛鈩冪☉缁犮儳鎲搁幋锔衡偓渚€骞嬮敂鑺ユ珫闁诲繒鍋犳慨銈夌叕椤掆偓椤啴濡堕崶銊︽瘓濠电偛鍚嬪姗€濡撮幒妤€鐭楀璺鸿嫰鐢剟姊洪崨濠冨碍缂佸顕懞閬嶅蓟閵夛箑浠洪梺闈涱焾閸庡搫顫忕捄銊х＜闁诡垎鍕殘闁煎灈鏅濋埀顒侇問閸犳牜鎹㈤幇鏉跨闁规鍠楅弳婊堟煕閹扳晛濡挎繝鈧悧鍫滅箚妞ゆ牗銇涢崑鎾崇暦閸モ晩鏀ㄩ梻浣瑰缁嬫垿鎯岄崒娑橆嚤闁冲搫鎳庣粈鍌溾偓骞垮劚椤︿即鏁嶈箛娑欑厽?
 		(function () {
 			const wallpaperMode =
 				localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
 			const body = document.body;
 
-			// 闂佽姘﹂～澶愭儗椤斿墽涓?banner 濠德板€曢崐褰掓晪闁诲海鎳撶壕顓㈠极椤曗偓楠炴牗鎷呴崨濠庝画闂備焦瀵х粙鎴︽偋閸涱垳绠?constants.ts 濠电儑绲藉ú锔炬崲閸愵亖鍋撻崹顐ｂ拹缂佸顦甸崺鈧い鎺戝閸ゅ﹪寮堕崼婵嗏挃缂佲偓?
 			// const BANNER_HEIGHT = 35;
 			// const BANNER_HEIGHT_EXTEND = 30;
 			// const BANNER_HEIGHT_HOME = BANNER_HEIGHT + BANNER_HEIGHT_EXTEND;
 			// const MAIN_PANEL_OVERLAPS_BANNER_HEIGHT = 3.5;
 
-			// 缂傚倷鐒﹂弻銊╊敄閸涱厾鏆ら柛鈩兩戦崕鐔兼煛閸愩劌鈧綊寮?body 缂傚倷绶￠崑鍌滄椤旂偓顫曟繝闈涚墛閸忔粍銇勯弮鍥у惞缂佺姾妫勮灋闁挎繂妫涙晶顒併亜閹邦喖甯堕柕鍡樺浮瀹曪絾寰勭仦钘夎劘闂佽绻愮换妤併仈缁嬭锝囩矙濞嗙偓妗ㄩ梺鎸庣箓濞茬娀鍩€椤掍緤鑰块柟顖氬暣瀹曠喖顢橀悙鎰剁畵閺?
 			switch (wallpaperMode) {
 				case "banner":
 					body.classList.add("enable-banner");
@@ -258,29 +226,23 @@ const transparentClass = shouldEnableTransparency
 					break;
 			}
 
-			// 缂傚倷鐒﹂弻銊╊敄閸涱厾鏆ら柛鈩冪懄鐎氼剟鏌涢幇銊︽珕婵炲牐顕ч埥澶愬箻鐠団€虫闂佸摜鍋涢顓㈠焵椤掆偓濠€閬嶅箠閹炬湹鐒婃い鏍仜閺勩儵鏌ｉ弬鍨暢缂佸顕槐鎾诲礃閹勭亪闂佸綊鏀辨竟鍡涘极椤曗偓瀹曟﹢濡歌閹峰崬鈹戦埥鍡楃仚闁逞屽墮绾绢厾娑甸埀顒勬⒑閹稿海鈽夐柣妤佹尰鐎靛ジ鍩￠崨顓狀槯閻庡箍鍎遍ˇ浼存晬韫囨稒鐓熼柟瀛樼矌椤︼箓鏌熸搴☆暭闁瑰嘲鎳庨濂稿炊閳哄倻鈧參姊绘担鐟邦嚋闁荤喆鍔戦、姘跺Χ婢跺娅?
-			// 濠电偠鎻紞鈧繛澶嬫礋瀵?requestAnimationFrame 缂備胶铏庨崣搴ㄥ窗閺囩姵宕?DOM 闂備礁鎲￠崹闈浳涘Δ鍚藉洭顢楁担娲?
 			requestAnimationFrame(function () {
 				const mainContent = document.querySelector(
 					".absolute.w-full.z-30.pointer-events-none",
 				);
 				if (mainContent) {
 					if (wallpaperMode === "banner") {
-						// 闂佽崵濮崇拋鏌ュ疾濞嗘垟鍋撻棃娑氱劯鐎规洘锕㈠畷銊╊敇瑜嶉弲锝夋⒑閸涘﹦澧柟纰卞亰閹€斥枎閹邦噮娴勯悗鍦焾閸ㄧner濠碉紕鍋戦崐鏇㈡偉婵傜纾块柡澶嬪焾閸ゆ洟鏌嶈閸撴岸骞堥妸褉鍋撻敐鍛暢缂佲偓婢舵劕绾ч柍鍝勫€婚幊鍕煟濡も偓瀹曨剟鍩㈤弮鍫濐潊闁斥晛鍟伴崺宥囩磽娴ｇ懓鍔ら柕鍥焽濡叉劖瀵肩€涙ê娈滃銈呯箰濡鎱ㄨ閹兘寮撮悙鎼￥濠电偞褰冮敃顏勭暦濮椻偓瀹曘劑顢樿閺咃絾绻涢幋鐐村碍闁挎洦浜畷?
 						mainContent.style.top = `${BANNER_HEIGHT}vh`;
 					} else {
-						// fullscreen 闂?none 婵犵妲呴崹顏堝焵椤掆偓绾绢厾娑甸埀?
 						mainContent.style.top = "5.5rem";
 					}
 				}
 
-				// 缂傚倷鐒﹂弻銊╊敄閸涱厾鏆ら柛鈩兩戦崕鐔兼煛閸愩劌鈧綊寮宠箛娑欏仺妞ゆ牗鑹鹃弳娆撴煟椤忓秴澧摶锝夋煃閵夈儳锛嶇痪顓涘亾闂備焦瀵х粙鎴︽儗閸屾稑顕遍柍鍝勬噹缁€鍌溾偓骞垮劚椤︿即鏁嶈箛娑欑厽?
 				const mainGrid = document.getElementById("main-grid");
 				if (mainGrid) {
 					const currentLayout = "list";
 					mainGrid.setAttribute("data-layout-mode", currentLayout);
 
-					// 闂備礁鎼粔鐑斤綖婢跺﹦鏆ゅù锝囧劋閺嗘粓鏌涢幇鈺佸婵犫偓閻楀牅绻嗘い鏍ㄣ仜閸嬫挸鐣烽崶鈺婃敤闂備礁鎼€氼剚鏅舵禒瀣︽慨妯挎硾缁狅綁鏌″搴″箺妞ゆ挻妞介弻锕€螣閾忓湱顔囬悷婊勬緲閹诧紕绮悢娲绘▉缂備焦姊婚崰鏍ь嚕?
 					const rightSidebar = document.querySelector(
 						".right-sidebar-container",
 					);
@@ -288,7 +250,6 @@ const transparentClass = shouldEnableTransparency
 						rightSidebar.classList.remove("hidden-in-grid-mode");
 					}
 
-					// 闂備礁鎲￠懝楣冨嫉椤掆偓椤啴宕掗悙鎻掑祮闁诲孩绋掕摫闁绘挴鍋撻梻浣告惈閸婄煤閵娾晜鍋熼柣鎴ｆ缁€鍡樹繆閵堝懎顏ラ柍褜鍓欓崯浼村焵椤掆偓濠€閬嶅箠閹炬枼鏋嶉柟鐑橆殕閸庡秹鏌涢幋鐐舵－S缂?
 					const postListContainer = document.getElementById(
 						"post-list-container",
 					);
@@ -310,15 +271,11 @@ const transparentClass = shouldEnableTransparency
 			});
 		})();
 
-		// 闂備礁鎼粔鐑斤綖婢跺﹦鏆ゅù锝呮贡閻濊泛霉閿濆牊顏犻柛鎾卞妽娣囧﹪顢涘璇蹭壕鐎规洖娲ㄩ、鍛存⒑閸涘﹥鐓熼柛鏂跨Ч閸┾偓妞ゆ垶瀵х粊鐗堛亜閺冣偓濞叉粎妲?banner 闂備礁鎲＄划宀勬嚐椤栫偛鐭楅煫鍥ㄦ磻濞岊亪鐓崶銊︽儎婵﹨娉曠槐鎺楀箚瑜庨幉鍛婄箾閸喎鐏寸€殿喕鍗冲畷婊嗩槹濞?
 		// const wallpaperMode = localStorage.getItem('wallpaperMode') || defaultWallpaperMode;
 
-		// 闂?DOM 闂備礁鎲″缁樻叏閹灐褰掑炊椤掆偓鐟欙箓骞栧ǎ顒€鐏╅柍閿嬫閹?
-		// 婵犵妲呴崑澶愵敋瑜嶉弬鐢殿攱閸氾箑宕熼悽銊╁櫚婵☆偅顕ｉ崐鐔虹杸闁哄啠鍋撶粭鎴︽⒑閸涘﹥澧犵紒顔芥崌閺岋紕浠╛pplyWallpaperMode 閸樼粯澧滅拠鎾煏濞戙埄鏆?Swup 濠碉紕鍋戦柟鍓х仠閸氾箑宕熼懞鎵煕濞戙垻鐓傞柛鎾卞妽娣囧﹪顢涘璇蹭壕閻犵剫鏌涢幘妤€鎳勯柨锔虹彆缁?
 		function initWallpaperModeWithRetry() {
 			applyWallpaperMode();
 
-			// 婵犵妲呴崑澶愵敋瑜嶉崨顓犳噺濡瑩鏌ｉ弽瑙勫灱閸氾箑宕熼悽銊╁櫚婵☆偅顕ｉ崐鐔虹杸闁哄啠鍋撶粭鎴︽⒑閸涘﹥澧?
 			var retryCount = 0;
 			var maxRetries = 10;
 			var checkInterval = setInterval(function () {
@@ -358,21 +315,18 @@ const transparentClass = shouldEnableTransparency
 			);
 			var tocWrapper = document.getElementById("toc-wrapper");
 
-			// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呮噺閻撳倻鈧箍鍎卞Λ妤冪箔閹捐秮褰掓偐椤旂厧濮㈤梺鐐藉劜钃辩紒灞藉船閳规垿宕堕埡渚囨闁诲孩顔栭崰鏍崲閹达富鏁嗘繝濠傛噺閸忔粍銇勯弮鍥т汗閻庣懓顦甸弻?
 			var forceReflow = function () {
 				void document.body.offsetHeight;
 			};
 
 			switch (wallpaperMode) {
 				case "banner":
-					// 闂備礁鎼€氼剚鏅舵禒瀣?banner闂備焦瀵х粙鎴︽儗閸屾埃鏋旈柨婵嗩槹鐎电娀鐓崶銊﹀碍鐎殿喖娼￠幃姗€鎮欓懠顒傤唶濡炪們鍎卞Λ娑㈡儉?
 					if (bannerWrapper) {
 						bannerWrapper.style.display = "block";
 					}
 					if (fullscreenWallpaper) {
 						fullscreenWallpaper.style.display = "none";
 					}
-					// 闂備浇顕栭崢褰掑垂瑜版崵?TOC 闂?banner 婵犵妲呴崹顏堝焵椤掆偓绾绢厾娑甸埀顒佺箾閹寸偞灏い鎴濇搐閳绘捇骞嬮敂瑙ｆ寗闂佸綊鍋婇崹閬嵥夐幋锔界厽婵☆垰鐏濋悡鎰版煃瑜滈崗娑氭閵堝洦顫曟繝闈涚墛婵ジ鏌嶉崫鍕偓璇测枖婵犲洦鐓曢柡鍌濐嚙婵倿鏌嶈閸撴艾危閹烘梹顐芥い鎰剁畱缁犳娊鏌曟竟顖氳嫰閹?
 					if (tocWrapper) {
 						const scrollTop = document.documentElement.scrollTop;
 						const bannerHeight =
@@ -381,26 +335,19 @@ const transparentClass = shouldEnableTransparency
 							tocWrapper.classList.add("toc-hide");
 						}
 					}
-					// 闂備胶顭堢换鎰版偋韫囧海鏄傞梻鍌氬€哥€氬嘲危閸ｅシy缂傚倷绶￠崑鍌滄椤旂偓顫曟繝闈涱儐閻掑ジ鏌涢…鎴濇灈閻㈩垳鐓癝S闂備礁鎲￠崝妯间焊濞嗘挻鍋?
 					body.classList.remove("wallpaper-transparent");
 					body.classList.remove("no-banner-mode");
-					// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呮噺閻撳倻鈧箍鍎卞Λ妤冪箔?
 					forceReflow();
-					// 缂傚倷绀侀ˇ顖炩€﹀畡鎵虫瀺閹兼番鍔岀粈鍐煕濞戙埄鏆掔紒顔芥崌閺屸€愁吋閸涱厽些缂備焦鍞荤换婵嬪极瀹ュ懐鏆嗛柛鎰劤閺侇棭SS闂佽娴烽幊鎾绘嚐椤栫偛鐭楅煫鍥ㄧ☉缁犳娊鏌曟竟顖氳嫰閹?
 					if (mainContent) {
 						mainContent.style.removeProperty("top");
 					}
-					// 闂備礁鎲￠崝鏇犵矓閻㈢閿ゅ┑鐘叉搐缁€澶愭煟閺嶃倕浜緉able-banner缂?
 					body.classList.add("enable-banner");
-					// navbar 闂備浇顕栭崢褰掑垂瑜版崵鍥蓟閵夈儱鍋嶉梺缁樻煥椤ㄥ骸顭囧Δ鍛拺妞ゆ劑鍨荤粻鍙変繆閸欏鐏ラ摶锝夋煃閵夈儳锛嶇痪顓涘亾闂備焦瀵х粙鎴︽偋閸涱垰鍨?config 闂佽崵濮村ú鈺咁敋瑜戦妵鎰板炊椤掍焦娅?
 					if (navbar) {
 						navbar.removeAttribute("data-dynamic-transparent");
-						// 闂備浇顕栭崢褰掑垂瑜版崵?config 濠电偞鍨堕幖鈺呭矗閳ь剚銇勯弮鈧ú婊呮閺冨牜鏁婇柣鎰靛墰閺?data-transparent-mode
 						navbar.setAttribute(
 							"data-transparent-mode",
 							navbarTransparentMode,
 						);
-						// 濠电姷顣介埀顒€鍟块埀顒€缍婇幃妯诲緞閹邦剙寮?semifull 婵犵妲呴崹顏堝焵椤掆偓绾绢厾娑甸埀顒勬⒑閹稿海鈽夐柣顓炲€垮畷鎶藉箹娴ｅ憡顥濋梺鍝勵槸閻忔繈鎮橀妷銉㈡斀妞ゆ梻鈷堥崕蹇涙倵閸偄绲绘い顓滃妼椤繈顢楅埀顒冾杽婵犵妲呴崑鈧柛瀣尰缁?
 						if (
 							navbarTransparentMode === "semifull" &&
 							window.initSemifullScrollDetection
@@ -408,40 +355,30 @@ const transparentClass = shouldEnableTransparency
 							window.initSemifullScrollDetection();
 						}
 					}
-					// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呮噺閻撳倻鈧箍鍎卞Λ妤冪箔閹捐秮褰掓偐椤旂厧濮㈤梺鐐藉劜钃辩紒灞藉船椤劑鎯嶉崷顐︽⒑閸涘﹦鎳勯柨鏇樺灲瀹曟娊宕崟鍨〃闂佹寧绻傚ú鐘诲焵椤掍緤鑰跨€殿喖顕埀顒佺⊕钃遍柣鎾亾
 					forceReflow();
 					break;
 
 				case "fullscreen":
-					// 闂傚倸鍊搁幊蹇涘礉濡綍?banner闂備焦瀵х粙鎴﹀嫉椤掆偓铻ｅ璺虹灱閻棝鏌涘┑鍡楊仼鐎殿喖娼￠幃姗€鎮欓懠顒傤唶濡炪們鍎卞Λ娑㈡儉?
 					if (bannerWrapper) {
 						bannerWrapper.style.display = "none";
 					}
 					if (fullscreenWallpaper) {
 						fullscreenWallpaper.style.display = "block";
 					}
-					// 闂備線娼荤拹鐔煎礉瀹€鍕煑闊洦娲戝▽顏堢叓閸ャ劍鐎板ù锝呭閸ゆ洟鐓崶褎鎹ｉ柣鐔告尭閳规垿顢欑喊鍗炲壋缂備緡鍠楅幑鍥ь嚕娴兼潙绀堢憸瀣?TOC
 					if (tocWrapper) {
 						tocWrapper.classList.remove("toc-hide");
 					}
-					// 闂備胶顭堢换鎰版偋韫囧海鏄傞梻鍌氬€哥€氬嘲危閸ｅシy缂傚倷绶￠崑鍌滄椤旂偓顫曟繝闈涱儐閻掑ジ鏌涢…鎴濇灈閻㈩垳鐓癝S闂備礁鎲￠崝妯间焊濞嗘挻鍋?
 					body.classList.remove("enable-banner");
-					// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呮噺閻撳倻鈧箍鍎卞Λ妤冪箔?
 					forceReflow();
-					// 缂傚倷绀侀ˇ顖炩€﹀畡鎵虫瀺閹兼番鍔岀粈鍐煕濞戙埄鏆掔紒顔芥崌閺屸€愁吋閸涱厽些缂備焦鍞荤换婵嬪极瀹ュ懐鏆嗛柛鎰劤閺侇棭SS闂佽娴烽幊鎾绘嚐椤栫偛鐭楅煫鍥ㄧ☉缁犳娊鏌曟竟顖氳嫰閹?
 					if (mainContent) {
 						mainContent.style.removeProperty("top");
 					}
-					// 闂備礁鎲￠崝鏇犵矓閻㈢閿ゅ┑鐘叉搐缁€澶愭煟閺嶃劌绀乴lpaper-transparent闂備礁鎲＄划宀勵敊閸?banner-mode缂?
 					body.classList.add("wallpaper-transparent");
 					body.classList.add("no-banner-mode");
-					// navbar 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呭暞婵ジ鏌涢幘妤€鎳忛悗顓熺箾?semi 闂傚倷绶￠崑鍕崲閹存惊锝夊箣濠㈩亞鍠栭崹鎯х暦閸モ晩鏀ㄩ梻浣瑰缁嬫垿鎮ч崱娑樼闁绘垼濮ら崑?config 闂傚倷鐒﹀妯肩矓閸洘鍋柛鈩冪⊕閺?
 					if (navbar) {
 						navbar.setAttribute("data-dynamic-transparent", "semi");
-						// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呭暟閻挸鈹戦悩宕囶暡闁?config 濠电偞鍨堕幖鈺呭储閹€鏋?data-transparent-mode 闁荤喐绮嶅妯虹暦椤掑嫬绠?
 						navbar.removeAttribute("data-transparent-mode");
 					}
-					// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呮噺閻撳倻鈧箍鍎卞Λ妤冪箔閹捐秮褰掓偐椤旂厧濮㈤梺鐐藉劜钃辩紒灞藉船椤劑鎯嶉崷顐︽⒑閸涘﹦鎳勯柨鏇樺灲瀹曟娊宕崟鍨〃闂佹寧绻傚ú鐘诲焵椤掍緤鑰跨€殿喖顕埀顒佺⊕钃遍柣鎾亾
 					forceReflow();
 					break;
 
@@ -453,47 +390,35 @@ const transparentClass = shouldEnableTransparency
 					if (fullscreenWallpaper) {
 						fullscreenWallpaper.style.display = "none";
 					}
-					// 闂備線娼荤拹鐔煎礉瀹ュ憘娑㈠Χ閸℃瑧褰炬繛杈剧秬濞咃綁宕滈妸锔跨箚妞ゆ牗銇涢崑鎾崇暦閸モ晩鏀ㄥ┑鐐村灦閹告悂顢栭崟顓炲К闁告劏鏅滈崣蹇涙倵閿濆骸澧伴柣顓熷浮閺岋繝宕熼鈶╂寖闂?TOC
 					if (tocWrapper) {
 						tocWrapper.classList.remove("toc-hide");
 					}
-					// 闂備胶顭堢换鎰版偋韫囧海鏄傞梻鍌氬€哥€氬嘲危閸ｅシy缂傚倷绶￠崑鍌滄椤旂偓顫曟繝闈涱儐閻掑ジ鏌涢…鎴濇灈閻㈩垳鐓癝S闂備礁鎲￠崝妯间焊濞嗘挻鍋?
 					body.classList.remove("enable-banner");
 					body.classList.remove("wallpaper-transparent");
-					// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呮噺閻撳倻鈧箍鍎卞Λ妤冪箔?
 					forceReflow();
-					// 缂傚倷绀侀ˇ顖炩€﹀畡鎵虫瀺閹兼番鍔岀粈鍐煕濞戙埄鏆掔紒顔芥崌閺屸€愁吋閸涱厽些缂備焦鍞荤换婵嬪极瀹ュ懐鏆嗛柛鎰劤閺侇棭SS闂佽娴烽幊鎾绘嚐椤栫偛鐭楅煫鍥ㄧ☉缁犳娊鏌曟竟顖氳嫰閹?
 					if (mainContent) {
 						mainContent.style.removeProperty("top");
 					}
-					// 闂備礁鎲￠崝鏇犵矓閻㈢閿ゅ┑鐘叉搐缁€澶愭煟閺嵮屾春-banner-mode缂?
 					body.classList.add("no-banner-mode");
-					// navbar 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呭暞婵ジ鏌涢幘妤€鎳忛悗顓熺箾閹寸偞宕勬俊妞煎妿缁厽寰勯幇顓犲姷闂婎偄娲﹀褰掞綖閺嶎厽鐓ユ繛鎴烆焽婢ф洟鏌熸搴″幋闁?config 闂傚倷鐒﹀妯肩矓閸洘鍋柛鈩冪⊕閺?
 					if (navbar) {
 						navbar.setAttribute("data-dynamic-transparent", "none");
-						// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呭暟閻挸鈹戦悩宕囶暡闁?config 濠电偞鍨堕幖鈺呭储閹€鏋?data-transparent-mode 闁荤喐绮嶅妯虹暦椤掑嫬绠?
 						navbar.removeAttribute("data-transparent-mode");
 					}
-					// 闁诲孩顔栭崰鏍箹椤愶箑鏄ユ俊銈呮噺閻撳倻鈧箍鍎卞Λ妤冪箔閹捐秮褰掓偐椤旂厧濮㈤梺鐐藉劜钃辩紒灞藉船椤劑鎯嶉崷顐︽⒑閸涘﹦鎳勯柨鏇樺灲瀹曟娊宕崟鍨〃闂佹寧绻傚ú鐘诲焵椤掍緤鑰跨€殿喖顕埀顒佺⊕钃遍柣鎾亾
 					forceReflow();
 					break;
 			}
 		}
 
-		// 闂備胶鍎甸弲婊堝垂閻㈢绠氬璺侯儑閻濊泛霉閿濆牊顏犻柛鎾卞妽娣囧﹪顢涘璇蹭壕鐎规洖娲ㄩ、鍛存⒑閸涘﹦鎳勯柨姘舵倵閸偆鍙€闁轰礁绉撮悾婵嬪焵椤掑嫭鍋熸繛鎴欏灩绾偓闂佸憡鍔樼亸娆戔偓鐟邦樀閺岋綁濮€閳哄啫甯ㄧ紓浣介哺閻燂妇绮欐径濠庡悑濠㈣泛锕ラ鐔兼煛婢跺苯浠掔紒顔界懇婵″瓨寰勯幇顓ф濡炪値鍋掗崰姘辩矆?
 		window.addEventListener("wallpaper-mode-change", function (_event) {
 			applyWallpaperMode();
 		});
 
-		// 闂備浇銆€閸嬫挻銇勯弽銊р槈闁?Swup 濠碉紕鍋戦崐妤呭极鐠囧樊鐒介柣妤€鐗婃禍銈夋煕閵夛絽濡介悹?- 闂備線娼荤拹鐔煎礉瀹€鍕埞閻庣數纭堕崑鎾舵兜閸滀焦缍堝┑鐐茬摠閻╊垶鐛幋锔肩稏妞ゆ挾濯崥鍛存⒑閸涘﹥灏紒澶嬫綑椤繈濡搁敂钘夊妳闂佸搫鍟崐褰掑汲韫囨稒鍋ㄦい鏍ㄨ壘閺嗘瑩鏌ｉ宥呭⒋闁轰礁绉撮悾婵嬪礋椤忓棛绀嗛梻浣侯焾缁绘劗绮旈悷鎷旀盯顢涢悙鏉戔偓?
 		function setupSwupLayoutSync() {
 			// @ts-ignore
 			if (typeof window !== "undefined" && window.swup) {
-				// 闂備胶顭堢换鎴炵箾婵犲洤鏋佹い鎾卞灪閺咁剚鎱ㄥ鍡楀闂?content:replace 濠电偞鍨堕弻銊╊敄閸涱喗娅犻柣妯肩帛閺咁剟鏌涜瀹曠袱mation:out:start闂備焦瀵х粙鎴λ囬姘兼僵闁靛ň鏅涚粈鍕煕閳╁喚娈㈡俊鏌ユ涧閳规垿宕掑┑鍥舵缂備焦妫冮ˉ鎾寸閿曞倸鐒垫い鎺戝閸嬫劙鏌ら崫銉毌闁?
 				// @ts-ignore
 				window.swup.hooks.on("animation:out:start", function () {});
 
-				// 闂備線娼荤拹鐔煎礉瀹€鍕埞閻庣數纭堕崑鎾舵兜閸滀焦缍堝┑鐐茬摠閻╊垶鐛幋锕€顫呴柣妯哄暱閳ь剛鏁哥槐鎺楀棘濞嗘儳鍓伴悗瑙勬尭濡瑩骞嗛弮鍫濈睄闁稿本绋掑▓銏ゆ煟閵忊晛鐏犻柛鐕佸亰閹洭顢楅崟顒佹珫闁诲繒鍋犻崑鎰版偡濠靛牏纾兼繛鎴烇供濡插摜绱掗崜浣告灈鐎规洘顨婂鐢告偨閻㈠憡鎯冮梻浣哄帶閻°劎鍠婂鍜冭€?
 				// @ts-ignore
 				window.swup.hooks.on("content:replace", function () {
 					const mainGrid = document.getElementById("main-grid");
@@ -514,12 +439,10 @@ const transparentClass = shouldEnableTransparency
 							);
 						}
 
-						// 闂備胶顭堢换鎴炵箾婵犲洤鏋佹い鎾卞灪閺咁剚鎱ㄥ鍡楀闁稿﹪浜堕弻锟犲礃椤撶偟鍘┑鐐村絻濞尖€愁嚕椤掑嫭鍋嬮柛顐ゅ枔閳ь剦鍠氱槐鎺楀籍閸屾銏ゆ煕椤垳绨介柟顔诲嵆婵℃悂濡烽鍏兼珝闂備線娼荤徊濠氬礉鎼粹檧鏋旈柟鍗炵ˉS缂?
 						const postListContainer = document.getElementById(
 							"post-list-container",
 						);
 						if (postListContainer) {
-							// 缂傚倷绀侀ˇ顖炩€﹀畡鎵虫瀺閹兼番鍔嶉崑婵嬫煟濡も偓閻楀﹦绮婚幒妤佸仺妞ゆ牗鑹鹃弳娆撴煟椤忓秴澧伴柣?
 							postListContainer.classList.remove(
 								"list-mode",
 								"grid-mode",
@@ -534,7 +457,6 @@ const transparentClass = shouldEnableTransparency
 							);
 						}
 
-						// 婵犵數鍋為幐鎼佸箠濡　鏋嶉幖娣灮閳绘棃鎮楀☉娅虫垿藝瑜旈弻锝呂熼崹顔惧帿闂?
 						// @ts-ignore
 						delete window.__pendingLayoutMode;
 					}
@@ -545,7 +467,6 @@ const transparentClass = shouldEnableTransparency
 			return false;
 		}
 
-		// 闂佽绻愮换鎴犳崲閸℃稒鍎婃い鏍ㄧ矌閸楁岸鎮楅敐搴濈盎缂佷緡鍣ｉ幃瑙勬媴缁嬪簱鎸冮梺姹囧€曞Λ婵嬪极瀹ュ洣娌紒娑橆儐閹兼劙姊洪崫鍕靛剱缂侇喖鐭傛俊鐢稿箣閻樺啿顏搁梺闈涱槶閸庨亶鎮橀悢琛″亾閻愮懓鈧牠宕曢懖鈺傚床婵犲﹤鐗婇悡鍌溾偓骞垮劚閻楀繐危?
 		if (!setupSwupLayoutSync()) {
 			const checkSwup = setInterval(function () {
 				if (setupSwupLayoutSync()) {
@@ -558,11 +479,9 @@ const transparentClass = shouldEnableTransparency
 			}, 2000);
 		}
 
-		// 闂備浇銆€閸嬫挻銇勯弽銊р槈闁?Swup 濠碉紕鍋戦崐妤呭极鐠囧樊鐒介柣妤€鐗婃禍銈夋煕閵夛絽濡介悹?
 		document.addEventListener("swup:page:view", function () {
 			applyWallpaperMode();
 
-			// 闂備線娼婚懙瑙勭箾瀹勭p濠碉紕鍋戦崐妤呭极鐠囧樊鐒藉ù鍏兼綑缁€鍡涙煕閵夛絽濡奸幖鏉戯躬閺岋繝宕橀埡鍌涚€紓浣测偓鍐叉殶闁硅尙澧楃粭鐔煎焵椤掑嫬闂柟闂寸濡﹢鏌℃径搴㈢《閻庣懓顦甸弻锝夛綖椤掆偓婵¤偐绱掗弮鍫濞寸媴绠撻崺鈧い鎺嗗亾閾伙綁鏌嶉妷銉э紞缁绢厸鍋?
 			requestAnimationFrame(function () {
 				const mainGrid = document.getElementById("main-grid");
 				if (mainGrid) {
@@ -578,7 +497,6 @@ const transparentClass = shouldEnableTransparency
 				}
 			});
 		});
-		// 闂備線娼荤拹鐔煎礉閹达箑违濠㈣埖鍔栭ˉ鍫ユ煏韫囨洖啸闁哄棙宀搁弻娑滅疀鐎ｎ亜顬堟繝娈垮枤閸嬬偛顭囬鍫熷癄濠㈣泛顑呴埀顒傛暬閺屻劌鈽夊Ο鍨伃闂佸摜鍟块崑鎾斥攽閻愬弶锛旂紒杈ㄦ礋閸ㄦ儳螣閸忕厧顎涢梺闈涚墕閹虫劙顢旈幘顔藉€堕柣鎰ㄦ櫅娴滄儳鈹戦埥鍡楃仚闁逞屽墮绾绢厾娑甸埀顒勬⒑閸濆嫬顏撮柛銊ゅ嵆楠炲棙鎷呴崜鍙夋〃闂佹寧绻傚ú鐘诲焵?
 		if (document.readyState === "loading") {
 			document.addEventListener("DOMContentLoaded", function () {
 				const mainGrid = document.getElementById("main-grid");
