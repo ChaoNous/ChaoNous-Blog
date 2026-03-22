@@ -2,13 +2,14 @@
 
 /* Google Fonts 已通过 link 标签在 HTML 中异步加载，避免 CSS 阻塞 */
 
-/* 导入本地中文字体：朱雀仿宋 */
+/* 导入本地中文字体：朱雀仿宋 - 使用 optional 避免阻塞渲染 */
 @font-face {
   font-family: 'Zhuque Fangsong';
   src: url('/assets/fonts/ZhuqueFangsong-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF;
 }
 
 /* 导入相册样式 */
