@@ -166,10 +166,14 @@ if (siteConfig.font) {
 		<!-- 预连接关键域名 - 减少 DNS/TLS 延迟 -->
 		<link rel="dns-prefetch" href="https://api.iconify.design" />
 		<link rel="preconnect" href="https://api.iconify.design" crossorigin />
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-		<!-- 首屏图片预加载 -->
+		<!-- 首屏图片预加载 - 所有页面都预加载以优化 LCP -->
 		{
-			isHomePage && siteConfig.banner.src && (
+			siteConfig.banner.src && (
 				<>
 					<link
 						rel="preload"
@@ -365,50 +369,6 @@ if (siteConfig.font) {
 
 		<!-- Music Player - 仅在启用时加载 -->
 		{musicPlayerConfig.enable && <MusicPlayer client:idle />}
-
-		<!-- Clarity 分析 - 延迟到用户交互后加载 -->
-		<script is:inline>
-			(function () {
-				var loaded = false;
-				function loadClarity() {
-					if (loaded) return;
-					loaded = true;
-					(function (c, l, a, r, i, t, y) {
-						c[a] =
-							c[a] ||
-							function () {
-								(c[a].q = c[a].q || []).push(arguments);
-							};
-						t = l.createElement(r);
-						t.async = 1;
-						t.src = "https://www.clarity.ms/tag/tjr3vkhj8i";
-						y = l.getElementsByTagName(r)[0];
-						y.parentNode.insertBefore(t, y);
-					})(window, document, "clarity", "script");
-				}
-				var events = [
-					"scroll",
-					"click",
-					"keydown",
-					"touchstart",
-					"mousemove",
-				];
-				var timer = setTimeout(loadClarity, 3000);
-				events.forEach(function (e) {
-					document.addEventListener(
-						e,
-						function handler() {
-							clearTimeout(timer);
-							loadClarity();
-							events.forEach(function (ev) {
-								document.removeEventListener(ev, handler);
-							});
-						},
-						{ once: true, passive: true },
-					);
-				});
-			})();
-		</script>
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
