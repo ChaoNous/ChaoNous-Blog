@@ -520,6 +520,15 @@ if (siteConfig.font) {
 
 	initializePanelManager();
 
+	// 延迟非关键功能到空闲时
+	if ('requestIdleCallback' in window) {
+		requestIdleCallback(() => {
+			initCustomScrollbar();
+		});
+	} else {
+		setTimeout(initCustomScrollbar, 100);
+	}
+
 	function initCustomScrollbar() {
 		// 完全禁用OverlayScrollbars的body初始化，避免导致页面重新加载
 		// 只处理katex元素的滚动条
