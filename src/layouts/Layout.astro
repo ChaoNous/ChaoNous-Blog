@@ -163,7 +163,11 @@ if (siteConfig.font) {
 		<meta name="google" content="notranslate" />
 		<meta name="googlebot" content="notranslate" />
 
-		<!-- 首屏关键资源预加载 - LCP 优化：在 preconnect 之前 -->
+		<!-- 预连接关键域名 - 最先加载以建立连接 -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- 首屏关键资源预加载 - LCP 优化 -->
 		{
 			siteConfig.banner.src && (
 				<>
@@ -184,10 +188,6 @@ if (siteConfig.font) {
 				</>
 			)
 		}
-
-		<!-- 预连接关键域名 -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
 		<!-- Google Fonts 异步加载 - 使用 optional 避免布局偏移 -->
 		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
