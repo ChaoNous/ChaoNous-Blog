@@ -169,11 +169,11 @@ if (siteConfig.font) {
 		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-		<!-- 关键字体预加载 -->
-		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+		<!-- 关键字体预加载 - 使用 optional 避免布局偏移 -->
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" media="print" onload="this.media='all'" />
 		<noscript>
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" />
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
 		</noscript>
 
 		<!-- 首屏图片预加载 - LCP 优化 -->
