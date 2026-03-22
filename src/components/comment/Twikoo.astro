@@ -49,16 +49,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	}
 
 	/* Twikoo 样式覆盖 - 完美融入主题色与亮暗模式 */
-	:global(.twikoo-wrapper) {
-		width: 100%;
-		max-width: 100%;
-		overflow: visible;
-	}
-
 	:global(.tk-comments) {
 		--twikoo-primary: var(--primary);
-		width: 100% !important;
-		max-width: 100% !important;
 	}
 
 	:global(.tk-comments *::selection) {
@@ -68,58 +60,30 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	:global(.tk-comments .tk-container) {
 		background: transparent !important;
-		width: 100% !important;
-		max-width: 100% !important;
-		box-sizing: border-box !important;
 	}
 
 	:global(.tk-comments .tk-header) {
 		display: none !important;
 	}
 
-	/* 输入框区域布局修复 */
-	:global(.tk-comments .tk-submit) {
-		width: 100% !important;
-		max-width: 100% !important;
-		box-sizing: border-box !important;
+	/* 增加输入框与评论列表的间距 */
+	:global(.tk-submit) {
 		margin-bottom: 2.5rem !important;
 	}
 
-	/* 修复输入框布局 */
-	:global(.tk-comments .tk-input-group) {
-		width: 100% !important;
-		max-width: 100% !important;
-		display: flex !important;
-		flex-direction: column !important;
-		gap: 0.75rem !important;
-	}
-
-	:global(.tk-comments .tk-input-row) {
-		display: flex !important;
-		flex-wrap: wrap !important;
-		gap: 0.75rem !important;
-		width: 100% !important;
-	}
-
-	:global(.tk-comments .tk-input-item) {
-		flex: 1 1 auto !important;
-		min-width: 200px !important;
+	:global(.tk-main-header) {
+		margin-top: 2.5rem !important;
 	}
 
 	/* 输入框与预览框 */
 	:global(.tk-comments .tk-input),
 	:global(.tk-comments .tk-preview) {
-		width: 100% !important;
-		max-width: 100% !important;
-		box-sizing: border-box !important;
 		background: rgba(128, 128, 128, 0.05) !important;
 		border: 1px solid rgba(128, 128, 128, 0.2) !important;
 		border-radius: 0.5rem !important;
 		color: inherit !important;
 		font-family: inherit !important;
 		transition: all 0.3s ease;
-		resize: vertical !important;
-		min-height: 120px !important;
 	}
 
 	:global(.tk-comments .tk-input::placeholder) {
@@ -129,116 +93,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-input:focus) {
 		border-color: var(--primary) !important;
 		background: rgba(128, 128, 128, 0.02) !important;
-		outline: none !important;
-	}
-
-	/* 修复头像和用户信息对齐 */
-	:global(.tk-comments .tk-comment) {
-		background: transparent !important;
-		border: 1px solid rgba(128, 128, 128, 0.1) !important;
-		border-radius: 0.5rem !important;
-		margin-bottom: 1rem !important;
-		padding: 1rem !important;
-		overflow: hidden !important;
-		transition: all 0.3s ease;
-		display: flex !important;
-		gap: 0.75rem !important;
-		width: 100% !important;
-		box-sizing: border-box !important;
-	}
-
-	:global(.tk-comments .tk-comment:hover) {
-		border-color: rgba(128, 128, 128, 0.25) !important;
-	}
-
-	:global(.tk-comments .tk-comment-avatar) {
-		flex-shrink: 0 !important;
-	}
-
-	:global(.tk-comments .tk-comment-main) {
-		flex: 1 !important;
-		min-width: 0 !important;
-		overflow: hidden !important;
-	}
-
-	:global(.tk-comments .tk-comment-header) {
-		display: flex !important;
-		align-items: center !important;
-		gap: 0.5rem !important;
-		flex-wrap: wrap !important;
-		margin-bottom: 0.5rem !important;
-	}
-
-	:global(.tk-comments .tk-avatar) {
-		border-radius: 50% !important;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		width: 40px !important;
-		height: 40px !important;
-		object-fit: cover !important;
-	}
-
-	:global(.tk-comments .tk-nick) {
-		color: inherit !important;
-		font-weight: 600 !important;
-		transition: color 0.2s;
-		white-space: nowrap !important;
-		overflow: hidden !important;
-		text-overflow: ellipsis !important;
-	}
-
-	:global(.tk-comments .tk-nick:hover) {
-		color: var(--primary) !important;
-	}
-
-	:global(.tk-comments .tk-time) {
-		color: inherit !important;
-		opacity: 0.5;
-		font-size: 0.85em !important;
-		white-space: nowrap !important;
-	}
-
-	/* 修复评论内容溢出 */
-	:global(.tk-comments .tk-content) {
-		color: inherit !important;
-		margin-top: 0.5rem !important;
-		word-wrap: break-word !important;
-		word-break: break-word !important;
-		overflow-wrap: break-word !important;
-		max-width: 100% !important;
-		line-height: 1.6 !important;
-	}
-
-	:global(.tk-comments .tk-content p) {
-		margin: 0.5rem 0 !important;
-	}
-
-	:global(.tk-comments .tk-content a) {
-		color: var(--primary) !important;
-		text-decoration: underline;
-		text-decoration-style: dashed;
-		text-underline-offset: 4px;
-		word-break: break-all !important;
-	}
-
-	:global(.tk-comments .tk-content img) {
-		max-width: 100% !important;
-		height: auto !important;
-		border-radius: 0.25rem !important;
-	}
-
-	/* 修复操作栏布局 */
-	:global(.tk-comments .tk-comment-actions) {
-		display: flex !important;
-		gap: 0.75rem !important;
-		margin-top: 0.75rem !important;
-		flex-wrap: wrap !important;
-	}
-
-	:global(.tk-comments .tk-comment-actions .tk-action) {
-		font-size: 0.85em !important;
-		display: inline-flex !important;
-		align-items: center !important;
-		gap: 0.25rem !important;
 	}
 
 	/* 操作栏 */
@@ -246,47 +100,32 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		background: transparent !important;
 		border-radius: 0 0 0.5rem 0.5rem !important;
 		padding-top: 0.5rem !important;
-		display: flex !important;
-		gap: 0.5rem !important;
-		flex-wrap: wrap !important;
-		align-items: center !important;
 	}
 
 	:global(.tk-comments .tk-action-btn) {
 		color: inherit !important;
 		opacity: 0.6;
 		transition: all 0.2s;
-		padding: 0.25rem 0.5rem !important;
-		border-radius: 0.25rem !important;
-		background: rgba(128, 128, 128, 0.1) !important;
 	}
 
 	:global(.tk-comments .tk-action-btn:hover) {
 		color: var(--primary) !important;
 		opacity: 1;
-		background: rgba(128, 128, 128, 0.15) !important;
 	}
 
 	/* 提交按钮 */
-	:global(.tk-comments .tk-submit-btn) {
+	:global(.tk-comments .tk-submit) {
 		background: rgba(128, 128, 128, 0.15) !important;
 		color: inherit !important;
 		border-radius: 0.5rem !important;
 		font-weight: 500 !important;
 		border: 1px solid rgba(128, 128, 128, 0.1) !important;
 		transition: all 0.3s;
-		padding: 0.5rem 1.5rem !important;
-		cursor: pointer !important;
 	}
 
-	:global(.tk-comments .tk-submit-btn:hover) {
+	:global(.tk-comments .tk-submit:hover) {
 		background: rgba(128, 128, 128, 0.25) !important;
 		color: var(--primary) !important;
-	}
-
-	:global(.tk-comments .tk-submit-btn:disabled) {
-		opacity: 0.5 !important;
-		cursor: not-allowed !important;
 	}
 
 	/* 预览按钮 */
@@ -296,21 +135,64 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		border-radius: 0.5rem !important;
 		border: 1px solid rgba(128, 128, 128, 0.1) !important;
 		transition: all 0.3s;
-		padding: 0.5rem 1rem !important;
-		cursor: pointer !important;
 	}
-
+	
 	:global(.tk-comments .tk-preview-btn:hover) {
 		background: rgba(128, 128, 128, 0.2) !important;
 	}
 
-	/* 修复回复区域的嵌套处理 */
+	/* 评论卡片本体 */
+	:global(.tk-comments .tk-comment) {
+		background: transparent !important;
+		border: 1px solid rgba(128, 128, 128, 0.1) !important;
+		border-radius: 0.5rem !important;
+		margin-bottom: 1rem !important;
+		padding: 1rem !important;
+		overflow: hidden !important;
+		transition: all 0.3s ease;
+	}
+
+	:global(.tk-comments .tk-comment:hover) {
+		border-color: rgba(128, 128, 128, 0.25) !important;
+	}
+
+	:global(.tk-comments .tk-avatar) {
+		border-radius: 50% !important;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	:global(.tk-comments .tk-nick) {
+		color: inherit !important;
+		font-weight: 600 !important;
+		transition: color 0.2s;
+	}
+
+	:global(.tk-comments .tk-nick:hover) {
+		color: var(--primary) !important;
+	}
+
+	:global(.tk-comments .tk-time) {
+		color: inherit !important;
+		opacity: 0.5;
+	}
+
+	:global(.tk-comments .tk-content) {
+		color: inherit !important;
+		margin-top: 0.5rem !important;
+	}
+
+	:global(.tk-comments .tk-content a) {
+		color: var(--primary) !important;
+		text-decoration: underline;
+		text-decoration-style: dashed;
+		text-underline-offset: 4px;
+	}
+
+	/* 回复区域的嵌套处理 */
 	:global(.tk-comments .tk-replies) {
 		border-top: none !important;
 		background: transparent !important;
 		margin-top: 1rem !important;
-		width: 100% !important;
-		box-sizing: border-box !important;
 	}
 
 	:global(.tk-comments .tk-reply) {
@@ -320,8 +202,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		background: transparent !important;
 		padding-left: 1rem !important;
 		margin-bottom: 0.5rem !important;
-		width: 100% !important;
-		box-sizing: border-box !important;
 	}
 
 	/* 小按钮与图标 */
@@ -330,7 +210,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		color: inherit !important;
 		opacity: 0.6;
 		transition: all 0.2s;
-		cursor: pointer !important;
 	}
 
 	:global(.tk-comments .tk-action:hover),
@@ -346,10 +225,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		color: inherit !important;
 		border-radius: 0.5rem !important;
 		transition: all 0.3s;
-		padding: 0.75rem 1.5rem !important;
-		margin: 1rem auto !important;
-		display: block !important;
-		cursor: pointer !important;
 	}
 
 	:global(.tk-comments .tk-expand:hover) {
@@ -358,48 +233,21 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		color: var(--primary) !important;
 	}
 
-	/* 修复表情面板位置 */
+	/* 表情面板 */
 	:global(.tk-comments .tk-owo-popup) {
 		background: var(--card-bg, rgba(255, 255, 255, 0.95)) !important;
 		border: 1px solid rgba(128, 128, 128, 0.15) !important;
 		border-radius: 0.75rem !important;
-		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 		backdrop-filter: blur(10px);
-		z-index: 1000 !important;
-		max-width: 300px !important;
-		max-height: 250px !important;
-		overflow-y: auto !important;
 	}
 
-	:global(.tk-comments .tk-owo-list) {
-		display: grid !important;
-		grid-template-columns: repeat(6, 1fr) !important;
-		gap: 0.25rem !important;
-		padding: 0.5rem !important;
-	}
-
-	:global(.tk-comments .tk-owo-item) {
-		padding: 0.25rem !important;
-		cursor: pointer !important;
-		border-radius: 0.25rem !important;
-		transition: background 0.2s;
-		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
-	}
-
-	:global(.tk-comments .tk-owo-item:hover) {
-		background: rgba(128, 128, 128, 0.1) !important;
-	}
-
-	/* 代码块风格修复 */
+	/* 代码块风格 */
 	:global(.tk-comments .tk-content code) {
 		background: rgba(128, 128, 128, 0.1) !important;
 		padding: 0.2em 0.4em !important;
 		border-radius: 0.25rem !important;
-		font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-		font-size: 0.9em !important;
-		word-break: break-all !important;
+		font-family: inherit !important;
 	}
 
 	:global(.tk-comments .tk-content pre) {
@@ -407,16 +255,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		padding: 1rem !important;
 		border-radius: 0.5rem !important;
 		border: 1px solid rgba(128, 128, 128, 0.1) !important;
-		overflow-x: auto !important;
-		max-width: 100% !important;
-		box-sizing: border-box !important;
-	}
-
-	:global(.tk-comments .tk-content pre code) {
-		background: transparent !important;
-		padding: 0 !important;
-		word-break: break-all !important;
-		white-space: pre-wrap !important;
 	}
 
 	:global(.tk-comments .tk-content blockquote) {
@@ -425,7 +263,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		color: inherit !important;
 		opacity: 0.8;
 		background: transparent !important;
-		margin: 0.5rem 0 !important;
 	}
 
 	/* 加载状态文字等 */
@@ -433,82 +270,19 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-meta) {
 		color: inherit !important;
 		opacity: 0.5;
-		text-align: center !important;
-		padding: 2rem !important;
-	}
-
-	/* 移动端适配 */
-	@media (max-width: 768px) {
-		:global(.tk-comments .tk-comment) {
-			padding: 0.75rem !important;
-			gap: 0.5rem !important;
-		}
-
-		:global(.tk-comments .tk-avatar) {
-			width: 32px !important;
-			height: 32px !important;
-		}
-
-		:global(.tk-comments .tk-input),
-		:global(.tk-comments .tk-preview) {
-			min-height: 100px !important;
-		}
-
-		:global(.tk-comments .tk-input-row) {
-			flex-direction: column !important;
-		}
-
-		:global(.tk-comments .tk-input-item) {
-			width: 100% !important;
-		}
-
-		:global(.tk-comments .tk-actions) {
-			flex-direction: column !important;
-			align-items: stretch !important;
-		}
-
-		:global(.tk-comments .tk-owo-popup) {
-			max-width: 250px !important;
-			left: 50% !important;
-			transform: translateX(-50%) !important;
-		}
 	}
 </style>
 
 <script>
-	// Twikoo 初始化状态管理
-	let twikooLoaded = false;
-	let twikooObserver: IntersectionObserver | null = null;
-
 	// 动态加载 Twikoo
 	function initTwikoo() {
 		const container = document.getElementById("twikoo-comment");
-		if (!container) return;
-
-		// 检查是否已初始化
-		if (container.querySelector("tk-time")) return;
+		if (!container || container.querySelector("tk-time")) return;
 
 		const envId = container.getAttribute("data-env-id") || "";
 		const region = container.getAttribute("data-region") || "";
 		const path = container.getAttribute("data-path") || window.location.pathname;
 		const lang = container.getAttribute("data-lang") || "zh-CN";
-
-		// 如果脚本已加载，直接初始化
-		// @ts-ignore
-		if (twikooLoaded && typeof twikoo !== "undefined") {
-			// @ts-ignore
-			twikoo.init({
-				envId,
-				el: '#twikoo-comment',
-				region,
-				path,
-				lang,
-				onCommentLoaded: () => {
-					// 评论加载完成后的回调
-				},
-			});
-			return;
-		}
 
 		// 加载 Twikoo 脚本 (使用本地化文件以防止被拦截)
 		const script = document.createElement("script");
@@ -516,7 +290,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		script.async = true;
 
 		script.onload = () => {
-			twikooLoaded = true;
 			// @ts-ignore
 			twikoo.init({
 				envId,
@@ -533,68 +306,32 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		document.head.appendChild(script);
 	}
 
-	// 创建 IntersectionObserver
-	function createObserver() {
-		if (twikooObserver) {
-			twikooObserver.disconnect();
-		}
+	// IntersectionObserver 延迟加载
+	const twikooObserver = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					initTwikoo();
+					twikooObserver.disconnect();
+				}
+			});
+		},
+		{ rootMargin: "200px" },
+	);
 
-		twikooObserver = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						initTwikoo();
-						twikooObserver?.disconnect();
-					}
-				});
-			},
-			{ rootMargin: "200px" },
-		);
-
+	// 初始化
+	document.addEventListener("DOMContentLoaded", () => {
 		const container = document.getElementById("twikoo-comment");
 		if (container) {
 			twikooObserver.observe(container);
 		}
-	}
-
-	// 初始化函数 - 支持首次加载和 Swup 页面切换
-	function init() {
-		createObserver();
-	}
-
-	// 首次加载
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", init);
-	} else {
-		init();
-	}
-
-	// Astro View Transitions 支持
-	document.addEventListener("astro:page-load", init);
-
-	// Swup 页面切换支持
-	document.addEventListener("swup:page:view", () => {
-		// 重置观察器并重新初始化
-		setTimeout(() => {
-			init();
-		}, 100);
 	});
 
-	// Swup hooks 支持（更早的时机）
-	function setupSwupHooks() {
-		// @ts-ignore
-		if (typeof window !== "undefined" && window.swup) {
-			// @ts-ignore
-			window.swup.hooks.on("content:replace", () => {
-				// 断开旧的观察器
-				if (twikooObserver) {
-					twikooObserver.disconnect();
-				}
-			});
+	// 页面导航后重新初始化
+	document.addEventListener("astro:page-load", () => {
+		const container = document.getElementById("twikoo-comment");
+		if (container && !container.querySelector("tk-time")) {
+			twikooObserver.observe(container);
 		}
-	}
-
-	// 尝试立即设置 hooks，或在 Swup 准备好时设置
-	setupSwupHooks();
-	document.addEventListener("swup:enable", setupSwupHooks);
+	});
 </script>
