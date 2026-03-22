@@ -163,40 +163,38 @@ if (siteConfig.font) {
 		<meta name="google" content="notranslate" />
 		<meta name="googlebot" content="notranslate" />
 
-		<!-- 预连接关键域名 -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-		<!-- Google Fonts 异步加载 - 使用 optional 避免布局偏移 -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" media="print" onload="this.media='all'" />
-		<noscript>
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
-		</noscript>
-
-		<!-- 首屏图片预加载 - 所有页面都预加载以优化 LCP -->
+		<!-- 首屏关键资源预加载 - LCP 优化：在 preconnect 之前 -->
 		{
 			siteConfig.banner.src && (
 				<>
 					<link
 						rel="preload"
 						as="image"
-						href={getDesktopBanner()}
+						href={url(getDesktopBanner())}
 						media="(min-width: 768px)"
 						fetchpriority="high"
 					/>
 					<link
 						rel="preload"
 						as="image"
-						href={getMobileBanner()}
+						href={url(getMobileBanner())}
 						media="(max-width: 767px)"
 						fetchpriority="high"
 					/>
 				</>
 			)
 		}
+
+		<!-- 预连接关键域名 -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Google Fonts 异步加载 - 使用 optional 避免布局偏移 -->
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" media="print" onload="this.media='all'" />
+		<noscript>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
+		</noscript>
 
 		{
 			siteConfig.keywords && siteConfig.keywords.length > 0 && (
