@@ -163,11 +163,20 @@ if (siteConfig.font) {
 		<meta name="google" content="notranslate" />
 		<meta name="googlebot" content="notranslate" />
 
-		<!-- 预连接关键域名 - 最先加载以建立连接 -->
+		<!-- 关键连接预建立 -->
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-		<!-- 首屏关键资源预加载 - LCP 优化 -->
+		<!-- 关键字体预加载 -->
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+		<noscript>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" />
+		</noscript>
+
+		<!-- 首屏图片预加载 - LCP 优化 -->
 		{
 			siteConfig.banner.src && (
 				<>
@@ -188,13 +197,6 @@ if (siteConfig.font) {
 				</>
 			)
 		}
-
-		<!-- Google Fonts 异步加载 - 使用 optional 避免布局偏移 -->
-		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" media="print" onload="this.media='all'" />
-		<noscript>
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
-		</noscript>
 
 		{
 			siteConfig.keywords && siteConfig.keywords.length > 0 && (
