@@ -54,8 +54,7 @@ export default defineConfig({
 			cache: true,
 			preload: {
 				hover: true,
-				visible: true,
-				threshold: 0.2,
+				visible: false,
 			},
 			accessibility: true,
 			updateHead: true,
