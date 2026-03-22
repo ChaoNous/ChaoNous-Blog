@@ -174,6 +174,28 @@ if (siteConfig.font) {
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
 		</noscript>
 
+		<!-- Banner 图片预加载 - 低优先级避免阻塞 -->
+		{
+			siteConfig.banner.src && (
+				<>
+					<link
+						rel="preload"
+						as="image"
+						href={url(getDesktopBanner())}
+						media="(min-width: 768px)"
+						fetchpriority="low"
+					/>
+					<link
+						rel="preload"
+						as="image"
+						href={url(getMobileBanner())}
+						media="(max-width: 767px)"
+						fetchpriority="low"
+					/>
+				</>
+			)
+		}
+
 		{
 			siteConfig.keywords && siteConfig.keywords.length > 0 && (
 				<meta
