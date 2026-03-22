@@ -298,12 +298,84 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 				path,
 				lang,
 				onCommentLoaded: () => {
-					// 评论加载完成后的回调
+					// 评论加载完成后，修复点赞/评论按钮的跳转问题
+					fixTwikooScrollIssue();
 				},
 			});
 		};
 
 		document.head.appendChild(script);
+	}
+
+	// 修复 Twikoo 点赞/评论后页面滚动到顶部的问题
+	function fixTwikooScrollIssue() {
+		const container = document.getElementById("twikoo-comment");
+		if (!container) return;
+
+		// 保存当前滚动位置
+		let savedScrollPos = 0;
+
+		// 监听所有按钮点击，在操作前保存滚动位置
+		container.addEventListener("click", (e) => {
+			const target = e.target as HTMLElement;
+			// 检测点赞按钮或提交按钮
+			if (
+				target.closest(".tk-like") ||
+				target.closest(".tk-submit") ||
+				target.closest(".tk-action") ||
+				target.closest("button")
+			) {
+				savedScrollPos = window.scrollY;
+
+				// 延迟恢复滚动位置（防止 Twikoo 内部操作导致滚动）
+				setTimeout(() => {
+					if (window.scrollY !== savedScrollPos) {
+						window.scrollTo({
+							top: savedScrollPos,
+							behavior: "auto",
+						});
+					}
+				}, 50);
+
+				// 再次延迟恢复（确保异步操作完成后）
+				setTimeout(() => {
+					if (window.scrollY !== savedScrollPos) {
+						window.scrollTo({
+							top: savedScrollPos,
+							behavior: "auto",
+						});
+					}
+				}, 200);
+			}
+		});
+
+		// 阻止表单提交导致的页面刷新
+		const form = container.querySelector("form");
+		if (form) {
+			form.addEventListener("submit", (e) => {
+				e.preventDefault();
+			});
+		}
+
+		// 监听 hashchange 事件，防止 Twikoo 操作触发滚动
+		const originalHash = window.location.hash;
+		window.addEventListener(
+			"hashchange",
+			(e) => {
+				// 如果 hash 变为空或只是 #，且滚动位置发生了大幅变化，则恢复
+				if (
+					(window.location.hash === "" || window.location.hash === "#") &&
+					Math.abs(window.scrollY - savedScrollPos) > 100
+				) {
+					history.replaceState(null, "", window.location.pathname + originalHash);
+					window.scrollTo({
+						top: savedScrollPos,
+						behavior: "auto",
+					});
+				}
+			},
+			{ passive: true },
+		);
 	}
 
 	// IntersectionObserver 延迟加载
