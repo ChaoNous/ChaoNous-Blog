@@ -274,15 +274,39 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 </style>
 
 <script>
+	// Twikoo 初始化状态管理
+	let twikooLoaded = false;
+	let twikooObserver: IntersectionObserver | null = null;
+
 	// 动态加载 Twikoo
 	function initTwikoo() {
 		const container = document.getElementById("twikoo-comment");
-		if (!container || container.querySelector("tk-time")) return;
+		if (!container) return;
+
+		// 检查是否已初始化
+		if (container.querySelector("tk-time")) return;
 
 		const envId = container.getAttribute("data-env-id") || "";
 		const region = container.getAttribute("data-region") || "";
 		const path = container.getAttribute("data-path") || window.location.pathname;
 		const lang = container.getAttribute("data-lang") || "zh-CN";
+
+		// 如果脚本已加载，直接初始化
+		// @ts-ignore
+		if (twikooLoaded && typeof twikoo !== "undefined") {
+			// @ts-ignore
+			twikoo.init({
+				envId,
+				el: '#twikoo-comment',
+				region,
+				path,
+				lang,
+				onCommentLoaded: () => {
+					// 评论加载完成后的回调
+				},
+			});
+			return;
+		}
 
 		// 加载 Twikoo 脚本 (使用本地化文件以防止被拦截)
 		const script = document.createElement("script");
@@ -290,6 +314,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		script.async = true;
 
 		script.onload = () => {
+			twikooLoaded = true;
 			// @ts-ignore
 			twikoo.init({
 				envId,
@@ -306,32 +331,68 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		document.head.appendChild(script);
 	}
 
-	// IntersectionObserver 延迟加载
-	const twikooObserver = new IntersectionObserver(
-		(entries) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					initTwikoo();
-					twikooObserver.disconnect();
-				}
-			});
-		},
-		{ rootMargin: "200px" },
-	);
+	// 创建 IntersectionObserver
+	function createObserver() {
+		if (twikooObserver) {
+			twikooObserver.disconnect();
+		}
 
-	// 初始化
-	document.addEventListener("DOMContentLoaded", () => {
+		twikooObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						initTwikoo();
+						twikooObserver?.disconnect();
+					}
+				});
+			},
+			{ rootMargin: "200px" },
+		);
+
 		const container = document.getElementById("twikoo-comment");
 		if (container) {
 			twikooObserver.observe(container);
 		}
+	}
+
+	// 初始化函数 - 支持首次加载和 Swup 页面切换
+	function init() {
+		createObserver();
+	}
+
+	// 首次加载
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", init);
+	} else {
+		init();
+	}
+
+	// Astro View Transitions 支持
+	document.addEventListener("astro:page-load", init);
+
+	// Swup 页面切换支持
+	document.addEventListener("swup:page:view", () => {
+		// 重置观察器并重新初始化
+		setTimeout(() => {
+			init();
+		}, 100);
 	});
 
-	// 页面导航后重新初始化
-	document.addEventListener("astro:page-load", () => {
-		const container = document.getElementById("twikoo-comment");
-		if (container && !container.querySelector("tk-time")) {
-			twikooObserver.observe(container);
+	// Swup hooks 支持（更早的时机）
+	function setupSwupHooks() {
+		// @ts-ignore
+		if (typeof window !== "undefined" && window.swup) {
+			// @ts-ignore
+			window.swup.hooks.on("content:replace", () => {
+				// 断开旧的观察器
+				if (twikooObserver) {
+					twikooObserver.disconnect();
+				}
+			});
 		}
-	});
+	}
+
+	// 尝试立即设置 hooks，或在 Swup 准备好时设置
+	setupSwupHooks();
+	document.addEventListener("swup:enable", setupSwupHooks);
 </script>
