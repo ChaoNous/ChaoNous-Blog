@@ -169,6 +169,13 @@ if (siteConfig.font) {
 		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+		<!-- Google Fonts 异步加载 - 避免阻塞渲染 -->
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+		<noscript>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" />
+		</noscript>
+
 		<!-- 首屏图片预加载 - 所有页面都预加载以优化 LCP -->
 		{
 			siteConfig.banner.src && (

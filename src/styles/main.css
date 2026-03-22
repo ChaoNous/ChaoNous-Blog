@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
-/* 导入 Cinzel 字体 (Trajan 替代) */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+/* Google Fonts 已通过 link 标签在 HTML 中异步加载，避免 CSS 阻塞 */
 
 /* 导入本地中文字体：朱雀仿宋 */
 @font-face {
