@@ -143,6 +143,13 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 			display: var(--sidebar-desktop-display, block);
 		}
 	}
+
+	@media (min-width: 768px) {
+		#sidebar-sticky {
+			position: sticky;
+			top: 0;
+		}
+	}
 </style>
 
 <script
