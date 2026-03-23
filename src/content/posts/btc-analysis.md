@@ -1,5 +1,5 @@
 ---
-title: "比特币五年行情复盘与半年价格预测"
+title: "比特币五年行情复盘与未来半年价格预测"
 published: 2026-03-22
 description: "基于 2021-03 至 2026-03 共 1826 天日线数据，使用 EMA 趋势外推、傅里叶周期分解与对数线性回归三模型集成，对 BTC 未来 183 天进行逐日价格预测，并附 68%/95% 置信区间。"
 image: ""
@@ -14,6 +14,15 @@ category: "投资"
 ### 数据来源
 
 使用 CryptoCompare 日线数据，覆盖 **2021-03-23 至 2026-03-22**，共 **1,826 个交易日**。
+
+### 五年关键数据
+
+| 指标 | 数值 |
+|------|------|
+| 当前价格 | **$68,483** |
+| 5 年最高 | $124,723（2025 年） |
+| 5 年最低 | $15,760（2022 年 11 月 FTX 暴雷后） |
+| 年化波动率 | 57.5%（近 90 日计算） |
 
 ### 预测模型：三模型集成
 
@@ -34,15 +43,6 @@ category: "投资"
 <div id="btc-main-chart" style="width:100%;height:420px;margin:1.5rem 0"></div>
 
 <div id="btc-mini-chart" style="width:100%;height:260px;margin:1.5rem 0"></div>
-
-### 五年关键数据
-
-| 指标 | 数值 |
-|------|------|
-| 当前价格 | **$68,483** |
-| 5 年最高 | $124,723（2025 年） |
-| 5 年最低 | $15,760（2022 年 11 月 FTX 暴雷后） |
-| 年化波动率 | 57.5%（近 90 日计算） |
 
 上方交互式图表支持以下操作：
 
@@ -117,7 +117,6 @@ $$\sigma_{t} = \sigma_{\text{daily}} \cdot \sqrt{t}$$
   if(typeof window === 'undefined' || typeof echarts === 'undefined') return;
   var DATA_URL = '/assets/posts/btc-analysis/data.json';
 
-  // ── 统计卡片 ──
   var metaEl = document.getElementById('btc-meta-stats');
   var tableWrap = document.getElementById('btc-table-wrap');
 
@@ -126,7 +125,6 @@ $$\sigma_{t} = \sigma_{\text{daily}} \cdot \sqrt{t}$$
     var hist = DATA.history;
     var fc   = DATA.forecast;
 
-    // ── 主图 ──
     var mainChart = echarts.init(document.getElementById('btc-main-chart'));
     var histDates  = hist.map(function(d){return d.date});
     var histPrices = hist.map(function(d){return d.price});
@@ -138,7 +136,6 @@ $$\sigma_{t} = \sigma_{\text{daily}} \cdot \sqrt{t}$$
     var fc68Dn     = fc.map(function(d){return d.lower_68});
     var allDates   = histDates.concat(fcDates);
 
-    // MA
     function calcMA(data, period){
       return data.map(function(_, i){
         if(i < period - 1) return null;
@@ -183,7 +180,6 @@ $$\sigma_{t} = \sigma_{\text{daily}} \cdot \sqrt{t}$$
     };
     mainChart.setOption(mainOpt);
 
-    // ── 小图（预测放大） ──
     var miniChart = echarts.init(document.getElementById('btc-mini-chart'));
     var miniOpt = {
       backgroundColor:'transparent', animation:true,
@@ -206,7 +202,6 @@ $$\sigma_{t} = \sigma_{\text{daily}} \cdot \sqrt{t}$$
     };
     miniChart.setOption(miniOpt);
 
-    // ── 预测表格 ──
     function fmt(n){return '$'+Math.round(n).toLocaleString();}
     var html='<table style="width:100%;border-collapse:collapse;font-size:0.82rem"><thead><tr style="border-bottom:1px solid rgba(128,128,128,0.15)"><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#5a7a9a;text-transform:uppercase;letter-spacing:0.04em">日期</th><th style="padding:8px 12px;text-align:right;font-size:0.72rem;color:#5a7a9a">预测价格</th><th style="padding:8px 12px;text-align:right;font-size:0.72rem;color:#5a7a9a">68% 区间</th><th style="padding:8px 12px;text-align:right;font-size:0.72rem;color:#5a7a9a">95% 区间</th></tr></thead><tbody>';
     for(var i=0;i<fc.length;i++){
@@ -221,10 +216,8 @@ $$\sigma_{t} = \sigma_{\text{daily}} \cdot \sqrt{t}$$
     html+='</tbody></table>';
     tableWrap.innerHTML=html;
 
-    // ── 响应式 ──
     window.addEventListener('resize',function(){mainChart.resize();miniChart.resize()});
 
-    // ── Swup 兼容 ──
     document.addEventListener('astro:page-load',function(){
       setTimeout(function(){mainChart.resize();miniChart.resize()},100);
     });
