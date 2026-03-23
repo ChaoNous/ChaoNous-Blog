@@ -784,7 +784,7 @@ const transparentClass = shouldEnableTransparency
 			</div>
 
 			<BackToTop />
-			{siteConfig.toc.enable && isFloatTOC && <FloatingTOC />}
+			{siteConfig.toc.enable && isFloatTOC && !isPostPage && <FloatingTOC />}
 		</div>
 	</div>
 
