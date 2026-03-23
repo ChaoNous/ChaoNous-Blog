@@ -55,7 +55,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 >
 	<div
 		id="sidebar-sticky"
-		class="transition-all duration-700 flex flex-col w-full mt-0 gap-4 sticky top-0"
+		class="transition-all duration-700 flex flex-col w-full mt-0 gap-4"
 	>
 		{
 			mobileTopComponents.length > 0 && (
@@ -144,12 +144,6 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 		}
 	}
 
-	@media (min-width: 768px) {
-		#sidebar-sticky {
-			position: sticky;
-			top: 0;
-		}
-	}
 </style>
 
 <script

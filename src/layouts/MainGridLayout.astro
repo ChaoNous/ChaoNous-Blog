@@ -131,7 +131,6 @@ const gridCols = `
 	.replace(/\s+/g, " ");
 
 const sidebarClass = `
-	onload-animation
 	${mobileShowSidebar && hasMobileDrawerComponents ? "block" : "hidden"}
 	${tabletShowLeftSidebar ? "md:block md:mb-4 md:max-w-80" : "md:hidden"}
 	${desktopShowLeftSidebar ? "lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-80 lg:col-start-1 lg:col-end-2" : "lg:hidden"}
@@ -140,7 +139,6 @@ const sidebarClass = `
 	.replace(/\s+/g, " ");
 
 const rightSidebarClass = `
-	onload-animation
 	hidden
 	${tabletShowRightSidebar ? "md:block md:mb-4 md:max-w-80" : "md:hidden"}
 	${desktopShowRightSidebar ? `lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-80 ${desktopShowLeftSidebar ? "lg:col-start-3 lg:col-end-4" : "lg:col-start-2 lg:col-end-3"} lg:col-span-1` : "lg:hidden"}
@@ -734,7 +732,7 @@ const transparentClass = shouldEnableTransparency
 						<div id="left-sidebar-wrapper" class="contents">
 							<div
 								id="left-sidebar-static"
-								class={`${sidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start`}
+								class={`${sidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start md:sticky md:top-0`}
 							>
 								<SideBar
 									class="w-full"
@@ -751,7 +749,7 @@ const transparentClass = shouldEnableTransparency
 					hasRightSidebarComponents && (
 						<div id="right-sidebar-static" class="contents">
 							<div
-								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start`}
+								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start md:sticky md:top-0`}
 							>
 								<RightSideBar headings={headings} />
 							</div>
