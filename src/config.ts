@@ -384,6 +384,13 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			},
 		},
 		{
+			// 目录组件
+			type: "card-toc",
+			position: "top",
+			class: "onload-animation",
+			animationDelay: 300,
+		},
+		{
 			// 网站统计组件
 			type: "site-stats",
 			position: "top",
@@ -401,7 +408,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 左右侧边栏组件配置
 	components: {
-		left: ["profile", "card-toc", "tags", "categories"],
+		left: ["profile", "tags", "categories", "card-toc"],
 		right: ["site-stats", "calendar"],
 		drawer: ["profile", "tags", "categories"],
 	},

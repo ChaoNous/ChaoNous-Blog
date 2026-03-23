@@ -1,39 +1,39 @@
 ---
 import type { MarkdownHeading } from "astro";
 import { siteConfig } from "../../config";
+import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
 	class?: string;
+	style?: string;
 	headings?: MarkdownHeading[];
 }
 
 const { headings = [] } = Astro.props;
+const className = Astro.props.class;
+const style = Astro.props.style;
 const tocDepth = siteConfig.toc.depth;
 const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 ---
 
-<div
-	class="card-toc-wrapper"
-	data-depth={tocDepth}
-	data-japanese-badge={useJapaneseBadge}
+<WidgetLayout
+	id="card-toc"
+	name="目录"
+	class={className}
+	style={style}
 >
-	<div class="font-bold transition text-lg text-neutral-900 dark:text-neutral-100 relative ml-8 mt-4 mb-2 flex items-center before:absolute before:left-[-16px] before:top-[5.5px] before:w-1.5 before:h-1.5 before:rounded-full before:bg-[var(--primary)]">
-		目录
-	</div>
-	<div id="card-toc" class="collapse-wrapper px-2 overflow-hidden">
-		<div data-card-toc-root>
-			<div class="toc-scroll-container max-h-[60vh] overflow-y-auto overflow-x-hidden">
-				<div class="toc-content" data-card-toc-content></div>
-			</div>
+	<div
+		class="card-toc-wrapper"
+		data-depth={tocDepth}
+		data-japanese-badge={useJapaneseBadge}
+	>
+		<div class="toc-scroll-container max-h-[60vh] overflow-y-auto overflow-x-hidden">
+			<div class="toc-content" data-card-toc-content></div>
 		</div>
 	</div>
-</div>
+</WidgetLayout>
 
 <style>
-	.card-toc-wrapper {
-		width: 100%;
-	}
-
 	.toc-scroll-container::-webkit-scrollbar {
 		width: 4px;
 	}
