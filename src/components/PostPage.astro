@@ -28,6 +28,8 @@ const { page } = Astro.props;
 </div>
 
 <script>
+	import { registerPageScript } from "../scripts/page-lifecycle.js";
+
 	function initPostList() {
 		const postListContainer = document.getElementById(
 			"post-list-container",
@@ -60,37 +62,14 @@ const { page } = Astro.props;
 		);
 	}
 
-	document.addEventListener("DOMContentLoaded", initPostList);
-	if (document.readyState !== "loading") initPostList();
-
-	function setupSwupListeners() {
-		if ((window as any)._postListSwupListenerAttached) return;
-
-		function trySetupSwup() {
-			if (typeof window !== "undefined" && (window as any).swup) {
-				(window as any).swup.hooks.on("content:replace", initPostList);
-				(window as any)._postListSwupListenerAttached = true;
-				return true;
-			}
-			return false;
-		}
-
-		if (!trySetupSwup()) {
-			let retryCount = 0;
-			const retryInterval = setInterval(() => {
-				if (trySetupSwup() || ++retryCount >= 10) {
-					clearInterval(retryInterval);
-					if (retryCount >= 10) {
-						window.addEventListener("popstate", () =>
-							requestAnimationFrame(initPostList),
-						);
-					}
-				}
-			}, 100);
-		}
-	}
-
-	setTimeout(setupSwupListeners, 200);
+	registerPageScript("post-list-layout", {
+		shouldRun() {
+			return document.getElementById("post-list-container") !== null;
+		},
+		init() {
+			requestAnimationFrame(initPostList);
+		},
+	});
 </script>
 
 <style>

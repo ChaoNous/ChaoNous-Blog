@@ -112,3 +112,6 @@ export function registerPageScript(name, options) {
 export function cleanupPageScripts() {
 	cleanupAll();
 }
+
+window.registerPageScript = registerPageScript;
+window.cleanupPageScripts = cleanupPageScripts;

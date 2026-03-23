@@ -160,6 +160,8 @@ const headingsJson = JSON.stringify(headings);
 </style>
 
 <script>
+	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+
 	interface HeadingData {
 		depth: number;
 		slug: string;
@@ -464,6 +466,19 @@ const headingsJson = JSON.stringify(headings);
 		).map((wrapper) => new CardTOC(wrapper as HTMLElement));
 	};
 
-	document.addEventListener("DOMContentLoaded", initCardTOC);
-	document.addEventListener("swup:page:view", initCardTOC);
+	registerPageScript("card-toc", {
+		shouldRun() {
+			return document.querySelector(".card-toc-wrapper") !== null;
+		},
+		init() {
+			initCardTOC();
+			return () => {
+				const cardTocWindow = window as CardTOCWindow;
+				cardTocWindow.__cardTocInstances?.forEach((instance) =>
+					instance.destroy(),
+				);
+				cardTocWindow.__cardTocInstances = [];
+			};
+		},
+	});
 </script>

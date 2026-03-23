@@ -1,3 +1,5 @@
+import { registerPageScript } from "./page-lifecycle.js";
+
 function showRightSidebar() {
 	const rightSidebar = document.querySelector(".right-sidebar-container");
 	if (rightSidebar) {
@@ -16,11 +18,11 @@ function initialize() {
 	showRightSidebar();
 }
 
-if (document.readyState === "loading") {
-	document.addEventListener("DOMContentLoaded", initialize);
-} else {
-	initialize();
-}
+registerPageScript("right-sidebar-layout", {
+	init() {
+		initialize();
+	},
+});
 
 if (typeof module !== "undefined" && module.exports) {
 	module.exports = { showRightSidebar };

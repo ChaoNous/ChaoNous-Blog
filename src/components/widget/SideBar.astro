@@ -162,23 +162,15 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 	}}
 >
 	class SidebarManager {
+		handleResize = () => this.updateResponsiveDisplay();
+
 		constructor() {
 			this.init();
 		}
 
 		init() {
 			this.updateResponsiveDisplay();
-			window.addEventListener("resize", () =>
-				this.updateResponsiveDisplay(),
-			);
-
-			if (typeof window !== "undefined" && window.swup) {
-				window.swup.hooks.on("content:replace", () => {
-					setTimeout(() => {
-						this.updateResponsiveDisplay();
-					}, 100);
-				});
-			}
+			window.addEventListener("resize", this.handleResize);
 		}
 
 		updateResponsiveDisplay() {
@@ -212,7 +204,37 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 				);
 			}
 		}
+
+		destroy() {
+			window.removeEventListener("resize", this.handleResize);
+		}
 	}
 
-	new SidebarManager();
+	type SidebarWindow = Window & {
+		__sidebarManager?: SidebarManager | null;
+	};
+
+	function registerSidebarManager() {
+		if (typeof window.registerPageScript !== "function") {
+			setTimeout(registerSidebarManager, 0);
+			return;
+		}
+
+		window.registerPageScript("sidebar-manager", {
+			shouldRun() {
+				return document.getElementById("sidebar") !== null;
+			},
+			init() {
+				const sidebarWindow = window as SidebarWindow;
+				sidebarWindow.__sidebarManager?.destroy();
+				sidebarWindow.__sidebarManager = new SidebarManager();
+				return () => {
+					sidebarWindow.__sidebarManager?.destroy();
+					sidebarWindow.__sidebarManager = null;
+				};
+			},
+		});
+	}
+
+	registerSidebarManager();
 </script>

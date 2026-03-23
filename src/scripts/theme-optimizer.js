@@ -1,3 +1,5 @@
+import { registerPageScript } from "./page-lifecycle.js";
+
 /**
  * 主题切换综合性能优化器
  *
@@ -54,64 +56,8 @@ class ThemeOptimizer {
 		// 应用代码块过渡行为设置
 		this.applyCodeBlockTransitionBehavior();
 
-		// 设置 Swup 钩子以确保在页面切换时重新初始化
-		this.setupSwupHooks();
-
 		// 通知其他组件主题优化器已准备就绪
 		document.dispatchEvent(new CustomEvent("themeOptimizerReady"));
-	}
-
-	// ==================== Swup 钩子设置 ====================
-
-	setupSwupHooks() {
-		// 设置 Swup 钩子的函数
-		const setupHooks = () => {
-			if (window.swup) {
-				// 监听 page:view 事件
-				window.swup.hooks.on("page:view", () => {
-					// 页面切换后重新初始化代码块优化
-					setTimeout(() => {
-						this.observeCodeBlocks();
-						this.applyCodeBlockTransitionBehavior();
-						// 确保主题切换样式正确应用
-						this.forceApplyThemeTransitionStyles();
-					}, 100);
-				});
-
-				// 监听 content:replace 事件（更早触发）
-				window.swup.hooks.on("content:replace", () => {
-					// 内容替换时也重新应用代码块过渡行为
-					setTimeout(() => {
-						this.applyCodeBlockTransitionBehavior();
-						// 确保主题切换样式正确应用
-						this.forceApplyThemeTransitionStyles();
-					}, 50);
-				});
-
-				return true;
-			}
-			return false;
-		};
-
-		// 尝试立即设置 Swup 钩子
-		if (!setupHooks()) {
-			// 如果 Swup 尚未初始化，等待它加载
-			document.addEventListener("swup:enable", () => {
-				setupHooks();
-			});
-
-			// 额外的延迟重试机制，确保捕获到 Swup
-			const retryInterval = setInterval(() => {
-				if (setupHooks()) {
-					clearInterval(retryInterval);
-				}
-			}, 100);
-
-			// 最多重试 20 次（2 秒）
-			setTimeout(() => {
-				clearInterval(retryInterval);
-			}, 2000);
-		}
 	}
 
 	forceApplyThemeTransitionStyles() {
@@ -255,12 +201,6 @@ class ThemeOptimizer {
 		// 监听主题变化
 		this.setupThemeListener();
 
-		// 页面变化时重新观察
-		if (window.swup) {
-			window.swup.hooks.on("page:view", () => {
-				setTimeout(() => this.observeCodeBlocks(), 100);
-			});
-		}
 	}
 
 	observeCodeBlocks() {
@@ -551,3 +491,13 @@ const themeOptimizer = new ThemeOptimizer();
 
 // 导出到全局（统一API）
 window.themeOptimizer = themeOptimizer;
+
+registerPageScript("theme-optimizer", {
+	init() {
+		setTimeout(() => {
+			themeOptimizer.observeCodeBlocks();
+			themeOptimizer.applyCodeBlockTransitionBehavior();
+			themeOptimizer.forceApplyThemeTransitionStyles();
+		}, 50);
+	},
+});
