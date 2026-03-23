@@ -46,10 +46,24 @@
 html {
   @apply scroll-smooth;
   @apply text-black/80;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
   &.dark {
     @apply text-white/80;
   }
+}
+
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 /* 页面顶部渐变高光效果 */
