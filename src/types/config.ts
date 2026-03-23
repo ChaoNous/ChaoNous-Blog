@@ -300,7 +300,6 @@ export type WidgetComponentType =
 	| "profile"
 	| "announcement"
 	| "categories"
-	| "tags"
 	| "toc"
 	| "card-toc"
 	| "music-player"

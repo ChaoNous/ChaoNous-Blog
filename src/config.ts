@@ -364,16 +364,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			animationDelay: 50,
 		},
 		{
-			// 标签云组件
-			type: "tags",
-			position: "sticky",
-			class: "onload-animation",
-			animationDelay: 150,
-			responsive: {
-				collapseThreshold: 20, // 超过指定数量时折叠
-			},
-		},
-		{
 			// 分类组件
 			type: "categories",
 			position: "top",
@@ -408,9 +398,9 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 左右侧边栏组件配置
 	components: {
-		left: ["profile", "tags", "categories", "card-toc"],
+		left: ["profile", "categories", "card-toc"],
 		right: ["site-stats", "calendar"],
-		drawer: ["profile", "tags", "categories"],
+		drawer: ["profile", "categories"],
 	},
 
 	// 默认动画配置
