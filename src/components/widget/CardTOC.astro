@@ -14,8 +14,6 @@ const className = Astro.props.class;
 const style = Astro.props.style;
 const tocDepth = siteConfig.toc.depth;
 const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
-
-// 序列化 headings 为 JSON 字符串，供客户端脚本使用
 const headingsJson = JSON.stringify(headings);
 ---
 
@@ -135,70 +133,115 @@ const headingsJson = JSON.stringify(headings);
 	}
 
 	class CardTOC {
-		private wrapper: HTMLElement | null;
+		private wrapper: HTMLElement;
 		private content: HTMLElement | null;
 		private headings: HTMLElement[] = [];
 		private tocItems: HTMLElement[] = [];
 		private activeIndex = -1;
+		private observer: MutationObserver | null = null;
+		private readonly handleScroll = () => this.updateActiveHeading();
+		private readonly handleResize = () => this.updateActiveHeading();
+		private readonly handleClick = (event: Event) => {
+			const item = (event.target as HTMLElement).closest(".card-toc-item");
+			if (!item) return;
 
-		constructor() {
-			this.wrapper = document.querySelector(".card-toc-wrapper");
-			this.content = document.querySelector("[data-card-toc-content]");
+			const id = item.getAttribute("data-heading-id");
+			if (!id) return;
+
+			const element = document.getElementById(id);
+			if (!element) return;
+
+			const top = element.getBoundingClientRect().top + window.scrollY - 80;
+			window.scrollTo({ top, behavior: "smooth" });
+		};
+
+		constructor(wrapper: HTMLElement) {
+			this.wrapper = wrapper;
+			this.content = wrapper.querySelector("[data-card-toc-content]");
 			this.init();
 		}
 
+		private getJapaneseKatakana() {
+			return [
+				"\u30a2",
+				"\u30a4",
+				"\u30a6",
+				"\u30a8",
+				"\u30aa",
+				"\u30ab",
+				"\u30ad",
+				"\u30af",
+				"\u30b1",
+				"\u30b3",
+				"\u30b5",
+				"\u30b7",
+				"\u30b9",
+				"\u30bb",
+				"\u30bd",
+				"\u30bf",
+				"\u30c1",
+				"\u30c4",
+				"\u30c6",
+				"\u30c8",
+				"\u30ca",
+				"\u30cb",
+				"\u30cc",
+				"\u30cd",
+				"\u30ce",
+				"\u30cf",
+				"\u30d2",
+				"\u30d5",
+				"\u30d8",
+				"\u30db",
+			];
+		}
+
 		private init() {
-			// 优先使用服务端通过 data 属性传入的 headings
-			const headingsAttr = this.wrapper?.dataset.headings;
+			const headingsAttr = this.wrapper.dataset.headings;
 			if (headingsAttr) {
 				try {
 					const headingsData: HeadingData[] = JSON.parse(headingsAttr);
-					if (headingsData && headingsData.length > 0) {
+					if (headingsData.length > 0) {
 						this.generateTOCFromHeadingsData(headingsData);
 						this.bindEvents();
 						return;
 					}
-				} catch (e) {
-					console.warn("Failed to parse headings data:", e);
+				} catch (error) {
+					console.warn("Failed to parse headings data:", error);
 				}
 			}
-			// 如果没有服务端数据，则从 DOM 获取
+
 			this.generateTOC();
 			this.bindEvents();
 			this.observeContent();
 		}
 
 		private generateTOCFromHeadingsData(headingsData: HeadingData[]) {
-			if (!this.wrapper || !this.content) return;
+			if (!this.content) return;
 
-			const maxLevel = parseInt(this.wrapper.dataset.depth || "3");
+			const maxLevel = parseInt(this.wrapper.dataset.depth || "3", 10);
 			const useJapaneseBadge = this.wrapper.dataset.japaneseBadge === "true";
-
-			const japaneseKatakana = [
-				"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
-				"サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
-				"ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
-			];
+			const japaneseKatakana = this.getJapaneseKatakana();
 
 			let minLevel = 6;
-			headingsData.forEach((h) => {
-				if (h.depth < minLevel) minLevel = h.depth;
+			headingsData.forEach((heading) => {
+				if (heading.depth < minLevel) minLevel = heading.depth;
 			});
 
+			this.headings = [];
 			let html = "";
 			let h1Count = 0;
+
 			headingsData.forEach((heading) => {
 				const level = heading.depth;
-
 				if (level >= minLevel + maxLevel) return;
 
-				// 获取对应的 DOM 元素
 				const domElement = document.getElementById(heading.slug);
 				if (domElement) {
-					this.headings.push(domElement as HTMLElement);
+					this.headings.push(domElement);
 				}
 
-				const indent = (level - minLevel) * 1;
+				const indent = level - minLevel;
 				let badge = "";
 
 				if (level === minLevel) {
@@ -218,35 +261,29 @@ const headingsJson = JSON.stringify(headings);
 				html += `<div class="card-toc-item" style="padding-left: ${0.5 + indent}rem" data-heading-id="${heading.slug}">${badge}<span class="card-toc-text">${text}</span></div>`;
 			});
 
-			if (this.content) {
-				this.content.innerHTML = html;
-				this.tocItems = Array.from(
-					this.content.querySelectorAll(".card-toc-item"),
-				);
-			}
-
+			this.render(html);
 			this.wrapper.classList.remove("hidden");
 			this.updateActiveHeading();
 		}
 
 		private observeContent() {
 			const contentWrapper = document.getElementById("post-container");
-			if (contentWrapper) {
-				const observer = new MutationObserver(() => {
-					this.generateTOC();
-				});
-				observer.observe(contentWrapper, {
-					childList: true,
-					subtree: true,
-				});
-			}
+			if (!contentWrapper) return;
+
+			this.observer = new MutationObserver(() => {
+				this.generateTOC();
+			});
+
+			this.observer.observe(contentWrapper, {
+				childList: true,
+				subtree: true,
+			});
 		}
 
 		private generateTOC() {
 			const container = document.getElementById("post-container");
-
 			if (!container) {
-				this.wrapper?.classList.add("hidden");
+				this.wrapper.classList.add("hidden");
 				return;
 			}
 
@@ -255,40 +292,33 @@ const headingsJson = JSON.stringify(headings);
 			);
 
 			if (allHeadings.length === 0) {
-				this.wrapper?.classList.add("hidden");
+				this.wrapper.classList.add("hidden");
 				this.headings = [];
+				this.render("");
 				return;
 			}
 
-			this.wrapper?.classList.remove("hidden");
-			this.headings = [];
-
-			const maxLevel = parseInt(this.wrapper?.dataset.depth || "3");
-			const useJapaneseBadge =
-				this.wrapper?.dataset.japaneseBadge === "true";
-
-			const japaneseKatakana = [
-				"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
-				"サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
-				"ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
-			];
+			const maxLevel = parseInt(this.wrapper.dataset.depth || "3", 10);
+			const useJapaneseBadge = this.wrapper.dataset.japaneseBadge === "true";
+			const japaneseKatakana = this.getJapaneseKatakana();
 
 			let minLevel = 6;
-			allHeadings.forEach((h) => {
-				const level = parseInt(h.tagName[1]);
+			allHeadings.forEach((heading) => {
+				const level = parseInt(heading.tagName[1], 10);
 				if (level < minLevel) minLevel = level;
 			});
 
+			this.headings = [];
 			let html = "";
 			let h1Count = 0;
-			allHeadings.forEach((heading) => {
-				const level = parseInt(heading.tagName[1]);
 
+			allHeadings.forEach((heading) => {
+				const level = parseInt(heading.tagName[1], 10);
 				if (level >= minLevel + maxLevel) return;
 
 				this.headings.push(heading as HTMLElement);
 
-				const indent = (level - minLevel) * 1;
+				const indent = level - minLevel;
 				let badge = "";
 
 				if (level === minLevel) {
@@ -308,14 +338,18 @@ const headingsJson = JSON.stringify(headings);
 				html += `<div class="card-toc-item" style="padding-left: ${0.5 + indent}rem" data-heading-id="${heading.id}">${badge}<span class="card-toc-text">${text}</span></div>`;
 			});
 
-			if (this.content) {
-				this.content.innerHTML = html;
-				this.tocItems = Array.from(
-					this.content.querySelectorAll(".card-toc-item"),
-				);
-			}
-
+			this.render(html);
+			this.wrapper.classList.remove("hidden");
 			this.updateActiveHeading();
+		}
+
+		private render(html: string) {
+			if (!this.content) return;
+
+			this.content.innerHTML = html;
+			this.tocItems = Array.from(
+				this.content.querySelectorAll(".card-toc-item"),
+			);
 		}
 
 		private updateActiveHeading() {
@@ -323,70 +357,51 @@ const headingsJson = JSON.stringify(headings);
 
 			const scrollY = window.scrollY;
 			const offsetTop = 150;
-
 			let newActiveIndex = -1;
+
 			for (let i = 0; i < this.headings.length; i++) {
 				const heading = this.headings[i];
-				if (
-					heading.getBoundingClientRect().top + scrollY <
-					scrollY + offsetTop
-				) {
+				if (heading.getBoundingClientRect().top + scrollY < scrollY + offsetTop) {
 					newActiveIndex = i;
 				} else {
 					break;
 				}
 			}
 
-			if (newActiveIndex !== this.activeIndex) {
-				this.activeIndex = newActiveIndex;
+			if (newActiveIndex === this.activeIndex) return;
 
-				this.tocItems.forEach((item, index) => {
-					if (index === this.activeIndex) {
-						item.classList.add("active");
-					} else {
-						item.classList.remove("active");
-					}
-				});
-			}
+			this.activeIndex = newActiveIndex;
+			this.tocItems.forEach((item, index) => {
+				item.classList.toggle("active", index === this.activeIndex);
+			});
 		}
 
 		private bindEvents() {
-			window.addEventListener("scroll", () => this.updateActiveHeading(), {
-				passive: true,
-			});
+			window.addEventListener("scroll", this.handleScroll, { passive: true });
+			window.addEventListener("resize", this.handleResize, { passive: true });
+			this.content?.addEventListener("click", this.handleClick);
+		}
 
-			window.addEventListener("resize", () => this.updateActiveHeading(), {
-				passive: true,
-			});
-
-			this.content?.addEventListener("click", (e) => {
-				const item = (e.target as HTMLElement).closest(".card-toc-item");
-				if (item) {
-					const id = item.getAttribute("data-heading-id");
-					if (id) {
-						const element = document.getElementById(id);
-						if (element) {
-							const top =
-								element.getBoundingClientRect().top +
-								window.scrollY -
-								80;
-							window.scrollTo({ top, behavior: "smooth" });
-						}
-					}
-				}
-			});
-
-			// Swup 支持
-			if ((window as any).swup) {
-				(window as any).swup.hooks.on("page:view", () => {
-					setTimeout(() => {
-						this.generateTOC();
-					}, 200);
-				});
-			}
+		destroy() {
+			window.removeEventListener("scroll", this.handleScroll);
+			window.removeEventListener("resize", this.handleResize);
+			this.content?.removeEventListener("click", this.handleClick);
+			this.observer?.disconnect();
 		}
 	}
 
-	document.addEventListener("DOMContentLoaded", () => new CardTOC());
-	document.addEventListener("swup:page:view", () => new CardTOC());
+	type CardTOCWindow = Window & {
+		__cardTocInstances?: CardTOC[];
+	};
+
+	const initCardTOC = () => {
+		const cardTocWindow = window as CardTOCWindow;
+		cardTocWindow.__cardTocInstances?.forEach((instance) => instance.destroy());
+		cardTocWindow.__cardTocInstances = Array.from(
+			document.querySelectorAll(".card-toc-wrapper"),
+		).map((wrapper) => new CardTOC(wrapper as HTMLElement));
+	};
+
+	document.addEventListener("DOMContentLoaded", initCardTOC);
+	document.addEventListener("swup:page:view", initCardTOC);
 </script>
