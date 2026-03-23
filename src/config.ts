@@ -352,14 +352,14 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 个人资料组件
 			type: "profile",
-			position: "top", // 显示位置："top" 置顶，"sticky" 粘性定位
+			position: "sticky", // 显示位置："top" 置顶，"sticky" 粘性定位
 			class: "onload-animation", // CSS 动画类
 			animationDelay: 0, // 动画延迟
 		},
 		{
 			// 分类组件
 			type: "categories",
-			position: "top",
+			position: "sticky",
 			class: "onload-animation",
 			animationDelay: 250,
 			responsive: {
@@ -376,14 +376,14 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 网站统计组件
 			type: "site-stats",
-			position: "top",
+			position: "sticky",
 			class: "onload-animation",
 			animationDelay: 200,
 		},
 		{
 			// 日历组件
 			type: "calendar",
-			position: "top",
+			position: "sticky",
 			class: "onload-animation",
 			animationDelay: 250,
 		},
