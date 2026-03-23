@@ -1,0 +1,4 @@
+  FAILED: EPERM, Permission denied: \\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.44040872 '\\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.44040872'
+  FAILED: EPERM, Permission denied: \\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.90135626 '\\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.90135626'
+  FAILED: EPERM, Permission denied: \\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.64824642 '\\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.64824642'
+  FAILED: EPERM, Permission denied: \\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.69542495 '\\?\C:\Users\ChaoNous\AppData\Local\Temp\lighthouse.69542495'

@@ -220,11 +220,6 @@ export const navBarConfig: NavBarConfig = {
 			url: "/albums/",
 			icon: "material-symbols:photo-library",
 		},
-		{
-			name: "书籍",
-			url: "/books/",
-			icon: "material-symbols:menu-book",
-		},
 		LinkPreset.Friends,
 	],
 };

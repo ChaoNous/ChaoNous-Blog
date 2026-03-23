@@ -1,0 +1,19 @@
+========== DESKTOP - 5 runs ==========
+Run 1/5...
+Run 2/5...
+Run 3/5...
+Run 4/5...
+Run 5/5...
+  Perf: 60 | A11y: 100 | BP: 100 | SEO: 100
+  FCP: 1.6 s | LCP: 4.7 s | TBT: 180 ms | CLS: 0.007
+
+========== SUMMARY ==========
+
+Performance: 60
+Accessibility: 100
+Best Practices: 100
+SEO: 100
+FCP avg: 1568 ms
+LCP avg: 4654 ms
+TBT avg: 176 ms
+CLS avg: 0.0075
