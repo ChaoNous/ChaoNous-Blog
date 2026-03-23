@@ -1,0 +1,169 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { MarkdownHeading } from "astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "../../components/misc/ImageWrapper.astro";
+import PostMetadata from "../../components/PostMeta.astro";
+import { siteConfig } from "../../config";
+import { getFileDirFromPath } from "../../utils/url-utils";
+import LastModifiedCard from "./LastModifiedCard.astro";
+import PostNavigation from "./PostNavigation.astro";
+
+interface Props {
+	entry: CollectionEntry<"posts">;
+	headings?: MarkdownHeading[];
+	jsonLd: Record<string, unknown>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	remarkPluginFrontmatter: any; // Astro render() 返回的类型
+	lastModified: string;
+}
+
+const {
+	entry,
+	headings = [],
+	jsonLd,
+	remarkPluginFrontmatter,
+	lastModified,
+} = Astro.props;
+---
+
+<MainGridLayout
+	banner={entry.data.image}
+	title={entry.data.title}
+	description={entry.data.description}
+	lang={entry.data.lang}
+	setOGTypeArticle={true}
+	postSlug={entry.id}
+	headings={headings}
+>
+	<script
+		is:inline
+		slot="head"
+		type="application/ld+json"
+		set:html={JSON.stringify(jsonLd)}
+	/>
+	<script>
+		import("../../scripts/right-sidebar-layout.js");
+	</script>
+	<div
+		class="flex w-full rounded-(--radius-large) overflow-hidden relative mb-4"
+	>
+		<div
+			id="post-container"
+			class:list={[
+				"card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
+				{},
+			]}
+		>
+			<div
+				class="flex flex-row text-50 gap-5 mb-3 transition onload-animation"
+			>
+				<div class="flex flex-row items-center">
+					<div
+						class="transition h-6 w-6 rounded-md bg-(--line-divider) flex items-center justify-center mr-2"
+					>
+						<Icon name="material-symbols:notes-rounded" />
+					</div>
+					<div class="text-sm">
+						{remarkPluginFrontmatter.words}
+						{" " + i18n(I18nKey.wordsCount)}
+					</div>
+				</div>
+				<div class="flex flex-row items-center">
+					<div
+						class="transition h-6 w-6 rounded-md bg-(--line-divider) flex items-center justify-center mr-2"
+					>
+						<Icon
+							name="material-symbols:schedule-outline-rounded"
+						/>
+					</div>
+					<div class="text-sm">
+						{remarkPluginFrontmatter.minutes}
+						{
+							" " +
+								i18n(
+									remarkPluginFrontmatter.minutes === 1
+										? I18nKey.minuteCount
+										: I18nKey.minutesCount,
+								)
+						}
+					</div>
+				</div>
+			</div>
+
+			<div class="relative onload-animation">
+				<div
+					data-pagefind-body
+					data-pagefind-weight="10"
+					data-pagefind-meta="title"
+					class="transition w-full block font-bold mb-3
+                    text-3xl md:text-[2.25rem]/[2.75rem]
+                    text-90
+                    md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
+                    before:absolute before:top-3 before:-left-4.5"
+				>
+					{entry.data.title}
+				</div>
+			</div>
+
+			<div class="onload-animation">
+				<PostMetadata
+					className="mb-5"
+					published={entry.data.published}
+					updated={entry.data.updated}
+					category={entry.data.category || undefined}
+					id={entry.id}
+				/>
+				{
+					(!entry.data.image ||
+						(entry.data.image &&
+							!siteConfig.showCoverInContent)) && (
+						<div class="mt-4 border-(--line-divider) border-dashed border-b mb-5" />
+					)
+				}
+			</div>
+
+			{
+				entry.data.image && siteConfig.showCoverInContent && (
+					<>
+						<div class="mt-4" />
+						<ImageWrapper
+							id="post-cover"
+							src={entry.data.image}
+							basePath={getFileDirFromPath(entry.filePath || "")}
+							class="mb-8 rounded-xl banner-container onload-animation"
+						/>
+					</>
+				)
+			}
+
+			<slot />
+			<slot name="post-actions" />
+		</div>
+	</div>
+	{
+		siteConfig.showLastModified && (
+			<LastModifiedCard
+				lastModified={lastModified}
+				prefix={i18n(I18nKey.lastModifiedPrefix)}
+				year={i18n(I18nKey.year)}
+				month={i18n(I18nKey.month)}
+				day={i18n(I18nKey.day)}
+				hour={i18n(I18nKey.hour)}
+				minute={i18n(I18nKey.minute)}
+				second={i18n(I18nKey.second)}
+				description={i18n(I18nKey.lastModifiedOutdated)}
+			/>
+		)
+	}
+
+	<PostNavigation
+		nextSlug={entry.data.nextSlug}
+		nextTitle={entry.data.nextTitle}
+		prevSlug={entry.data.prevSlug}
+		prevTitle={entry.data.prevTitle}
+	/>
+</MainGridLayout>

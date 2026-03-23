@@ -1,0 +1,129 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { Page } from "astro";
+import PostCard from "./PostCard.astro";
+
+interface Props {
+	page: Page<CollectionEntry<"posts">>;
+}
+
+const { page } = Astro.props;
+---
+
+<div
+	id="post-list-container"
+	class="post-list-container list-mode transition-all duration-500 ease-in-out rounded-(--radius-large) bg-(--card-bg) md:bg-transparent mb-4"
+	data-default-layout="list"
+	data-layout="list"
+>
+	{
+		page.data.map((entry, index) => (
+			<PostCard
+				entry={entry}
+				class:list="onload-animation"
+				style={`--i: ${index}; --interval: 50ms;`}
+			/>
+		))
+	}
+</div>
+
+<script>
+	function initPostList() {
+		const postListContainer = document.getElementById(
+			"post-list-container",
+		);
+		if (!postListContainer) return;
+
+		postListContainer.classList.remove(
+			"grid-mode",
+			"grid",
+			"grid-cols-1",
+			"md:grid-cols-2",
+			"lg:grid-cols-2",
+			"gap-6",
+		);
+		postListContainer.classList.add("list-mode", "js-initialized");
+		postListContainer.dataset.layout = "list";
+
+		const rightSidebar = document.querySelector(".right-sidebar-container");
+		if (rightSidebar) {
+			rightSidebar.classList.remove("hidden-in-grid-mode");
+		}
+
+		const mainGrid = document.getElementById("main-grid");
+		if (mainGrid) {
+			mainGrid.setAttribute("data-layout-mode", "list");
+		}
+
+		window.dispatchEvent(
+			new CustomEvent("layoutInit", { detail: { layout: "list" } }),
+		);
+	}
+
+	document.addEventListener("DOMContentLoaded", initPostList);
+	if (document.readyState !== "loading") initPostList();
+
+	function setupSwupListeners() {
+		if ((window as any)._postListSwupListenerAttached) return;
+
+		function trySetupSwup() {
+			if (typeof window !== "undefined" && (window as any).swup) {
+				(window as any).swup.hooks.on("content:replace", initPostList);
+				(window as any)._postListSwupListenerAttached = true;
+				return true;
+			}
+			return false;
+		}
+
+		if (!trySetupSwup()) {
+			let retryCount = 0;
+			const retryInterval = setInterval(() => {
+				if (trySetupSwup() || ++retryCount >= 10) {
+					clearInterval(retryInterval);
+					if (retryCount >= 10) {
+						window.addEventListener("popstate", () =>
+							requestAnimationFrame(initPostList),
+						);
+					}
+				}
+			}, 100);
+		}
+	}
+
+	setTimeout(setupSwupListeners, 200);
+</script>
+
+<style>
+	@reference "tailwindcss";
+
+	#post-list-container {
+		min-height: 200px;
+		transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	#post-list-container.list-mode {
+		@apply flex flex-col gap-4;
+	}
+
+	#post-list-container > :global(*) {
+		content-visibility: auto;
+		contain-intrinsic-size: 200px;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		opacity: 0;
+		animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+		animation-delay: calc(
+			var(--content-delay) + var(--i) * var(--interval)
+		);
+	}
+
+	@keyframes fadeInSlide {
+		from {
+			opacity: 0;
+			transform: translateX(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+</style>

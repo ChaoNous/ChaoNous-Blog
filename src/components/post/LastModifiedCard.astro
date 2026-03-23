@@ -1,0 +1,102 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	lastModified: string;
+	prefix: string;
+	year: string;
+	month: string;
+	day: string;
+	hour: string;
+	minute: string;
+	second: string;
+	description: string;
+}
+
+const {
+	lastModified,
+	prefix,
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	description,
+} = Astro.props;
+---
+
+<div
+	id="last-modified"
+	data-last-modified={lastModified}
+	data-prefix={prefix}
+	data-year={year}
+	data-month={month}
+	data-day={day}
+	data-hour={hour}
+	data-minute={minute}
+	data-second={second}
+	style="display: none;"
+>
+</div>
+
+<div class="card-base p-6 mb-4">
+	<script is:inline>
+		function runtime() {
+			const lastModifiedElement =
+				document.getElementById("last-modified");
+			if (!lastModifiedElement) return;
+
+			const startDate = new Date(
+				lastModifiedElement.dataset.lastModified,
+			);
+			const currentDate = new Date();
+			const diff = currentDate - startDate;
+			const seconds = Math.floor(diff / 1000);
+			const days = Math.floor(seconds / 86400);
+			const hours = Math.floor((seconds % 86400) / 3600);
+			const minutes = Math.floor((seconds % 3600) / 60);
+			const secs = seconds % 60;
+			const years = Math.floor(days / 365);
+			const months = Math.floor((days % 365) / 30);
+			const remainingDays = days % 30;
+
+			const prefix = lastModifiedElement.dataset.prefix;
+			const yearKey = lastModifiedElement.dataset.year;
+			const monthKey = lastModifiedElement.dataset.month;
+			const dayKey = lastModifiedElement.dataset.day;
+			const hourKey = lastModifiedElement.dataset.hour;
+			const minuteKey = lastModifiedElement.dataset.minute;
+			const secondKey = lastModifiedElement.dataset.second;
+
+			let runtimeString = prefix + " ";
+			if (years > 0) runtimeString += `${years} ${yearKey} `;
+			if (months > 0) runtimeString += `${months} ${monthKey} `;
+			if (remainingDays > 0)
+				runtimeString += `${remainingDays} ${dayKey} `;
+			runtimeString += `${hours} ${hourKey} `;
+			runtimeString += `${String(minutes).padStart(2, "0")} ${minuteKey} `;
+			runtimeString += `${String(secs).padStart(2, "0")} ${secondKey}`;
+
+			const target = document.getElementById("modifiedtime");
+			if (target) target.innerHTML = runtimeString;
+		}
+		runtime();
+		setInterval(runtime, 1000);
+	</script>
+	<div class="flex items-center gap-3">
+		<div
+			class="flex items-center justify-center h-12 w-12 rounded-lg bg-(--enter-btn-bg)"
+		>
+			<Icon
+				name="material-symbols:history-rounded"
+				class="text-3xl text-(--primary)"
+			/>
+		</div>
+		<div class="flex flex-col gap-1">
+			<div id="modifiedtime" class="text-[1.0rem] leading-tight text-75">
+			</div>
+			<p class="text-[0.8rem] leading-tight text-75">{description}</p>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,194 @@
+---
+import {
+	normalizeBannerSources,
+	type ResolvedBannerImages,
+} from "../../utils/banner-utils";
+import { url } from "../../utils/url-utils";
+
+interface Props {
+	bannerImages: ResolvedBannerImages;
+	position?: string;
+	carouselEnabled?: boolean;
+	carouselInterval?: number;
+}
+
+const {
+	bannerImages,
+	position = "center",
+	carouselEnabled = false,
+	carouselInterval = 3,
+} = Astro.props;
+
+const desktopImages = normalizeBannerSources(bannerImages.desktop);
+const mobileImages = normalizeBannerSources(bannerImages.mobile);
+const count = Math.max(desktopImages.length, mobileImages.length);
+
+// 构建图片样式
+const imageStyle = `object-position: ${position}`;
+---
+
+<div id="banner-container" class="banner-container relative h-full w-full">
+	<ul id="banner-list" class="h-full w-full relative overflow-hidden">
+		{
+			Array.from({ length: count }).map((_, index) => {
+				const desktopSrc = desktopImages[index] || desktopImages[0];
+				const mobileSrc = mobileImages[index] || mobileImages[0];
+				// 首屏图片使用高优先级加载，其余图片延迟加载
+				const isFirstImage = index === 0;
+				const imageLoading = isFirstImage ? "eager" : "lazy";
+				const imagePriority = isFirstImage ? "high" : "low";
+
+				return (
+					<li
+						class="banner-item carousel-item absolute inset-0 opacity-0 scale-110"
+						data-index={index}
+					>
+						{/* 使用 picture 元素让浏览器只加载匹配的图片 */}
+						<picture>
+							{/* 移动端图片源：仅在小屏幕下加载 */}
+							<source
+								srcset={url(mobileSrc)}
+								media="(max-width: 767px)"
+							/>
+							{/* 默认使用桌面端图片 */}
+							<img
+								src={url(desktopSrc)}
+								alt={`Banner image ${index + 1}`}
+								class="w-full h-full object-cover"
+								style={imageStyle}
+								loading={imageLoading}
+								fetchpriority={imagePriority}
+								decoding={isFirstImage ? "sync" : "async"}
+							/>
+						</picture>
+					</li>
+				);
+			})
+		}
+	</ul>
+
+	<script
+		is:inline
+		define:vars={{
+			carouselType: carouselEnabled ? "carousel" : "random",
+			interval: carouselInterval * 1000,
+		}}
+	>
+		(function () {
+			const container = document.getElementById("banner-container");
+			if (!container) return;
+
+			const previousCleanup = container.__bannerCarouselCleanup;
+			if (typeof previousCleanup === "function") {
+				previousCleanup();
+			}
+
+			const items = Array.from(
+				container.querySelectorAll(".banner-item"),
+			);
+			if (items.length === 0) return;
+
+			let currentIndex = 0;
+			let timer = null;
+
+			if (carouselType === "random") {
+				const savedIndex = sessionStorage.getItem("banner_index");
+				if (savedIndex !== null && items[Number(savedIndex)]) {
+					currentIndex = Number(savedIndex);
+				} else {
+					currentIndex = Math.floor(Math.random() * items.length);
+					sessionStorage.setItem(
+						"banner_index",
+						String(currentIndex),
+					);
+				}
+			}
+
+			const preloadImage = (index) => {
+				const item = items[index];
+				if (!item) return;
+
+				const img = item.querySelector("img");
+				if (!img || img.dataset.bannerPreloaded === "true") return;
+
+				// 触发浏览器预加载（通过访问 src）
+				const preloadSrc = img.currentSrc || img.src;
+				if (!preloadSrc) return;
+
+				const preloadImg = new Image();
+				preloadImg.src = preloadSrc;
+				img.dataset.bannerPreloaded = "true";
+			};
+
+			const showItem = (index, immediate = false) => {
+				items.forEach((item, itemIndex) => {
+					if (immediate) {
+						item.style.transition = "none";
+					} else {
+						item.style.removeProperty("transition");
+					}
+
+					const isActive = itemIndex === index;
+					item.classList.toggle("opacity-100", isActive);
+					item.classList.toggle("scale-100", isActive);
+					item.classList.toggle("opacity-0", !isActive);
+					item.classList.toggle("scale-110", !isActive);
+					item.style.zIndex = isActive ? "2" : "1";
+				});
+
+				if (immediate) {
+					requestAnimationFrame(() => {
+						items.forEach((item) =>
+							item.style.removeProperty("transition"),
+						);
+					});
+				}
+			};
+
+			const stop = () => {
+				if (timer) {
+					clearInterval(timer);
+					timer = null;
+				}
+			};
+
+			const start = () => {
+				if (carouselType !== "carousel" || items.length <= 1 || timer) {
+					return;
+				}
+
+				timer = setInterval(() => {
+					currentIndex = (currentIndex + 1) % items.length;
+					preloadImage((currentIndex + 1) % items.length);
+					showItem(currentIndex);
+				}, interval);
+			};
+
+			const handleVisibilityChange = () => {
+				if (document.hidden) {
+					stop();
+				} else {
+					start();
+				}
+			};
+
+			preloadImage(currentIndex);
+			preloadImage((currentIndex + 1) % items.length);
+			showItem(currentIndex, true);
+			start();
+
+			document.addEventListener(
+				"visibilitychange",
+				handleVisibilityChange,
+			);
+
+			container.__bannerCarouselCleanup = () => {
+				stop();
+				document.removeEventListener(
+					"visibilitychange",
+					handleVisibilityChange,
+				);
+			};
+		})();
+	</script>
+</div>
