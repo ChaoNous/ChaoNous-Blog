@@ -146,7 +146,7 @@ export const siteConfig: SiteConfig = {
 	},
 	toc: {
 		enable: true, // 是否启用目录
-		mode: "sidebar", // 目录显示模式："float" 悬浮，"sidebar" 侧边栏
+		mode: "float", // 目录显示模式："float" 悬浮，"sidebar" 侧边栏
 		depth: 2, // 目录深度，1-6。例如 h1 则提取 h1，为 2 时从 h1 到 h2，以此类推
 		useJapaneseBadge: false, // 使用日文徽章（未启用显示 "Table of Contents"..）
 	},
