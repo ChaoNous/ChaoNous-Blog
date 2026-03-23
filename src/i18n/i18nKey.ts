@@ -18,10 +18,6 @@ enum I18nKey {
 	tableOfContents = "tableOfContents",
 	tocEmpty = "tocEmpty",
 
-	// 公告栏
-	announcement = "announcement",
-	announcementClose = "announcementClose",
-
 	untitled = "untitled",
 	uncategorized = "uncategorized",
 	noTags = "noTags",

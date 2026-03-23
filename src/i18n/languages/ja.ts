@@ -21,10 +21,6 @@ export const ja: Translation = {
 	[Key.tableOfContents]: "目次",
 	[Key.tocEmpty]: "目次はありません",
 
-	// お知らせ
-	[Key.announcement]: "お知らせ",
-	[Key.announcementClose]: "閉じる",
-
 	[Key.friends]: "友達",
 	[Key.friendsSubtitle]: "もっと素敵なウェブサイトを見つける",
 	[Key.friendsSearchPlaceholder]: "友達の名前または説明を検索...",

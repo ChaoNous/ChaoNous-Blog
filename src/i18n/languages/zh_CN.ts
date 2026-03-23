@@ -20,9 +20,6 @@ export const zh_CN: Translation = {
 	[Key.tableOfContents]: "目录",
 	[Key.tocEmpty]: "当前页面没有目录",
 
-	[Key.announcement]: "公告",
-	[Key.announcementClose]: "关闭",
-
 	[Key.friends]: "友链",
 	[Key.friendsSubtitle]: "发现更多优质网站",
 	[Key.friendsSearchPlaceholder]: "搜索友链名称或描述...",

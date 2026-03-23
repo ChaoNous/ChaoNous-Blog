@@ -298,7 +298,6 @@ export type FooterConfig = {
 // 缂佸嫪娆㈤柊宥囩枂缁鐎风€规矮绠?
 export type WidgetComponentType =
 	| "profile"
-	| "announcement"
 	| "categories"
 	| "toc"
 	| "card-toc"

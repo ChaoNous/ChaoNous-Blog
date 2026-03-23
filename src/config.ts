@@ -357,13 +357,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			animationDelay: 0, // 动画延迟
 		},
 		{
-			// 公告组件
-			type: "announcement",
-			position: "sticky",
-			class: "onload-animation",
-			animationDelay: 50,
-		},
-		{
 			// 分类组件
 			type: "categories",
 			position: "top",
@@ -399,7 +392,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// 左右侧边栏组件配置
 	components: {
 		left: ["profile", "categories"],
-		right: ["announcement", "card-toc", "site-stats", "calendar"],
+		right: ["card-toc", "site-stats", "calendar"],
 		drawer: ["profile", "categories"],
 	},
 
@@ -450,7 +443,6 @@ export const sakuraConfig: SakuraConfig = {
 // 组件配置汇总
 export const widgetConfigs = {
 	profile: profileConfig,
-	announcement: announcementConfig,
 	music: musicPlayerConfig,
 	layout: sidebarLayoutConfig,
 	sakura: sakuraConfig,

@@ -21,10 +21,6 @@ export const en: Translation = {
 	[Key.tableOfContents]: "Table of Contents",
 	[Key.tocEmpty]: "No table of contents",
 
-	// Announcement
-	[Key.announcement]: "Announcement",
-	[Key.announcementClose]: "Close",
-
 	[Key.friends]: "Friends",
 	[Key.friendsSubtitle]: "Discover more great websites",
 	[Key.friendsSearchPlaceholder]: "Search friend's name or description...",
