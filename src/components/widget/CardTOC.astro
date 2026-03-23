@@ -29,7 +29,7 @@ const headingsJson = JSON.stringify(headings);
 		data-japanese-badge={useJapaneseBadge}
 		data-headings={headingsJson}
 	>
-		<div class="toc-scroll-container max-h-[60vh] overflow-y-auto overflow-x-hidden">
+		<div class="toc-scroll-container overflow-y-auto overflow-x-hidden">
 			<div class="toc-content" data-card-toc-content></div>
 		</div>
 	</div>
@@ -37,12 +37,16 @@ const headingsJson = JSON.stringify(headings);
 
 <style>
 	:global(widget-layout[data-id="card-toc"]) {
-		display: block;
+		display: flex;
+		flex-direction: column;
+		max-height: var(--card-toc-max-height, none);
 	}
 
 	#card-toc {
 		display: flex;
+		flex: 1;
 		flex-direction: column;
+		min-height: 0;
 	}
 
 	.card-toc-wrapper {
@@ -72,7 +76,7 @@ const headingsJson = JSON.stringify(headings);
 
 	:global(.card-toc-item) {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		padding: 0.5rem 0.75rem;
 		color: var(--text-secondary);
 		text-decoration: none;
@@ -140,16 +144,15 @@ const headingsJson = JSON.stringify(headings);
 	}
 
 	:global(.card-toc-text) {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		flex: 1;
+		overflow: visible;
+		text-overflow: unset;
+		white-space: normal;
+		word-break: break-word;
+		overflow-wrap: anywhere;
 	}
 
 	@media (min-width: 1280px) {
-		:global(widget-layout[data-id="card-toc"]) {
-			min-height: 41.75rem;
-		}
-
 		.toc-scroll-container {
 			max-height: none;
 		}
@@ -166,12 +169,16 @@ const headingsJson = JSON.stringify(headings);
 	class CardTOC {
 		private wrapper: HTMLElement;
 		private content: HTMLElement | null;
+		private widgetElement: HTMLElement | null;
 		private headings: HTMLElement[] = [];
 		private tocItems: HTMLElement[] = [];
 		private activeIndex = -1;
 		private observer: MutationObserver | null = null;
 		private readonly handleScroll = () => this.updateActiveHeading();
-		private readonly handleResize = () => this.updateActiveHeading();
+		private readonly handleResize = () => {
+			this.syncMaxHeight();
+			this.updateActiveHeading();
+		};
 		private readonly handleClick = (event: Event) => {
 			const item = (event.target as HTMLElement).closest(".card-toc-item");
 			if (!item) return;
@@ -189,6 +196,7 @@ const headingsJson = JSON.stringify(headings);
 		constructor(wrapper: HTMLElement) {
 			this.wrapper = wrapper;
 			this.content = wrapper.querySelector("[data-card-toc-content]");
+			this.widgetElement = wrapper.closest('widget-layout[data-id="card-toc"]');
 			this.init();
 		}
 
@@ -294,6 +302,7 @@ const headingsJson = JSON.stringify(headings);
 
 			this.render(html);
 			this.wrapper.classList.remove("hidden");
+			this.syncMaxHeight();
 			this.updateActiveHeading();
 		}
 
@@ -326,6 +335,7 @@ const headingsJson = JSON.stringify(headings);
 				this.wrapper.classList.add("hidden");
 				this.headings = [];
 				this.render("");
+				this.syncMaxHeight();
 				return;
 			}
 
@@ -371,6 +381,7 @@ const headingsJson = JSON.stringify(headings);
 
 			this.render(html);
 			this.wrapper.classList.remove("hidden");
+			this.syncMaxHeight();
 			this.updateActiveHeading();
 		}
 
@@ -380,6 +391,26 @@ const headingsJson = JSON.stringify(headings);
 			this.content.innerHTML = html;
 			this.tocItems = Array.from(
 				this.content.querySelectorAll(".card-toc-item"),
+			);
+		}
+
+		private syncMaxHeight() {
+			if (!this.widgetElement) return;
+
+			if (window.innerWidth < 1280) {
+				this.widgetElement.style.removeProperty("--card-toc-max-height");
+				return;
+			}
+
+			const rightSidebar = document.getElementById("right-sidebar-sticky");
+			if (!rightSidebar) {
+				this.widgetElement.style.removeProperty("--card-toc-max-height");
+				return;
+			}
+
+			this.widgetElement.style.setProperty(
+				"--card-toc-max-height",
+				`${Math.round(rightSidebar.getBoundingClientRect().height)}px`,
 			);
 		}
 
