@@ -1,3 +1,5 @@
+import { registerPageScript } from "./page-lifecycle.js";
+
 const BTC_MAIN_SELECTOR = "#btc-main-chart";
 const BTC_MINI_SELECTOR = "#btc-mini-chart";
 const BTC_TABLE_SELECTOR = "#btc-table-wrap";
@@ -304,41 +306,16 @@ async function initBtcAnalysisCharts() {
 				'<p style="padding:1rem;color:#9a7a5a;text-align:center">数据加载失败，请稍后重试。</p>';
 		}
 	}
+	return cleanupBtcCharts;
 }
 
-function bootstrapBtcAnalysisCharts() {
-	if (!hasBtcChartElements()) {
-		cleanupBtcCharts();
-		return;
-	}
+registerPageScript("btc-analysis-chart", {
+	shouldRun: hasBtcChartElements,
+	init() {
+		window.setTimeout(() => {
+			initBtcAnalysisCharts();
+		}, 0);
 
-	window.setTimeout(() => {
-		initBtcAnalysisCharts();
-	}, 0);
-}
-
-function setupSwupHooks() {
-	if (window.__btcAnalysisSwupHookBound) {
-		return;
-	}
-
-	if (window.swup && window.swup.hooks) {
-		window.swup.hooks.on("page:view", bootstrapBtcAnalysisCharts);
-		window.swup.hooks.on("content:replace", cleanupBtcCharts);
-		window.__btcAnalysisSwupHookBound = true;
-		return;
-	}
-
-	document.addEventListener(
-		"swup:enable",
-		() => {
-			setupSwupHooks();
-		},
-		{ once: true },
-	);
-}
-
-setupSwupHooks();
-document.addEventListener("astro:page-load", bootstrapBtcAnalysisCharts);
-document.addEventListener("DOMContentLoaded", bootstrapBtcAnalysisCharts);
-bootstrapBtcAnalysisCharts();
+		return cleanupBtcCharts;
+	},
+});
