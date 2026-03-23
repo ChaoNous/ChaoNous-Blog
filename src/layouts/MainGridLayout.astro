@@ -30,6 +30,7 @@ interface Props {
 	setOGTypeArticle?: boolean;
 	postSlug?: string;
 	headings?: MarkdownHeading[];
+	isPostPage?: boolean;
 }
 
 // 检查 banner 是否为对象格式的工具函数（暂时注释）
@@ -60,6 +61,7 @@ const {
 	setOGTypeArticle,
 	postSlug,
 	headings = [],
+	isPostPage = false,
 } = Astro.props;
 const hasBannerCredit = siteConfig.banner.credit.enable;
 const hasBannerLink = !!siteConfig.banner.credit.url;
@@ -733,7 +735,11 @@ const transparentClass = shouldEnableTransparency
 							<div
 								class={`${sidebarClass} ${transparentClass} flex flex-col gap-4`}
 							>
-								<SideBar class="w-full" headings={headings} />
+								<SideBar
+									class="w-full"
+									headings={headings}
+									isPostPage={isPostPage}
+								/>
 								<slot name="left-sidebar" />
 							</div>
 						)

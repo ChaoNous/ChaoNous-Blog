@@ -16,12 +16,18 @@ interface Props {
 	components: WidgetComponentConfig[];
 	headings?: MarkdownHeading[];
 	wrapperClass?: string;
+	isPostPage?: boolean;
 }
 
-const { id, components, headings, wrapperClass } = Astro.props;
+const {
+	id,
+	components,
+	headings,
+	wrapperClass,
+	isPostPage = Astro.url.pathname.startsWith("/posts/"),
+} = Astro.props;
 
 // 判断是否是文章页面
-const isPostPage = Astro.url.pathname.startsWith("/posts/");
 
 // 文章页面只显示目录（card-toc），隐藏分类（categories）
 // 其他页面只显示分类（categories），隐藏目录（card-toc）
