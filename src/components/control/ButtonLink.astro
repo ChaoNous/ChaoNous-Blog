@@ -7,7 +7,7 @@ interface Props {
 const { badge, url, label } = Astro.props;
 ---
 
-<a href={url} aria-label={label}>
+<a href={url}>
 	<button
 		class:list={`
             w-full
@@ -23,6 +23,7 @@ const { badge, url, label } = Astro.props;
             text-75
             hover:text-(--primary)
         `}
+		aria-label={label}
 	>
 		<div class="flex items-center justify-between relative mr-2">
 			<div

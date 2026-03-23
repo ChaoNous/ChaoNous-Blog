@@ -49,5 +49,17 @@ src/data/bilibili-data.json
 # Vercel
 .vercel
 
-# Lighthouse reports
+# Lighthouse reports & test scripts
 lighthouse-report.json
+lighthouse-*.js
+lighthouse-*.cjs
+lighthouse-*.mjs
+lighthouse-results/
+lighthouse-results-*/
+
+# Twikoo local dev
+twikoo-cloudflare/
+twikoo_version.json
+
+# WorkBuddy agent workspace
+.workbuddy/

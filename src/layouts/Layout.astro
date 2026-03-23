@@ -166,6 +166,8 @@ if (siteConfig.font) {
 		<!-- 预连接关键域名 -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<!-- Iconify 图标 CDN -->
+		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
 
 		<!-- 关键字体预加载 - 使用 optional 避免布局偏移 -->
 		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
@@ -174,7 +176,7 @@ if (siteConfig.font) {
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
 		</noscript>
 
-		<!-- Banner 图片预加载 - 低优先级避免阻塞 -->
+		<!-- Banner 图片预加载 - 高优先级确保 LCP -->
 		{
 			siteConfig.banner.src && (
 				<>
@@ -183,14 +185,16 @@ if (siteConfig.font) {
 						as="image"
 						href={url(getDesktopBanner())}
 						media="(min-width: 768px)"
-						fetchpriority="low"
+						fetchpriority="high"
+						crossorigin="anonymous"
 					/>
 					<link
 						rel="preload"
 						as="image"
 						href={url(getMobileBanner())}
 						media="(max-width: 767px)"
-						fetchpriority="low"
+						fetchpriority="high"
+						crossorigin="anonymous"
 					/>
 				</>
 			)
