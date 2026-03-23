@@ -786,7 +786,7 @@ if (siteConfig.font) {
 		}
 	}
 
-	// 图片灯箱按需加载
+	// 图片灯箱按需延迟加载
 	async function initFancybox() {
 		const albumImagesSelector =
 			".custom-md img, #post-cover img, .moment-images img";
@@ -903,7 +903,8 @@ if (siteConfig.font) {
 
 		window.swup.hooks.on("content:replace", () => {
 			// 初始化新页面的图片、公式、滚动条和TOC
-			initFancybox();
+			// 延迟初始化 Fancybox，避免阻塞首屏
+			requestIdleCallback(() => initFancybox());
 			checkKatex();
 			initCustomScrollbar();
 
@@ -1076,7 +1077,7 @@ if (siteConfig.font) {
 	};
 
 	if (window?.swup?.hooks) {
-		initFancybox();
+		requestIdleCallback(() => initFancybox());
 		checkKatex();
 		setup();
 	} else {
@@ -1084,11 +1085,11 @@ if (siteConfig.font) {
 		// 监听 DOM 加载 (确保首屏也能加载优化组件)
 		if (document.readyState === "loading") {
 			document.addEventListener("DOMContentLoaded", () => {
-				initFancybox();
+				requestIdleCallback(() => initFancybox());
 				checkKatex();
 			});
 		} else {
-			initFancybox();
+			requestIdleCallback(() => initFancybox());
 			checkKatex();
 		}
 	}
