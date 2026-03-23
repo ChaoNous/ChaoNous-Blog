@@ -461,6 +461,28 @@
 	}
 
 	const interactionEvents = ["click", "keydown", "touchstart"];
+
+	// 标记播放列表是否已加载
+	let playlistLoaded = false;
+
+	// 延迟加载播放列表（首次用户交互时）
+	function lazyLoadPlaylist() {
+		if (playlistLoaded) return;
+		playlistLoaded = true;
+
+		if (mode === "meting") {
+			fetchMetingPlaylist();
+		} else {
+			// 使用本地播放列表，不发送任何API请求
+			playlist = [...localPlaylist];
+			if (playlist.length > 0) {
+				loadSong(playlist[0]);
+			} else {
+				showErrorMessage("本地播放列表为空");
+			}
+		}
+	}
+
 	onMount(() => {
 		loadVolumeSettings();
 		interactionEvents.forEach((event) => {
@@ -474,16 +496,20 @@
 		if (!musicPlayerConfig.enable) {
 			return;
 		}
-		if (mode === "meting") {
-			fetchMetingPlaylist();
+
+		// 延迟加载播放列表：等待用户首次交互或空闲时
+		// 这可以显著减少首屏 TBT
+		if ("requestIdleCallback" in window) {
+			// 使用 requestIdleCallback 在浏览器空闲时加载
+			requestIdleCallback(
+				() => {
+					lazyLoadPlaylist();
+				},
+				{ timeout: 5000 }
+			);
 		} else {
-			// 使用本地播放列表，不发送任何API请求
-			playlist = [...localPlaylist];
-			if (playlist.length > 0) {
-				loadSong(playlist[0]);
-			} else {
-				showErrorMessage("本地播放列表为空");
-			}
+			// 回退：延迟 3 秒后加载
+			setTimeout(lazyLoadPlaylist, 3000);
 		}
 	});
 

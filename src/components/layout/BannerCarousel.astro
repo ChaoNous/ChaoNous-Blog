@@ -1,9 +1,9 @@
 ---
-import ImageWrapper from "../misc/ImageWrapper.astro";
 import {
 	normalizeBannerSources,
 	type ResolvedBannerImages,
 } from "../../utils/banner-utils";
+import { url } from "../../utils/url-utils";
 
 interface Props {
 	bannerImages: ResolvedBannerImages;
@@ -22,6 +22,9 @@ const {
 const desktopImages = normalizeBannerSources(bannerImages.desktop);
 const mobileImages = normalizeBannerSources(bannerImages.mobile);
 const count = Math.max(desktopImages.length, mobileImages.length);
+
+// 构建图片样式
+const imageStyle = `object-position: ${position}`;
 ---
 
 <div id="banner-container" class="banner-container relative h-full w-full">
@@ -40,32 +43,24 @@ const count = Math.max(desktopImages.length, mobileImages.length);
 						class="banner-item carousel-item absolute inset-0 opacity-0 scale-110"
 						data-index={index}
 					>
-						{mobileSrc && (
-							<ImageWrapper
-								alt={`Mobile banner image ${index + 1}`}
-								class:list={[
-									"block md:hidden object-cover h-full w-full",
-								]}
-								src={mobileSrc}
-								position={position}
+						{/* 使用 picture 元素让浏览器只加载匹配的图片 */}
+						<picture>
+							{/* 移动端图片源：仅在小屏幕下加载 */}
+							<source
+								srcset={url(mobileSrc)}
+								media="(max-width: 767px)"
+							/>
+							{/* 默认使用桌面端图片 */}
+							<img
+								src={url(desktopSrc)}
+								alt={`Banner image ${index + 1}`}
+								class="w-full h-full object-cover"
+								style={imageStyle}
 								loading={imageLoading}
 								fetchpriority={imagePriority}
 								decoding={isFirstImage ? "sync" : "async"}
 							/>
-						)}
-						{desktopSrc && (
-							<ImageWrapper
-								alt={`Desktop banner image ${index + 1}`}
-								class:list={[
-									"hidden md:block object-cover h-full w-full",
-								]}
-								src={desktopSrc}
-								position={position}
-								loading={imageLoading}
-								fetchpriority={imagePriority}
-								decoding={isFirstImage ? "sync" : "async"}
-							/>
-						)}
+						</picture>
 					</li>
 				);
 			})
@@ -113,15 +108,16 @@ const count = Math.max(desktopImages.length, mobileImages.length);
 				const item = items[index];
 				if (!item) return;
 
-				item.querySelectorAll("img").forEach((image) => {
-					if (image.dataset.bannerPreloaded === "true") return;
-					const preloadSrc = image.currentSrc || image.src;
-					if (!preloadSrc) return;
+				const img = item.querySelector("img");
+				if (!img || img.dataset.bannerPreloaded === "true") return;
 
-					const preloadImage = new Image();
-					preloadImage.src = preloadSrc;
-					image.dataset.bannerPreloaded = "true";
-				});
+				// 触发浏览器预加载（通过访问 src）
+				const preloadSrc = img.currentSrc || img.src;
+				if (!preloadSrc) return;
+
+				const preloadImg = new Image();
+				preloadImg.src = preloadSrc;
+				img.dataset.bannerPreloaded = "true";
 			};
 
 			const showItem = (index, immediate = false) => {

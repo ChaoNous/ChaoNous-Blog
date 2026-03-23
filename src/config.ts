@@ -79,16 +79,16 @@ export const siteConfig: SiteConfig = {
 		// 横幅图片配置，数量大于 1 时自动启用轮播
 		src: {
 			desktop: [
-				"assets/desktop-banner/banner1.webp",
-				"assets/desktop-banner/banner2.webp",
-				"assets/desktop-banner/banner3.webp",
-				"assets/desktop-banner/banner4.webp",
+				"/assets/desktop-banner/banner1.webp",
+				"/assets/desktop-banner/banner2.webp",
+				"/assets/desktop-banner/banner3.webp",
+				"/assets/desktop-banner/banner4.webp",
 			],
 			mobile: [
-				"assets/mobile-banner/banner1.webp",
-				"assets/mobile-banner/banner2.webp",
-				"assets/mobile-banner/banner3.webp",
-				"assets/mobile-banner/banner4.webp",
+				"/assets/mobile-banner/banner1.webp",
+				"/assets/mobile-banner/banner2.webp",
+				"/assets/mobile-banner/banner3.webp",
+				"/assets/mobile-banner/banner4.webp",
 			],
 		},
 
@@ -189,16 +189,16 @@ export const siteConfig: SiteConfig = {
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
 		desktop: [
-			"assets/desktop-banner/banner1.webp",
-			"assets/desktop-banner/banner2.webp",
-			"assets/desktop-banner/banner3.webp",
-			"assets/desktop-banner/banner4.webp",
+			"/assets/desktop-banner/banner1.webp",
+			"/assets/desktop-banner/banner2.webp",
+			"/assets/desktop-banner/banner3.webp",
+			"/assets/desktop-banner/banner4.webp",
 		],
 		mobile: [
-			"assets/mobile-banner/banner1.webp",
-			"assets/mobile-banner/banner2.webp",
-			"assets/mobile-banner/banner3.webp",
-			"assets/mobile-banner/banner4.webp",
+			"/assets/mobile-banner/banner1.webp",
+			"/assets/mobile-banner/banner2.webp",
+			"/assets/mobile-banner/banner3.webp",
+			"/assets/mobile-banner/banner4.webp",
 		],
 	},
 	position: "center", // 壁纸位置，对应 object-position
