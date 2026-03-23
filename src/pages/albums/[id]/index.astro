@@ -135,7 +135,16 @@ if (!album) {
 </MainGridLayout>
 
 <script>
-	document.addEventListener("DOMContentLoaded", () => {
+	import { registerPageScript } from "../../../scripts/page-lifecycle.js";
+
+	registerPageScript("album-image-preload", {
+		shouldRun() {
+			return (
+				document.querySelector(".moment-images img, .photo-gallery img") !==
+				null
+			);
+		},
+		init() {
 		const albumImages = document.querySelectorAll(
 			".moment-images img, .photo-gallery img",
 		);
@@ -146,6 +155,7 @@ if (!album) {
 				preloadImg.src = img.src;
 			}
 		});
+		},
 	});
 </script>
 

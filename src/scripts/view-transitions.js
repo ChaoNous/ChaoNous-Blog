@@ -263,11 +263,12 @@ function initNavigation() {
 }
 
 // 自动初始化
-if (document.readyState === "loading") {
-	document.addEventListener("DOMContentLoaded", initNavigation);
-} else {
-	initNavigation();
-}
+registerPageScript("view-transitions-navigation", {
+	init() {
+		initNavigation();
+	},
+});
 
 // 导出供外部使用
 export { navigateTo, prefetchPage };
+import { registerPageScript } from "./page-lifecycle.js";

@@ -1,4 +1,5 @@
-(() => {
+(async () => {
+	const { registerPageScript } = await import("../scripts/page-lifecycle.js");
 	// 单例模式：检查是否已经初始化过
 	if (window.mermaidInitialized) {
 		// 如果已经初始化过，只确保 renderMermaidDiagrams 函数可用
@@ -502,9 +503,12 @@
 	}
 
 	// 启动初始化
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", initialize);
-	} else {
-		initialize();
-	}
+	registerPageScript("mermaid-renderer", {
+		shouldRun() {
+			return document.querySelector(".mermaid") !== null;
+		},
+		init() {
+			initialize();
+		},
+	});
 })();

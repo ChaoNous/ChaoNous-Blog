@@ -25,6 +25,8 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 	data-pause-time={pauseTime}></span>
 
 <script>
+	import { registerPageScript } from "../scripts/page-lifecycle.js";
+
 	class TypewriterEffect {
 		private element: HTMLElement;
 		private texts: string[];
@@ -162,8 +164,15 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 			});
 	}
 
-	document.addEventListener("DOMContentLoaded", initTypewriters);
-	document.addEventListener("swup:contentReplaced", initTypewriters);
+	registerPageScript("typewriter-text", {
+		shouldRun() {
+			return document.querySelector(".typewriter") !== null;
+		},
+		init() {
+			initTypewriters();
+			return () => observer.disconnect();
+		},
+	});
 </script>
 
 <style>

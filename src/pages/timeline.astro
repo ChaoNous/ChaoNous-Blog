@@ -494,6 +494,7 @@ const subtitle = i18n(I18nKey.timelineSubtitle);
 </style>
 
 <script>
+	import { registerPageScript } from "../scripts/page-lifecycle.js";
 	// 确保图标库已加载，并处理页面导航
 	function initTimelinePage() {
 		// 如果图标加载器存在，确保图标已加载
@@ -525,8 +526,13 @@ const subtitle = i18n(I18nKey.timelineSubtitle);
 	}
 
 	// 页面加载完成后初始化
-	document.addEventListener("DOMContentLoaded", function () {
-		initTimelinePage();
+	registerPageScript("timeline-page", {
+		shouldRun() {
+			return document.querySelector(".timeline-item") !== null;
+		},
+		init() {
+			setTimeout(initTimelinePage, 100);
+		},
 	});
 
 	// 处理页面导航时的图标重新加载
@@ -542,21 +548,9 @@ const subtitle = i18n(I18nKey.timelineSubtitle);
 		});
 
 		// 增强对 Astro 导航的支持
-		document.addEventListener("astro:page-load", function () {
-			setTimeout(initTimelinePage, 100);
-		});
 
-		document.addEventListener("astro:after-swap", function () {
-			setTimeout(initTimelinePage, 100);
-		});
 
 		// 监听 SWUP 事件
-		document.addEventListener("swup:contentReplaced", function () {
-			setTimeout(initTimelinePage, 100);
-		});
 
-		document.addEventListener("swup:pageView", function () {
-			setTimeout(initTimelinePage, 100);
-		});
 	}
 </script>

@@ -274,6 +274,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 </style>
 
 <script>
+	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+
 	// 动态加载 Twikoo
 	function initTwikoo() {
 		const container = document.getElementById("twikoo-comment");
@@ -392,18 +394,20 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	);
 
 	// 初始化
-	document.addEventListener("DOMContentLoaded", () => {
-		const container = document.getElementById("twikoo-comment");
-		if (container) {
-			twikooObserver.observe(container);
-		}
+	registerPageScript("twikoo-comment", {
+		shouldRun() {
+			return document.getElementById("twikoo-comment") !== null;
+		},
+		init() {
+			const container = document.getElementById("twikoo-comment");
+			if (container && !container.querySelector("tk-time")) {
+				twikooObserver.observe(container);
+			}
+			return () => {
+				twikooObserver.disconnect();
+			};
+		},
 	});
 
 	// 页面导航后重新初始化
-	document.addEventListener("astro:page-load", () => {
-		const container = document.getElementById("twikoo-comment");
-		if (container && !container.querySelector("tk-time")) {
-			twikooObserver.observe(container);
-		}
-	});
 </script>

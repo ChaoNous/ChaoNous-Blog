@@ -161,8 +161,15 @@ const hasChildren = children.length > 0;
 
 <script>
 	// 閿洏瀵艰埅鏀寔
-	document.addEventListener("DOMContentLoaded", () => {
-		const dropdowns = document.querySelectorAll("[data-dropdown]");
+	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+
+	registerPageScript("dropdown-menu", {
+		shouldRun() {
+			return document.querySelector("[data-dropdown]") !== null;
+		},
+		init() {
+			const dropdowns = document.querySelectorAll("[data-dropdown]");
+			const cleanups: Array<() => void> = [];
 
 		dropdowns.forEach((dropdown) => {
 			const trigger = dropdown.querySelector(
@@ -187,7 +194,7 @@ const hasChildren = children.length > 0;
 				trigger.setAttribute("aria-expanded", String(!isExpanded));
 			};
 
-			trigger.addEventListener("keydown", (e) => {
+			const handleTriggerKeydown = (e: KeyboardEvent) => {
 				if (e.key === "Enter" || e.key === " ") {
 					e.preventDefault();
 					toggleMenu();
@@ -198,11 +205,15 @@ const hasChildren = children.length > 0;
 				} else if (e.key === "Escape") {
 					closeMenu();
 				}
-			});
+			};
+			trigger.addEventListener("keydown", handleTriggerKeydown);
+			cleanups.push(() =>
+				trigger.removeEventListener("keydown", handleTriggerKeydown),
+			);
 
 			// 鑿滃崟椤归敭鐩樺鑸?
 			items.forEach((item, index) => {
-				item.addEventListener("keydown", (e) => {
+				const handleItemKeydown = (e: KeyboardEvent) => {
 					if (e.key === "ArrowDown") {
 						e.preventDefault();
 						items[(index + 1) % items.length].focus();
@@ -216,15 +227,28 @@ const hasChildren = children.length > 0;
 						closeMenu();
 						trigger.focus();
 					}
-				});
+				};
+				item.addEventListener("keydown", handleItemKeydown);
+				cleanups.push(() =>
+					item.removeEventListener("keydown", handleItemKeydown),
+				);
 			});
 
 			// 鐐瑰嚮澶栭儴鍏抽棴
-			document.addEventListener("click", (e) => {
+			const handleDocumentClick = (e: MouseEvent) => {
 				if (!dropdown.contains(e.target as Node)) {
 					closeMenu();
 				}
-			});
+			};
+			document.addEventListener("click", handleDocumentClick);
+			cleanups.push(() =>
+				document.removeEventListener("click", handleDocumentClick),
+			);
 		});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		},
 	});
 </script>

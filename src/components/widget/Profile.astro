@@ -118,6 +118,22 @@ import { i18n } from "../../i18n/translation";
 		profileStatsUnavailable: i18n(I18nKey.profileStatsUnavailable),
 	}}
 >
+	function scheduleFetchSiteStats() {
+		if (typeof window.registerPageScript === "function") {
+			window.registerPageScript("profile-site-stats", {
+				shouldRun() {
+					return document.querySelector(".umami-stats-container") !== null;
+				},
+				init() {
+					fetchSiteStats();
+				},
+			});
+			return;
+		}
+
+		setTimeout(scheduleFetchSiteStats, 0);
+	}
+
 	function generateStatsText(pageViews, visits) {
 		return `${profileStatsPageViews} ${pageViews} · ${profileStatsVisits} ${visits}`;
 	}
@@ -156,9 +172,5 @@ import { i18n } from "../../i18n/translation";
 		}
 	}
 
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", () => fetchSiteStats());
-	} else {
-		fetchSiteStats();
-	}
+	scheduleFetchSiteStats();
 </script>

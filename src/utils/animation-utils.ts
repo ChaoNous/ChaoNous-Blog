@@ -251,11 +251,10 @@ export const animationManager = AnimationManager.getInstance();
 
 // 自动初始化
 if (typeof window !== "undefined") {
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", () => {
+	registerPageScript("animation-manager", {
+		init() {
 			animationManager.init();
-		});
-	} else {
-		animationManager.init();
-	}
+		},
+	});
 }
+import { registerPageScript } from "../scripts/page-lifecycle.js";
