@@ -1,0 +1,296 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - link "𝘾𝙝𝙖𝙤𝙉𝙤𝙪𝙨" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e8]: 𝘾𝙝𝙖𝙤𝙉𝙤𝙪𝙨
+    - generic [ref=e9]:
+      - generic [ref=e11]:
+        - button "Search Panel" [ref=e12]
+        - generic:
+          - generic:
+            - textbox "搜索"
+      - generic [ref=e13]:
+        - button "Table of Contents" [ref=e14]
+        - generic:
+          - generic:
+            - heading "目录" [level=3]
+            - button "Close TOC"
+          - generic:
+            - paragraph: 当前页面没有目录
+      - button "Display Settings" [ref=e15]:
+        - img [ref=e16]
+      - button "Light/Dark Mode" [ref=e20]:
+        - img [ref=e22]
+        - img [ref=e25]
+      - button "Menu" [ref=e27]:
+        - img [ref=e28]
+    - generic:
+      - generic:
+        - link "首页":
+          - /url: /
+          - generic:
+            - img
+            - text: 首页
+          - img
+      - generic:
+        - link "归档":
+          - /url: /archive/
+          - generic:
+            - img
+            - text: 归档
+          - img
+      - generic:
+        - link "相册":
+          - /url: /albums/
+          - generic:
+            - img
+            - text: 相册
+          - img
+      - generic:
+        - link "友链":
+          - /url: /friends/
+          - generic:
+            - img
+            - text: 友链
+          - img
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - text: 主题色
+            - button "Reset to Default"
+          - generic:
+            - generic: "70"
+        - generic:
+          - slider "主题色": "70"
+  - generic [ref=e30]:
+    - list [ref=e32]:
+      - listitem [ref=e33]:
+        - img "Banner image 1" [ref=e35]
+      - listitem [ref=e36]:
+        - img "Banner image 2" [ref=e38]
+      - listitem [ref=e39]:
+        - img "Banner image 3" [ref=e41]
+      - listitem [ref=e42]:
+        - img "Banner image 4" [ref=e44]
+    - generic [ref=e48]:
+      - heading "闲话漫谈" [level=1] [ref=e49]
+      - heading [level=2] [ref=e50]
+    - generic:
+      - img
+  - generic [ref=e54]:
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - link "Go to About Page" [ref=e61] [cursor=pointer]:
+          - /url: /about/
+          - generic:
+            - img
+          - img "Profile Image of the Author" [ref=e63]
+        - generic [ref=e64]:
+          - generic [ref=e65]: ChaoNous
+          - generic [ref=e69]:
+            - link "Bilibili" [ref=e70] [cursor=pointer]:
+              - /url: https://space.bilibili.com/432268688
+              - img [ref=e71]
+            - link "知乎" [ref=e73] [cursor=pointer]:
+              - /url: https://www.zhihu.com/people/80-57-6-25
+              - img [ref=e74]
+            - link "GitHub" [ref=e76] [cursor=pointer]:
+              - /url: https://github.com/ChaoNous
+              - img [ref=e77]
+            - link "Steam" [ref=e79] [cursor=pointer]:
+              - /url: https://steamcommunity.com/id/ChaoNous/
+              - img [ref=e80]
+            - link "Discord" [ref=e82] [cursor=pointer]:
+              - /url: https://discord.com/users/1248814878656041003
+              - img [ref=e83]
+      - generic [ref=e85]:
+        - generic [ref=e86]: 分类
+        - generic [ref=e87]:
+          - link "View all posts in the 随笔 category" [ref=e88] [cursor=pointer]:
+            - /url: /archive/?category=%E9%9A%8F%E7%AC%94
+            - button "View all posts in the 随笔 category" [ref=e89]:
+              - generic [ref=e90]:
+                - generic [ref=e91]: 随笔
+                - generic [ref=e92]: "2"
+          - link "View all posts in the 投资 category" [ref=e93] [cursor=pointer]:
+            - /url: /archive/?category=%E6%8A%95%E8%B5%84
+            - button "View all posts in the 投资 category" [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96]: 投资
+                - generic [ref=e97]: "2"
+          - link "View all posts in the 游记 category" [ref=e98] [cursor=pointer]:
+            - /url: /archive/?category=%E6%B8%B8%E8%AE%B0
+            - button "View all posts in the 游记 category" [ref=e99]:
+              - generic [ref=e100]:
+                - generic [ref=e101]: 游记
+                - generic [ref=e102]: "1"
+    - main [ref=e103]:
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - link "深夜对自己处理异性聊天的思考" [ref=e108] [cursor=pointer]:
+                - /url: /posts/late-night-reflection/
+                - img [ref=e109]
+                - text: 深夜对自己处理异性聊天的思考
+                - img [ref=e111]
+              - generic [ref=e113]:
+                - generic [ref=e114]:
+                  - img [ref=e116]
+                  - generic [ref=e118]: 2026-03-04
+                - generic [ref=e119]:
+                  - img [ref=e121]
+                  - link "View all posts in the 随笔 category" [ref=e124] [cursor=pointer]:
+                    - /url: /archive/?category=%E9%9A%8F%E7%AC%94
+                    - text: 随笔
+                - generic [ref=e125]:
+                  - img [ref=e127]
+                  - generic [ref=e129]: 863 字
+              - generic [ref=e130]: 关于"人机感"、实用主义与情绪价值的深夜碎碎念。
+            - link "深夜对自己处理异性聊天的思考" [ref=e131] [cursor=pointer]:
+              - /url: /posts/late-night-reflection/
+              - generic:
+                - img
+              - img "Cover Image of the Post" [ref=e133]
+          - generic [ref=e135]:
+            - link "比特币五年行情复盘与未来半年价格预测" [ref=e136] [cursor=pointer]:
+              - /url: /posts/btc-analysis/
+              - text: 比特币五年行情复盘与未来半年价格预测
+              - img [ref=e137]
+            - generic [ref=e139]:
+              - generic [ref=e140]:
+                - img [ref=e142]
+                - generic [ref=e144]: 2026-03-22
+              - generic [ref=e145]:
+                - img [ref=e147]
+                - link "View all posts in the 投资 category" [ref=e150] [cursor=pointer]:
+                  - /url: /archive/?category=%E6%8A%95%E8%B5%84
+                  - text: 投资
+              - generic [ref=e151]:
+                - img [ref=e153]
+                - generic [ref=e155]: 1110 字
+            - generic [ref=e156]: 基于 2021-03 至 2026-03 共 1826 天日线数据，使用 EMA 趋势外推、傅里叶周期分解与对数线性回归三模型集成，对 BTC 未来 183 天进行逐日价格预测，并附 68%/95% 置信区间。
+          - generic [ref=e157]:
+            - generic [ref=e158]:
+              - link "景德镇一日印象：御窑、陶博馆与陶溪川" [ref=e159] [cursor=pointer]:
+                - /url: /posts/jingdezhen-trip/
+                - text: 景德镇一日印象：御窑、陶博馆与陶溪川
+                - img [ref=e160]
+              - generic [ref=e162]:
+                - generic [ref=e163]:
+                  - img [ref=e165]
+                  - generic [ref=e167]: 2026-03-16
+                - generic [ref=e168]:
+                  - img [ref=e170]
+                  - link "View all posts in the 游记 category" [ref=e173] [cursor=pointer]:
+                    - /url: /archive/?category=%E6%B8%B8%E8%AE%B0
+                    - text: 游记
+                - generic [ref=e174]:
+                  - img [ref=e176]
+                  - generic [ref=e178]: 1324 字
+              - generic [ref=e179]: 围绕陶阳里历史文化旅游区、景德镇中国陶瓷博物馆与陶溪川文创街区的一次简短记录。
+            - link "景德镇一日印象：御窑、陶博馆与陶溪川" [ref=e180] [cursor=pointer]:
+              - /url: /posts/jingdezhen-trip/
+              - generic:
+                - img
+              - img "Cover Image of the Post" [ref=e182]
+          - generic [ref=e184]:
+            - link "资产祛魅：基于房产价值公式的定价分析" [ref=e185] [cursor=pointer]:
+              - /url: /posts/asset-demystification/
+              - text: 资产祛魅：基于房产价值公式的定价分析
+              - img [ref=e186]
+            - generic [ref=e188]:
+              - generic [ref=e189]:
+                - img [ref=e191]
+                - generic [ref=e193]: 2026-03-07
+              - generic [ref=e194]:
+                - img [ref=e196]
+                - link "View all posts in the 投资 category" [ref=e199] [cursor=pointer]:
+                  - /url: /archive/?category=%E6%8A%95%E8%B5%84
+                  - text: 投资
+              - generic [ref=e200]:
+                - img [ref=e202]
+                - generic [ref=e204]: 2042 字
+            - generic [ref=e205]: 以房产价值公式为核心，对 NOI、无风险利率、风险溢价、增长率与附加效用价值进行系统说明，并附估值工具与案例。
+          - generic [ref=e207]:
+            - link "廉价亲密的时代寓言：从“精神小妹”视频看欲望退潮后的青年心态" [ref=e208] [cursor=pointer]:
+              - /url: /posts/folded-ambitions/
+              - text: 廉价亲密的时代寓言：从“精神小妹”视频看欲望退潮后的青年心态
+              - img [ref=e209]
+            - generic [ref=e211]:
+              - generic [ref=e212]:
+                - img [ref=e214]
+                - generic [ref=e216]: 2026-03-06
+              - generic [ref=e217]:
+                - img [ref=e219]
+                - link "View all posts in the 随笔 category" [ref=e222] [cursor=pointer]:
+                  - /url: /archive/?category=%E9%9A%8F%E7%AC%94
+                  - text: 随笔
+              - generic [ref=e223]:
+                - img [ref=e225]
+                - generic [ref=e227]: 2480 字
+            - generic [ref=e228]: 从“低成本陪伴”类短视频出发，讨论青年欲望结构、婚恋风气与社会上升预期变化所折射出的时代情绪。
+        - generic [ref=e229]:
+          - link "Previous Page":
+            - /url: ""
+            - img
+          - generic [ref=e231]: "1"
+          - link "Next Page":
+            - /url: ""
+            - img
+    - generic [ref=e236]:
+      - text: © 2026 ChaoNous. All Rights Reserved. /
+      - link "RSS" [ref=e237] [cursor=pointer]:
+        - /url: /rss/
+      - text: /
+      - link "Atom" [ref=e238] [cursor=pointer]:
+        - /url: /atom/
+      - text: /
+      - link "Sitemap" [ref=e239] [cursor=pointer]:
+        - /url: /sitemap-index.xml
+  - generic [ref=e241]:
+    - button "显示音乐播放器"
+    - generic [ref=e243]:
+      - button "播放" [ref=e244] [cursor=pointer]:
+        - img "封面" [ref=e245]
+      - button "展开音乐播放器" [ref=e247] [cursor=pointer]:
+        - generic [ref=e248]: Sample Song
+        - generic [ref=e249]: Sample Artist
+      - generic [ref=e250]:
+        - button "隐藏音乐播放器" [ref=e251]
+        - button "展开音乐播放器" [ref=e252]
+    - generic:
+      - generic:
+        - generic:
+          - img "封面"
+        - generic:
+          - generic: Sample Song
+          - generic: Sample Artist
+          - generic: 0:00 / 0:00
+        - generic:
+          - button "隐藏音乐播放器"
+          - button "播放列表"
+      - generic:
+        - slider "播放进度"
+      - generic:
+        - button "列表循环"
+        - button "上一首" [disabled]
+        - button "播放"
+        - button "下一首" [disabled]
+        - generic:
+          - button "音量控制"
+        - button "收起播放器"
+  - generic [ref=e255]:
+    - button "Menu" [ref=e256]:
+      - img [ref=e258]
+      - generic: Menu
+    - button "Inspect" [ref=e262]:
+      - img [ref=e264]
+      - generic: Inspect
+    - button "Audit" [ref=e266]:
+      - img [ref=e268]
+      - generic: Audit
+    - button "Settings" [ref=e271]:
+      - img [ref=e273]
+      - generic: Settings

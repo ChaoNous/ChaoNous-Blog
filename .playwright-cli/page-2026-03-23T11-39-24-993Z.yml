@@ -1,0 +1,351 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - link "𝘾𝙝𝙖𝙤𝙉𝙤𝙪𝙨" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e8]: 𝘾𝙝𝙖𝙤𝙉𝙤𝙪𝙨
+    - generic [ref=e9]:
+      - link "首页" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - img [ref=e12]
+        - generic [ref=e14]: 首页
+      - link "归档" [ref=e16] [cursor=pointer]:
+        - /url: /archive/
+        - img [ref=e17]
+        - generic [ref=e19]: 归档
+      - link "相册" [ref=e21] [cursor=pointer]:
+        - /url: /albums/
+        - img [ref=e22]
+        - generic [ref=e24]: 相册
+      - link "友链" [ref=e26] [cursor=pointer]:
+        - /url: /friends/
+        - img [ref=e27]
+        - generic [ref=e29]: 友链
+    - generic [ref=e30]:
+      - button "Search" [ref=e34]:
+        - img
+        - textbox "搜索" [ref=e35]
+      - generic:
+        - generic:
+          - generic:
+            - heading "目录" [level=3]
+            - button "Close TOC"
+          - generic:
+            - paragraph: 当前页面没有目录
+      - button "Display Settings" [ref=e36]:
+        - img [ref=e37]
+      - menu [ref=e41]:
+        - menuitem "Wallpaper Mode" [ref=e42]:
+          - img [ref=e43]
+        - generic:
+          - generic:
+            - button "横幅模式"
+            - button "全屏模式"
+      - button "Light/Dark Mode" [ref=e47]:
+        - img [ref=e49]
+        - img [ref=e52]
+    - generic:
+      - generic:
+        - link "首页":
+          - /url: /
+          - generic:
+            - img
+            - text: 首页
+          - img
+      - generic:
+        - link "归档":
+          - /url: /archive/
+          - generic:
+            - img
+            - text: 归档
+          - img
+      - generic:
+        - link "相册":
+          - /url: /albums/
+          - generic:
+            - img
+            - text: 相册
+          - img
+      - generic:
+        - link "友链":
+          - /url: /friends/
+          - generic:
+            - img
+            - text: 友链
+          - img
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - text: 主题色
+            - button "Reset to Default"
+          - generic:
+            - generic: "70"
+        - generic:
+          - slider "主题色": "70"
+  - generic [ref=e54]:
+    - list [ref=e56]:
+      - listitem [ref=e57]:
+        - img "Banner image 1" [ref=e59]
+      - listitem [ref=e60]:
+        - img "Banner image 2" [ref=e62]
+      - listitem [ref=e63]:
+        - img "Banner image 3" [ref=e65]
+      - listitem [ref=e66]:
+        - img "Banner image 4" [ref=e68]
+    - generic:
+      - img
+  - generic [ref=e69]:
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - link "Go to About Page" [ref=e77] [cursor=pointer]:
+              - /url: /about/
+              - generic:
+                - img
+              - img "Profile Image of the Author" [ref=e79]
+            - generic [ref=e80]:
+              - generic [ref=e81]: ChaoNous
+              - generic [ref=e85]:
+                - link "Bilibili" [ref=e86] [cursor=pointer]:
+                  - /url: https://space.bilibili.com/432268688
+                  - img [ref=e87]
+                - link "知乎" [ref=e89] [cursor=pointer]:
+                  - /url: https://www.zhihu.com/people/80-57-6-25
+                  - img [ref=e90]
+                - link "GitHub" [ref=e92] [cursor=pointer]:
+                  - /url: https://github.com/ChaoNous
+                  - img [ref=e93]
+                - link "Steam" [ref=e95] [cursor=pointer]:
+                  - /url: https://steamcommunity.com/id/ChaoNous/
+                  - img [ref=e96]
+                - link "Discord" [ref=e98] [cursor=pointer]:
+                  - /url: https://discord.com/users/1248814878656041003
+                  - img [ref=e99]
+          - generic [ref=e101]:
+            - generic [ref=e102]: 分类
+            - generic [ref=e103]:
+              - link "View all posts in the 随笔 category" [ref=e104] [cursor=pointer]:
+                - /url: /archive/?category=%E9%9A%8F%E7%AC%94
+                - button "View all posts in the 随笔 category" [ref=e105]:
+                  - generic [ref=e106]:
+                    - generic [ref=e107]: 随笔
+                    - generic [ref=e108]: "2"
+              - link "View all posts in the 投资 category" [ref=e109] [cursor=pointer]:
+                - /url: /archive/?category=%E6%8A%95%E8%B5%84
+                - button "View all posts in the 投资 category" [ref=e110]:
+                  - generic [ref=e111]:
+                    - generic [ref=e112]: 投资
+                    - generic [ref=e113]: "2"
+              - link "View all posts in the 游记 category" [ref=e114] [cursor=pointer]:
+                - /url: /archive/?category=%E6%B8%B8%E8%AE%B0
+                - button "View all posts in the 游记 category" [ref=e115]:
+                  - generic [ref=e116]:
+                    - generic [ref=e117]: 游记
+                    - generic [ref=e118]: "1"
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]: 站点统计
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - generic [ref=e127]:
+                  - img [ref=e129]
+                  - generic [ref=e131]: 文章
+                - generic [ref=e133]: "5"
+              - generic [ref=e134]:
+                - generic [ref=e135]:
+                  - img [ref=e137]
+                  - generic [ref=e139]: 分类
+                - generic [ref=e141]: "3"
+              - generic [ref=e142]:
+                - generic [ref=e143]:
+                  - img [ref=e145]
+                  - generic [ref=e147]: 总字数
+                - generic [ref=e149]: 9,567
+              - generic [ref=e150]:
+                - generic [ref=e151]:
+                  - img [ref=e153]
+                  - generic [ref=e155]: 运行天数
+                - generic [ref=e156]:
+                  - generic [ref=e157]: "21"
+                  - generic [ref=e158]: 天
+          - generic [ref=e160]:
+            - generic [ref=e161]:
+              - generic [ref=e164] [cursor=pointer]: 2026年 3月
+              - generic [ref=e165]:
+                - button "Previous month" [ref=e166]: ＜
+                - button "Next month" [ref=e167]: ＞
+            - generic [ref=e169]:
+              - generic [ref=e170]:
+                - generic [ref=e171]: 一
+                - generic [ref=e172]: 二
+                - generic [ref=e173]: 三
+                - generic [ref=e174]: 四
+                - generic [ref=e175]: 五
+                - generic [ref=e176]: 六
+                - generic [ref=e177]: 日
+              - generic [ref=e178]:
+                - generic [ref=e185] [cursor=pointer]: "1"
+                - generic [ref=e186] [cursor=pointer]: "2"
+                - generic [ref=e187] [cursor=pointer]: "3"
+                - generic [ref=e188] [cursor=pointer]: "4"
+                - generic [ref=e190] [cursor=pointer]: "5"
+                - generic [ref=e191] [cursor=pointer]: "6"
+                - generic [ref=e193] [cursor=pointer]: "7"
+                - generic [ref=e195] [cursor=pointer]: "8"
+                - generic [ref=e196] [cursor=pointer]: "9"
+                - generic [ref=e197] [cursor=pointer]: "10"
+                - generic [ref=e198] [cursor=pointer]: "11"
+                - generic [ref=e199] [cursor=pointer]: "12"
+                - generic [ref=e200] [cursor=pointer]: "13"
+                - generic [ref=e201] [cursor=pointer]: "14"
+                - generic [ref=e202] [cursor=pointer]: "15"
+                - generic [ref=e203] [cursor=pointer]: "16"
+                - generic [ref=e205] [cursor=pointer]: "17"
+                - generic [ref=e206] [cursor=pointer]: "18"
+                - generic [ref=e207] [cursor=pointer]: "19"
+                - generic [ref=e208] [cursor=pointer]: "20"
+                - generic [ref=e209] [cursor=pointer]: "21"
+                - generic [ref=e210] [cursor=pointer]: "22"
+                - generic [ref=e212] [cursor=pointer]: "23"
+                - generic [ref=e213] [cursor=pointer]: "24"
+                - generic [ref=e214] [cursor=pointer]: "25"
+                - generic [ref=e215] [cursor=pointer]: "26"
+                - generic [ref=e216] [cursor=pointer]: "27"
+                - generic [ref=e217] [cursor=pointer]: "28"
+                - generic [ref=e218] [cursor=pointer]: "29"
+                - generic [ref=e219] [cursor=pointer]: "30"
+                - generic [ref=e220] [cursor=pointer]: "31"
+              - generic [ref=e223]:
+                - link "深夜对自己处理异性聊天的思考 3-4" [ref=e224] [cursor=pointer]:
+                  - /url: /posts/late-night-reflection/
+                  - generic [ref=e225]: 深夜对自己处理异性聊天的思考
+                  - generic [ref=e226]: 3-4
+                - link "比特币五年行情复盘与未来半年价格预测 3-22" [ref=e227] [cursor=pointer]:
+                  - /url: /posts/btc-analysis/
+                  - generic [ref=e228]: 比特币五年行情复盘与未来半年价格预测
+                  - generic [ref=e229]: 3-22
+                - link "景德镇一日印象：御窑、陶博馆与陶溪川 3-16" [ref=e230] [cursor=pointer]:
+                  - /url: /posts/jingdezhen-trip/
+                  - generic [ref=e231]: 景德镇一日印象：御窑、陶博馆与陶溪川
+                  - generic [ref=e232]: 3-16
+                - link "资产祛魅：基于房产价值公式的定价分析 3-7" [ref=e233] [cursor=pointer]:
+                  - /url: /posts/asset-demystification/
+                  - generic [ref=e234]: 资产祛魅：基于房产价值公式的定价分析
+                  - generic [ref=e235]: 3-7
+                - link "廉价亲密的时代寓言：从“精神小妹”视频看欲望退潮后的青年心态 3-6" [ref=e236] [cursor=pointer]:
+                  - /url: /posts/folded-ambitions/
+                  - generic [ref=e237]: 廉价亲密的时代寓言：从“精神小妹”视频看欲望退潮后的青年心态
+                  - generic [ref=e238]: 3-6
+      - main [ref=e239]:
+        - generic [ref=e240]:
+          - generic [ref=e242]:
+            - generic [ref=e244]:
+              - generic [ref=e245]:
+                - heading "友情链接" [level=1] [ref=e246]
+                - paragraph [ref=e247]: 发现优质博客，结交有趣灵魂
+              - button "随机访问" [ref=e248] [cursor=pointer]:
+                - img [ref=e249]
+                - generic [ref=e251]: 随机访问
+            - link "ChaoNous ChaoNous 人是万物的尺度。" [ref=e254] [cursor=pointer]:
+              - /url: https://chaonous.com
+              - img "ChaoNous" [ref=e256]
+              - generic [ref=e257]:
+                - heading "ChaoNous" [level=3] [ref=e258]
+                - paragraph [ref=e259]: 人是万物的尺度。
+              - img [ref=e261]
+            - generic [ref=e264]:
+              - generic [ref=e265]:
+                - img [ref=e268]
+                - generic [ref=e271]:
+                  - heading "申请友链" [level=2] [ref=e272]
+                  - paragraph [ref=e273]: 期待与你成为朋友
+              - generic [ref=e274]:
+                - generic [ref=e275]:
+                  - generic [ref=e276]: "\""
+                  - paragraph [ref=e277]: 好的友链是互相认可，是惺惺相惜。
+                  - paragraph [ref=e278]: 如果你也热爱分享、坚持输出，欢迎交换友链。
+                - generic [ref=e279]:
+                  - generic [ref=e280]:
+                    - img [ref=e282]
+                    - heading "准备信息" [level=4] [ref=e285]
+                    - paragraph [ref=e286]: 按下方格式准备友链信息
+                  - generic [ref=e287]:
+                    - img [ref=e289]
+                    - heading "发送申请" [level=4] [ref=e291]
+                    - paragraph [ref=e292]: 在 GitHub 留言申请
+                  - generic [ref=e293]:
+                    - img [ref=e295]
+                    - heading "等待添加" [level=4] [ref=e298]
+                    - paragraph [ref=e299]: 确认后会尽快添加
+                - generic [ref=e300]:
+                  - generic [ref=e301]:
+                    - generic [ref=e302]: JSON 格式
+                    - button "复制" [ref=e303] [cursor=pointer]:
+                      - img [ref=e304]
+                      - generic [ref=e307]: 复制
+                  - code [ref=e310]: "{ \"name\": \"博客名称\", \"url\": \"https://your-blog.com\", \"avatar\": \"https://your-blog.com/avatar.png\", \"description\": \"一句话介绍（20字内）\" }"
+                - link "前往 GitHub Discussions 申请" [ref=e311] [cursor=pointer]:
+                  - /url: https://github.com/ChaoNous/ChaoNous-Blog/discussions
+                  - img [ref=e312]
+                  - generic [ref=e314]: 前往 GitHub Discussions 申请
+                  - img [ref=e315]
+          - generic [ref=e321]:
+            - text: © 2026 ChaoNous. All Rights Reserved. /
+            - link "RSS" [ref=e322] [cursor=pointer]:
+              - /url: /rss/
+            - text: /
+            - link "Atom" [ref=e323] [cursor=pointer]:
+              - /url: /atom/
+            - text: /
+            - link "Sitemap" [ref=e324] [cursor=pointer]:
+              - /url: /sitemap-index.xml
+    - generic:
+      - generic:
+        - button "Back to Top":
+          - img
+  - generic [ref=e326]:
+    - button "显示音乐播放器"
+    - generic [ref=e328]:
+      - button "播放" [ref=e329] [cursor=pointer]:
+        - img "封面" [ref=e330]
+      - button "展开音乐播放器" [ref=e332] [cursor=pointer]:
+        - generic [ref=e333]: Sample Song
+        - generic [ref=e334]: Sample Artist
+      - generic [ref=e335]:
+        - button "隐藏音乐播放器" [ref=e336]
+        - button "展开音乐播放器" [ref=e337]
+    - generic:
+      - generic:
+        - generic:
+          - img "封面"
+        - generic:
+          - generic: Sample Song
+          - generic: Sample Artist
+          - generic: 0:00 / 0:00
+        - generic:
+          - button "隐藏音乐播放器"
+          - button "播放列表"
+      - generic:
+        - slider "播放进度"
+      - generic:
+        - button "列表循环"
+        - button "上一首" [disabled]
+        - button "播放"
+        - button "下一首" [disabled]
+        - generic:
+          - button "音量控制"
+        - button "收起播放器"
+  - generic [ref=e340]:
+    - button "Menu" [ref=e341]:
+      - img [ref=e343]
+      - generic: Menu
+    - button "Inspect" [ref=e347]:
+      - img [ref=e349]
+      - generic: Inspect
+    - button "Audit" [ref=e351]:
+      - img [ref=e353]
+      - generic: Audit
+    - button "Settings" [ref=e356]:
+      - img [ref=e358]
+      - generic: Settings
