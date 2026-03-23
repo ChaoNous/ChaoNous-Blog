@@ -50,10 +50,13 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 	id="sidebar"
 	class:list={[
 		className,
-		"w-full sidebar-root md:sticky md:top-20 md:self-start md:max-h-[calc(100vh-6rem)] md:overflow-y-auto",
+		"w-full sidebar-root",
 	]}
 >
-	<div class="flex flex-col w-full gap-4 mb-4">
+	<div
+		id="sidebar-sticky"
+		class="transition-all duration-700 flex flex-col w-full mt-0 gap-4 md:sticky md:top-0"
+	>
 		{
 			mobileTopComponents.length > 0 && (
 				<WidgetGroup
@@ -86,12 +89,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 				/>
 			)
 		}
-	</div>
 
-	<div
-		id="sidebar-sticky"
-		class="transition-all duration-700 flex flex-col w-full gap-4"
-	>
 		{
 			mobileStickyComponents.length > 0 && (
 				<WidgetGroup
@@ -128,10 +126,6 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 </div>
 
 <style>
-	#sidebar {
-		scrollbar-width: thin;
-	}
-
 	@media (max-width: 1280px) {
 		#sidebar {
 			display: var(--sidebar-mobile-display, block);
