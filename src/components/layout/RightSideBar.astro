@@ -17,7 +17,13 @@ const stickyComponents = widgetManager.getComponentsByPosition(
 );
 ---
 
-<div id="right-sidebar" class:list={[className, "w-full"]}>
+<div
+	id="right-sidebar"
+	class:list={[
+		className,
+		"w-full md:sticky md:top-20 md:self-start md:max-h-[calc(100vh-6rem)] md:overflow-y-auto",
+	]}
+>
 	{
 		topComponents.length > 0 && (
 			<WidgetGroup
@@ -34,13 +40,17 @@ const stickyComponents = widgetManager.getComponentsByPosition(
 				id="right-sidebar-sticky"
 				components={stickyComponents}
 				headings={headings}
-				wrapperClass="transition-all duration-700 flex flex-col w-full gap-4 sticky top-4"
+				wrapperClass="transition-all duration-700 flex flex-col w-full gap-4"
 			/>
 		)
 	}
 </div>
 
 <style>
+	#right-sidebar {
+		scrollbar-width: thin;
+	}
+
 	@media (max-width: 768px) {
 		#right-sidebar {
 			display: var(--sidebar-mobile-display, block);

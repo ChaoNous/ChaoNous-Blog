@@ -733,7 +733,7 @@ const transparentClass = shouldEnableTransparency
 							tabletShowSidebar ||
 							desktopShowSidebar) && (
 							<div
-								class={`${sidebarClass} ${transparentClass} flex flex-col gap-4`}
+								class={`${sidebarClass} ${transparentClass} flex flex-col gap-4 self-start`}
 							>
 								<SideBar
 									class="w-full"
@@ -748,7 +748,7 @@ const transparentClass = shouldEnableTransparency
 					{
 						hasRightSidebarComponents && (
 							<div
-								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass}`}
+								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} self-start`}
 							>
 								<RightSideBar headings={headings} />
 							</div>
