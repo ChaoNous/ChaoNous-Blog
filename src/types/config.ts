@@ -302,6 +302,7 @@ export type WidgetComponentType =
 	| "categories"
 	| "tags"
 	| "toc"
+	| "card-toc"
 	| "music-player"
 	| "site-stats" // 缁旀瑧鍋ｇ紒鐔活吀缂佸嫪娆?
 	| "calendar" // 閺冦儱宸荤紒鍕

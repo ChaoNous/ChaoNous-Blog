@@ -3,6 +3,7 @@ import type { MarkdownHeading } from "astro";
 import type { WidgetComponentConfig } from "../../types/config";
 import Announcement from "@components/widget/Announcement.astro";
 import Calendar from "@components/widget/Calendar.astro";
+import CardTOC from "@components/widget/CardTOC.astro";
 import Categories from "@components/widget/Categories.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import Profile from "@components/widget/Profile.astro";
@@ -24,6 +25,7 @@ const componentMap = {
 	announcement: Announcement,
 	categories: Categories,
 	toc: TOC,
+	"card-toc": CardTOC,
 	"music-player": MusicPlayer,
 	"site-stats": SiteStats,
 	calendar: Calendar,
@@ -47,7 +49,7 @@ const componentMap = {
 				...component.customProps,
 			};
 
-			if (component.type === "toc" && headings) {
+			if ((component.type === "toc" || component.type === "card-toc") && headings) {
 				return (
 					<ComponentToRender {...sharedProps} headings={headings} />
 				);

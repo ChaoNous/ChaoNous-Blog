@@ -1,0 +1,317 @@
+---
+import type { MarkdownHeading } from "astro";
+import { siteConfig } from "../../config";
+
+interface Props {
+	class?: string;
+	headings?: MarkdownHeading[];
+}
+
+const { headings = [] } = Astro.props;
+const tocDepth = siteConfig.toc.depth;
+const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
+---
+
+<div
+	class="card-toc-wrapper"
+	data-depth={tocDepth}
+	data-japanese-badge={useJapaneseBadge}
+>
+	<div class="font-bold transition text-lg text-neutral-900 dark:text-neutral-100 relative ml-8 mt-4 mb-2 flex items-center before:absolute before:left-[-16px] before:top-[5.5px] before:w-1.5 before:h-1.5 before:rounded-full before:bg-[var(--primary)]">
+		目录
+	</div>
+	<div id="card-toc" class="collapse-wrapper px-2 overflow-hidden">
+		<div data-card-toc-root>
+			<div class="toc-scroll-container max-h-[60vh] overflow-y-auto overflow-x-hidden">
+				<div class="toc-content" data-card-toc-content></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.card-toc-wrapper {
+		width: 100%;
+	}
+
+	.toc-scroll-container::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	.toc-scroll-container::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.toc-scroll-container::-webkit-scrollbar-thumb {
+		background: var(--line-color);
+		border-radius: 2px;
+	}
+
+	:global(.card-toc-item) {
+		display: flex;
+		align-items: center;
+		padding: 0.5rem 0.75rem;
+		color: var(--text-secondary);
+		text-decoration: none;
+		font-size: 0.875rem;
+		line-height: 1.5;
+		border-radius: 0.5rem;
+		transition: all 0.2s;
+		cursor: pointer;
+	}
+
+	:global(.card-toc-item:hover) {
+		background-color: var(--btn-regular-bg);
+		color: var(--primary);
+	}
+
+	:global(.card-toc-item.active) {
+		background-color: var(--btn-card-bg-active);
+		color: var(--primary);
+		font-weight: 500;
+	}
+
+	:global(.card-toc-badge) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.25rem;
+		height: 1.25rem;
+		background: var(--btn-regular-bg);
+		color: var(--primary);
+		border-radius: 0.25rem;
+		font-size: 0.75rem;
+		font-weight: bold;
+		margin-right: 0.5rem;
+		flex-shrink: 0;
+	}
+
+	:global(.card-toc-item.active .card-toc-badge) {
+		background: var(--primary);
+		color: var(--btn-content);
+	}
+
+	:global(.card-toc-dot) {
+		width: 0.5rem;
+		height: 0.5rem;
+		background: var(--line-divider);
+		border-radius: 50%;
+		margin-right: 0.75rem;
+		margin-left: 0.25rem;
+		flex-shrink: 0;
+	}
+
+	:global(.card-toc-dot-small) {
+		width: 0.35rem;
+		height: 0.35rem;
+		background: var(--line-divider);
+		border-radius: 50%;
+		margin-right: 0.75rem;
+		margin-left: 0.35rem;
+		flex-shrink: 0;
+	}
+
+	:global(.card-toc-item.active .card-toc-dot),
+	:global(.card-toc-item.active .card-toc-dot-small) {
+		background: var(--primary);
+	}
+
+	:global(.card-toc-text) {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>
+
+<script>
+	class CardTOC {
+		private wrapper: HTMLElement | null;
+		private content: HTMLElement | null;
+		private headings: HTMLElement[] = [];
+		private tocItems: HTMLElement[] = [];
+		private activeIndex = -1;
+
+		constructor() {
+			this.wrapper = document.querySelector(".card-toc-wrapper");
+			this.content = document.querySelector("[data-card-toc-content]");
+			this.init();
+		}
+
+		private init() {
+			this.generateTOC();
+			this.bindEvents();
+			this.observeContent();
+		}
+
+		private observeContent() {
+			const contentWrapper = document.getElementById("post-container");
+			if (contentWrapper) {
+				const observer = new MutationObserver(() => {
+					this.generateTOC();
+				});
+				observer.observe(contentWrapper, {
+					childList: true,
+					subtree: true,
+				});
+			}
+		}
+
+		private generateTOC() {
+			const container = document.getElementById("post-container");
+
+			if (!container) {
+				this.wrapper?.classList.add("hidden");
+				return;
+			}
+
+			const allHeadings = container.querySelectorAll(
+				"h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]",
+			);
+
+			if (allHeadings.length === 0) {
+				this.wrapper?.classList.add("hidden");
+				this.headings = [];
+				return;
+			}
+
+			this.wrapper?.classList.remove("hidden");
+			this.headings = [];
+
+			const maxLevel = parseInt(this.wrapper?.dataset.depth || "3");
+			const useJapaneseBadge =
+				this.wrapper?.dataset.japaneseBadge === "true";
+
+			const japaneseKatakana = [
+				"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
+				"サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
+				"ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
+			];
+
+			let minLevel = 6;
+			allHeadings.forEach((h) => {
+				const level = parseInt(h.tagName[1]);
+				if (level < minLevel) minLevel = level;
+			});
+
+			let html = "";
+			let h1Count = 0;
+			allHeadings.forEach((heading) => {
+				const level = parseInt(heading.tagName[1]);
+
+				if (level >= minLevel + maxLevel) return;
+
+				this.headings.push(heading as HTMLElement);
+
+				const indent = (level - minLevel) * 1;
+				let badge = "";
+
+				if (level === minLevel) {
+					h1Count++;
+					const badgeText =
+						useJapaneseBadge && h1Count - 1 < japaneseKatakana.length
+							? japaneseKatakana[h1Count - 1]
+							: h1Count.toString();
+					badge = `<span class="card-toc-badge">${badgeText}</span>`;
+				} else if (level === minLevel + 1) {
+					badge = '<span class="card-toc-dot"></span>';
+				} else {
+					badge = '<span class="card-toc-dot-small"></span>';
+				}
+
+				const text = (heading.textContent || "").replace(/#+\s*$/, "");
+				html += `<div class="card-toc-item" style="padding-left: ${0.5 + indent}rem" data-heading-id="${heading.id}">${badge}<span class="card-toc-text">${text}</span></div>`;
+			});
+
+			if (this.content) {
+				this.content.innerHTML = html;
+				this.tocItems = Array.from(
+					this.content.querySelectorAll(".card-toc-item"),
+				);
+			}
+
+			this.updateActiveHeading();
+		}
+
+		private updateActiveHeading() {
+			if (!this.content || this.headings.length === 0) return;
+
+			const scrollY = window.scrollY;
+			const offsetTop = 150;
+
+			let newActiveIndex = -1;
+			for (let i = 0; i < this.headings.length; i++) {
+				const heading = this.headings[i];
+				if (
+					heading.getBoundingClientRect().top + scrollY <
+					scrollY + offsetTop
+				) {
+					newActiveIndex = i;
+				} else {
+					break;
+				}
+			}
+
+			if (newActiveIndex !== this.activeIndex) {
+				this.activeIndex = newActiveIndex;
+
+				this.tocItems.forEach((item, index) => {
+					if (index === this.activeIndex) {
+						item.classList.add("active");
+						// 滚动到可见位置
+						if (this.content) {
+							const containerRect = this.content.getBoundingClientRect();
+							const itemRect = item.getBoundingClientRect();
+							if (
+								itemRect.top < containerRect.top ||
+								itemRect.bottom > containerRect.bottom
+							) {
+								item.scrollIntoView({ block: "nearest", behavior: "smooth" });
+							}
+						}
+					} else {
+						item.classList.remove("active");
+					}
+				});
+			}
+		}
+
+		private bindEvents() {
+			window.addEventListener("scroll", () => this.updateActiveHeading(), {
+				passive: true,
+			});
+
+			window.addEventListener("resize", () => this.updateActiveHeading(), {
+				passive: true,
+			});
+
+			this.content?.addEventListener("click", (e) => {
+				const item = (e.target as HTMLElement).closest(".card-toc-item");
+				if (item) {
+					const id = item.getAttribute("data-heading-id");
+					if (id) {
+						const element = document.getElementById(id);
+						if (element) {
+							const top =
+								element.getBoundingClientRect().top +
+								window.scrollY -
+								80;
+							window.scrollTo({ top, behavior: "smooth" });
+						}
+					}
+				}
+			});
+
+			// Swup 支持
+			if ((window as any).swup) {
+				(window as any).swup.hooks.on("page:view", () => {
+					setTimeout(() => {
+						this.generateTOC();
+					}, 200);
+				});
+			}
+		}
+	}
+
+	document.addEventListener("DOMContentLoaded", () => new CardTOC());
+	document.addEventListener("swup:page:view", () => new CardTOC());
+</script>

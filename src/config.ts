@@ -401,7 +401,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 左右侧边栏组件配置
 	components: {
-		left: ["profile", "tags", "categories"],
+		left: ["profile", "card-toc", "tags", "categories"],
 		right: ["site-stats", "calendar"],
 		drawer: ["profile", "tags", "categories"],
 	},
