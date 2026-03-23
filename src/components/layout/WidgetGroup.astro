@@ -33,6 +33,9 @@ const {
 // 其他页面只显示分类（categories），隐藏目录（card-toc）
 // 两者都在左侧头像下方，但互斥显示
 const filteredComponents = components.filter((c) => {
+	if (c.type === "profile") {
+		return !isPostPage;
+	}
 	if (c.type === "categories") {
 		// 分类：只在非文章页面显示
 		return !isPostPage;
