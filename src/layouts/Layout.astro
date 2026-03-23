@@ -152,7 +152,6 @@ if (siteConfig.font) {
 <html
 	lang={siteLang}
 	class="bg-(--page-bg) text-[14px] md:text-[16px]"
-	data-overlayscrollbars-initialize
 >
 	<head>
 		<title>{pageTitle}</title>
@@ -366,7 +365,6 @@ if (siteConfig.font) {
 		class="min-h-screen"
 		class:list={[{ "is-home": isHomePage, "enable-banner": enableBanner }]}
 		style={bodyFontFamily ? `font-family: ${bodyFontFamily};` : ""}
-		data-overlayscrollbars-initialize
 	>
 		<!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显�?-->
 		{shouldShowTopHighlight && <div class="top-gradient-highlight" />}
@@ -450,7 +448,6 @@ if (siteConfig.font) {
 <script>
 	// 使用原生 View Transitions API 替代 Swup，更轻量高效
 	import "../scripts/view-transitions.js";
-	import "overlayscrollbars/overlayscrollbars.css";
 	import { pathsEqual, url } from "../utils/url-utils";
 	import { DARK_MODE, DEFAULT_THEME } from "../constants/constants";
 

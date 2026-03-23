@@ -204,8 +204,6 @@ export default defineConfig({
 							if (id.includes("swup")) return "vendor-swup";
 							if (id.includes("fancyapps"))
 								return "vendor-fancybox";
-							if (id.includes("overlayscrollbars"))
-								return "vendor-scrollbar";
 							if (id.includes("katex")) return "vendor-katex";
 							if (id.includes("expressive-code"))
 								return "vendor-ec";
@@ -234,7 +232,7 @@ export default defineConfig({
 		},
 		// 优化依赖预构建
 		optimizeDeps: {
-			include: ["@fancyapps/ui", "overlayscrollbars", "svelte"],
+			include: ["@fancyapps/ui", "svelte"],
 			// 排除大型依赖
 			exclude: ["katex"],
 		},

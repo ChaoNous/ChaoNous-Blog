@@ -101,9 +101,6 @@ importers:
       oddmisc:
         specifier: ^1.1.5
         version: 1.1.5
-      overlayscrollbars:
-        specifier: ^2.14.0
-        version: 2.14.0
       pagefind:
         specifier: ^1.4.0
         version: 1.4.0
@@ -4446,9 +4443,6 @@ packages:
 
   ordered-read-streams@1.0.1:
     resolution: {integrity: sha512-Z87aSjx3r5c0ZB7bcJqIgIRX5bxR7A4aSzvIbaxd0oTkWBCOoKfuGHiKj60CHVUgg1Phm5yMZzBdt8XqRs73Mw==}
-
-  overlayscrollbars@2.14.0:
-    resolution: {integrity: sha512-RjV0pqc79kYhQLC3vTcLRb5GLpI1n6qh0Oua3g+bGH4EgNOJHVBGP7u0zZtxoAa0dkHlAqTTSYRb9MMmxNLjig==}
 
   own-keys@1.0.1:
     resolution: {integrity: sha512-qFOyK5PjiWZd+QQIh+1jhdb9LpxTF0qs7Pm8o5QHYZ0M3vKqSqzsZaEB6oWlxZ+q2sJBMI/Ktgd2N5ZwQoRHfg==}
@@ -11427,8 +11421,6 @@ snapshots:
   ordered-read-streams@1.0.1:
     dependencies:
       readable-stream: 2.3.8
-
-  overlayscrollbars@2.14.0: {}
 
   own-keys@1.0.1:
     dependencies:
