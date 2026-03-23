@@ -20,6 +20,14 @@ interface Props {
 
 const { id, components, headings, wrapperClass } = Astro.props;
 
+// 判断是否是文章页面
+const isPostPage = Astro.url.pathname.startsWith("/posts/");
+
+// 文章页面隐藏分类组件
+const filteredComponents = isPostPage
+	? components.filter((c) => c.type !== "categories")
+	: components;
+
 const componentMap = {
 	profile: Profile,
 	announcement: Announcement,
@@ -34,7 +42,7 @@ const componentMap = {
 
 <div id={id} class:list={wrapperClass}>
 	{
-		components.map((component, index) => {
+		filteredComponents.map((component, index) => {
 			const ComponentToRender = componentMap[
 				component.type as keyof typeof componentMap
 			] as any;
