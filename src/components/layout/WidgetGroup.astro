@@ -23,12 +23,19 @@ const { id, components, headings, wrapperClass } = Astro.props;
 // 判断是否是文章页面
 const isPostPage = Astro.url.pathname.startsWith("/posts/");
 
-// 文章页面隐藏分类组件，其他页面隐藏目录组件
+// 文章页面只显示目录（card-toc），隐藏分类（categories）
+// 其他页面只显示分类（categories），隐藏目录（card-toc）
+// 两者都在左侧头像下方，但互斥显示
 const filteredComponents = components.filter((c) => {
-	if (isPostPage) {
-		return c.type !== "categories";
+	if (c.type === "categories") {
+		// 分类：只在非文章页面显示
+		return !isPostPage;
 	}
-	return c.type !== "card-toc";
+	if (c.type === "card-toc") {
+		// 目录：只在文章页面显示
+		return isPostPage;
+	}
+	return true;
 });
 
 const componentMap = {
