@@ -36,6 +36,27 @@ const headingsJson = JSON.stringify(headings);
 </WidgetLayout>
 
 <style>
+	:global(widget-layout[data-id="card-toc"]) {
+		display: block;
+	}
+
+	#card-toc {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.card-toc-wrapper {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-height: 0;
+	}
+
+	.toc-scroll-container {
+		flex: 1;
+		min-height: 0;
+	}
+
 	.toc-scroll-container::-webkit-scrollbar {
 		width: 4px;
 	}
@@ -122,6 +143,16 @@ const headingsJson = JSON.stringify(headings);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	@media (min-width: 1280px) {
+		:global(widget-layout[data-id="card-toc"]) {
+			min-height: 41.75rem;
+		}
+
+		.toc-scroll-container {
+			max-height: none;
+		}
 	}
 </style>
 
