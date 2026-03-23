@@ -31,6 +31,18 @@ const tabletStickyComponents = widgetManager.getComponentsByPosition(
 	"left",
 	"tablet",
 );
+
+// 桌面端组件
+const desktopTopComponents = widgetManager.getComponentsByPosition(
+	"top",
+	"left",
+	"desktop",
+);
+const desktopStickyComponents = widgetManager.getComponentsByPosition(
+	"sticky",
+	"left",
+	"desktop",
+);
 ---
 
 <div id="sidebar" class:list={[className, "w-full sidebar-root"]}>
@@ -50,7 +62,17 @@ const tabletStickyComponents = widgetManager.getComponentsByPosition(
 				<WidgetGroup
 					components={tabletTopComponents}
 					headings={headings}
-					wrapperClass="sidebar-content hidden md:flex flex-col w-full gap-4"
+					wrapperClass="sidebar-content hidden md:flex lg:hidden flex-col w-full gap-4"
+				/>
+			)
+		}
+
+		{
+			desktopTopComponents.length > 0 && (
+				<WidgetGroup
+					components={desktopTopComponents}
+					headings={headings}
+					wrapperClass="sidebar-content hidden lg:flex flex-col w-full gap-4"
 				/>
 			)
 		}
@@ -75,7 +97,17 @@ const tabletStickyComponents = widgetManager.getComponentsByPosition(
 				<WidgetGroup
 					components={tabletStickyComponents}
 					headings={headings}
-					wrapperClass="sidebar-content hidden md:flex flex-col w-full gap-4"
+					wrapperClass="sidebar-content hidden md:flex lg:hidden flex-col w-full gap-4"
+				/>
+			)
+		}
+
+		{
+			desktopStickyComponents.length > 0 && (
+				<WidgetGroup
+					components={desktopStickyComponents}
+					headings={headings}
+					wrapperClass="sidebar-content hidden lg:flex flex-col w-full gap-4"
 				/>
 			)
 		}
