@@ -359,7 +359,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 公告组件
 			type: "announcement",
-			position: "top",
+			position: "sticky",
 			class: "onload-animation",
 			animationDelay: 50,
 		},
@@ -376,7 +376,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 目录组件
 			type: "card-toc",
-			position: "top",
+			position: "sticky",
 			class: "onload-animation",
 			animationDelay: 300,
 		},
@@ -398,8 +398,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 左右侧边栏组件配置
 	components: {
-		left: ["profile", "categories", "card-toc"],
-		right: ["site-stats", "calendar"],
+		left: ["profile", "categories"],
+		right: ["announcement", "card-toc", "site-stats", "calendar"],
 		drawer: ["profile", "categories"],
 	},
 
