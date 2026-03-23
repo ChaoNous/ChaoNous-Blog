@@ -145,6 +145,8 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 			mobileTopComponents.length > 0 || mobileStickyComponents.length > 0,
 		hasTabletComponents:
 			tabletTopComponents.length > 0 || tabletStickyComponents.length > 0,
+		hasDesktopComponents:
+			desktopTopComponents.length > 0 || desktopStickyComponents.length > 0,
 	}}
 >
 	class SidebarManager {
@@ -182,11 +184,11 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 				deviceType = "tablet";
 				hasComponents = hasTabletComponents;
 				showConfig = tabletShowSidebar;
-			} else {
-				deviceType = "desktop";
-				hasComponents = hasTabletComponents;
-				showConfig = desktopShowSidebar;
-			}
+		} else {
+			deviceType = "desktop";
+			hasComponents = hasDesktopComponents;
+			showConfig = desktopShowSidebar;
+		}
 
 			const shouldShow = showConfig && hasComponents;
 			const sidebar = document.getElementById("sidebar");
