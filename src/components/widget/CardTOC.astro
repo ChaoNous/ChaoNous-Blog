@@ -14,6 +14,9 @@ const className = Astro.props.class;
 const style = Astro.props.style;
 const tocDepth = siteConfig.toc.depth;
 const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
+
+// 序列化 headings 为 JSON 字符串，供客户端脚本使用
+const headingsJson = JSON.stringify(headings);
 ---
 
 <WidgetLayout
@@ -26,6 +29,7 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 		class="card-toc-wrapper"
 		data-depth={tocDepth}
 		data-japanese-badge={useJapaneseBadge}
+		data-headings={headingsJson}
 	>
 		<div class="toc-scroll-container max-h-[60vh] overflow-y-auto overflow-x-hidden">
 			<div class="toc-content" data-card-toc-content></div>
@@ -124,6 +128,12 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 </style>
 
 <script>
+	interface HeadingData {
+		depth: number;
+		slug: string;
+		text: string;
+	}
+
 	class CardTOC {
 		private wrapper: HTMLElement | null;
 		private content: HTMLElement | null;
@@ -138,9 +148,85 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 		}
 
 		private init() {
+			// 优先使用服务端通过 data 属性传入的 headings
+			const headingsAttr = this.wrapper?.dataset.headings;
+			if (headingsAttr) {
+				try {
+					const headingsData: HeadingData[] = JSON.parse(headingsAttr);
+					if (headingsData && headingsData.length > 0) {
+						this.generateTOCFromHeadingsData(headingsData);
+						this.bindEvents();
+						return;
+					}
+				} catch (e) {
+					console.warn("Failed to parse headings data:", e);
+				}
+			}
+			// 如果没有服务端数据，则从 DOM 获取
 			this.generateTOC();
 			this.bindEvents();
 			this.observeContent();
+		}
+
+		private generateTOCFromHeadingsData(headingsData: HeadingData[]) {
+			if (!this.wrapper || !this.content) return;
+
+			const maxLevel = parseInt(this.wrapper.dataset.depth || "3");
+			const useJapaneseBadge = this.wrapper.dataset.japaneseBadge === "true";
+
+			const japaneseKatakana = [
+				"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
+				"サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
+				"ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
+			];
+
+			let minLevel = 6;
+			headingsData.forEach((h) => {
+				if (h.depth < minLevel) minLevel = h.depth;
+			});
+
+			let html = "";
+			let h1Count = 0;
+			headingsData.forEach((heading) => {
+				const level = heading.depth;
+
+				if (level >= minLevel + maxLevel) return;
+
+				// 获取对应的 DOM 元素
+				const domElement = document.getElementById(heading.slug);
+				if (domElement) {
+					this.headings.push(domElement as HTMLElement);
+				}
+
+				const indent = (level - minLevel) * 1;
+				let badge = "";
+
+				if (level === minLevel) {
+					h1Count++;
+					const badgeText =
+						useJapaneseBadge && h1Count - 1 < japaneseKatakana.length
+							? japaneseKatakana[h1Count - 1]
+							: h1Count.toString();
+					badge = `<span class="card-toc-badge">${badgeText}</span>`;
+				} else if (level === minLevel + 1) {
+					badge = '<span class="card-toc-dot"></span>';
+				} else {
+					badge = '<span class="card-toc-dot-small"></span>';
+				}
+
+				const text = heading.text.replace(/#+\s*$/, "");
+				html += `<div class="card-toc-item" style="padding-left: ${0.5 + indent}rem" data-heading-id="${heading.slug}">${badge}<span class="card-toc-text">${text}</span></div>`;
+			});
+
+			if (this.content) {
+				this.content.innerHTML = html;
+				this.tocItems = Array.from(
+					this.content.querySelectorAll(".card-toc-item"),
+				);
+			}
+
+			this.wrapper.classList.remove("hidden");
+			this.updateActiveHeading();
 		}
 
 		private observeContent() {
