@@ -727,13 +727,14 @@ const transparentClass = shouldEnableTransparency
 				{
 					/* 濠电偞鎸婚惃婊堝幢濞嗘垵楠勯梻浣告惈缁夊鎹㈤幇鏉跨闁绘鐗忛埢鏃堟偣閸ャ劌绲婚柡浣哥埣閹宕烽鐔锋畬闁诲繐娴氶崹璺虹暦濞差亝鍋勫┑鍌氼槸閺咃綁姊?*/
 				}
-				<div class="contents" style="contain: layout style paint;">
-					{
-						(mobileShowSidebar ||
-							tabletShowSidebar ||
-							desktopShowSidebar) && (
+				{
+					(mobileShowSidebar ||
+						tabletShowSidebar ||
+						desktopShowSidebar) && (
+						<div id="left-sidebar-wrapper" class="contents">
 							<div
-								class={`${sidebarClass} ${transparentClass} flex flex-col gap-4`}
+								id="left-sidebar-static"
+								class={`${sidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start`}
 							>
 								<SideBar
 									class="w-full"
@@ -742,19 +743,21 @@ const transparentClass = shouldEnableTransparency
 								/>
 								<slot name="left-sidebar" />
 							</div>
-						)
-					}
+						</div>
+					)
+				}
 
-					{
-						hasRightSidebarComponents && (
+				{
+					hasRightSidebarComponents && (
+						<div id="right-sidebar-static" class="contents">
 							<div
-								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0`}
+								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start`}
 							>
 								<RightSideBar headings={headings} />
 							</div>
-						)
-					}
-				</div>
+						</div>
+					)
+				}
 
 				<main
 					id="swup-container"
