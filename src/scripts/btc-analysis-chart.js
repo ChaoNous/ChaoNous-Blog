@@ -14,6 +14,10 @@ function getChartElements() {
 	return { mainEl, miniEl, tableEl };
 }
 
+function getChartMountElement() {
+	return document.querySelector(BTC_MAIN_SELECTOR);
+}
+
 function hasBtcChartElements() {
 	const { mainEl, miniEl, tableEl } = getChartElements();
 	return Boolean(mainEl && miniEl && tableEl);
@@ -25,6 +29,9 @@ function getBtcChartState() {
 			mainChart: null,
 			miniChart: null,
 			resizeHandler: null,
+			intersectionObserver: null,
+			idleTimer: null,
+			initPromise: null,
 		};
 	}
 	return window.__btcAnalysisChartState;
@@ -32,6 +39,16 @@ function getBtcChartState() {
 
 function cleanupBtcCharts() {
 	const state = getBtcChartState();
+
+	if (state.intersectionObserver) {
+		state.intersectionObserver.disconnect();
+		state.intersectionObserver = null;
+	}
+
+	if (state.idleTimer) {
+		window.clearTimeout(state.idleTimer);
+		state.idleTimer = null;
+	}
 
 	if (state.resizeHandler) {
 		window.removeEventListener("resize", state.resizeHandler);
@@ -46,6 +63,7 @@ function cleanupBtcCharts() {
 
 	state.mainChart = null;
 	state.miniChart = null;
+	state.initPromise = null;
 }
 
 function loadEcharts() {
@@ -263,10 +281,16 @@ function buildMiniChartOption(forecast) {
 }
 
 async function initBtcAnalysisCharts() {
+	const state = getBtcChartState();
+	if (state.initPromise) {
+		return state.initPromise;
+	}
+
+	state.initPromise = (async () => {
 	const { mainEl, miniEl, tableEl } = getChartElements();
 	if (!mainEl || !miniEl || !tableEl) {
 		cleanupBtcCharts();
-		return;
+		return cleanupBtcCharts;
 	}
 
 	try {
@@ -295,7 +319,6 @@ async function initBtcAnalysisCharts() {
 			setTimeout(resizeHandler, 120);
 		});
 
-		const state = getBtcChartState();
 		state.mainChart = mainChart;
 		state.miniChart = miniChart;
 		state.resizeHandler = resizeHandler;
@@ -307,14 +330,52 @@ async function initBtcAnalysisCharts() {
 		}
 	}
 	return cleanupBtcCharts;
+	})();
+
+	return state.initPromise.finally(() => {
+		state.initPromise = null;
+	});
+}
+
+function scheduleChartInitialization() {
+	const state = getBtcChartState();
+	const mountEl = getChartMountElement();
+	if (!mountEl) {
+		return;
+	}
+
+	const runInit = () => {
+		if (state.intersectionObserver) {
+			state.intersectionObserver.disconnect();
+			state.intersectionObserver = null;
+		}
+		if (state.idleTimer) {
+			window.clearTimeout(state.idleTimer);
+			state.idleTimer = null;
+		}
+		void initBtcAnalysisCharts();
+	};
+
+	if ("IntersectionObserver" in window) {
+		state.intersectionObserver = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					runInit();
+				}
+			},
+			{ rootMargin: "240px 0px" },
+		);
+		state.intersectionObserver.observe(mountEl);
+		return;
+	}
+
+	state.idleTimer = window.setTimeout(runInit, 300);
 }
 
 registerPageScript("btc-analysis-chart", {
 	shouldRun: hasBtcChartElements,
 	init() {
-		window.setTimeout(() => {
-			initBtcAnalysisCharts();
-		}, 0);
+		scheduleChartInitialization();
 
 		return cleanupBtcCharts;
 	},

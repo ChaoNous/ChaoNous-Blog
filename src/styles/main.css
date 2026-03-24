@@ -13,10 +13,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Cinzel", "Zhuque Fangsong UI", "Zhuque Fangsong Primary";
+  --font-sans: "Cinzel", "Zhuque Fangsong UI";
   --font-latin: "Cinzel";
-  --font-cjk: "Zhuque Fangsong UI", "Zhuque Fangsong Primary";
-  --font-content: "Cinzel", "Zhuque Fangsong UI", "Zhuque Fangsong Primary";
+  --font-cjk: "Zhuque Fangsong UI";
+  --font-content: "Cinzel", "Zhuque Fangsong UI";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
