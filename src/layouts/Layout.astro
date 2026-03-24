@@ -43,15 +43,15 @@ const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
 const configHue = siteConfig.themeColor.hue;
 
-// 获取导航栏透明模式配置
+// Read the navbar transparency mode from the site config.
 const navbarTransparentMode =
 	siteConfig.banner?.navbar?.transparentMode || "semi";
 
-// 判断是否应该显示顶部高光效果（只在full和semifull模式下显示）
+// Only show the top highlight in full and semifull transparent modes.
 const shouldShowTopHighlight =
 	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
 
-// 统一的 banner 图片获取函数
+// Resolve the banner source for desktop and mobile variants.
 const getBannerSrc = (
 	src: typeof siteConfig.banner.src,
 	type: "desktop" | "mobile",
@@ -64,7 +64,7 @@ const getBannerSrc = (
 		if (typeof typeSrc === "string") return typeSrc;
 		if (Array.isArray(typeSrc) && typeSrc.length > 0) return typeSrc[0];
 	}
-	// 回退到另一种类型
+	// Fall back to the other variant if the preferred one is not available.
 	const fallbackType = type === "desktop" ? "mobile" : "desktop";
 	if (typeof src === "object" && src[fallbackType]) {
 		const fallbackSrc = src[fallbackType];
@@ -132,11 +132,11 @@ const bannerOffset =
 		<meta name="google" content="notranslate" />
 		<meta name="googlebot" content="notranslate" />
 
-		<!-- 预连接关键域名 -->
-		<!-- Iconify 图标 CDN -->
+		<!-- Preconnect critical third-party origins. -->
+		<!-- Iconify icon CDN -->
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
 
-		<!-- 关键字体预加载 - 仅加载 Cinzel，避免引入其他英文字体 -->
+		<!-- Preload the primary Latin and CJK fonts used above the fold. -->
 		<link
 			rel="preload"
 			as="font"
@@ -152,7 +152,7 @@ const bannerOffset =
 			crossorigin
 		/>
 
-		<!-- Banner 图片预加载 - 高优先级确保 LCP -->
+		<!-- Preload banner images to protect LCP. -->
 		{
 			siteConfig.banner.src && (
 				<>
@@ -277,7 +277,7 @@ const bannerOffset =
 				`${offset}px`,
 			);
 
-			// 自动缩放逻辑 (Moved from MainGridLayout to here for earlier execution)
+			// Apply desktop page scaling early to avoid a visible relayout flash.
 			(function () {
 				if (pageScaling && pageScaling.enable) {
 					function adjustPageScale() {
@@ -309,7 +309,7 @@ const bannerOffset =
 
 					adjustPageScale();
 
-					// 监听窗口大小变化
+					// Keep scaling in sync after viewport changes and swup navigation.
 					window.addEventListener("resize", adjustPageScale);
 
 					document.addEventListener(
@@ -349,7 +349,7 @@ const bannerOffset =
 		<ConfigCarrier />
 		<slot />
 
-		<!-- Music Player - 使用 client:idle 在浏览器空闲时加载，减少首屏 TBT -->
+		<!-- Load the music player when the browser is idle to keep TBT low. -->
 		{musicPlayerConfig.enable && <MusicPlayer client:idle />}
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->

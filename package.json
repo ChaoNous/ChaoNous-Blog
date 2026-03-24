@@ -1,7 +1,7 @@
 {
 	"name": "chaonous-blog",
 	"version": "8.3",
-	"description": "下一代 Material Design 3 博客主题，由 Astro 驱动",
+	"description": "A personal Astro blog inspired by Material Design 3",
 	"author": "ChaoNous",
 	"license": "Apache-2.0",
 	"type": "module",

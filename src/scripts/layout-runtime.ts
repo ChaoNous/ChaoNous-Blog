@@ -1,4 +1,3 @@
-import "./view-transitions.js";
 import { pathsEqual, url } from "../utils/url-utils";
 import { DARK_MODE, DEFAULT_THEME } from "../constants/constants";
 import { widgetConfigs } from "../config";

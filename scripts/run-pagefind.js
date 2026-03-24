@@ -2,6 +2,8 @@ import { spawnSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 
+process.env.NODE_NO_WARNINGS = "1";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
@@ -24,11 +26,25 @@ const suppressedPatterns = [
 	/\(Use `node --trace-deprecation \.\.\.` to show where the warning was created\)/,
 ];
 
+process.removeAllListeners("warning");
+process.on("warning", (warning) => {
+	const warningText = String(warning?.stack || warning?.message || "").trim();
+	if (
+		!warningText ||
+		suppressedPatterns.some((pattern) => pattern.test(warningText))
+	) {
+		return;
+	}
+
+	console.warn(warningText);
+});
+
 const result = spawnSync(process.execPath, [pagefindRunner, "--site", "dist"], {
 	cwd: rootDir,
 	encoding: "utf-8",
 	env: {
 		...process.env,
+		NODE_NO_WARNINGS: "1",
 		NODE_OPTIONS: [process.env.NODE_OPTIONS, "--no-deprecation"]
 			.filter(Boolean)
 			.join(" "),
