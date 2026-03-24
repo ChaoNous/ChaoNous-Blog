@@ -177,7 +177,7 @@ export const siteConfig: SiteConfig = {
 		cjkFont: {
 			// CJK 字体 - 用于中日韩文字
 			fontFamily:
-				"'Zhuque Fangsong', 'Source Han Serif SC'",
+				"'Zhuque Fangsong'",
 			fontWeight: "400",
 			localFonts: [ "ZhuqueFangsong-Regular.ttf" ], // 本地字体文件（相对于 public/assets/font/）
 			enableCompress: true,
