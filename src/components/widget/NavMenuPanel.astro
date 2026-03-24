@@ -312,6 +312,9 @@ const {
 				await panelManager.closePanel("nav-menu-panel");
 
 				if (action === "mobile-toc") {
+					if (typeof window.mobileTOCInit === "function") {
+						window.mobileTOCInit();
+					}
 					await panelManager.togglePanel("mobile-toc-panel", true);
 					return;
 				}

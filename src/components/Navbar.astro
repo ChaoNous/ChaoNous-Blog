@@ -173,7 +173,7 @@ const desktopWallpaperSwitchClass =
 		</div>
 		<NavMenuPanel
 			links={links}
-			showMobileToc={siteConfig.toc.enable}
+			showMobileToc={!isHomePage && siteConfig.toc.enable}
 			showDisplaySettings={!siteConfig.themeColor.fixed}
 			showWallpaperModes={modeSwitchDisplay !== "off"}
 		></NavMenuPanel>
