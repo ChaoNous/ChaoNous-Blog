@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import * as fs from "node:fs";
+import path from "node:path";
 import type { APIContext, GetStaticPaths } from "astro";
 import satori from "satori";
 import sharp from "sharp";
@@ -37,76 +38,30 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	});
 };
 
-let fontCache: { regular: Buffer | null; bold: Buffer | null; cjkRegular: Buffer | null; cjkBold: Buffer | null } | null = null;
+let fontCache: { regular: Buffer | null; bold: Buffer | null } | null = null;
 
-async function fetchSerifFonts() {
+function loadOgFonts() {
 	if (fontCache) {
 		return fontCache;
 	}
 
 	try {
-		// Fetch Cinzel for ASCII
-		const cinzelCssResp = await fetch(
-			"https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap",
+		const fontPath = path.resolve(
+			process.cwd(),
+			"public/assets/fonts/ZhuqueFangsong-Regular.ttf",
 		);
-		if (!cinzelCssResp.ok) throw new Error("Failed to fetch Cinzel CSS");
-		const cinzelCssText = await cinzelCssResp.text();
-
-		// Fetch Noto Serif SC for CJK
-		const notoCssResp = await fetch(
-			"https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap",
-		);
-		if (!notoCssResp.ok) throw new Error("Failed to fetch Noto Serif SC CSS");
-		const notoCssText = await notoCssResp.text();
-
-		const getUrlForWeight = (cssText: string, weight: number) => {
-			const blockRe = new RegExp(
-				`@font-face\\s*{[^}]*font-weight:\\s*${weight}[^}]*}`,
-				"g",
-			);
-			const match = cssText.match(blockRe);
-			if (!match || match.length === 0) return null;
-			const urlMatch = match[0].match(/url\((https:[^)]+)\)/);
-			return urlMatch ? urlMatch[1] : null;
-		};
-
-		const cinzelRegularUrl = getUrlForWeight(cinzelCssText, 400);
-		const cinzelBoldUrl = getUrlForWeight(cinzelCssText, 700);
-		const notoRegularUrl = getUrlForWeight(notoCssText, 400);
-		const notoBoldUrl = getUrlForWeight(notoCssText, 700);
-
-		if (!cinzelRegularUrl || !cinzelBoldUrl || !notoRegularUrl || !notoBoldUrl) {
-			console.warn(
-				"Could not find font urls in Google Fonts CSS; falling back to no fonts.",
-			);
-			fontCache = { regular: null, bold: null, cjkRegular: null, cjkBold: null };
+		if (!fs.existsSync(fontPath)) {
+			console.warn(`OG font not found: ${fontPath}`);
+			fontCache = { regular: null, bold: null };
 			return fontCache;
 		}
 
-		const [crResp, cbResp, nrResp, nbResp] = await Promise.all([
-			fetch(cinzelRegularUrl),
-			fetch(cinzelBoldUrl),
-			fetch(notoRegularUrl),
-			fetch(notoBoldUrl),
-		]);
-		if (!crResp.ok || !cbResp.ok || !nrResp.ok || !nbResp.ok) {
-			console.warn(
-				"Failed to download font files from Google; falling back to no fonts.",
-			);
-			fontCache = { regular: null, bold: null, cjkRegular: null, cjkBold: null };
-			return fontCache;
-		}
-
-		const crBuf = Buffer.from(await crResp.arrayBuffer());
-		const cbBuf = Buffer.from(await cbResp.arrayBuffer());
-		const nrBuf = Buffer.from(await nrResp.arrayBuffer());
-		const nbBuf = Buffer.from(await nbResp.arrayBuffer());
-
-		fontCache = { regular: crBuf, bold: cbBuf, cjkRegular: nrBuf, cjkBold: nbBuf };
+		const fontBuffer = fs.readFileSync(fontPath);
+		fontCache = { regular: fontBuffer, bold: fontBuffer };
 		return fontCache;
 	} catch (err) {
-		console.warn("Error fetching fonts:", err);
-		fontCache = { regular: null, bold: null, cjkRegular: null, cjkBold: null };
+		console.warn("Error loading OG fonts:", err);
+		fontCache = { regular: null, bold: null };
 		return fontCache;
 	}
 }
@@ -116,9 +71,7 @@ export async function GET({
 }: APIContext<{ post: CollectionEntry<"posts"> }>) {
 	const { post } = props;
 
-	// Try to fetch fonts from Google Fonts (woff2) at runtime.
-	const { regular: fontRegular, bold: fontBold, cjkRegular, cjkBold } =
-		await fetchSerifFonts();
+	const { regular: fontRegular, bold: fontBold } = loadOgFonts();
 
 	// Avatar + icon: still read from disk (small assets)
 	const avatarBuffer = fs.readFileSync(`./src/${profileConfig.avatar}`);
@@ -155,8 +108,7 @@ export async function GET({
 				display: "flex",
 				flexDirection: "column",
 				backgroundColor: backgroundColor,
-				fontFamily:
-					'"Cinzel", "Noto Serif SC", Georgia, "Times New Roman", Times, serif',
+				fontFamily: '"Zhuque Fangsong OG"',
 				padding: "60px",
 			},
 			children: [
@@ -331,7 +283,7 @@ export async function GET({
 	const fonts: FontOptions[] = [];
 	if (fontRegular) {
 		fonts.push({
-			name: "Cinzel",
+			name: "Zhuque Fangsong OG",
 			data: fontRegular,
 			weight: 400,
 			style: "normal",
@@ -339,24 +291,8 @@ export async function GET({
 	}
 	if (fontBold) {
 		fonts.push({
-			name: "Cinzel",
+			name: "Zhuque Fangsong OG",
 			data: fontBold,
-			weight: 700,
-			style: "normal",
-		});
-	}
-	if (cjkRegular) {
-		fonts.push({
-			name: "Noto Serif SC",
-			data: cjkRegular,
-			weight: 400,
-			style: "normal",
-		});
-	}
-	if (cjkBold) {
-		fonts.push({
-			name: "Noto Serif SC",
-			data: cjkBold,
 			weight: 700,
 			style: "normal",
 		});

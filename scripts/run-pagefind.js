@@ -19,9 +19,20 @@ const suppressedMessages = new Set([
 	"Search will still work, but will not match across root words.",
 ]);
 
+const suppressedPatterns = [
+	/\[DEP0180\] DeprecationWarning: fs\.Stats constructor is deprecated\./,
+	/\(Use `node --trace-deprecation \.\.\.` to show where the warning was created\)/,
+];
+
 const result = spawnSync(process.execPath, [pagefindRunner, "--site", "dist"], {
 	cwd: rootDir,
 	encoding: "utf-8",
+	env: {
+		...process.env,
+		NODE_OPTIONS: [process.env.NODE_OPTIONS, "--no-deprecation"]
+			.filter(Boolean)
+			.join(" "),
+	},
 });
 
 if (result.error) {
@@ -36,7 +47,13 @@ for (const stream of [result.stdout, result.stderr]) {
 
 	const filteredOutput = stream
 		.split(/\r?\n/)
-		.filter((line) => !suppressedMessages.has(line.trim()))
+		.filter((line) => {
+			const trimmed = line.trim();
+			return (
+				!suppressedMessages.has(trimmed) &&
+				!suppressedPatterns.some((pattern) => pattern.test(trimmed))
+			);
+		})
 		.join("\n")
 		.trim();
 
