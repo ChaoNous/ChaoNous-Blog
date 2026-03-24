@@ -6,6 +6,9 @@
 	"license": "Apache-2.0",
 	"type": "module",
 	"homepage": "https://chaonous.com",
+	"engines": {
+		"node": ">=22 <23"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ChaoNous/ChaoNous-Blog"
