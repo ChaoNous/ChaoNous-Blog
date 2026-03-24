@@ -1,32 +1,16 @@
 @import "tailwindcss";
 @import "./local-fonts.css";
 
-/* Google Fonts 已通过 link 标签在 HTML 中异步加载，避免 CSS 阻塞 */
+/* Google Fonts 宸查€氳繃 link 鏍囩鍦?HTML 涓紓姝ュ姞杞斤紝閬垮厤 CSS 闃诲 */
 
-/* 导入本地中文字体：朱雀仿宋 - 使用 optional 避免阻塞渲染 */
-@font-face {
-  font-family: 'Zhuque Fangsong CJK';
-  src: url('/assets/fonts/ZhuqueFangsong-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: optional;
-  unicode-range:
-    U+3000-303F,
-    U+3400-4DBF,
-    U+4E00-9FFF,
-    U+F900-FAFF,
-    U+FF00-FFEF,
-    U+20000-2A6DF;
-}
-
-/* 导入相册样式 */
+/* 瀵煎叆鐩稿唽鏍峰紡 */
 @import "./albums.css";
-/* 导入动画样式 */
+/* 瀵煎叆鍔ㄧ敾鏍峰紡 */
 @import "./transition.css";
 @import "./animation-enhancements.css";
-/* 导入渐变按钮样式 */
+/* 瀵煎叆娓愬彉鎸夐挳鏍峰紡 */
 @import "./gradient-buttons.css";
-/* 加密内容样式已移除，现在直接使用非加密文章的样式 */
+/* 鍔犲瘑鍐呭鏍峰紡宸茬Щ闄わ紝鐜板湪鐩存帴浣跨敤闈炲姞瀵嗘枃绔犵殑鏍峰紡 */
 
 @plugin "@tailwindcss/typography";
 
@@ -34,10 +18,10 @@
 
 /* Migrate from v3 config */
 @theme {
-  --font-sans: "Cinzel", "Zhuque Fangsong Primary";
+  --font-sans: "Cinzel", "Zhuque Fangsong UI", "Zhuque Fangsong Primary";
   --font-latin: "Cinzel";
-  --font-cjk: "Zhuque Fangsong Primary";
-  --font-content: "Cinzel", "Zhuque Fangsong Primary";
+  --font-cjk: "Zhuque Fangsong UI", "Zhuque Fangsong Primary";
+  --font-content: "Cinzel", "Zhuque Fangsong UI", "Zhuque Fangsong Primary";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
@@ -50,9 +34,9 @@
       before:absolute before:rounded-[inherit] before:inset-0 before:scale-[0.85] hover:before:scale-100 before:-z-10;
 }
 
-/* 自定义字体已移除 - 使用系统字体以提升加载速度 */
+/* 鑷畾涔夊瓧浣撳凡绉婚櫎 - 浣跨敤绯荤粺瀛椾綋浠ユ彁鍗囧姞杞介€熷害 */
 
-/* 确保平滑滚动 */
+/* 纭繚骞虫粦婊氬姩 */
 html {
   @apply scroll-smooth;
   @apply text-black/80;
@@ -70,6 +54,12 @@ body {
   -ms-overflow-style: none;
 }
 
+body.is-home {
+  --font-sans: "Cinzel", "Zhuque Fangsong UI";
+  --font-cjk: "Zhuque Fangsong UI";
+  --font-content: "Cinzel", "Zhuque Fangsong UI";
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   width: 0;
@@ -77,7 +67,7 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-/* 页面顶部渐变高光效果 */
+/* 椤甸潰椤堕儴娓愬彉楂樺厜鏁堟灉 */
 .top-gradient-highlight {
   position: fixed;
   top: 0;
@@ -90,43 +80,43 @@ body::-webkit-scrollbar {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 暗色主题下的渐变高光效果 */
+/* 鏆楄壊涓婚涓嬬殑娓愬彉楂樺厜鏁堟灉 */
 :root.dark .top-gradient-highlight {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.05) 80%, transparent 100%);
 }
 
 @layer components {
-  /* View Transitions API 主题切换动画 */
-  /* 为整个文档根元素设置视图过渡 */
+  /* View Transitions API 涓婚鍒囨崲鍔ㄧ敾 */
+  /* 涓烘暣涓枃妗ｆ牴鍏冪礌璁剧疆瑙嗗浘杩囨浮 */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 0.5s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    /* 使用混合模式使颜色过渡更平滑 */
+    /* 浣跨敤娣峰悎妯″紡浣块鑹茶繃娓℃洿骞虫粦 */
     mix-blend-mode: normal;
   }
 
-  /* 视图过渡组 - 使用交叉淡化效果 */
+  /* 瑙嗗浘杩囨浮缁?- 浣跨敤浜ゅ弶娣″寲鏁堟灉 */
   ::view-transition-group(root) {
     animation-duration: 0.5s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* 淡出旧视图 - 使用更平滑的曲线 */
+  /* 娣″嚭鏃ц鍥?- 浣跨敤鏇村钩婊戠殑鏇茬嚎 */
   ::view-transition-old(root) {
     animation-name: theme-fade-out;
-    /* 确保背景色同步切换 */
+    /* 纭繚鑳屾櫙鑹插悓姝ュ垏鎹?*/
     z-index: 2;
   }
 
-  /* 淡入新视图 - 使用更平滑的曲线 */
+  /* 娣″叆鏂拌鍥?- 浣跨敤鏇村钩婊戠殑鏇茬嚎 */
   ::view-transition-new(root) {
     animation-name: theme-fade-in;
-    /* 确保新视图在上层 */
+    /* 纭繚鏂拌鍥惧湪涓婂眰 */
     z-index: 1;
   }
 
-  /* 定义淡出动画 - 使用更平滑的缓动函数 */
+  /* 瀹氫箟娣″嚭鍔ㄧ敾 - 浣跨敤鏇村钩婊戠殑缂撳姩鍑芥暟 */
   @keyframes theme-fade-out {
     0% {
       opacity: 1;
@@ -136,7 +126,7 @@ body::-webkit-scrollbar {
     }
   }
 
-  /* 定义淡入动画 - 从下层淡入 */
+  /* 瀹氫箟娣″叆鍔ㄧ敾 - 浠庝笅灞傛贰鍏?*/
   @keyframes theme-fade-in {
     0% {
       opacity: 0;
@@ -146,7 +136,7 @@ body::-webkit-scrollbar {
     }
   }
 
-  /* 确保边框和分隔线元素在主题切换时有更明确的过渡时长 */
+  /* 纭繚杈规鍜屽垎闅旂嚎鍏冪礌鍦ㄤ富棰樺垏鎹㈡椂鏈夋洿鏄庣‘鐨勮繃娓℃椂闀?*/
   .transition,
   [class*="border"],
   [class*="transition"] {
@@ -155,8 +145,8 @@ body::-webkit-scrollbar {
     transition-duration: 0.15s;
   }
 
-  /* 主题过渡保护类 - 仅在非 View Transitions 模式下使用 */
-  /* 当使用 View Transitions API 时，浏览器会自动处理过渡，不需要禁用 transition */
+  /* 涓婚杩囨浮淇濇姢绫?- 浠呭湪闈?View Transitions 妯″紡涓嬩娇鐢?*/
+  /* 褰撲娇鐢?View Transitions API 鏃讹紝娴忚鍣ㄤ細鑷姩澶勭悊杩囨浮锛屼笉闇€瑕佺鐢?transition */
   .is-theme-transitioning:not(.use-view-transition) *,
   .is-theme-transitioning:not(.use-view-transition) *::before,
   .is-theme-transitioning:not(.use-view-transition) *::after {
@@ -164,8 +154,8 @@ body::-webkit-scrollbar {
     animation: none !important;
   }
 
-  /* 在主题切换时禁用代码块的复杂效果以提升性能 */
-  /* 使用 View Transitions 时也需要禁用代码块动画，因为它们太多了 */
+  /* 鍦ㄤ富棰樺垏鎹㈡椂绂佺敤浠ｇ爜鍧楃殑澶嶆潅鏁堟灉浠ユ彁鍗囨€ц兘 */
+  /* 浣跨敤 View Transitions 鏃朵篃闇€瑕佺鐢ㄤ唬鐮佸潡鍔ㄧ敾锛屽洜涓哄畠浠お澶氫簡 */
   .is-theme-transitioning .expressive-code,
   .is-theme-transitioning .expressive-code * {
     transition: none !important;
@@ -173,21 +163,21 @@ body::-webkit-scrollbar {
     will-change: auto !important;
   }
 
-  /* 主题切换时临时隐藏代码块以提升性能 */
-  /* 这个行为可以通过配置文件中的 expressiveCodeConfig.hideDuringThemeTransition 控制 */
+  /* 涓婚鍒囨崲鏃朵复鏃堕殣钘忎唬鐮佸潡浠ユ彁鍗囨€ц兘 */
+  /* 杩欎釜琛屼负鍙互閫氳繃閰嶇疆鏂囦欢涓殑 expressiveCodeConfig.hideDuringThemeTransition 鎺у埗 */
   .is-theme-transitioning .expressive-code {
     content-visibility: hidden !important;
-    /* 避免闪烁 */
+    /* 閬垮厤闂儊 */
     opacity: 0.99;
   }
 
-  /* 当禁用隐藏代码块功能时（通过JavaScript动态控制） */
+  /* 褰撶鐢ㄩ殣钘忎唬鐮佸潡鍔熻兘鏃讹紙閫氳繃JavaScript鍔ㄦ€佹帶鍒讹級 */
   .is-theme-transitioning .expressive-code:not(.hide-during-transition) {
-    /* 保持代码块可见，但禁用过渡效果 */
+    /* 淇濇寔浠ｇ爜鍧楀彲瑙侊紝浣嗙鐢ㄨ繃娓℃晥鏋?*/
     content-visibility: visible !important;
     opacity: 1 !important;
   }
-  /* 禁用复杂选择器元素的过渡 - 仅在非 View Transitions 模式下 */
+  /* 绂佺敤澶嶆潅閫夋嫨鍣ㄥ厓绱犵殑杩囨浮 - 浠呭湪闈?View Transitions 妯″紡涓?*/
   .is-theme-transitioning:not(.use-view-transition) .float-panel,
   .is-theme-transitioning:not(.use-view-transition) .float-panel *,
   .is-theme-transitioning:not(.use-view-transition) .music-player,
@@ -200,22 +190,22 @@ body::-webkit-scrollbar {
     animation: none !important;
   }
 
-  /* 强制使用 contain 隔离渲染上下文 - 仅在非 View Transitions 模式下 */
+  /* 寮哄埗浣跨敤 contain 闅旂娓叉煋涓婁笅鏂?- 浠呭湪闈?View Transitions 妯″紡涓?*/
   .is-theme-transitioning:not(.use-view-transition) .post-card,
   .is-theme-transitioning:not(.use-view-transition) .widget,
   .is-theme-transitioning:not(.use-view-transition) .float-panel {
     contain: layout style paint !important;
   }
 
-  /* 波浪效果精确同步处理 - 仅在非 View Transitions 模式下 */
+  /* 娉㈡氮鏁堟灉绮剧‘鍚屾澶勭悊 - 浠呭湪闈?View Transitions 妯″紡涓?*/
   .is-theme-transitioning:not(.use-view-transition) svg use {
-    /* 禁用过渡但保持动画 */
+    /* 绂佺敤杩囨浮浣嗕繚鎸佸姩鐢?*/
     transition: none;
-    /* 强制立即继承页面背景色 */
+    /* 寮哄埗绔嬪嵆缁ф壙椤甸潰鑳屾櫙鑹?*/
     fill: currentColor;
   }
 
-  /* 导航栏主题切换保护 - 仅在非 View Transitions 模式下禁用过渡 */
+  /* 瀵艰埅鏍忎富棰樺垏鎹繚鎶?- 浠呭湪闈?View Transitions 妯″紡涓嬬鐢ㄨ繃娓?*/
   .is-theme-transitioning:not(.use-view-transition) #navbar > div,
   .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode] > div,
   .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode].scrolled > div,
@@ -230,7 +220,7 @@ body::-webkit-scrollbar {
     backdrop-filter: none !important;
   }
 
-  /* 导航栏相关浮动面板的过渡禁用 */
+  /* 瀵艰埅鏍忕浉鍏虫诞鍔ㄩ潰鏉跨殑杩囨浮绂佺敤 */
   .is-theme-transitioning .dropdown-content,
   .is-theme-transitioning .float-panel,
   .is-theme-transitioning #display-setting,
@@ -242,24 +232,24 @@ body::-webkit-scrollbar {
     backdrop-filter: none !important;
   }
 
-  /* 波浪容器的颜色传递 */
+  /* 娉㈡氮瀹瑰櫒鐨勯鑹蹭紶閫?*/
   .is-theme-transitioning #header-waves {
-    /* 设置当前颜色为页面背景色，供SVG继承 */
+    /* 璁剧疆褰撳墠棰滆壊涓洪〉闈㈣儗鏅壊锛屼緵SVG缁ф壙 */
     color: var(--page-bg);
-    /* 确保与页面在同一合成层 */
+    /* 纭繚涓庨〉闈㈠湪鍚屼竴鍚堟垚灞?*/
     isolation: isolate;
-    /* 优化渲染性能 */
+    /* 浼樺寲娓叉煋鎬ц兘 */
     contain: layout style paint;
-    /* GPU层合成 */
+    /* GPU灞傚悎鎴?*/
     transform: translateZ(0);
-    /* 确保没有背景色 */
+    /* 纭繚娌℃湁鑳屾櫙鑹?*/
     background: transparent;
   }
 
   .is-theme-transitioning #header-waves use {
-    /* 保持动画连续性 */
+    /* 淇濇寔鍔ㄧ敾杩炵画鎬?*/
     will-change: transform;
-    /* GPU优化 */
+    /* GPU浼樺寲 */
     transform: translateZ(0);
   }
 
@@ -270,7 +260,7 @@ body::-webkit-scrollbar {
     @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg-transparent) backdrop-blur-sm transition-colors duration-150;
   }
 
-  /* 全屏壁纸模式下的半透明效果 - 使用!important确保优先级 */
+  /* 鍏ㄥ睆澹佺焊妯″紡涓嬬殑鍗婇€忔槑鏁堟灉 - 浣跨敤!important纭繚浼樺厛绾?*/
   .wallpaper-transparent .card-base {
     background: var(--card-bg-transparent) !important;
     backdrop-filter: blur(8px) !important;
@@ -283,7 +273,7 @@ body::-webkit-scrollbar {
     -webkit-backdrop-filter: blur(8px) !important;
   }
 
-  /* 确保嵌套的卡片元素在全屏壁纸模式下也应用半透明效果 */
+  /* 纭繚宓屽鐨勫崱鐗囧厓绱犲湪鍏ㄥ睆澹佺焊妯″紡涓嬩篃搴旂敤鍗婇€忔槑鏁堟灉 */
   .wallpaper-transparent .card-base .card-base,
   body.wallpaper-transparent .card-base .card-base {
     background: var(--card-bg-transparent) !important;
@@ -336,7 +326,7 @@ body::-webkit-scrollbar {
   .card-shadow {
     @apply drop-shadow-[0_2px_4px_rgba(0,0,0,0.005)];
   }
-  /* 主题切换时禁用按钮背景色过渡，确保立即更新 */
+  /* 涓婚鍒囨崲鏃剁鐢ㄦ寜閽儗鏅壊杩囨浮锛岀‘淇濈珛鍗虫洿鏂?*/
   .is-theme-transitioning .expand-animation::before {
     transition: transform 75ms ease-out !important;
   }
@@ -425,7 +415,7 @@ body::-webkit-scrollbar {
     @apply text-black/25 dark:text-white/25;
   }
 
-  /* 悬浮TOC样式 */
+  /* 鎮诞TOC鏍峰紡 */
   .floating-toc-item {
     @apply flex items-center gap-2 py-2 px-2 rounded-lg text-sm leading-relaxed;
     @apply text-black/70 dark:text-white/70;
@@ -460,7 +450,7 @@ body::-webkit-scrollbar {
     @apply overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0;
   }
 
-  /* 下拉菜单样式 */
+  /* 涓嬫媺鑿滃崟鏍峰紡 */
   .dropdown-container {
     @apply relative;
   }
@@ -495,7 +485,7 @@ body::-webkit-scrollbar {
     @apply rounded-b-[calc(var(--radius-large)-0.5rem)];
   }
 
-  /* 移动端菜单样式 */
+  /* 绉诲姩绔彍鍗曟牱寮?*/
   .mobile-submenu {
     @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
   }
@@ -508,14 +498,14 @@ body::-webkit-scrollbar {
     @apply rotate-180;
   }
 
-  /* 响应式隐藏 */
+  /* 鍝嶅簲寮忛殣钘?*/
   @media (max-width: 768px) {
     .dropdown-container {
       @apply hidden;
     }
   }
 
-  /* 无障碍支持 */
+  /* 鏃犻殰纰嶆敮鎸?*/
   .dropdown-container:focus-within .dropdown-menu {
     @apply opacity-100 visible pointer-events-auto translate-y-0;
   }
@@ -557,12 +547,12 @@ body::-webkit-scrollbar {
   color: inherit;
 }
 
-/* 白天模式下选中文本的颜色 */
+/* 鐧藉ぉ妯″紡涓嬮€変腑鏂囨湰鐨勯鑹?*/
 :root:not(.dark) ::selection {
   color: #000000;
 }
 
-/* 夜间模式下选中文本的颜色 */
+/* 澶滈棿妯″紡涓嬮€変腑鏂囨湰鐨勯鑹?*/
 :root.dark ::selection {
   color: #ffffff;
 }
@@ -587,7 +577,7 @@ body::-webkit-scrollbar {
   height: var(--collapsedHeight);
 }
 
-/*剧透效果*/
+/*鍓ч€忔晥鏋?/
 .custom-md spoiler {
   --_spoiler-mask: var(--primary);
   @apply hover:bg-transparent px-1 py-0.5 overflow-hidden rounded-md transition-all duration-150;
@@ -601,21 +591,21 @@ body::-webkit-scrollbar {
   }
 }
 
-/* 浅色模式：使用更浅的主题色且完全不透明 */
+/* 娴呰壊妯″紡锛氫娇鐢ㄦ洿娴呯殑涓婚鑹蹭笖瀹屽叏涓嶉€忔槑 */
 
-/* 文章列表布局切换样式 - 统一管理 */
+/* 鏂囩珷鍒楄〃甯冨眬鍒囨崲鏍峰紡 - 缁熶竴绠＄悊 */
 .post-list-container {
   transition: all 0.3s ease-in-out;
 }
 
-/* 列表模式 - 默认样式 */
+/* 鍒楄〃妯″紡 - 榛樿鏍峰紡 */
 .post-list-container.list-mode {
   display: flex !important;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* 网格模式下的文章卡片样式调整 */
+/* 缃戞牸妯″紡涓嬬殑鏂囩珷鍗＄墖鏍峰紡璋冩暣 */
 .post-list-container.grid-mode .post-card-item {
   width: 100%;
   margin-bottom: 0;
@@ -648,9 +638,9 @@ body::-webkit-scrollbar {
   margin-bottom: 0.5rem;
 }
 
-/* CSS-only移动端优化 - 避免JavaScript闪烁 */
+/* CSS-only绉诲姩绔紭鍖?- 閬垮厤JavaScript闂儊 */
 @media (max-width: 768px) {
-  /* 移动端强制列表模式，避免初始化闪烁 */
+  /* 绉诲姩绔己鍒跺垪琛ㄦā寮忥紝閬垮厤鍒濆鍖栭棯鐑?*/
   #post-list-container {
     display: flex !important;
     flex-direction: column !important;
@@ -659,7 +649,7 @@ body::-webkit-scrollbar {
     background: transparent !important;
   }
 
-  /* 移动端网格模式也显示为列表 */
+  /* 绉诲姩绔綉鏍兼ā寮忎篃鏄剧ず涓哄垪琛?*/
   #post-list-container.grid-mode {
     display: flex !important;
     flex-direction: column !important;
@@ -667,20 +657,20 @@ body::-webkit-scrollbar {
     grid-template-columns: 1fr !important;
   }
 
-  /* 移动端文章卡片间距优化 */
+  /* 绉诲姩绔枃绔犲崱鐗囬棿璺濅紭鍖?*/
   #post-list-container .post-card-item {
     margin-bottom: 0 !important;
   }
 }
 
-/* 桌面端样式 */
+/* 妗岄潰绔牱寮?*/
 @media (min-width: 769px) {
-  /* 列表模式下的样式 */
+  /* 鍒楄〃妯″紡涓嬬殑鏍峰紡 */
   .post-list-container.list-mode {
     gap: 0.75rem;
   }
 
-  /* 网格模式下的样式 */
+  /* 缃戞牸妯″紡涓嬬殑鏍峰紡 */
   .post-list-container.grid-mode {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -692,35 +682,35 @@ body::-webkit-scrollbar {
 }
 
 /* ========================================
-   渲染性能优化 - 提升页面加载和滚动流畅度
+   娓叉煋鎬ц兘浼樺寲 - 鎻愬崌椤甸潰鍔犺浇鍜屾粴鍔ㄦ祦鐣呭害
    ======================================== */
 
-/* 离屏内容优化 - 使用 content-visibility 跳过不可见内容的渲染
-   注意：只对纯静态、无交互子组件的容器使用，避免 Svelte/Web Components 事件失效 */
+/* 绂诲睆鍐呭浼樺寲 - 浣跨敤 content-visibility 璺宠繃涓嶅彲瑙佸唴瀹圭殑娓叉煋
+   娉ㄦ剰锛氬彧瀵圭函闈欐€併€佹棤浜や簰瀛愮粍浠剁殑瀹瑰櫒浣跨敤锛岄伩鍏?Svelte/Web Components 浜嬩欢澶辨晥 */
 
-/* 文章卡片：纯静态，可安全使用 */
+/* 鏂囩珷鍗＄墖锛氱函闈欐€侊紝鍙畨鍏ㄤ娇鐢?*/
 .post-card-item {
   content-visibility: auto;
   contain-intrinsic-size: 0 200px;
 }
 
-/* .widget 已无 DOM 对应元素（类名未实际使用），规则移除 */
-/* .card-base 包含 MusicPlayer 等 Svelte 交互组件，不应施加 content-visibility */
+/* .widget 宸叉棤 DOM 瀵瑰簲鍏冪礌锛堢被鍚嶆湭瀹為檯浣跨敤锛夛紝瑙勫垯绉婚櫎 */
+/* .card-base 鍖呭惈 MusicPlayer 绛?Svelte 浜や簰缁勪欢锛屼笉搴旀柦鍔?content-visibility */
 
-/* 文章正文：纯静态内容，可安全使用 */
+/* 鏂囩珷姝ｆ枃锛氱函闈欐€佸唴瀹癸紝鍙畨鍏ㄤ娇鐢?*/
 .custom-md {
   content-visibility: auto;
   contain-intrinsic-size: 0 500px;
 }
 
-/* 动画元素 GPU 加速 - 仅对真正的动画元素使用 */
-/* 注意：不要对交互元素使用 will-change，可能影响点击事件 */
+/* 鍔ㄧ敾鍏冪礌 GPU 鍔犻€?- 浠呭鐪熸鐨勫姩鐢诲厓绱犱娇鐢?*/
+/* 娉ㄦ剰锛氫笉瑕佸浜や簰鍏冪礌浣跨敤 will-change锛屽彲鑳藉奖鍝嶇偣鍑讳簨浠?*/
 .carousel-item,
 .banner-item {
   will-change: transform, opacity;
 }
 
-/* 滚动容器优化 */
+/* 婊氬姩瀹瑰櫒浼樺寲 */
 .overflow-auto,
 .overflow-scroll,
 .overflow-x-auto,
@@ -729,8 +719,8 @@ body::-webkit-scrollbar {
   scroll-behavior: smooth;
 }
 
-/* 图片渲染优化 - 防止布局抖动 */
-/* 注意：不要对 svg 设置 display: block，会破坏内联图标 */
+/* 鍥剧墖娓叉煋浼樺寲 - 闃叉甯冨眬鎶栧姩 */
+/* 娉ㄦ剰锛氫笉瑕佸 svg 璁剧疆 display: block锛屼細鐮村潖鍐呰仈鍥炬爣 */
 img,
 picture,
 video,
@@ -739,23 +729,23 @@ canvas {
   max-width: 100%;
 }
 
-/* Banner 容器优化 */
+/* Banner 瀹瑰櫒浼樺寲 */
 #banner-wrapper,
 #banner-container,
 #banner-carousel {
   contain: layout style;
 }
 
-/* 注意：不对导航栏、侧边栏等使用 contain，可能影响子元素交互 */
+/* 娉ㄦ剰锛氫笉瀵瑰鑸爮銆佷晶杈规爮绛変娇鐢?contain锛屽彲鑳藉奖鍝嶅瓙鍏冪礌浜や簰 */
 
-/* 优化字体渲染 */
+/* 浼樺寲瀛椾綋娓叉煋 */
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* 减少动画偏好的用户优化 */
+/* 鍑忓皯鍔ㄧ敾鍋忓ソ鐨勭敤鎴蜂紭鍖?*/
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -767,7 +757,7 @@ html {
   }
 }
 
-/* 打印优化 */
+/* 鎵撳嵃浼樺寲 */
 @media print {
   .no-print,
   #navbar-wrapper,
