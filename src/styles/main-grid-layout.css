@@ -291,7 +291,6 @@ body.wallpaper-transparent
 	/* 桌面端 banner/carousel 图片居中裁切 */
 	.carousel-item img,
 	#banner img {
-		object-position: center center;
 		transition: transform 1s ease-out;
 	}
 
@@ -331,7 +330,6 @@ body.wallpaper-transparent
 	/* 移动/平板端 carousel 图片对象位置 */
 	.carousel-item img,
 	#banner img {
-		object-position: center center;
 		transition: transform 0.5s ease-out;
 	}
 
