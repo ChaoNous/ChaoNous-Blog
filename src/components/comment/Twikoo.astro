@@ -1,8 +1,4 @@
 ---
-/**
- * Twikoo 评论组件
- * 基于 Twikoo 的评论系统，融入现有设计风格
- */
 import { Icon } from "astro-icon/components";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
@@ -18,7 +14,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 ---
 
 <div class="twikoo-wrapper mt-8 mb-6">
-	<!-- 评论区域标题 -->
 	<div class="comment-header flex items-center gap-3 mb-4 onload-animation">
 		<div class="flex items-center justify-center w-9 h-9 rounded-lg bg-(--btn-regular-bg)">
 			<Icon
@@ -31,7 +26,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		</h3>
 	</div>
 
-	<!-- Twikoo 容器 -->
 	<div class="twikoo-container relative onload-animation">
 		<div
 			id="twikoo-comment"
@@ -48,7 +42,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		min-height: 200px;
 	}
 
-	/* Twikoo 样式覆盖 - 完美融入主题色与亮暗模式 */
 	:global(.tk-comments) {
 		--twikoo-primary: var(--primary);
 	}
@@ -66,7 +59,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		display: none !important;
 	}
 
-	/* 增加输入框与评论列表的间距 */
 	:global(.tk-submit) {
 		margin-bottom: 2.5rem !important;
 	}
@@ -75,7 +67,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		margin-top: 2.5rem !important;
 	}
 
-	/* 输入框与预览框 */
 	:global(.tk-comments .tk-input),
 	:global(.tk-comments .tk-preview) {
 		background: rgba(128, 128, 128, 0.05) !important;
@@ -95,7 +86,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		background: rgba(128, 128, 128, 0.02) !important;
 	}
 
-	/* 操作栏 */
 	:global(.tk-comments .tk-actions) {
 		background: transparent !important;
 		border-radius: 0 0 0.5rem 0.5rem !important;
@@ -113,7 +103,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		opacity: 1;
 	}
 
-	/* 提交按钮 */
 	:global(.tk-comments .tk-submit) {
 		background: rgba(128, 128, 128, 0.15) !important;
 		color: inherit !important;
@@ -128,7 +117,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		color: var(--primary) !important;
 	}
 
-	/* 预览按钮 */
 	:global(.tk-comments .tk-preview-btn) {
 		background: rgba(128, 128, 128, 0.1) !important;
 		color: inherit !important;
@@ -136,12 +124,11 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		border: 1px solid rgba(128, 128, 128, 0.1) !important;
 		transition: all 0.3s;
 	}
-	
+
 	:global(.tk-comments .tk-preview-btn:hover) {
 		background: rgba(128, 128, 128, 0.2) !important;
 	}
 
-	/* 评论卡片本体 */
 	:global(.tk-comments .tk-comment) {
 		background: transparent !important;
 		border: 1px solid rgba(128, 128, 128, 0.1) !important;
@@ -188,7 +175,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		text-underline-offset: 4px;
 	}
 
-	/* 回复区域的嵌套处理 */
 	:global(.tk-comments .tk-replies) {
 		border-top: none !important;
 		background: transparent !important;
@@ -204,7 +190,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		margin-bottom: 0.5rem !important;
 	}
 
-	/* 小按钮与图标 */
 	:global(.tk-comments .tk-action),
 	:global(.tk-comments .tk-icon) {
 		color: inherit !important;
@@ -218,7 +203,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		opacity: 1;
 	}
 
-	/* 展开分页按钮 */
 	:global(.tk-comments .tk-expand) {
 		background: rgba(128, 128, 128, 0.05) !important;
 		border: 1px solid rgba(128, 128, 128, 0.15) !important;
@@ -233,7 +217,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		color: var(--primary) !important;
 	}
 
-	/* 表情面板 */
 	:global(.tk-comments .tk-owo-popup) {
 		background: var(--card-bg, rgba(255, 255, 255, 0.95)) !important;
 		border: 1px solid rgba(128, 128, 128, 0.15) !important;
@@ -242,7 +225,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		backdrop-filter: blur(10px);
 	}
 
-	/* 代码块风格 */
 	:global(.tk-comments .tk-content code) {
 		background: rgba(128, 128, 128, 0.1) !important;
 		padding: 0.2em 0.4em !important;
@@ -265,7 +247,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		background: transparent !important;
 	}
 
-	/* 加载状态文字等 */
 	:global(.tk-loading),
 	:global(.tk-comments .tk-meta) {
 		color: inherit !important;
@@ -276,32 +257,31 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 <script>
 	import { registerPageScript } from "../../scripts/page-lifecycle.js";
 
-	// 动态加载 Twikoo
 	function initTwikoo() {
 		const container = document.getElementById("twikoo-comment");
 		if (!container || container.querySelector("tk-time")) return;
 
 		const envId = container.getAttribute("data-env-id") || "";
 		const region = container.getAttribute("data-region") || "";
-		const path = container.getAttribute("data-path") || window.location.pathname;
+		const path =
+			container.getAttribute("data-path") || window.location.pathname;
 		const lang = container.getAttribute("data-lang") || "zh-CN";
 
-		// 加载 Twikoo 脚本 (使用本地化文件以防止被拦截)
 		const script = document.createElement("script");
 		script.src = "/assets/js/twikoo.all.min.js";
 		script.async = true;
 
 		script.onload = () => {
-			// twikoo 由动态注入的脚本挂载到 window，此处声明其类型
-			declare const twikoo: { init: (options: Record<string, unknown>) => void };
+			declare const twikoo: {
+				init: (options: Record<string, unknown>) => void;
+			};
 			twikoo.init({
 				envId,
-				el: '#twikoo-comment',
+				el: "#twikoo-comment",
 				region,
 				path,
 				lang,
 				onCommentLoaded: () => {
-					// 评论加载完成后，修复点赞/评论按钮的跳转问题
 					fixTwikooScrollIssue();
 				},
 			});
@@ -310,18 +290,14 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		document.head.appendChild(script);
 	}
 
-	// 修复 Twikoo 点赞/评论后页面滚动到顶部的问题
 	function fixTwikooScrollIssue() {
 		const container = document.getElementById("twikoo-comment");
 		if (!container) return;
 
-		// 保存当前滚动位置
 		let savedScrollPos = 0;
 
-		// 监听所有按钮点击，在操作前保存滚动位置
 		container.addEventListener("click", (e) => {
 			const target = e.target as HTMLElement;
-			// 检测点赞按钮或提交按钮
 			if (
 				target.closest(".tk-like") ||
 				target.closest(".tk-submit") ||
@@ -330,7 +306,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			) {
 				savedScrollPos = window.scrollY;
 
-				// 延迟恢复滚动位置（防止 Twikoo 内部操作导致滚动）
 				setTimeout(() => {
 					if (window.scrollY !== savedScrollPos) {
 						window.scrollTo({
@@ -340,7 +315,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 					}
 				}, 50);
 
-				// 再次延迟恢复（确保异步操作完成后）
 				setTimeout(() => {
 					if (window.scrollY !== savedScrollPos) {
 						window.scrollTo({
@@ -352,7 +326,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			}
 		});
 
-		// 阻止表单提交导致的页面刷新
 		const form = container.querySelector("form");
 		if (form) {
 			form.addEventListener("submit", (e) => {
@@ -360,17 +333,19 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			});
 		}
 
-		// 监听 hashchange 事件，防止 Twikoo 操作触发滚动
 		const originalHash = window.location.hash;
 		window.addEventListener(
 			"hashchange",
-			(e) => {
-				// 如果 hash 变为空或只是 #，且滚动位置发生了大幅变化，则恢复
+			() => {
 				if (
 					(window.location.hash === "" || window.location.hash === "#") &&
 					Math.abs(window.scrollY - savedScrollPos) > 100
 				) {
-					history.replaceState(null, "", window.location.pathname + originalHash);
+					history.replaceState(
+						null,
+						"",
+						window.location.pathname + originalHash,
+					);
 					window.scrollTo({
 						top: savedScrollPos,
 						behavior: "auto",
@@ -381,7 +356,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		);
 	}
 
-	// IntersectionObserver 延迟加载
 	const twikooObserver = new IntersectionObserver(
 		(entries) => {
 			entries.forEach((entry) => {
@@ -394,7 +368,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		{ rootMargin: "200px" },
 	);
 
-	// 初始化
 	registerPageScript("twikoo-comment", {
 		shouldRun() {
 			return document.getElementById("twikoo-comment") !== null;
@@ -409,6 +382,4 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			};
 		},
 	});
-
-	// 页面导航后重新初始化
 </script>
