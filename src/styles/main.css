@@ -671,7 +671,7 @@ body::-webkit-scrollbar {
 
   /* 网格模式下的样式 */
   .post-list-container.grid-mode {
-    display: grid !important;
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
