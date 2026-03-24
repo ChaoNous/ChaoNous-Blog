@@ -1,65 +1,63 @@
 <script lang="ts">
 	import Icon from "@iconify/svelte";
 	import { onDestroy, onMount } from "svelte";
-	// 从配置文件中导入音乐播放器配置
 	import { musicPlayerConfig } from "../../config";
-	import banner4Cover from "../../assets/mobile-banner/banner4.webp";
-	// 导入国际化相关的 Key 和 i18n 实例
+	import hitoriCover from "../../assets/music/cover/hitori.jpg";
 	import Key from "../../i18n/i18nKey";
 	import { i18n } from "../../i18n/translation";
 
-	// 音乐播放器模式，可选 "local" 或 "meting"，从本地配置中获取或使用默认值 "meting"
+	// Music player mode: local playlist or Meting API
 	let mode = musicPlayerConfig.mode ?? "meting";
-	// Meting API 地址，从配置中获取或使用默认地址(bilibili.uno(由哔哩哔哩松坂有希公益管理)),服务器在海外,部分音乐平台可能不支持并且速度可能慢,也可以自建Meting API
+	// Meting API endpoint
 	let meting_api =
 		musicPlayerConfig.meting_api ??
 		"https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r";
-	// Meting API 的 ID，从配置中获取或使用默认值
+	// Meting playlist identifier
 	let meting_id = musicPlayerConfig.id ?? "14164869977";
-	// Meting API 的服务器，从配置中获取或使用默认值,有的meting的api源支持更多平台,一般来说,netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
+	// Meting source provider
 	let meting_server = musicPlayerConfig.server ?? "netease";
-	// Meting API 的类型，从配置中获取或使用默认值
+	// Meting source type
 	let meting_type = musicPlayerConfig.type ?? "playlist";
 
-	// 播放状态，默认为 false (未播放)
+	// Playback state
 	let isPlaying = false;
-	// 播放器是否展开，默认为 false
+	// 闁圭虎鍘介弬渚€宕抽妸锔叫﹂柛姘剧畱閻秴顕ｉ埀顒勬晬瀹€鍕笡閻犱降鍊撶拹?false
 	let isExpanded = false;
-	// 播放器是否隐藏，默认为 false
+	// 闁圭虎鍘介弬渚€宕抽妸锔叫﹂柛姘剧畵濞堬綁鎸婅箛銉х濮掓稒顭堥缁樼▔?false
 	let isHidden = false;
-	// 是否显示播放列表，默认为 false
+	// 闁哄嫷鍨伴幆渚€寮伴崜褋浠涢柟缁㈠幗閺備線宕氬Δ鍕┾偓鍐晬瀹€鍕笡閻犱降鍊撶拹?false
 	let showPlaylist = false;
-	// 当前播放时间，默认为 0
+	// 鐟滅増鎸告晶鐘诲箻椤撶喐鏉归柡鍐ㄧ埣濡潡鏁嶅畝鍕笡閻犱降鍊撶拹?0
 	let currentTime = 0;
-	// 歌曲总时长，默认为 0
+	// 婵繂鏈ú鎼佸箑缂佹ɑ顦ч梻鈧崠锛勭濮掓稒顭堥缁樼▔?0
 	let duration = 0;
 
-	// localStorage 存储音量
+	// localStorage 閻庢稒锚閸嬪秹妫呴幎钘夋
 	const STORAGE_KEY_VOLUME = "music-player-volume";
 
-	// 音量，默认为 0.7
+	// 闂傚﹥濞婇崳娲晬瀹€鍕笡閻犱降鍊撶拹?0.7
 	let volume = 0.7;
-	// 是否静音，默认为 false
+	// 闁哄嫷鍨伴幆渚€妫冨▎鎾跺従闁挎稑鐭傜划顖滄媼閵堝嫯绀?false
 	let isMuted = false;
-	// 是否正在加载，默认为 false
+	// 闁哄嫷鍨伴幆浣割潰閿濆懏韬柛鏃傚Ь濞村洭鏁嶅畝鍕笡閻犱降鍊撶拹?false
 	let isLoading = false;
-	// 是否随机播放，默认为 false
+	// 闁哄嫷鍨伴幆渚€姊捐箛鏃€绨氶柟缁㈠幗閺備線鏁嶅畝鍕笡閻犱降鍊撶拹?false
 	let isShuffled = false;
-	// 循环模式，0: 不循环, 1: 单曲循环, 2: 列表循环，默认为 0
+	// 鐎甸偊浜為獮鍡椢熼垾宕囩闁?: 濞戞挸绉撮幆濠囨偝? 1: 闁告娲樺ú绋款嚗椤忓棗绠? 2: 闁告帗顨夐妴鍐嚗椤忓棗绠氶柨娑樼焸缁垳鎷嬮妶鍕 0
 	let isRepeating = 2;
-	// 错误信息，默认为空字符串
+	// 闂佹寧鐟ㄩ銈嗙┍閳╁啩绱栭柨娑樼焸缁垳鎷嬮妶鍕缂佸苯鎼悺褏绮敂鑳洬
 	let errorMessage = "";
-	// 是否显示错误信息，默认为 false
+	// 闁哄嫷鍨伴幆渚€寮伴崜褋浠涢梺鎸庣懆椤曘倖绌遍埄鍐х礀闁挎稑鐭傜划顖滄媼閵堝嫯绀?false
 	let showError = false;
 
-	// 当前歌曲信息
+	
 	let currentSong = {
 		title: "Sample Song",
 		artist: "Sample Artist",
 		cover:
-			typeof banner4Cover === "string"
-				? banner4Cover
-				: ((banner4Cover as any).src ?? ""),
+			typeof hitoriCover === "string"
+				? hitoriCover
+				: ((hitoriCover as any).src ?? ""),
 		url: "",
 		duration: 0,
 	};
@@ -84,31 +82,30 @@
 	const localPlaylist = [
 		{
 			id: 1,
-			title: "ひとり上手",
+			title: "Hitori no Uta",
 			artist: "Kaya",
-			cover: banner4Cover,
+			cover: hitoriCover,
 			url: "assets/music/url/hitori.mp3",
 			duration: 240,
 		},
 		{
 			id: 2,
-			title: "眩耀夜行",
-			artist: "スリーズブーケ",
+			title: "Xing Ri Yu Xing",
+			artist: "Stereo Dive Foundation",
 			cover: "assets/music/cover/xryx.webp",
 			url: "assets/music/url/xryx.mp3",
 			duration: 180,
 		},
 		{
 			id: 3,
-			title: "春雷の頃",
+			title: "Chun Lei",
 			artist: "22/7",
 			cover: "assets/music/cover/cl.webp",
 			url: "assets/music/url/cl.mp3",
 			duration: 200,
 		},
 	];
-
-	// 从localStorage加载音量设置
+	// Load volume settings from localStorage
 	function loadVolumeSettings() {
 		try {
 			if (typeof localStorage !== "undefined") {
@@ -124,7 +121,7 @@
 			);
 		}
 	}
-	// 保存音量设置到localStorage
+	// 濞ｅ洦绻傞悺銊╂閹惰棄娅ら悹浣稿⒔閻ゅ棝宕氶惂绱€calStorage
 	function saveVolumeSettings() {
 		try {
 			if (typeof localStorage !== "undefined") {
@@ -245,7 +242,7 @@
 		playSong(newIndex, autoPlay);
 	}
 
-	// 记录切歌时的播放意图，用于解决加载失败时的状态传递问题
+	// Record whether the next track should auto-play after loading
 	let willAutoPlay = false;
 
 	function playSong(index: number, autoPlay = true) {
@@ -267,7 +264,7 @@
 	function loadSong(song: typeof currentSong) {
 		if (!song) return;
 
-		// 强制重新加载音频
+		// Reset the audio element before loading the next track
 		if (audio) {
 			audio.pause();
 			audio.currentTime = 0;
@@ -276,7 +273,7 @@
 		currentSong = { ...song };
 		if (song.url) {
 			isLoading = true;
-			// 确保音频元素更新 src 后重新加载
+			// Reload the audio element after updating the source
 			setTimeout(() => {
 				if (audio) {
 					audio.load();
@@ -287,7 +284,7 @@
 		}
 	}
 
-	// 标记是否因浏览器策略导致自动播放失败
+	// 闁哄秴娲╅鍥及椤栨碍鍎婇柛銉уУ缁佽崵鎲撮崼婵囩彜缂佹稒鐗滈弳鎰偓浣冨閸ぱ囨嚊椤忓嫬袟闁圭虎鍘介弬浣瑰緞鏉堫偉袝
 	let autoplayFailed = false;
 
 	function handleLoadSuccess() {
@@ -303,7 +300,7 @@
 			const playPromise = audio.play();
 			if (playPromise !== undefined) {
 				playPromise.catch((error) => {
-					console.warn("自动播放被拦截，等待用户交互:", error);
+					console.warn("闁煎浜滄慨鈺呭箻椤撶喐鏉归悶姘煎亝鐎氥倝骞嬮搴ｇ缂佹稑顦欢鐔兼偨閵婏箑鐓曞ù婧垮€撶花?", error);
 					autoplayFailed = true;
 					isPlaying = false;
 				});
@@ -462,10 +459,10 @@
 
 	const interactionEvents = ["click", "keydown", "touchstart"];
 
-	// 标记播放列表是否已加载
+	// Track whether the playlist has been loaded
 	let playlistLoaded = false;
 
-	// 延迟加载播放列表（首次用户交互时）
+	// Delay playlist setup until idle time or the first interaction
 	function lazyLoadPlaylist() {
 		if (playlistLoaded) return;
 		playlistLoaded = true;
@@ -473,12 +470,12 @@
 		if (mode === "meting") {
 			fetchMetingPlaylist();
 		} else {
-			// 使用本地播放列表，不发送任何API请求
+			// Use the local playlist without any API request
 			playlist = [...localPlaylist];
 			if (playlist.length > 0) {
 				loadSong(playlist[0]);
 			} else {
-				showErrorMessage("本地播放列表为空");
+				showErrorMessage("闁哄牜鍓欏﹢鎾箻椤撶喐鏉归柛鎺擃殙閵嗗啯绋夐搹鍏夋晞");
 			}
 		}
 	}
@@ -497,10 +494,9 @@
 			return;
 		}
 
-		// 延迟加载播放列表：等待用户首次交互或空闲时
-		// 这可以显著减少首屏 TBT
+		// 鐎点倖鍎肩换婊堝礉閻樼儤绁伴柟缁㈠幗閺備線宕氬Δ鍕┾偓鍐晬濮樿京鎼肩€垫澘鎳愰弫銈夊箣閻戠瓔娴曟繛鍡忊偓鍙夊攭濞存粍甯楅崹銊х矚濞差亝锛濋柡?		// 閺夆晜鐟ヨぐ鍙夌閵夛附鈻旈柦浣诡殔閸ｈ櫣浜搁幋锔绘禃閻?TBT
 		if ("requestIdleCallback" in window) {
-			// 使用 requestIdleCallback 在浏览器空闲时加载
+			// Prefer idle time to avoid blocking the first render
 			requestIdleCallback(
 				() => {
 					lazyLoadPlaylist();
@@ -508,7 +504,7 @@
 				{ timeout: 5000 }
 			);
 		} else {
-			// 回退：延迟 3 秒后加载
+			// Fallback for browsers without requestIdleCallback
 			setTimeout(lazyLoadPlaylist, 3000);
 		}
 	});
@@ -570,7 +566,7 @@
 		class:expanded={isExpanded}
 		class:hidden-mode={isHidden}
 	>
-		<!-- 隐藏状态的小圆球 -->
+		<!-- 闂傚懏鍔樺Λ宀勬偐閼哥鍋撴担鐑樼暠閻忓繐绻愬〒楣冩偠?-->
 		<div
 			class="orb-player w-12 h-12 bg-(--primary) rounded-full shadow-lg cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center hover:scale-110 active:scale-95"
 			class:opacity-0={!isHidden}
@@ -610,7 +606,7 @@
 				/>
 			{/if}
 		</div>
-		<!-- 收缩状态的迷你播放器（封面圆形） -->
+		<!-- 闁衡偓閸撲胶绱氶柣妯垮煐閳ь兛鑳跺▓鎴炴交閾氬倻绋戦柟缁㈠幗閺備線宕抽…鎺旂閻忓繋绶氬浼村捶閸℃鍩岄柨?-->
 		<div
 			class="mini-player card-base bg-(--float-panel-bg) shadow-xl rounded-2xl p-3 transition-all duration-500 ease-in-out"
 			class:opacity-0={isExpanded || isHidden}
@@ -618,7 +614,7 @@
 			class:pointer-events-none={isExpanded || isHidden}
 		>
 			<div class="flex items-center gap-3">
-				<!-- 封面区域：点击控制播放/暂停 -->
+				<!-- 閻忓繋绶氬浼村礌閸濆嫮鍘甸柨娑欐皑閸嬶綁宕欑紒妯轰粯闁告帟鍩栭幐閬嶅绩?闁哄棗鍊告禒?-->
 				<div
 					class="cover-container relative w-12 h-12 rounded-full overflow-hidden cursor-pointer"
 					on:click={togglePlay}
@@ -662,7 +658,7 @@
 						{/if}
 					</div>
 				</div>
-				<!-- 歌曲信息区域：点击展开播放器 -->
+				<!-- 婵繂鏈ú鍛婄┍閳╁啩绱栭柛鏍ф惈閻撴瑩鏁嶅鍗炰化闁告垼顕ч惈宥咁嚕閳ь剟骞橀鐔告澒闁?-->
 				<div
 					class="flex-1 min-w-0 cursor-pointer"
 					on:click={toggleExpanded}
@@ -708,7 +704,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- 展开状态的完整播放器（封面圆形） -->
+		<!-- 閻忕偞娲栫槐鎴︽偐閼哥鍋撴担鐑樼暠閻庣懓鏈弳锝夊箻椤撶喐鏉归柛锝庣厜缁辨瑧浜告笟鈧浼村捶閸℃鍩岄柨?-->
 		<div
 			class="expanded-player card-base bg-(--float-panel-bg) shadow-xl rounded-2xl p-4 transition-all duration-500 ease-in-out"
 			class:opacity-0={!isExpanded}
@@ -967,7 +963,7 @@
 							}}
 							role="button"
 							tabindex="0"
-							aria-label="播放 {song.title} - {song.artist}"
+							aria-label="闁圭虎鍘介弬?{song.title} - {song.artist}"
 						>
 							<div
 								class="w-6 h-6 flex items-center justify-center"
@@ -1320,7 +1316,7 @@
 				padding: 0.375rem 0.625rem;
 			}
 		}
-		/* 自定义旋转动画，停止时保持当前位置 */
+		/* 闁煎浜滈悾鐐▕婢跺顥嬮弶鐑嗗墮婵晠鎮芥导娆戠闁稿绮嶉娑㈠籍閺堢數绠介柟闀愮缂嶅宕滃鍕Т缂?*/
 		@keyframes spin-continuous {
 			from {
 				transform: rotate(0deg);
@@ -1339,7 +1335,7 @@
 			animation-play-state: running;
 		}
 
-		/* 让主题色按钮更有视觉反馈 */
+		/* 閻犱讲鏅欑€靛本锛愬Ο鍨棌闁圭顦甸幐鎶藉即鐎涙ɑ绠掗悷娆忔椤酣宕ｅ澶樻疮 */
 		button.bg-\[var\(--primary\)\] {
 			box-shadow: 0 0 0 2px var(--primary);
 			border: none;
