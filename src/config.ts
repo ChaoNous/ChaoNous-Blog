@@ -169,7 +169,7 @@ export const siteConfig: SiteConfig = {
 		asciiFont: {
 			// ASCII 字体 - 用于英文字符
 			fontFamily:
-				"'Cinzel', Georgia, 'Times New Roman', Times, serif",
+				"'Cinzel', Georgia",
 			fontWeight: "400",
 			localFonts: [], // 本地字体文件
 			enableCompress: false,
@@ -177,7 +177,7 @@ export const siteConfig: SiteConfig = {
 		cjkFont: {
 			// CJK 字体 - 用于中日韩文字
 			fontFamily:
-				"'Zhuque Fangsong', 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', 'STSong', 'SimSun', serif",
+				"'Zhuque Fangsong', 'Source Han Serif SC'",
 			fontWeight: "400",
 			localFonts: [ "ZhuqueFangsong-Regular.ttf" ], // 本地字体文件（相对于 public/assets/font/）
 			enableCompress: true,

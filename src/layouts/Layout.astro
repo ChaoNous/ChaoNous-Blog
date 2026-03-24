@@ -133,13 +133,6 @@ if (siteConfig.font) {
 		// 如果字体名包含空格，需要用引号包围
 		fonts.push(cjkFont.includes(" ") ? `"${cjkFont}"` : cjkFont);
 	}
-	// 添加系统字体作为最终回退
-	fonts.push(
-		"Georgia",
-		"'Times New Roman'",
-		"Times",
-		"serif",
-	);
 	// 组合成完整的 font-family 字符串
 	bodyFontFamily = fonts.join(", ");
 }
