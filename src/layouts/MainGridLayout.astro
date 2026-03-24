@@ -77,7 +77,11 @@ const mainPanelTop =
 // const mobileNonHomeMainTop = !isHomePage ? "5.5rem" : mainPanelTop;
 
 const finalMainPanelTop =
-	siteConfig.wallpaperMode.defaultMode === "banner" ? mainPanelTop : "5.5rem";
+	siteConfig.wallpaperMode.defaultMode === "banner"
+		? isHomePage
+			? `${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh`
+			: mainPanelTop
+		: "5.5rem";
 
 const hasLeftSidebarComponents =
 	widgetManager.getComponentsByPosition("top", "left", "desktop").length >
@@ -362,6 +366,7 @@ const transparentClass = shouldEnableTransparency
 
 	<!-- Main content -->
 	<div
+		id="main-content-shell"
 		class={`absolute w-full z-30 pointer-events-none ${transparentClass}`}
 		style={`top: ${finalMainPanelTop}`}
 	>
