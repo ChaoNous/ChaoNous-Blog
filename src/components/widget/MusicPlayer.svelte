@@ -34,6 +34,38 @@
 
 	// localStorage key for persisted volume
 	const STORAGE_KEY_VOLUME = "music-player-volume";
+	const STORAGE_KEY_INITIAL_SONG = "music-player-initial-song";
+
+	type Song = {
+		id: number;
+		title: string;
+		artist: string;
+		cover: string;
+		url: string;
+		duration: number;
+	};
+
+	function normalizeCover(cover: unknown): string {
+		if (typeof cover === "string") return cover;
+		if (cover && typeof cover === "object" && "src" in cover) {
+			const src = (cover as { src?: unknown }).src;
+			return typeof src === "string" ? src : "";
+		}
+		return "";
+	}
+
+	function createSong(
+		data: Partial<Song> & { title: string; artist: string },
+	): Song {
+		return {
+			id: data.id ?? 0,
+			title: data.title,
+			artist: data.artist,
+			cover: normalizeCover(data.cover),
+			url: data.url ?? "",
+			duration: data.duration ?? 0,
+		};
+	}
 
 	// Current volume
 	let volume = 0.7;
@@ -50,25 +82,45 @@
 	// Whether the error toast is visible
 	let showError = false;
 
-	let currentSong = {
-		title: "Sample Song",
-		artist: "Sample Artist",
-		cover:
-			typeof hitoriCover === "string"
-				? hitoriCover
-				: ((hitoriCover as any).src ?? ""),
-		url: "",
-		duration: 0,
-	};
+	const localPlaylist: Song[] = [
+		createSong({
+			id: 1,
+			title: "Hitori no Uta",
+			artist: "Kaya",
+			cover: hitoriCover,
+			url: "assets/music/url/hitori.mp3",
+			duration: 240,
+		}),
+		createSong({
+			id: 2,
+			title: "Xing Ri Yu Xing",
+			artist: "Stereo Dive Foundation",
+			cover: "assets/music/cover/xryx.webp",
+			url: "assets/music/url/xryx.mp3",
+			duration: 180,
+		}),
+		createSong({
+			id: 3,
+			title: "Chun Lei",
+			artist: "22/7",
+			cover: "assets/music/cover/cl.webp",
+			url: "assets/music/url/cl.mp3",
+			duration: 200,
+		}),
+	];
 
-	type Song = {
-		id: number;
-		title: string;
-		artist: string;
-		cover: string;
-		url: string;
-		duration: number;
-	};
+	function getLoadingSong(): Song {
+		if (mode === "local" && localPlaylist.length > 0) {
+			return { ...localPlaylist[0] };
+		}
+
+		return createSong({
+			title: i18n(Key.musicPlayerLoading),
+			artist: i18n(Key.unknownArtist),
+		});
+	}
+
+	let currentSong: Song = getLoadingSong();
 
 	let playlist: Song[] = [];
 	let currentIndex = 0;
@@ -78,32 +130,53 @@
 	let playerRoot: HTMLDivElement;
 	let playlistPanel: HTMLDivElement;
 
-	const localPlaylist = [
-		{
-			id: 1,
-			title: "Hitori no Uta",
-			artist: "Kaya",
-			cover: hitoriCover,
-			url: "assets/music/url/hitori.mp3",
-			duration: 240,
-		},
-		{
-			id: 2,
-			title: "Xing Ri Yu Xing",
-			artist: "Stereo Dive Foundation",
-			cover: "assets/music/cover/xryx.webp",
-			url: "assets/music/url/xryx.mp3",
-			duration: 180,
-		},
-		{
-			id: 3,
-			title: "Chun Lei",
-			artist: "22/7",
-			cover: "assets/music/cover/cl.webp",
-			url: "assets/music/url/cl.mp3",
-			duration: 200,
-		},
-	];
+	function restoreCachedInitialSong() {
+		if (mode !== "meting" || typeof localStorage === "undefined") return;
+
+		try {
+			const cached = localStorage.getItem(STORAGE_KEY_INITIAL_SONG);
+			if (!cached) return;
+
+			const parsed = JSON.parse(cached) as Partial<Song>;
+			if (
+				typeof parsed.title !== "string" ||
+				typeof parsed.artist !== "string"
+			) {
+				return;
+			}
+
+			currentSong = createSong({
+				id: parsed.id,
+				title: parsed.title,
+				artist: parsed.artist,
+				cover: parsed.cover,
+				url: parsed.url,
+				duration: parsed.duration,
+			});
+		} catch (error) {
+			console.warn("Failed to restore cached initial song:", error);
+		}
+	}
+
+	function cacheInitialSong(song: Song) {
+		if (mode !== "meting" || typeof localStorage === "undefined") return;
+
+		try {
+			localStorage.setItem(
+				STORAGE_KEY_INITIAL_SONG,
+				JSON.stringify({
+					id: song.id,
+					title: song.title,
+					artist: song.artist,
+					cover: song.cover,
+					url: song.url,
+					duration: song.duration,
+				}),
+			);
+		} catch (error) {
+			console.warn("Failed to cache initial song:", error);
+		}
+	}
 	// Load volume settings from localStorage
 	function loadVolumeSettings() {
 		try {
@@ -151,16 +224,17 @@
 				let dur = song.duration ?? 0;
 				if (dur > 10000) dur = Math.floor(dur / 1000);
 				if (!Number.isFinite(dur) || dur <= 0) dur = 0;
-				return {
+				return createSong({
 					id: song.id,
 					title,
 					artist,
 					cover: song.pic ?? "",
 					url: song.url ?? "",
 					duration: dur,
-				};
+				});
 			});
 			if (playlist.length > 0) {
+				cacheInitialSong(playlist[0]);
 				loadSong(playlist[0]);
 			}
 			isLoading = false;
@@ -484,6 +558,7 @@
 
 	onMount(() => {
 		loadVolumeSettings();
+		restoreCachedInitialSong();
 		interactionEvents.forEach((event) => {
 			document.addEventListener(event, handleUserInteraction, {
 				capture: true,
@@ -496,9 +571,11 @@
 			return;
 		}
 
-		// Delay playlist setup to reduce first-render work and TBT
-		if ("requestIdleCallback" in window) {
-			// Prefer idle time to avoid blocking the first render
+		if (mode === "meting") {
+			// 在线歌单立即拉取，首屏尽快替换成真实第一首歌信息。
+			lazyLoadPlaylist();
+		} else if ("requestIdleCallback" in window) {
+			// 本地模式已经能直接展示第一首歌，歌单初始化继续延后。
 			requestIdleCallback(
 				() => {
 					lazyLoadPlaylist();
@@ -506,7 +583,6 @@
 				{ timeout: 5000 },
 			);
 		} else {
-			// Fallback for browsers without requestIdleCallback
 			setTimeout(lazyLoadPlaylist, 3000);
 		}
 	});
@@ -632,13 +708,24 @@
 						? i18n(Key.musicPlayerPause)
 						: i18n(Key.musicPlayerPlay)}
 				>
-					<img
-						src={getAssetPath(currentSong.cover)}
-						alt={i18n(Key.musicPlayerCover)}
-						class="w-full h-full object-cover transition-transform duration-300"
-						class:spinning={isPlaying && !isLoading}
-						class:animate-pulse={isLoading}
-					/>
+					{#if currentSong.cover}
+						<img
+							src={getAssetPath(currentSong.cover)}
+							alt={i18n(Key.musicPlayerCover)}
+							class="w-full h-full object-cover transition-transform duration-300"
+							class:spinning={isPlaying && !isLoading}
+							class:animate-pulse={isLoading}
+						/>
+					{:else}
+						<div
+							class="w-full h-full flex items-center justify-center bg-(--btn-regular-bg) text-(--primary)"
+						>
+							<Icon
+								icon="material-symbols:album-outline"
+								class="text-xl"
+							/>
+						</div>
+					{/if}
 					<div
 						class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
 					>
@@ -717,13 +804,24 @@
 				<div
 					class="cover-container relative w-16 h-16 rounded-full overflow-hidden shrink-0"
 				>
-					<img
-						src={getAssetPath(currentSong.cover)}
-						alt={i18n(Key.musicPlayerCover)}
-						class="w-full h-full object-cover transition-transform duration-300"
-						class:spinning={isPlaying && !isLoading}
-						class:animate-pulse={isLoading}
-					/>
+					{#if currentSong.cover}
+						<img
+							src={getAssetPath(currentSong.cover)}
+							alt={i18n(Key.musicPlayerCover)}
+							class="w-full h-full object-cover transition-transform duration-300"
+							class:spinning={isPlaying && !isLoading}
+							class:animate-pulse={isLoading}
+						/>
+					{:else}
+						<div
+							class="w-full h-full flex items-center justify-center bg-(--btn-regular-bg) text-(--primary)"
+						>
+							<Icon
+								icon="material-symbols:album-outline"
+								class="text-2xl"
+							/>
+						</div>
+					{/if}
 				</div>
 				<div class="flex-1 min-w-0">
 					<div
