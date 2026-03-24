@@ -204,20 +204,6 @@ const transparentClass = shouldEnableTransparency
 		import "../scripts/main-grid-runtime.js";
 	</script>
 
-	{
-		isPostPage && (
-			<style is:global>
-				.floating-toc-wrapper,
-				#floating-toc-btn,
-				#floating-toc-panel {
-					display: none !important;
-					visibility: hidden !important;
-					pointer-events: none !important;
-				}
-			</style>
-		)
-	}
-
 	<!-- 全屏壁纸组件 - 在 banner 模式下由 JS 控制显隐 -->
 	<FullscreenWallpaper config={fullscreenWallpaperConfig} />
 
@@ -487,7 +473,7 @@ const transparentClass = shouldEnableTransparency
 				</div>
 			</div>
 
-			<BackToTop isPostPage={isPostPage} />
+			{!isPostPage && <BackToTop isPostPage={isPostPage} />}
 			{siteConfig.toc.enable && isFloatTOC && !isPostPage && <FloatingTOC />}
 		</div>
 	</div>
