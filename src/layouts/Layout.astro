@@ -133,17 +133,24 @@ const bannerOffset =
 		<meta name="googlebot" content="notranslate" />
 
 		<!-- 预连接关键域名 -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<!-- Iconify 图标 CDN -->
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
 
 		<!-- 关键字体预加载 - 仅加载 Cinzel，避免引入其他英文字体 -->
-		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" media="print" onload="this.media='all'" />
-		<noscript>
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
-		</noscript>
+		<link
+			rel="preload"
+			as="font"
+			type="font/woff2"
+			href="/assets/fonts/Cinzel-400.woff2"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			as="font"
+			type="font/woff2"
+			href="/assets/fonts/ZhuqueFangsong-Regular.woff2"
+			crossorigin
+		/>
 
 		<!-- Banner 图片预加载 - 高优先级确保 LCP -->
 		{

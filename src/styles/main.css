@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./local-fonts.css";
 
 /* Google Fonts 已通过 link 标签在 HTML 中异步加载，避免 CSS 阻塞 */
 
@@ -33,10 +34,10 @@
 
 /* Migrate from v3 config */
 @theme {
-  --font-sans: "Cinzel", "Zhuque Fangsong CJK";
+  --font-sans: "Cinzel", "Zhuque Fangsong Primary";
   --font-latin: "Cinzel";
-  --font-cjk: "Zhuque Fangsong CJK";
-  --font-content: "Cinzel", "Zhuque Fangsong CJK";
+  --font-cjk: "Zhuque Fangsong Primary";
+  --font-content: "Cinzel", "Zhuque Fangsong Primary";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
