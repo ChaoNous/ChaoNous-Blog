@@ -1,4 +1,4 @@
-﻿import type {
+import type {
 	DARK_MODE,
 	LIGHT_MODE,
 	WALLPAPER_BANNER,
