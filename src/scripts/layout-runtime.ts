@@ -529,13 +529,10 @@
 					);
 					if (transparentMode === "semifull") {
 						// 重新调用初始化函数来重新绑定滚动事件
-							if (typeof window.initSemifullScrollDetection === "function") {
-								window.initSemifullScrollDetection();
-							}
+						if (typeof window.initSemifullScrollDetection === "function") {
+							window.initSemifullScrollDetection();
 						}
 					}
-				}
-
 				}
 
 				// increase the page height during page transition to prevent the scrolling animation from jumping
