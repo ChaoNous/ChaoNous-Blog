@@ -472,8 +472,8 @@
 					setTimeout(() => {
 						window.mobileTOCInit!();
 					}, 100);
+				}
 			}
-
 
 			// 重新初始化 semifull 模式的滚动检测
 			if (navbar) {
@@ -481,11 +481,9 @@
 					"data-transparent-mode",
 				);
 				if (transparentMode === "semifull") {
-					if (transparentMode === "semifull") {
-						// 重新调用初始化函数来重新绑定滚动事件
-						if (typeof window.initSemifullScrollDetection === "function") {
-							window.initSemifullScrollDetection();
-						}
+					// 重新调用初始化函数来重新绑定滚动事件
+					if (typeof window.initSemifullScrollDetection === "function") {
+						window.initSemifullScrollDetection();
 					}
 				}
 			}
