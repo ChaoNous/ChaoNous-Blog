@@ -247,7 +247,7 @@ body.wallpaper-transparent
 
 	/* 副标题字号 */
 	.banner-subtitle {
-		font-size: 1.5rem;
+		font-size: 1.375rem;
 		line-height: 1.4;
 		text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
 	}
@@ -791,5 +791,17 @@ body.wallpaper-transparent
 		height: 4vh !important;
 		min-height: 30px !important;
 		max-height: 40px !important;
+	}
+}
+
+@media (min-width: 1280px) {
+	.banner-title {
+		font-size: 3.5rem;
+		line-height: 1.1;
+	}
+
+	.banner-subtitle {
+		font-size: 1.375rem;
+		line-height: 1.4;
 	}
 }
