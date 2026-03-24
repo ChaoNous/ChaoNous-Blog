@@ -162,11 +162,7 @@ const headingsJson = JSON.stringify(headings);
 		overflow-wrap: anywhere;
 	}
 
-	@media (min-width: 1280px) {
-		.toc-scroll-container {
-			max-height: none;
-		}
-	}
+
 </style>
 
 <script>
@@ -415,14 +411,19 @@ const headingsJson = JSON.stringify(headings);
 			}
 
 			const rightSidebar = document.getElementById("right-sidebar-sticky");
-			if (!rightSidebar) {
-				this.widgetElement.style.removeProperty("--card-toc-max-height");
+			if (rightSidebar) {
+				this.widgetElement.style.setProperty(
+					"--card-toc-max-height",
+					`${Math.round(rightSidebar.getBoundingClientRect().height)}px`,
+				);
 				return;
 			}
 
+			const rect = this.widgetElement.getBoundingClientRect();
+			const availableHeight = window.innerHeight - rect.top - 32;
 			this.widgetElement.style.setProperty(
 				"--card-toc-max-height",
-				`${Math.round(rightSidebar.getBoundingClientRect().height)}px`,
+				`${Math.max(200, Math.round(availableHeight))}px`,
 			);
 		}
 
