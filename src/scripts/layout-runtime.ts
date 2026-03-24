@@ -27,6 +27,31 @@ const IDLE_FALLBACK_DELAY = 100;
 
 let panelManagerInitialization: Promise<unknown> | null = null;
 
+function isCurrentPostPage() {
+	return (
+		document.querySelector('#swup-container[data-is-post-page="true"]') !==
+		null
+	);
+}
+
+function removePostPageActionButtons() {
+	if (!isCurrentPostPage()) {
+		return;
+	}
+
+	document.getElementById("back-to-top-btn")?.remove();
+	document.querySelector(".back-to-top-wrapper")?.remove();
+	document.getElementById("floating-toc-btn")?.remove();
+	document.getElementById("floating-toc-panel")?.remove();
+	document.querySelector(".floating-toc-wrapper")?.remove();
+
+	const floatingTocWindow = window as Window & {
+		__floatingTocInstance?: { destroy?: () => void } | null;
+	};
+	floatingTocWindow.__floatingTocInstance?.destroy?.();
+	floatingTocWindow.__floatingTocInstance = null;
+}
+
 function scheduleIdleTask(task: () => void, timeout = IDLE_FALLBACK_DELAY) {
 	if ("requestIdleCallback" in window) {
 		window.requestIdleCallback(task);
@@ -283,6 +308,7 @@ const setup = () => {
 		checkKatex();
 		initCustomScrollbar();
 		initializeArticleToc();
+		removePostPageActionButtons();
 
 		refreshDesktopRuntimeState();
 		syncDesktopViewportState();
@@ -356,6 +382,7 @@ const setup = () => {
 		}
 
 		revealBanner();
+		removePostPageActionButtons();
 		refreshDesktopRuntimeState();
 		syncDesktopViewportState();
 	});
@@ -406,6 +433,8 @@ function throttle(func: Function, limit: number) {
 }
 
 function syncDesktopViewportState() {
+	removePostPageActionButtons();
+
 	const scrollTop = document.documentElement.scrollTop;
 	const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
 
@@ -432,6 +461,7 @@ syncDesktopViewportState();
 
 runOnDocumentReady(async () => {
 	revealBanner();
+	removePostPageActionButtons();
 	refreshDesktopRuntimeState();
 	await initializePanelManager();
 });

@@ -449,6 +449,7 @@ const transparentClass = shouldEnableTransparency
 
 				<main
 					id="swup-container"
+					data-is-post-page={isPostPage ? "true" : "false"}
 					class={`${mainContentClass} transition-main`}
 				>
 					<div
@@ -464,6 +465,10 @@ const transparentClass = shouldEnableTransparency
 							<Footer />
 						</div>
 					</div>
+					{!isPostPage && <BackToTop isPostPage={isPostPage} />}
+					{siteConfig.toc.enable && isFloatTOC && !isPostPage && (
+						<FloatingTOC />
+					)}
 				</main>
 
 				<div
@@ -473,8 +478,6 @@ const transparentClass = shouldEnableTransparency
 				</div>
 			</div>
 
-			{!isPostPage && <BackToTop isPostPage={isPostPage} />}
-			{siteConfig.toc.enable && isFloatTOC && !isPostPage && <FloatingTOC />}
 		</div>
 	</div>
 
