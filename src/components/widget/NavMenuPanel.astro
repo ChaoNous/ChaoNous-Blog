@@ -10,7 +10,6 @@ interface Props {
 	links: NavBarLink[];
 }
 
-// 鍥介檯鍖栨爣棰樻槧灏?
 const navTitleMap: Record<string, string> = {
 	Links: I18nKey.navLinks,
 	My: I18nKey.navMy,
@@ -25,7 +24,6 @@ const navTitleMap: Record<string, string> = {
 	Friends: I18nKey.friends,
 };
 
-// 鑾峰彇鍥介檯鍖栫殑鏍囬
 const getLocalizedName = (name: string): string => {
 	const keyValue = navTitleMap[name];
 	if (keyValue) {
@@ -38,7 +36,6 @@ type ProcessedNavBarLink = Omit<NavBarLink, "children"> & {
 	children?: ProcessedNavBarLink[];
 };
 
-// 澶勭悊links涓殑LinkPreset杞崲
 const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 	(link: NavBarLink): ProcessedNavBarLink => ({
 		...link,
@@ -57,7 +54,6 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
     {processedLinks.map((link) => (
         <div class="mobile-menu-item">
             {link.children && link.children.length > 0 ? (
-                <!-- 鏈夊瓙鑿滃崟鐨勯」鐩?-->
                 <div class="mobile-dropdown" data-mobile-dropdown>
                     <button 
                         class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left
@@ -92,7 +88,6 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
                     </div>
                 </div>
             ) : (
-                <!-- 鏅€氶摼鎺ラ」鐩?-->
                 <a href={link.external ? link.url : url(link.url)} class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4
                     hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition
                 "
@@ -143,35 +138,36 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileDropdowns = document.querySelectorAll('[data-mobile-dropdown]');
-        
-        mobileDropdowns.forEach(dropdown => {
-            const trigger = dropdown.querySelector('[data-mobile-dropdown-trigger]');
-            const submenu = dropdown.querySelector('[data-mobile-submenu]');
-            
-            if (!trigger || !submenu) return;
-            
-            trigger.addEventListener('click', function(e) {
-                e.preventDefault();
-                const isExpanded = dropdown.getAttribute('data-expanded') === 'true';
-                
-                // 鍏抽棴鍏朵粬鎵撳紑鐨勪笅鎷夎彍鍗?
-                mobileDropdowns.forEach(otherDropdown => {
-                    if (otherDropdown !== dropdown) {
-                        otherDropdown.setAttribute('data-expanded', 'false');
-                        const otherTrigger = otherDropdown.querySelector('[data-mobile-dropdown-trigger]');
-                        if (otherTrigger) {
-                            otherTrigger.setAttribute('aria-expanded', 'false');
-                        }
-                    }
-                });
-                
-                // 鍒囨崲褰撳墠涓嬫媺鑿滃崟
-                const newState = !isExpanded;
-                dropdown.setAttribute('data-expanded', newState.toString());
-                trigger.setAttribute('aria-expanded', newState.toString());
-            });
-        });
-    });
+	const closeSiblingDropdowns = (activeDropdown: Element) => {
+		const mobileDropdowns = document.querySelectorAll("[data-mobile-dropdown]");
+		mobileDropdowns.forEach((dropdown) => {
+			if (dropdown === activeDropdown) return;
+			dropdown.setAttribute("data-expanded", "false");
+			const otherTrigger = dropdown.querySelector(
+				"[data-mobile-dropdown-trigger]",
+			);
+			if (otherTrigger instanceof HTMLElement) {
+				otherTrigger.setAttribute("aria-expanded", "false");
+			}
+		});
+	};
+
+	document.addEventListener("click", (event) => {
+		const target = event.target;
+		if (!(target instanceof Element)) return;
+
+		const trigger = target.closest("[data-mobile-dropdown-trigger]");
+		if (!(trigger instanceof HTMLElement)) return;
+
+		const dropdown = trigger.closest("[data-mobile-dropdown]");
+		if (!(dropdown instanceof HTMLElement)) return;
+
+		event.preventDefault();
+		const isExpanded = dropdown.getAttribute("data-expanded") === "true";
+		closeSiblingDropdowns(dropdown);
+
+		const newState = (!isExpanded).toString();
+		dropdown.setAttribute("data-expanded", newState);
+		trigger.setAttribute("aria-expanded", newState);
+	});
 </script>
