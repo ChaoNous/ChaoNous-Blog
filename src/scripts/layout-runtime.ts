@@ -1,12 +1,27 @@
 import "./view-transitions.js";
 import { pathsEqual, url } from "../utils/url-utils";
 import { DARK_MODE, DEFAULT_THEME } from "../constants/constants";
-import { siteConfig, widgetConfigs } from "../config";
+import { widgetConfigs } from "../config";
 import { initSakura } from "../utils/sakura-manager";
-
-const BANNER_HEIGHT = 35;
-const BANNER_HEIGHT_EXTEND = 30;
-const BANNER_HEIGHT_HOME = BANNER_HEIGHT + BANNER_HEIGHT_EXTEND;
+import { BANNER_HEIGHT } from "../constants/constants";
+import {
+	cleanupBannerRuntime,
+	revealBanner,
+	syncBannerHeightExtend,
+} from "./layout-runtime/banner-runtime";
+import { syncBackToTopVisibility } from "./layout-runtime/back-to-top-runtime";
+import {
+	handleNavbarLinkClick,
+	refreshNavbarTransparency,
+	syncNavbarHomeState,
+	syncNavbarVisibility,
+} from "./layout-runtime/navbar-runtime";
+import {
+	clearTocNotReady,
+	initializeArticleToc,
+	markTocNotReady,
+	syncDesktopTocVisibility,
+} from "./layout-runtime/toc-runtime";
 const bannerEnabled = !!document.getElementById("banner-wrapper");
 const IDLE_FALLBACK_DELAY = 100;
 
@@ -142,158 +157,6 @@ function initCustomScrollbar() {
 	});
 }
 
-function showBanner() {
-	requestAnimationFrame(() => {
-		const banner = document.getElementById("banner");
-		if (banner) {
-			banner.classList.remove("opacity-0", "scale-105");
-		}
-
-		const mobileBanner = document.querySelector(
-			'.block.md\\:hidden[alt="Mobile banner image of the blog"]',
-		);
-		if (mobileBanner && !document.getElementById("banner-carousel")) {
-			mobileBanner.classList.remove("opacity-0", "scale-105");
-			mobileBanner.classList.add("opacity-100");
-		}
-
-		const carousel = document.getElementById("banner-carousel");
-		if (carousel) {
-			initCarousel();
-		}
-	});
-}
-
-function initCarousel() {
-	const carouselItems = document.querySelectorAll(".carousel-item");
-	const isMobile = window.innerWidth < 768;
-	const validItems = Array.from(carouselItems).filter((item) => {
-		if (isMobile) {
-			return item.querySelector(".block.md\\:hidden");
-		}
-		return item.querySelector(".hidden.md\\:block");
-	});
-
-	if (validItems.length > 1 && siteConfig.banner.carousel?.enable) {
-		let currentIndex = 0;
-		const interval = siteConfig.banner.carousel?.interval || 6;
-		let carouselInterval: any;
-		let isPaused = false;
-		let startX = 0;
-		let startY = 0;
-		let isSwiping = false;
-
-		const carousel = document.getElementById("banner-carousel");
-
-		function switchToSlide(index: number) {
-			const currentItem = validItems[currentIndex];
-			currentItem.classList.remove("opacity-100", "scale-100");
-			currentItem.classList.add("opacity-0", "scale-110");
-
-			currentIndex = index;
-
-			const nextItem = validItems[currentIndex];
-			nextItem.classList.add("opacity-100", "scale-100");
-			nextItem.classList.remove("opacity-0", "scale-110");
-		}
-
-		carouselItems.forEach((item) => {
-			item.classList.add("opacity-0", "scale-110");
-			item.classList.remove("opacity-100", "scale-100");
-		});
-
-		if (validItems.length > 0) {
-			validItems[0].classList.add("opacity-100", "scale-100");
-			validItems[0].classList.remove("opacity-0", "scale-110");
-		}
-
-		if (carousel && "ontouchstart" in window) {
-			carousel.addEventListener(
-				"touchstart",
-				(e) => {
-					startX = e.touches[0].clientX;
-					startY = e.touches[0].clientY;
-					isSwiping = false;
-					isPaused = true;
-					clearInterval(carouselInterval);
-				},
-				{ passive: true },
-			);
-
-			carousel.addEventListener(
-				"touchmove",
-				(e) => {
-					if (!startX || !startY) return;
-
-					const diffX = Math.abs(e.touches[0].clientX - startX);
-					const diffY = Math.abs(e.touches[0].clientY - startY);
-
-					if (diffX > diffY && diffX > 30) {
-						isSwiping = true;
-						e.preventDefault();
-					}
-				},
-				{ passive: false },
-			);
-
-			carousel.addEventListener(
-				"touchend",
-				(e) => {
-					if (!startX || !startY || !isSwiping) {
-						isPaused = false;
-						startCarousel();
-						return;
-					}
-
-					const endX = e.changedTouches[0].clientX;
-					const diffX = startX - endX;
-
-					if (Math.abs(diffX) > 50) {
-						if (diffX > 0) {
-							const nextIndex = (currentIndex + 1) % validItems.length;
-							switchToSlide(nextIndex);
-						} else {
-							const prevIndex =
-								(currentIndex - 1 + validItems.length) % validItems.length;
-							switchToSlide(prevIndex);
-						}
-					}
-
-					startX = 0;
-					startY = 0;
-					isSwiping = false;
-					isPaused = false;
-					startCarousel();
-				},
-				{ passive: true },
-			);
-		}
-
-		function startCarousel() {
-			clearInterval(carouselInterval);
-			carouselInterval = setInterval(() => {
-				if (!isPaused) {
-					const nextIndex = (currentIndex + 1) % validItems.length;
-					switchToSlide(nextIndex);
-				}
-			}, interval * 1000);
-		}
-
-		if (carousel) {
-			carousel.addEventListener("mouseenter", () => {
-				isPaused = true;
-				clearInterval(carouselInterval);
-			});
-			carousel.addEventListener("mouseleave", () => {
-				isPaused = false;
-				startCarousel();
-			});
-		}
-
-		startCarousel();
-	}
-}
-
 function setupSakura() {
 	const sakuraConfig = (widgetConfigs as any)?.sakura;
 	if (!sakuraConfig || !sakuraConfig.enable) return;
@@ -410,47 +273,24 @@ function cleanupFancybox() {
 const setup = () => {
 	window.swup.hooks.on("link:click", () => {
 		document.documentElement.style.setProperty("--content-delay", "0ms");
-
-		if (bannerEnabled) {
-			const navbar = document.getElementById("navbar-wrapper");
-			if (navbar && document.body.classList.contains("is-home")) {
-				const threshold = window.innerHeight * (BANNER_HEIGHT / 100) - 88;
-				if (document.documentElement.scrollTop >= threshold) {
-					navbar.classList.add("navbar-hidden");
-				}
-			}
-		}
+		handleNavbarLinkClick(document.documentElement.scrollTop, bannerEnabled);
 	});
 
 	window.swup.hooks.on("content:replace", () => {
-		requestIdleCallback(() => initFancybox());
+		scheduleIdleTask(() => {
+			void initFancybox();
+		});
 		checkKatex();
 		initCustomScrollbar();
-
-		const tocWrapper = document.getElementById("toc-wrapper");
-		const isArticlePage = tocWrapper !== null;
-
-		if (isArticlePage) {
-			const tocElement = document.querySelector("table-of-contents");
-			if (tocElement && typeof (tocElement as any).init === "function") {
-				setTimeout(() => {
-					(tocElement as any).init();
-				}, 100);
-			}
-
-			if (typeof window.mobileTOCInit === "function") {
-				setTimeout(() => {
-					window.mobileTOCInit!();
-				}, 100);
-			}
-		}
+		initializeArticleToc();
 
 		refreshDesktopRuntimeState();
-		scrollFunction();
+		syncDesktopViewportState();
 	});
 
 	window.swup.hooks.on("visit:start", (visit: { to: { url: string } }) => {
 		cleanupFancybox();
+		cleanupBannerRuntime();
 
 		const bodyElement = document.querySelector("body");
 		const isHomePage = pathsEqual(visit.to.url, url("/"));
@@ -471,27 +311,15 @@ const setup = () => {
 			}
 		}
 
-		const navbar = document.getElementById("navbar");
-		if (navbar) {
-			navbar.setAttribute("data-is-home", isHomePage.toString());
-			const transparentMode = navbar.getAttribute("data-transparent-mode");
-			if (
-				transparentMode === "semifull" &&
-				typeof window.initSemifullScrollDetection === "function"
-			) {
-				window.initSemifullScrollDetection();
-			}
-		}
+		syncNavbarHomeState(isHomePage);
+		refreshDesktopRuntimeState();
 
 		const heightExtend = document.getElementById("page-height-extend");
 		if (heightExtend) {
 			heightExtend.classList.remove("hidden");
 		}
 
-		const toc = document.getElementById("toc-wrapper");
-		if (toc) {
-			toc.classList.add("toc-not-ready");
-		}
+		markTocNotReady();
 	});
 
 	window.swup.hooks.on("page:view", () => {
@@ -527,8 +355,9 @@ const setup = () => {
 			});
 		}
 
+		revealBanner();
 		refreshDesktopRuntimeState();
-		scrollFunction();
+		syncDesktopViewportState();
 	});
 
 	window.swup.hooks.on("visit:end", (_visit: { to: { url: string } }) => {
@@ -538,10 +367,7 @@ const setup = () => {
 				heightExtend.classList.add("hidden");
 			}
 
-			const toc = document.getElementById("toc-wrapper");
-			if (toc) {
-				toc.classList.remove("toc-not-ready");
-			}
+			clearTocNotReady();
 		}, 200);
 	});
 };
@@ -562,26 +388,8 @@ if (window?.swup?.hooks) {
 	});
 }
 
-function getRuntimeElements() {
-	return {
-		backToTopBtn: document.getElementById("back-to-top-btn"),
-		toc: document.getElementById("toc-wrapper"),
-		navbarWrapper: document.getElementById("navbar-wrapper"),
-		navbar: document.getElementById("navbar"),
-	};
-}
-
 function refreshDesktopRuntimeState() {
-	const { navbar } = getRuntimeElements();
-	if (!navbar) return;
-
-	const transparentMode = navbar.getAttribute("data-transparent-mode");
-	if (
-		transparentMode === "semifull" &&
-		typeof window.initSemifullScrollDetection === "function"
-	) {
-		window.initSemifullScrollDetection();
-	}
+	refreshNavbarTransparency();
 }
 
 function throttle(func: Function, limit: number) {
@@ -597,79 +405,33 @@ function throttle(func: Function, limit: number) {
 	};
 }
 
-function scrollFunction() {
+function syncDesktopViewportState() {
 	const scrollTop = document.documentElement.scrollTop;
 	const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
-	const { backToTopBtn, toc, navbarWrapper } = getRuntimeElements();
-
-	const contentWrapper = document.getElementById("content-wrapper");
-	let showBackToTopThreshold = bannerHeight + 100;
-
-	if (contentWrapper) {
-		const rect = contentWrapper.getBoundingClientRect();
-		const absoluteTop = rect.top + scrollTop;
-		showBackToTopThreshold = absoluteTop + window.innerHeight / 4;
-	}
 
 	requestAnimationFrame(() => {
-		if (backToTopBtn) {
-			if (scrollTop > showBackToTopThreshold) {
-				backToTopBtn.classList.remove("hide");
-			} else {
-				backToTopBtn.classList.add("hide");
-			}
-		}
-
-		if (bannerEnabled && toc) {
-			const isBannerMode = document.body.classList.contains("enable-banner");
-			if (isBannerMode) {
-				if (scrollTop > bannerHeight) {
-					toc.classList.remove("toc-hide");
-				} else {
-					toc.classList.add("toc-hide");
-				}
-			} else {
-				toc.classList.remove("toc-hide");
-			}
-		}
-
-		if (bannerEnabled && navbarWrapper) {
-			const isHome =
-				document.body.classList.contains("is-home") &&
-				window.innerWidth >= 1280;
-			const currentBannerHeight = isHome ? BANNER_HEIGHT_HOME : BANNER_HEIGHT;
-			const threshold =
-				window.innerHeight * (currentBannerHeight / 100) - 88;
-			if (scrollTop >= threshold) {
-				navbarWrapper.classList.add("navbar-hidden");
-			} else {
-				navbarWrapper.classList.remove("navbar-hidden");
-			}
-		}
+		syncBackToTopVisibility(scrollTop, bannerHeight);
+		syncDesktopTocVisibility(scrollTop, bannerHeight, bannerEnabled);
+		syncNavbarVisibility(scrollTop, bannerEnabled);
 	});
 }
 
-const throttledScrollFunction = throttle(scrollFunction, 16);
+const throttledScrollFunction = throttle(syncDesktopViewportState, 16);
 window.addEventListener("scroll", throttledScrollFunction, {
 	passive: true,
 });
 
 function handleResize() {
-	let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-	offset = offset - (offset % 4);
-	document.documentElement.style.setProperty(
-		"--banner-height-extend",
-		`${offset}px`,
-	);
-	scrollFunction();
+	syncBannerHeightExtend();
+	syncDesktopViewportState();
 }
 
 window.addEventListener("resize", handleResize);
 handleResize();
-scrollFunction();
+syncDesktopViewportState();
 
 runOnDocumentReady(async () => {
-	showBanner();
+	revealBanner();
 	refreshDesktopRuntimeState();
 	await initializePanelManager();
 });
