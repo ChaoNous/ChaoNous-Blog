@@ -21,33 +21,33 @@
 
 	// Playback state
 	let isPlaying = false;
-	// 闁圭虎鍘介弬渚€宕抽妸锔叫﹂柛姘剧畱閻秴顕ｉ埀顒勬晬瀹€鍕笡閻犱降鍊撶拹?false
+	// Whether the player panel is expanded
 	let isExpanded = false;
-	// 闁圭虎鍘介弬渚€宕抽妸锔叫﹂柛姘剧畵濞堬綁鎸婅箛銉х濮掓稒顭堥缁樼▔?false
+	// Whether the player is hidden in orb mode
 	let isHidden = false;
-	// 闁哄嫷鍨伴幆渚€寮伴崜褋浠涢柟缁㈠幗閺備線宕氬Δ鍕┾偓鍐晬瀹€鍕笡閻犱降鍊撶拹?false
+	// Whether the playlist panel is visible
 	let showPlaylist = false;
-	// 鐟滅増鎸告晶鐘诲箻椤撶喐鏉归柡鍐ㄧ埣濡潡鏁嶅畝鍕笡閻犱降鍊撶拹?0
+	// Current playback position in seconds
 	let currentTime = 0;
-	// 婵繂鏈ú鎼佸箑缂佹ɑ顦ч梻鈧崠锛勭濮掓稒顭堥缁樼▔?0
+	// Current track duration in seconds
 	let duration = 0;
 
-	// localStorage 閻庢稒锚閸嬪秹妫呴幎钘夋
+	// localStorage key for persisted volume
 	const STORAGE_KEY_VOLUME = "music-player-volume";
 
-	// 闂傚﹥濞婇崳娲晬瀹€鍕笡閻犱降鍊撶拹?0.7
+	// Current volume
 	let volume = 0.7;
-	// 闁哄嫷鍨伴幆渚€妫冨▎鎾跺従闁挎稑鐭傜划顖滄媼閵堝嫯绀?false
+	// Whether audio is muted
 	let isMuted = false;
-	// 闁哄嫷鍨伴幆浣割潰閿濆懏韬柛鏃傚Ь濞村洭鏁嶅畝鍕笡閻犱降鍊撶拹?false
+	// Whether playlist or track data is loading
 	let isLoading = false;
-	// 闁哄嫷鍨伴幆渚€姊捐箛鏃€绨氶柟缁㈠幗閺備線鏁嶅畝鍕笡閻犱降鍊撶拹?false
+	// Whether shuffle mode is enabled
 	let isShuffled = false;
-	// 鐎甸偊浜為獮鍡椢熼垾宕囩闁?: 濞戞挸绉撮幆濠囨偝? 1: 闁告娲樺ú绋款嚗椤忓棗绠? 2: 闁告帗顨夐妴鍐嚗椤忓棗绠氶柨娑樼焸缁垳鎷嬮妶鍕 0
+	// Repeat mode: 1 for single-track repeat, 2 for playlist repeat
 	let isRepeating = 2;
-	// 闂佹寧鐟ㄩ銈嗙┍閳╁啩绱栭柨娑樼焸缁垳鎷嬮妶鍕缂佸苯鎼悺褏绮敂鑳洬
+	// Error message shown in the UI
 	let errorMessage = "";
-	// 闁哄嫷鍨伴幆渚€寮伴崜褋浠涢梺鎸庣懆椤曘倖绌遍埄鍐х礀闁挎稑鐭傜划顖滄媼閵堝嫯绀?false
+	// Whether the error toast is visible
 	let showError = false;
 
 	
@@ -121,7 +121,7 @@
 			);
 		}
 	}
-	// 濞ｅ洦绻傞悺銊╂閹惰棄娅ら悹浣稿⒔閻ゅ棝宕氶惂绱€calStorage
+	// Persist volume settings to localStorage
 	function saveVolumeSettings() {
 		try {
 			if (typeof localStorage !== "undefined") {
@@ -284,7 +284,7 @@
 		}
 	}
 
-	// 闁哄秴娲╅鍥及椤栨碍鍎婇柛銉уУ缁佽崵鎲撮崼婵囩彜缂佹稒鐗滈弳鎰偓浣冨閸ぱ囨嚊椤忓嫬袟闁圭虎鍘介弬浣瑰緞鏉堫偉袝
+	// Whether autoplay failed due to browser policy
 	let autoplayFailed = false;
 
 	function handleLoadSuccess() {
@@ -300,7 +300,7 @@
 			const playPromise = audio.play();
 			if (playPromise !== undefined) {
 				playPromise.catch((error) => {
-					console.warn("闁煎浜滄慨鈺呭箻椤撶喐鏉归悶姘煎亝鐎氥倝骞嬮搴ｇ缂佹稑顦欢鐔兼偨閵婏箑鐓曞ù婧垮€撶花?", error);
+					console.warn("Autoplay was blocked until user interaction.", error);
 					autoplayFailed = true;
 					isPlaying = false;
 				});
@@ -475,7 +475,7 @@
 			if (playlist.length > 0) {
 				loadSong(playlist[0]);
 			} else {
-				showErrorMessage("闁哄牜鍓欏﹢鎾箻椤撶喐鏉归柛鎺擃殙閵嗗啯绋夐搹鍏夋晞");
+				showErrorMessage("Local playlist is empty.");
 			}
 		}
 	}
@@ -494,7 +494,7 @@
 			return;
 		}
 
-		// 鐎点倖鍎肩换婊堝礉閻樼儤绁伴柟缁㈠幗閺備線宕氬Δ鍕┾偓鍐晬濮樿京鎼肩€垫澘鎳愰弫銈夊箣閻戠瓔娴曟繛鍡忊偓鍙夊攭濞存粍甯楅崹銊х矚濞差亝锛濋柡?		// 閺夆晜鐟ヨぐ鍙夌閵夛附鈻旈柦浣诡殔閸ｈ櫣浜搁幋锔绘禃閻?TBT
+		// Delay playlist setup to reduce first-render work and TBT
 		if ("requestIdleCallback" in window) {
 			// Prefer idle time to avoid blocking the first render
 			requestIdleCallback(
@@ -566,7 +566,7 @@
 		class:expanded={isExpanded}
 		class:hidden-mode={isHidden}
 	>
-		<!-- 闂傚懏鍔樺Λ宀勬偐閼哥鍋撴担鐑樼暠閻忓繐绻愬〒楣冩偠?-->
+		<!-- Orb trigger shown when the player is hidden -->
 		<div
 			class="orb-player w-12 h-12 bg-(--primary) rounded-full shadow-lg cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center hover:scale-110 active:scale-95"
 			class:opacity-0={!isHidden}
@@ -606,7 +606,7 @@
 				/>
 			{/if}
 		</div>
-		<!-- 闁衡偓閸撲胶绱氶柣妯垮煐閳ь兛鑳跺▓鎴炴交閾氬倻绋戦柟缁㈠幗閺備線宕抽…鎺旂閻忓繋绶氬浼村捶閸℃鍩岄柨?-->
+		<!-- Mini player shown when collapsed -->
 		<div
 			class="mini-player card-base bg-(--float-panel-bg) shadow-xl rounded-2xl p-3 transition-all duration-500 ease-in-out"
 			class:opacity-0={isExpanded || isHidden}
@@ -614,7 +614,7 @@
 			class:pointer-events-none={isExpanded || isHidden}
 		>
 			<div class="flex items-center gap-3">
-				<!-- 閻忓繋绶氬浼村礌閸濆嫮鍘甸柨娑欐皑閸嬶綁宕欑紒妯轰粯闁告帟鍩栭幐閬嶅绩?闁哄棗鍊告禒?-->
+				<!-- Cover image area that toggles play and pause -->
 				<div
 					class="cover-container relative w-12 h-12 rounded-full overflow-hidden cursor-pointer"
 					on:click={togglePlay}
@@ -658,7 +658,7 @@
 						{/if}
 					</div>
 				</div>
-				<!-- 婵繂鏈ú鍛婄┍閳╁啩绱栭柛鏍ф惈閻撴瑩鏁嶅鍗炰化闁告垼顕ч惈宥咁嚕閳ь剟骞橀鐔告澒闁?-->
+				<!-- Track info area that expands the full player -->
 				<div
 					class="flex-1 min-w-0 cursor-pointer"
 					on:click={toggleExpanded}
@@ -704,7 +704,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- 閻忕偞娲栫槐鎴︽偐閼哥鍋撴担鐑樼暠閻庣懓鏈弳锝夊箻椤撶喐鏉归柛锝庣厜缁辨瑧浜告笟鈧浼村捶閸℃鍩岄柨?-->
+		<!-- Full player shown when expanded -->
 		<div
 			class="expanded-player card-base bg-(--float-panel-bg) shadow-xl rounded-2xl p-4 transition-all duration-500 ease-in-out"
 			class:opacity-0={!isExpanded}
@@ -963,7 +963,7 @@
 							}}
 							role="button"
 							tabindex="0"
-							aria-label="闁圭虎鍘介弬?{song.title} - {song.artist}"
+							aria-label={`Play ${song.title} - ${song.artist}` }
 						>
 							<div
 								class="w-6 h-6 flex items-center justify-center"
@@ -1316,7 +1316,7 @@
 				padding: 0.375rem 0.625rem;
 			}
 		}
-		/* 闁煎浜滈悾鐐▕婢跺顥嬮弶鐑嗗墮婵晠鎮芥导娆戠闁稿绮嶉娑㈠籍閺堢數绠介柟闀愮缂嶅宕滃鍕Т缂?*/
+		/* Keep the disc rotation smooth and resumable */
 		@keyframes spin-continuous {
 			from {
 				transform: rotate(0deg);
@@ -1335,7 +1335,7 @@
 			animation-play-state: running;
 		}
 
-		/* 閻犱讲鏅欑€靛本锛愬Ο鍨棌闁圭顦甸幐鎶藉即鐎涙ɑ绠掗悷娆忔椤酣宕ｅ澶樻疮 */
+		/* Make primary buttons feel more tactile */
 		button.bg-\[var\(--primary\)\] {
 			box-shadow: 0 0 0 2px var(--primary);
 			border: none;
