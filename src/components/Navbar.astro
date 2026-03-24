@@ -225,14 +225,11 @@ function initSemifullScrollDetection() {
     if (!navbar) return;
     
     // 移除之前的滚动事件监听器（如果存在）
-    // @ts-ignore
     if (window.semifullScrollHandler) {
-        // @ts-ignore
         window.removeEventListener('scroll', window.semifullScrollHandler);
     }
     
     // 获取当前是否为首页
-    // @ts-ignore
     const isHomePage = navbar.dataset.isHome === 'true';
 
     // 如果不是首页，在平板/桌面端强制显示为scrolled状态
@@ -264,7 +261,6 @@ function initSemifullScrollDetection() {
     }
     
     // 保存新的事件处理器引用
-    // @ts-ignore
     window.semifullScrollHandler = requestTick;
     
     // 监听滚动事件
@@ -275,7 +271,6 @@ function initSemifullScrollDetection() {
 }
 
 // 将函数暴露到全局对象，供页面切换时调用
-// @ts-ignore
 window.initSemifullScrollDetection = initSemifullScrollDetection;
 
 // 页面加载完成后初始化滚动检测

@@ -292,7 +292,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		script.async = true;
 
 		script.onload = () => {
-			// @ts-ignore
+			// twikoo 由动态注入的脚本挂载到 window，此处声明其类型
+			declare const twikoo: { init: (options: Record<string, unknown>) => void };
 			twikoo.init({
 				envId,
 				el: '#twikoo-comment',

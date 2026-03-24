@@ -1,4 +1,4 @@
-﻿	// 浣跨敤鍘熺敓 View Transitions API 鏇夸唬 Swup锛屾洿杞婚噺楂樻晥
+﻿	// 使用原生 View Transitions API 替代 Swup，更轻量高效
 	import "./view-transitions.js";
 	import { pathsEqual, url } from "../utils/url-utils";
 	import { DARK_MODE, DEFAULT_THEME } from "../constants/constants";
@@ -12,22 +12,15 @@
 	import { widgetConfigs } from "../config";
 	import { initSakura } from "../utils/sakura-manager";
 
-	// @ts-ignore
-	const setTimeout = (callback: any, delay: any) =>
-		window.setTimeout(callback, delay);
-
 	const bannerEnabled = !!document.getElementById("banner-wrapper");
 
-	// 瀵煎叆闈㈡澘绠＄悊锟?
+	// 导入面板管理器
 	async function initializePanelManager() {
 		try {
-			// @ts-ignore
-			const { panelManager } = await import("../utils/panel-manager.js");
+			const { panelManager } = await import("../utils/panel-manager");
 
 			function setClickOutsideToClose(panel: string, ignores: string[]) {
 				document.addEventListener("click", async (event) => {
-					// @ts-ignore
-					// let _panelDom = document.getElementById(panel);
 					let tDom = event.target;
 					if (!(tDom instanceof Node)) return; // Ensure the event target is an HTML Node
 					for (let ig of ignores) {
@@ -461,7 +454,7 @@
 			const tocWrapper = document.getElementById("toc-wrapper");
 			const isArticlePage = tocWrapper !== null;
 
-			// 鍙湪鏂囩珷椤甸潰閲嶆柊鍒濆锟?TOC 缁勪欢
+			// 只在文章页面重新初始化 TOC 组件
 			if (isArticlePage) {
 				const tocElement = document.querySelector("table-of-contents");
 				if (
@@ -473,31 +466,31 @@
 					}, 100);
 				}
 
-				// 閲嶆柊鍒濆鍖栫Щ鍔ㄧ TOC 缁勪欢
-				if (typeof (window as any).mobileTOCInit === "function") {
+
+				// 重新初始化移动端 TOC 组件
+				if (typeof window.mobileTOCInit === "function") {
 					setTimeout(() => {
-						(window as any).mobileTOCInit();
+						window.mobileTOCInit!();
 					}, 100);
-				}
 			}
 
-			// 閲嶆柊鍒濆鍖杝emifull妯″紡鐨勬粴鍔ㄦ锟?
-			const navbar = document.getElementById("navbar");
+
+			// 重新初始化 semifull 模式的滚动检测
 			if (navbar) {
 				const transparentMode = navbar.getAttribute(
 					"data-transparent-mode",
 				);
 				if (transparentMode === "semifull") {
-					// 閲嶆柊璋冪敤鍒濆鍖栧嚱鏁版潵閲嶆柊缁戝畾婊氬姩浜嬩欢
-					if (
-						typeof (window as any).initSemifullScrollDetection ===
-						"function"
-					) {
-						(window as any).initSemifullScrollDetection();
+					if (transparentMode === "semifull") {
+						// 重新调用初始化函数来重新绑定滚动事件
+						if (typeof window.initSemifullScrollDetection === "function") {
+							window.initSemifullScrollDetection();
+						}
 					}
 				}
 			}
 		});
+
 
 		window.swup.hooks.on(
 			"visit:start",
@@ -532,19 +525,19 @@
 				const navbar = document.getElementById("navbar");
 				if (navbar) {
 					navbar.setAttribute("data-is-home", isHomePage.toString());
-					// 閲嶆柊鍒濆鍖杝emifull妯″紡鐨勬粴鍔ㄦ锟?
+					// 重新初始化 semifull 模式的滚动检测
 					const transparentMode = navbar.getAttribute(
 						"data-transparent-mode",
 					);
 					if (transparentMode === "semifull") {
-						// 閲嶆柊璋冪敤鍒濆鍖栧嚱鏁版潵閲嶆柊缁戝畾婊氬姩浜嬩欢
-						if (
-							typeof (window as any)
-								.initSemifullScrollDetection === "function"
-						) {
-							(window as any).initSemifullScrollDetection();
+						// 重新调用初始化函数来重新绑定滚动事件
+							if (typeof window.initSemifullScrollDetection === "function") {
+								window.initSemifullScrollDetection();
+							}
 						}
 					}
+				}
+
 				}
 
 				// increase the page height during page transition to prevent the scrolling animation from jumping

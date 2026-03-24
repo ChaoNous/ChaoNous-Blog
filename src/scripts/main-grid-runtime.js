@@ -225,16 +225,14 @@ const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 35;
 		});
 
 		function setupSwupLayoutSync() {
-			// @ts-ignore
+
 			if (typeof window !== "undefined" && window.swup) {
-				// @ts-ignore
 				window.swup.hooks.on("animation:out:start", function () {});
 
-				// @ts-ignore
 				window.swup.hooks.on("content:replace", function () {
 					const mainGrid = document.getElementById("main-grid");
 					if (mainGrid) {
-						// @ts-ignore
+
 						const currentLayout = "list";
 						mainGrid.setAttribute(
 							"data-layout-mode",
@@ -268,7 +266,7 @@ const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 35;
 							);
 						}
 
-						// @ts-ignore
+
 						delete window.__pendingLayoutMode;
 					}
 				});

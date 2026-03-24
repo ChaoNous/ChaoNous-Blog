@@ -21,6 +21,12 @@ declare global {
 
 		mobileTOCInit?: () => void;
 		initSemifullScrollDetection?: () => void;
+		/** Navbar 滚动检测的事件处理器引用，用于 Swup 切换时移除旧监听器 */
+		semifullScrollHandler?: () => void;
+		/** Swup content:replace 时暂存的布局模式，由 layout-runtime 写入并消费 */
+		__pendingLayoutMode?: string;
+		/** main-grid-runtime 运行时配置注入 */
+		__mainGridRuntimeConfig?: Record<string, unknown>;
 		iconifyLoaded?: boolean;
 		__iconifyLoader?: {
 			load: () => Promise<void>;
