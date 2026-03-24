@@ -39,7 +39,7 @@ const headingsJson = JSON.stringify(headings);
 	:global(widget-layout[data-id="card-toc"]) {
 		display: flex;
 		flex-direction: column;
-		max-height: var(--card-toc-max-height, none);
+		max-height: var(--card-toc-max-height, calc(100vh - 8rem));
 	}
 
 	#card-toc {
@@ -59,6 +59,7 @@ const headingsJson = JSON.stringify(headings);
 	.toc-scroll-container {
 		flex: 1;
 		min-height: 0;
+		overflow-y: auto;
 	}
 
 	.toc-scroll-container::-webkit-scrollbar {
