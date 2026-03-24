@@ -32,9 +32,9 @@
 
 \## 部署链路
 
-\- 仓库：https://github.com/ChaoNous/ChaoNous-Blog（分支：master）
+\- 仓库：https://github.com/ChaoNous/ChaoNous-Blog（分支：main）
 
-\- 部署：push 到 master → Cloudflare Pages 自动构建部署 → chaonous.com
+\- 部署：push 到 main → Cloudflare Pages 自动构建部署 → chaonous.com
 
 \- 本地构建命令：pnpm run check \&\& pnpm run build
 
@@ -52,7 +52,7 @@
 
 \- 不破坏现有的 Cloudflare Pages 自动部署链路
 
-\- 修改完成后：git add → git commit（用简洁的英文 commit message）→ git push origin master
+\- 修改完成后：git add → git commit（用简洁的英文 commit message）→ git push origin main
 
 
 

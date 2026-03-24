@@ -54,8 +54,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content, headings } = await render(entry);
-const { remarkPluginFrontmatter } = await render(entry);
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 
 const isEncrypted = Boolean(entry.data.encrypted && entry.data.password);
 const encryptedContent = isEncrypted

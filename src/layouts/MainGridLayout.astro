@@ -207,7 +207,7 @@ const transparentClass = shouldEnableTransparency
 	<!-- 全屏壁纸组件 - 在 banner 模式下由 JS 控制显隐 -->
 	<FullscreenWallpaper config={fullscreenWallpaperConfig} />
 
-	<!-- 闂備胶顭堢换鍫ュ礉瀹€鍕剳妞ゆ帒瀚悙濠囨煟閹伴潧澧伴柛銊ャ偢閺屾盯寮崒姣款剚绻涢弶鎴炲枠鐎?-->
+	<!-- Iconify 图标加载器 -->
 	<IconifyLoader />
 
 	<!-- Navbar -->
@@ -412,9 +412,10 @@ const transparentClass = shouldEnableTransparency
 				}
 
 				{
-					/* 濠电偞鎸婚惃婊堝幢濞嗘垵楠勯梻浣告惈缁夊鎹㈤幇鏉跨闁绘鐗忛埢鏃堟偣閸ャ劌绲婚柡浣哥埣閹宕烽鐔锋畬闁诲繐娴氶崹璺虹暦濞差亝鍋勫┑鍌氼槸閺咃綁姊?*/
-				}
-				{
+					/* 濠电偞鎸婚惃婊堝			{
+				/* 左侧边栏 - 根据配置条件渲染 */
+			}
+			{
 					(mobileShowSidebar ||
 						tabletShowSidebar ||
 						desktopShowSidebar) && (
