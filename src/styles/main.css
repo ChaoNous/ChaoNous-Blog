@@ -771,7 +771,6 @@ html {
 @media print {
   .no-print,
   #navbar-wrapper,
-  #back-to-top-btn,
   .float-panel,
   .music-player {
     display: none !important;

@@ -9,7 +9,6 @@ import {
 	revealBanner,
 	syncBannerHeightExtend,
 } from "./layout-runtime/banner-runtime";
-import { syncBackToTopVisibility } from "./layout-runtime/back-to-top-runtime";
 import {
 	handleNavbarLinkClick,
 	refreshNavbarTransparency,
@@ -39,8 +38,6 @@ function removePostPageActionButtons() {
 		return;
 	}
 
-	document.getElementById("back-to-top-btn")?.remove();
-	document.querySelector(".back-to-top-wrapper")?.remove();
 	document.getElementById("floating-toc-btn")?.remove();
 	document.getElementById("floating-toc-panel")?.remove();
 	document.querySelector(".floating-toc-wrapper")?.remove();
@@ -439,7 +436,6 @@ function syncDesktopViewportState() {
 	const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
 
 	requestAnimationFrame(() => {
-		syncBackToTopVisibility(scrollTop, bannerHeight);
 		syncDesktopTocVisibility(scrollTop, bannerHeight, bannerEnabled);
 		syncNavbarVisibility(scrollTop, bannerEnabled);
 	});

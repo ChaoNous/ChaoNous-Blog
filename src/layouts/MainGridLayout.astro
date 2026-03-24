@@ -1,5 +1,4 @@
 ---
-import BackToTop from "@components/control/BackToTop.astro";
 import FloatingTOC from "@components/control/FloatingTOC.astro";
 import Footer from "@components/Footer.astro";
 import BannerCarousel from "@components/layout/BannerCarousel.astro";
@@ -473,7 +472,6 @@ const transparentClass = shouldEnableTransparency
 							<Footer />
 						</div>
 					</div>
-					{!isPostPage && <BackToTop isPostPage={isPostPage} />}
 					{siteConfig.toc.enable && isFloatTOC && !isPostPage && (
 						<FloatingTOC />
 					)}
