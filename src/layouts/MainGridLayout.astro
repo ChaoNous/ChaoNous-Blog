@@ -119,11 +119,11 @@ const tabletAnySidebar = tabletShowLeftSidebar;
 
 let desktopGridCols = "lg:grid-cols-1";
 if (desktopShowLeftSidebar && desktopShowRightSidebar) {
-	desktopGridCols = "lg:grid-cols-[20rem_1fr_20rem]";
+	desktopGridCols = "lg:grid-cols-[18rem_1fr_18rem]";
 } else if (desktopShowLeftSidebar) {
-	desktopGridCols = "lg:grid-cols-[20rem_1fr]";
+	desktopGridCols = "lg:grid-cols-[18rem_1fr]";
 } else if (desktopShowRightSidebar) {
-	desktopGridCols = "lg:grid-cols-[1fr_20rem]";
+	desktopGridCols = "lg:grid-cols-[1fr_18rem]";
 }
 
 const gridCols = `
