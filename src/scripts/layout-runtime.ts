@@ -475,18 +475,8 @@
 				}
 			}
 
-			// 重新初始化 semifull 模式的滚动检测
-			if (navbar) {
-				const transparentMode = navbar.getAttribute(
-					"data-transparent-mode",
-				);
-				if (transparentMode === "semifull") {
-					// 重新调用初始化函数来重新绑定滚动事件
-					if (typeof window.initSemifullScrollDetection === "function") {
-						window.initSemifullScrollDetection();
-					}
-				}
-			}
+			refreshDesktopRuntimeState();
+			scrollFunction();
 		});
 
 
@@ -594,6 +584,9 @@
 					}
 				});
 			}
+
+			refreshDesktopRuntimeState();
+			scrollFunction();
 		});
 
 		window.swup.hooks.on("visit:end", (_visit: { to: { url: string } }) => {
@@ -631,9 +624,27 @@
 		}
 	}
 
-	let backToTopBtn = document.getElementById("back-to-top-btn");
-	let toc = document.getElementById("toc-wrapper");
-	let navbar = document.getElementById("navbar-wrapper");
+	function getRuntimeElements() {
+		return {
+			backToTopBtn: document.getElementById("back-to-top-btn"),
+			toc: document.getElementById("toc-wrapper"),
+			navbarWrapper: document.getElementById("navbar-wrapper"),
+			navbar: document.getElementById("navbar"),
+		};
+	}
+
+	function refreshDesktopRuntimeState() {
+		const { navbar } = getRuntimeElements();
+		if (!navbar) return;
+
+		const transparentMode = navbar.getAttribute("data-transparent-mode");
+		if (
+			transparentMode === "semifull" &&
+			typeof window.initSemifullScrollDetection === "function"
+		) {
+			window.initSemifullScrollDetection();
+		}
+	}
 
 	// 鑺傛祦鍑芥暟
 	function throttle(func: Function, limit: number) {
@@ -652,6 +663,7 @@
 	function scrollFunction() {
 		const scrollTop = document.documentElement.scrollTop;
 		const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
+		const { backToTopBtn, toc, navbarWrapper } = getRuntimeElements();
 
 		// 灏濊瘯鑾峰彇鍐呭鍖哄煙鐨勮捣濮嬩綅锟?
 		const contentWrapper = document.getElementById("content-wrapper");
@@ -695,7 +707,7 @@
 				}
 			}
 
-			if (bannerEnabled && navbar) {
+			if (bannerEnabled && navbarWrapper) {
 				const isHome =
 					document.body.classList.contains("is-home") &&
 					window.innerWidth >= 1280;
@@ -706,18 +718,21 @@
 				const threshold =
 					window.innerHeight * (currentBannerHeight / 100) - 88;
 				if (scrollTop >= threshold) {
-					navbar.classList.add("navbar-hidden");
+					navbarWrapper.classList.add("navbar-hidden");
 				} else {
-					navbar.classList.remove("navbar-hidden");
+					navbarWrapper.classList.remove("navbar-hidden");
 				}
 			}
 		});
 	}
 
 	// 浣跨敤鑺傛祦浼樺寲婊氬姩鎬ц兘
-	window.onscroll = throttle(scrollFunction, 16); // 锟?0fps
+	const throttledScrollFunction = throttle(scrollFunction, 16);
+	window.addEventListener("scroll", throttledScrollFunction, {
+		passive: true,
+	});
 
-	window.onresize = () => {
+	function handleResize() {
 		// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
 		let offset = Math.floor(
 			window.innerHeight * (BANNER_HEIGHT_EXTEND / 100),
@@ -727,12 +742,18 @@
 			"--banner-height-extend",
 			`${offset}px`,
 		);
-	};
+		scrollFunction();
+	}
+
+	window.addEventListener("resize", handleResize);
+	handleResize();
+	scrollFunction();
 
 	// 椤甸潰鍔犺浇瀹屾垚鍚庡垵濮嬪寲banner鍜岃疆鎾浘
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", async () => {
 			showBanner();
+			refreshDesktopRuntimeState();
 			// 鍒濆鍖栭潰鏉跨鐞嗗櫒
 			try {
 				await import("../utils/panel-manager.js");
@@ -742,6 +763,7 @@
 		});
 	} else {
 		showBanner();
+		refreshDesktopRuntimeState();
 		// 椤甸潰宸茬粡鍔犺浇瀹屾垚锛岀珛鍗冲垵濮嬪寲闈㈡澘绠＄悊锟?
 		(async () => {
 			try {
