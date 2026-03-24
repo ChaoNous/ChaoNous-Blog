@@ -186,17 +186,28 @@ function initWallpaperModeWithRetry() {
 }
 
 function setupSwupLayoutSync() {
-	if (typeof window === "undefined" || !window.swup) {
+	if (typeof window === "undefined" || !window.swup?.hooks) {
 		return false;
 	}
 
-	window.swup.hooks.on("animation:out:start", function () {});
+	if (window.__mainGridRuntimeHooksRegistered) {
+		return true;
+	}
+
+	window.__mainGridRuntimeHooksRegistered = true;
 
 	window.swup.hooks.on("content:replace", function () {
 		if (document.getElementById("main-grid")) {
 			syncDesktopLayoutState();
 			delete window.__pendingLayoutMode;
 		}
+	});
+
+	window.swup.hooks.on("page:view", function () {
+		applyWallpaperMode();
+		requestAnimationFrame(() => {
+			syncDesktopLayoutState();
+		});
 	});
 
 	return true;
@@ -215,20 +226,7 @@ if (document.readyState === "loading") {
 }
 
 if (!setupSwupLayoutSync()) {
-	const checkSwup = setInterval(function () {
-		if (setupSwupLayoutSync()) {
-			clearInterval(checkSwup);
-		}
-	}, 50);
-
-	setTimeout(function () {
-		clearInterval(checkSwup);
-	}, 2000);
-}
-
-document.addEventListener("swup:page:view", function () {
-	applyWallpaperMode();
-	requestAnimationFrame(() => {
-		syncDesktopLayoutState();
+	document.addEventListener("swup:enable", setupSwupLayoutSync, {
+		once: true,
 	});
-});
+}

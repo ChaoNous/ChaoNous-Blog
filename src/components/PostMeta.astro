@@ -128,10 +128,16 @@ const {
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', fetchPageViews);
-    } else {
-        fetchPageViews();
-    }
+    (async () => {
+        const { registerPageScript } = await import("../scripts/page-lifecycle.js");
+        registerPageScript("post-meta-page-views", {
+            shouldRun() {
+                return document.querySelector(".umami-page-views") !== null;
+            },
+            init() {
+                fetchPageViews();
+            },
+        });
+    })();
 </script>
 )}

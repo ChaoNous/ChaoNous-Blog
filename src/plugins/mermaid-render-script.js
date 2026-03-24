@@ -87,6 +87,8 @@
 			attributeFilter: ["class"],
 			attributeOldValue: true,
 		});
+
+		return observer;
 	}
 
 	// 缩放平移
@@ -227,22 +229,20 @@
 
 	// 设置其他事件监听器
 	function setupEventListeners() {
-		// 监听页面切换
-		document.addEventListener("astro:page-load", () => {
-			// 重新初始化主题状态
-			currentTheme = null;
-			retryCount = 0; // 重置重试计数
-			if (hasThemeChanged()) {
-				setTimeout(() => renderMermaidDiagrams(), 100);
-			}
-		});
-
-		// 监听页面可见性变化，页面重新可见时重新渲染
-		document.addEventListener("visibilitychange", () => {
+		const handleVisibilityChange = () => {
 			if (!document.hidden) {
 				setTimeout(() => renderMermaidDiagrams(), 200);
 			}
-		});
+		};
+
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+
+		return () => {
+			document.removeEventListener(
+				"visibilitychange",
+				handleVisibilityChange,
+			);
+		};
 	}
 
 	async function initializeMermaid() {
@@ -484,21 +484,23 @@
 	// 主初始化函数
 	async function initialize() {
 		try {
-			// 设置监听器
-			setupMutationObserver();
-			setupEventListeners();
-
-			// 初始化主题状态
+			const observer = setupMutationObserver();
+			const cleanupListeners = setupEventListeners();
+			currentTheme = null;
+			retryCount = 0;
 			initializeThemeState();
 
-			// 加载并初始化 Mermaid
 			await loadMermaid();
 			await initializeMermaid();
 
-			// 将 renderMermaidDiagrams 暴露到全局作用域，以便在解密后调用
 			window.renderMermaidDiagrams = renderMermaidDiagrams;
+			return () => {
+				observer.disconnect();
+				cleanupListeners();
+			};
 		} catch (error) {
 			console.error("Failed to initialize Mermaid system:", error);
+			return () => {};
 		}
 	}
 
@@ -508,7 +510,7 @@
 			return document.querySelector(".mermaid") !== null;
 		},
 		init() {
-			initialize();
+			return initialize();
 		},
 	});
 })();

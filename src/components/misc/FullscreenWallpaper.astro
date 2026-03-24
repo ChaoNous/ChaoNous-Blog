@@ -272,17 +272,37 @@ const maxCount = Math.max(imageSources.desktop.length, imageSources.mobile.lengt
 			};
 		}
 
-		// 页面加载完成后初始化
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', initFullscreenWallpaperCarousel);
-		} else {
-			initFullscreenWallpaperCarousel();
+		const registerWithLifecycle = () => {
+			if (typeof window.registerPageScript !== 'function') {
+				return false;
+			}
+
+			window.registerPageScript('fullscreen-wallpaper-carousel', {
+				shouldRun() {
+					return document.querySelector('[data-fullscreen-wallpaper]') !== null;
+				},
+				init() {
+					initFullscreenWallpaperCarousel();
+					return () => {
+						if (window.__wallpaper_cleanup) {
+							window.__wallpaper_cleanup();
+							window.__wallpaper_cleanup = null;
+						}
+					};
+				},
+			});
+
+			return true;
+		};
+
+		if (!registerWithLifecycle()) {
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initFullscreenWallpaperCarousel, { once: true });
+			} else {
+				initFullscreenWallpaperCarousel();
+			}
 		}
 
-		// Swup 页面切换后重新初始化
-		document.addEventListener('swup:page:view', initFullscreenWallpaperCarousel);
-
-		// 壁纸模式切换时重新初始化
 		window.addEventListener('wallpaper-mode-change', initFullscreenWallpaperCarousel);
 	</script>
 )}

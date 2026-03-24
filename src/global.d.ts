@@ -8,7 +8,7 @@ declare global {
 	}
 
 	interface Window {
-		// Define swup type directly since @swup/astro doesn't export AstroIntegration
+		// Define swup directly because @swup/astro does not export AstroIntegration.
 		swup: any;
 		closeAnnouncement: () => void;
 		pagefind: {
@@ -21,12 +21,13 @@ declare global {
 
 		mobileTOCInit?: () => void;
 		initSemifullScrollDetection?: () => void;
-		/** Navbar 滚动检测的事件处理器引用，用于 Swup 切换时移除旧监听器 */
+		/** Navbar scroll handler reference used to remove stale listeners across Swup page swaps. */
 		semifullScrollHandler?: () => void;
-		/** Swup content:replace 时暂存的布局模式，由 layout-runtime 写入并消费 */
+		/** Temporary layout mode captured during `content:replace`, written and consumed by `layout-runtime`. */
 		__pendingLayoutMode?: string;
-		/** main-grid-runtime 运行时配置注入 */
+		/** Runtime configuration injected for `main-grid-runtime`. */
 		__mainGridRuntimeConfig?: Record<string, unknown>;
+		__mainGridRuntimeHooksRegistered?: boolean;
 		iconifyLoaded?: boolean;
 		__iconifyLoader?: {
 			load: () => Promise<void>;
@@ -35,6 +36,17 @@ declare global {
 			isLoaded: boolean;
 		};
 		siteConfig: any;
+		mermaidInitialized?: boolean;
+		renderMermaidDiagrams?: () => Promise<void>;
+		__wallpaper_cleanup?: (() => void) | null;
+		registerPageScript?: (
+			name: string,
+			options: {
+				shouldRun?: () => boolean;
+				init: () => void | (() => void) | Promise<void | (() => void)>;
+			},
+		) => () => void;
+		cleanupPageScripts?: () => void;
 	}
 }
 
