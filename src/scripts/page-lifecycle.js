@@ -1,6 +1,7 @@
 const lifecycleState = window.__pageLifecycleState || {
 	records: new Map(),
 	isSetup: false,
+	hasSwupHooks: false,
 };
 
 window.__pageLifecycleState = lifecycleState;
@@ -49,6 +50,17 @@ function cleanupAll() {
 	});
 }
 
+function attachSwupHooks() {
+	if (!window.swup?.hooks || lifecycleState.hasSwupHooks) {
+		return false;
+	}
+
+	window.swup.hooks.on("content:replace", cleanupAll);
+	window.swup.hooks.on("page:view", runAll);
+	lifecycleState.hasSwupHooks = true;
+	return true;
+}
+
 function setupPageLifecycle() {
 	if (lifecycleState.isSetup) {
 		return;
@@ -59,20 +71,14 @@ function setupPageLifecycle() {
 	document.addEventListener("DOMContentLoaded", runAll);
 	document.addEventListener("astro:page-load", runAll);
 
-	if (window.swup?.hooks) {
-		window.swup.hooks.on("content:replace", cleanupAll);
-		window.swup.hooks.on("page:view", runAll);
+	if (attachSwupHooks()) {
 		return;
 	}
 
 	document.addEventListener(
 		"swup:enable",
 		() => {
-			if (!window.swup?.hooks) {
-				return;
-			}
-			window.swup.hooks.on("content:replace", cleanupAll);
-			window.swup.hooks.on("page:view", runAll);
+			attachSwupHooks();
 		},
 		{ once: true },
 	);

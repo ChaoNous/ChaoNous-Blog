@@ -169,20 +169,34 @@ function applyWallpaperMode() {
 function initWallpaperModeWithRetry() {
 	applyWallpaperMode();
 
-	let retryCount = 0;
-	const maxRetries = 10;
-	const checkInterval = setInterval(() => {
-		const fullscreenWallpaper = document.querySelector(
-			"[data-fullscreen-wallpaper]",
-		);
-		if (fullscreenWallpaper || retryCount >= maxRetries) {
-			clearInterval(checkInterval);
-			if (fullscreenWallpaper) {
-				applyWallpaperMode();
-			}
+	const wallpaperMode =
+		localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
+	if (wallpaperMode !== "fullscreen") {
+		return;
+	}
+
+	if (document.querySelector("[data-fullscreen-wallpaper]")) {
+		applyWallpaperMode();
+		return;
+	}
+
+	const observer = new MutationObserver(() => {
+		if (!document.querySelector("[data-fullscreen-wallpaper]")) {
+			return;
 		}
-		retryCount++;
-	}, 150);
+
+		observer.disconnect();
+		applyWallpaperMode();
+	});
+
+	observer.observe(document.body, {
+		childList: true,
+		subtree: true,
+	});
+
+	window.setTimeout(() => {
+		observer.disconnect();
+	}, 2000);
 }
 
 function setupSwupLayoutSync() {
@@ -213,13 +227,15 @@ function setupSwupLayoutSync() {
 	return true;
 }
 
-window.addEventListener("wallpaper-mode-change", function (_event) {
+window.addEventListener("wallpaper-mode-change", function () {
 	applyWallpaperMode();
 });
 
 if (document.readyState === "loading") {
-	document.addEventListener("DOMContentLoaded", initWallpaperModeWithRetry);
-	document.addEventListener("DOMContentLoaded", syncDesktopLayoutState);
+	document.addEventListener("DOMContentLoaded", () => {
+		initWallpaperModeWithRetry();
+		syncDesktopLayoutState();
+	});
 } else {
 	initWallpaperModeWithRetry();
 	syncDesktopLayoutState();
