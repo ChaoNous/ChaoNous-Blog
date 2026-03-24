@@ -113,7 +113,7 @@
 @font-face {
   font-family: "Zhuque Fangsong Primary";
   src:
-    url("/assets/fonts/ZhuqueFangsong-Regular.woff2") format("woff2"),
+    url("/assets/fonts/ZhuqueFangsong-Regular-Full.woff2") format("woff2"),
     url("/assets/fonts/ZhuqueFangsong-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;

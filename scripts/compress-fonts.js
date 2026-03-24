@@ -622,7 +622,7 @@ async function compressFonts() {
 		}
 
 		// 创建 dist/assets/font 目录
-		const distFontDir = path.join(distDir, "assets/font");
+		const distFontDir = path.join(distDir, "assets/fonts");
 		if (!fs.existsSync(distFontDir)) {
 			fs.mkdirSync(distFontDir, { recursive: true });
 		}
@@ -648,7 +648,7 @@ async function compressFonts() {
 			for (const fontFile of fontConfig.files) {
 				const fontSrc = path.join(
 					__dirname,
-					"../public/assets/font",
+					"../public/assets/fonts",
 					fontFile,
 				);
 				const ext = path.extname(fontFile).toLowerCase();
@@ -681,14 +681,18 @@ async function compressFonts() {
 					// TTF/OTF 需要压缩为 woff2
 					console.log(`Compressing ${fontFile}...`);
 
-					const fontmin = new Fontmin()
-						.src(fontSrc)
-						.use(
+					const fontmin = new Fontmin().src(fontSrc);
+
+					if (fontConfig.type === "asciiFont") {
+						fontmin.use(
 							Fontmin.glyph({
 								text: text,
 								hinting: false,
 							}),
-						)
+						);
+					}
+
+					fontmin
 						.use(
 							Fontmin.ttf2woff2({
 								deflate: true,
