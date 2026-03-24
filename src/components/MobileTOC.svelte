@@ -34,7 +34,7 @@
 	};
 
 	const generateTOC = () => {
-		// 获取配置
+
 		useJapaneseBadge =
 			(window as any).siteConfig?.toc?.useJapaneseBadge || false;
 		tocDepth = (window as any).siteConfig?.toc?.depth || 3;
@@ -74,7 +74,7 @@
 			if (heading.id) {
 				const level = Number.parseInt(heading.tagName.charAt(1), 10);
 
-				// 根据depth配置过滤标题
+
 				if (level > tocDepth) {
 					return;
 				}
@@ -82,7 +82,7 @@
 				const text = (heading.textContent || "").replace(/#+\s*$/, "");
 				let badge = "";
 
-				// 只为H1标题生成badge
+
 				if (level === 1) {
 					h1Count++;
 					if (
@@ -103,7 +103,7 @@
 	};
 
 	const generatePostList = () => {
-		// 查找所有文章卡片
+
 		const postCards = document.querySelectorAll(".card-base");
 		const items: Array<{
 			title: string;
@@ -113,15 +113,15 @@
 		}> = [];
 
 		postCards.forEach((card) => {
-			// 查找标题链接
+
 			const titleLink = card.querySelector(
 				'a[href*="/posts/"].transition.group',
 			);
-			// 查找分类链接
+
 			const categoryLink = card.querySelector(
 				'a[href*="/categories/"].link-lg',
 			);
-			// 查找置顶图标
+
 			const pinnedIcon = titleLink?.querySelector(
 				'svg[data-icon="mdi:pin"]',
 			);
@@ -144,8 +144,7 @@
 
 	const checkIsHomePage = () => {
 		const pathname = window.location.pathname;
-		// 检查是否为首页或首页的分页页面
-		// 分页格式：/, /2/, /3/, 等等
+
 		isHomePage =
 			pathname === "/" || pathname === "" || /^\/\d+\/?$/.test(pathname);
 	};
@@ -153,10 +152,10 @@
 	const scrollToHeading = (id: string) => {
 		const element = document.getElementById(id);
 		if (element) {
-			// 关闭面板
+
 			setPanelVisibility(false);
 
-			// 滚动到目标位置，考虑导航栏高度
+
 			const offset = 80;
 			const elementPosition = element.offsetTop - offset;
 
@@ -168,10 +167,9 @@
 	};
 
 	const navigateToPost = (url: string) => {
-		// 关闭面板
 		setPanelVisibility(false);
 
-		// 使用统一的导航工具函数，实现无刷新跳转
+
 		navigateToPage(url);
 	};
 
@@ -231,9 +229,9 @@
 		) {
 			const swup = (window as any).swup;
 
-			// 只监听页面视图事件，避免重复触发
+
 			swup.hooks.on("page:view", () => {
-				// 延迟执行，确保页面已完全加载
+
 				setTimeout(() => {
 					init();
 				}, 200);
@@ -241,7 +239,7 @@
 
 			swupListenersRegistered = true;
 		} else if (!swupListenersRegistered) {
-			// 降级处理：监听普通页面切换事件
+
 			window.addEventListener("popstate", () => {
 				setTimeout(init, 200);
 			});
@@ -251,34 +249,34 @@
 
 	const checkSwupAvailability = () => {
 		if (typeof window !== "undefined") {
-			// 检查Swup是否已加载
+
 			swupReady = !!(window as any).swup;
 
-			// 如果Swup还未加载，监听其加载事件
+
 			if (!swupReady) {
 				const checkSwup = () => {
 					if ((window as any).swup) {
 						swupReady = true;
 						document.removeEventListener("swup:enable", checkSwup);
-						// Swup加载完成后设置监听器
+
 						setupSwupListeners();
 					}
 				};
 
-				// 监听Swup启用事件
+
 				document.addEventListener("swup:enable", checkSwup);
 
-				// 设置超时检查
+
 				setTimeout(() => {
 					if ((window as any).swup) {
 						swupReady = true;
 						document.removeEventListener("swup:enable", checkSwup);
-						// Swup加载完成后设置监听器
+
 						setupSwupListeners();
 					}
 				}, 1000);
 			} else {
-				// Swup已经加载，直接设置监听器
+
 				setupSwupListeners();
 			}
 		}
@@ -297,10 +295,10 @@
 	};
 
 	onMount(() => {
-		// 延迟初始化，确保页面内容已加载
+
 		setTimeout(init, 100);
 
-		// 监听滚动事件作为备用
+
 		window.addEventListener("scroll", updateActiveHeading);
 
 		return () => {
@@ -309,25 +307,25 @@
 			}
 			window.removeEventListener("scroll", updateActiveHeading);
 
-			// 清理Swup事件监听器
+
 			if (typeof window !== "undefined" && (window as any).swup) {
 				const swup = (window as any).swup;
 				swup.hooks.off("page:view");
 			}
 
-			// 清理popstate事件监听器
+
 			window.removeEventListener("popstate", init);
 			swupListenersRegistered = false;
 		};
 	});
 
-	// 导出初始化函数供外部调用
+
 	if (typeof window !== "undefined") {
 		(window as any).mobileTOCInit = init;
 	}
 </script>
 
-<!-- TOC toggle button for mobile - 只在非首页显示 -->
+
 {#if !isHomePage}
 	<button
 		on:click={togglePanel}
@@ -342,7 +340,7 @@
 	</button>
 {/if}
 
-<!-- Mobile TOC Panel -->
+
 <div
 	id="mobile-toc-panel"
 	class="float-panel float-panel-closed mobile-toc-panel absolute md:w-[20rem] w-[calc(100vw-2rem)]
@@ -429,7 +427,7 @@
 		backdrop-filter: blur(10px);
 	}
 
-	/* 确保主题切换按钮的背景色即时更新 */
+
 	:global(.theme-switch-btn)::before {
 		transition:
 			transform 75ms ease-out,
@@ -481,7 +479,7 @@
 		padding-left: 9px;
 	}
 
-	/* 不同级别的标题缩进 */
+
 	.toc-item.level-1 {
 		padding-left: 12px;
 		font-weight: 600;
@@ -654,7 +652,7 @@
 		color: rgba(255, 255, 255, 0.75);
 	}
 
-	/* 滚动条样式 */
+
 	.mobile-toc-panel::-webkit-scrollbar {
 		width: 4px;
 	}

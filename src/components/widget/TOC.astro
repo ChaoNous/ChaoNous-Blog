@@ -1,9 +1,7 @@
 ---
 import type { MarkdownHeading } from "astro";
 
-// import { siteConfig } from "../../config";
 
-// import { url } from "../../utils/url-utils";
 
 interface Props {
 	class?: string;
@@ -18,25 +16,11 @@ for (const heading of headings) {
 }
 
 const className = Astro.props.class;
-// const isPostsRoute =
-// 	Astro.url.pathname.includes("/posts/") || headings.length > 0;
 
-// const removeTailingHash = (text: string) => {
-// 	let lastIndexOfHash = text.lastIndexOf("#");
-// 	if (lastIndexOfHash !== text.length - 1) {
-// 		return text;
-// 	}
-//
-// 	return text.substring(0, lastIndexOfHash);
-// };
-
-// let heading1Count = 1;
-
-// const maxLevel = siteConfig.toc.depth;
 ---
 
 <table-of-contents class:list={[className, "group"]} id="toc">
-	<!-- TOC内容将由JavaScript动态生成 -->
+
 </table-of-contents>
 
 <script>
@@ -225,20 +209,19 @@ const className = Astro.props.class;
 				.find((element) => element instanceof HTMLAnchorElement);
 
 			if (anchor) {
-				event.preventDefault(); // 阻止默认的锚点跳转
+				event.preventDefault();
 
 				const id = decodeURIComponent(anchor.hash?.substring(1));
 				const targetElement = document.getElementById(id);
 
 				if (targetElement) {
-					// 计算目标位置，与移动端保持一致
-					const navbarHeight = 80; // 导航栏高度
+					const navbarHeight = 80;
 					const targetTop =
 						targetElement.getBoundingClientRect().top +
 						window.scrollY -
 						navbarHeight;
 
-					// 使用与移动端相同的滚动方式
+
 					window.scrollTo({
 						top: targetTop,
 						behavior: "smooth",
@@ -259,7 +242,7 @@ const className = Astro.props.class;
 		}
 
 		connectedCallback() {
-			// 优先监听动画结束，兜底定时初始化，确保二次刷新也能正常显示 TOC
+
 			const element =
 				document.querySelector(".custom-md") ||
 				document.querySelector(".prose") ||
@@ -275,17 +258,17 @@ const className = Astro.props.class;
 				element.addEventListener("animationend", tryInit, {
 					once: true,
 				});
-				// 兜底：无论动画是否触发，300ms后强制初始化一次
+
 				setTimeout(tryInit, 300);
 			} else {
-				// 没有动画元素，直接初始化，兜底再延迟一次
+
 				tryInit();
 				setTimeout(tryInit, 300);
 			}
 		}
 
 		init() {
-			// 重新生成TOC内容
+
 			this.regenerateTOC();
 
 			this.tocEl = this;
@@ -327,18 +310,18 @@ const className = Astro.props.class;
 		}
 
 		regenerateTOC(retryCount = 0) {
-			// 检查是否为文章页面
+
 			const isPostPage =
 				window.location.pathname.includes("/posts/") ||
 				document.querySelector(".custom-md, .markdown-content") !==
 					null;
 			if (!isPostPage) {
-				// 如果不是文章页面，隐藏TOC
+
 				this.innerHTML = "";
 				delete this.dataset.loaded;
 				return;
 			}
-			// 从当前页面重新获取标题
+
 			const headings = Array.from(
 				document.querySelectorAll("h1, h2, h3, h4, h5, h6"),
 			)
@@ -348,7 +331,7 @@ const className = Astro.props.class;
 					slug: h.id,
 					text: (h.textContent || "").replace(/#+\s*$/, ""),
 				}));
-			// 如果没有标题，延迟重试最多3次
+
 			if (headings.length === 0 && retryCount < 3) {
 				setTimeout(() => this.regenerateTOC(retryCount + 1), 120);
 				return;
@@ -358,14 +341,14 @@ const className = Astro.props.class;
 				delete this.dataset.loaded;
 				return;
 			}
-			// 重新生成TOC HTML
+
 			const minDepth = Math.min(...headings.map((h) => h.depth));
-			// 获取配置信息
+
 			const siteConfig = (window as any).siteConfig || {};
 			const maxLevel = siteConfig.toc?.depth || 3;
 			const useJapaneseBadge = siteConfig.toc?.useJapaneseBadge || false;
 
-			// 日语片假名字符集
+
 			const japaneseKatakana = [
 				"ア",
 				"イ",
