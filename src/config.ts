@@ -82,13 +82,11 @@ export const siteConfig: SiteConfig = {
 				"/assets/desktop-banner/banner1.webp",
 				"/assets/desktop-banner/banner2.webp",
 				"/assets/desktop-banner/banner3.webp",
-				"/assets/desktop-banner/banner4.webp",
 			],
 			mobile: [
 				"/assets/mobile-banner/banner1.webp",
 				"/assets/mobile-banner/banner2.webp",
 				"/assets/mobile-banner/banner3.webp",
-				"/assets/mobile-banner/banner4.webp",
 			],
 		},
 
@@ -192,13 +190,11 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/desktop-banner/banner1.webp",
 			"/assets/desktop-banner/banner2.webp",
 			"/assets/desktop-banner/banner3.webp",
-			"/assets/desktop-banner/banner4.webp",
 		],
 		mobile: [
 			"/assets/mobile-banner/banner1.webp",
 			"/assets/mobile-banner/banner2.webp",
 			"/assets/mobile-banner/banner3.webp",
-			"/assets/mobile-banner/banner4.webp",
 		],
 	},
 	position: "center", // 壁纸位置，对应 object-position
