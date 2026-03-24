@@ -9,7 +9,13 @@
   font-weight: normal;
   font-style: normal;
   font-display: optional;
-  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF;
+  unicode-range:
+    U+3000-303F,
+    U+3400-4DBF,
+    U+4E00-9FFF,
+    U+F900-FAFF,
+    U+FF00-FFEF,
+    U+20000-2A6DF;
 }
 
 /* 导入相册样式 */
