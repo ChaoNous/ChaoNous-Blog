@@ -87,13 +87,30 @@ const lastModified = dayjs(entry.data.updated || entry.data.published)
 	.utc()
 	.format("YYYY-MM-DDTHH:mm:ss");
 
+// 构建封面图的绝对 URL（用于 JSON-LD image 字段）
+const coverImage = entry.data.image;
+let imageAbsoluteUrl: string | undefined;
+if (coverImage) {
+	if (coverImage.startsWith("http://") || coverImage.startsWith("https://")) {
+		imageAbsoluteUrl = coverImage;
+	} else if (coverImage.startsWith("/") && Astro.site) {
+		imageAbsoluteUrl = new URL(coverImage, Astro.site).toString();
+	}
+}
+
 const jsonLd = buildBlogPostingJsonLd({
 	title: entry.data.title,
 	description: entry.data.description,
 	published: entry.data.published,
+	updated: entry.data.updated,
 	lang: entry.data.lang,
 	authorName: profileConfig.name,
 	siteUrl: Astro.site,
+	pageUrl: Astro.url,
+	imageUrl: imageAbsoluteUrl,
+	wordCount: remarkPluginFrontmatter?.words,
+	tags: entry.data.tags,
+	category: entry.data.category,
 	defaultLang: siteConfig.lang,
 });
 ---
