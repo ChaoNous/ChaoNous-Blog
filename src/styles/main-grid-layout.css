@@ -796,12 +796,12 @@ body.wallpaper-transparent
 
 @media (min-width: 1280px) {
 	.banner-title {
-		font-size: 3.9rem;
+		font-size: 4.5rem;
 		line-height: 1.08;
 	}
 
 	.banner-subtitle {
-		font-size: 1.55rem;
+		font-size: 2rem;
 		line-height: 1.45;
 	}
 }
