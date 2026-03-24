@@ -62,6 +62,11 @@ function toMathSansBoldItalic(text: string): string {
 const navbarBrandText = siteConfig.navbarTitle?.text
 	? toMathSansBoldItalic(siteConfig.navbarTitle.text)
 	: siteConfig.title;
+
+const desktopWallpaperSwitchClass =
+	modeSwitchDisplay === "desktop" || modeSwitchDisplay === "both"
+		? "hidden md:block"
+		: "hidden";
 ---
 <div
 	id="navbar"
@@ -131,12 +136,14 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 			<div id="search-container">
 				<Search client:only="svelte"></Search>
 			</div>
-			{siteConfig.toc.enable && <MobileTOC client:only="svelte"></MobileTOC>}
+			{siteConfig.toc.enable && (
+				<MobileTOC client:only="svelte" hideTrigger={true}></MobileTOC>
+			)}
 			{
 				!siteConfig.themeColor.fixed && (
 					<button
 						aria-label="Display Settings"
-						class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90"
+						class="hidden md:flex btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90"
 						id="display-settings-switch"
 					>
 						<Icon
@@ -147,17 +154,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 				)
 			}
 			<div
-				class:list={[
-					modeSwitchDisplay === "off"
-						? "hidden"
-						: modeSwitchDisplay === "mobile"
-							? "block md:hidden"
-							: modeSwitchDisplay === "desktop"
-								? "hidden md:block"
-								: modeSwitchDisplay === "both"
-									? "block"
-									: "hidden md:block",
-				]}
+				class:list={[desktopWallpaperSwitchClass]}
 			>
 				<WallpaperSwitch client:only="svelte"></WallpaperSwitch>
 			</div>
@@ -174,7 +171,12 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 				></Icon>
 			</button>
 		</div>
-		<NavMenuPanel links={links}></NavMenuPanel>
+		<NavMenuPanel
+			links={links}
+			showMobileToc={siteConfig.toc.enable}
+			showDisplaySettings={!siteConfig.themeColor.fixed}
+			showWallpaperModes={modeSwitchDisplay !== "off"}
+		></NavMenuPanel>
 		<DisplaySettings client:only="svelte"></DisplaySettings>
 	</div>
 </div>

@@ -6,6 +6,8 @@
 	import { navigateToPage } from "../utils/navigation-utils";
 	import { panelManager } from "../utils/panel-manager.js";
 
+	let { hideTrigger = false } = $props();
+
 	let tocItems: Array<{
 		id: string;
 		text: string;
@@ -317,7 +319,7 @@
 	}
 </script>
 
-{#if !isHomePage}
+{#if !hideTrigger && !isHomePage}
 	<button
 		on:click={togglePanel}
 		aria-label="Table of Contents"

@@ -1,5 +1,9 @@
 ---
 import { Icon } from "astro-icon/components";
+import {
+	WALLPAPER_BANNER,
+	WALLPAPER_FULLSCREEN,
+} from "../../constants/constants";
 import { LinkPresets } from "../../constants/link-presets";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
@@ -8,6 +12,9 @@ import { url } from "../../utils/url-utils";
 
 interface Props {
 	links: NavBarLink[];
+	showMobileToc?: boolean;
+	showDisplaySettings?: boolean;
+	showWallpaperModes?: boolean;
 }
 
 const navTitleMap: Record<string, string> = {
@@ -49,97 +56,227 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 		),
 	}),
 );
+
+const {
+	showMobileToc = false,
+	showDisplaySettings = false,
+	showWallpaperModes = false,
+} = Astro.props;
 ---
-<div id="nav-menu-panel" class:list={["float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
-    {processedLinks.map((link) => (
-        <div class="mobile-menu-item">
-            {link.children && link.children.length > 0 ? (
-                <div class="mobile-dropdown" data-mobile-dropdown>
-                    <button 
-                        class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left
+
+<div
+	id="nav-menu-panel"
+	class:list={[
+		"float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto",
+	]}
+>
+	{
+		(showMobileToc || showDisplaySettings || showWallpaperModes) && (
+			<div class="mb-2 border-b border-black/5 pb-2 dark:border-white/10">
+				{showMobileToc && (
+					<button
+						type="button"
+						class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+						data-nav-action="mobile-toc"
+					>
+						<div class="flex items-center transition nav-item-text font-bold">
+							<Icon
+								name="material-symbols:format-list-bulleted"
+								class="text-[1.1rem] mr-2"
+							/>
+							{i18n(I18nKey.tableOfContents)}
+						</div>
+						<Icon
+							name="material-symbols:chevron-right-rounded"
+							class="transition text-[1.25rem] text-(--primary)"
+						/>
+					</button>
+				)}
+				{showDisplaySettings && (
+					<button
+						type="button"
+						class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+						data-nav-action="display-settings"
+					>
+						<div class="flex items-center transition nav-item-text font-bold">
+							<Icon
+								name="material-symbols:palette-outline"
+								class="text-[1.1rem] mr-2"
+							/>
+							{i18n(I18nKey.themeColor)}
+						</div>
+						<Icon
+							name="material-symbols:chevron-right-rounded"
+							class="transition text-[1.25rem] text-(--primary)"
+						/>
+					</button>
+				)}
+				{showWallpaperModes && (
+					<>
+						<button
+							type="button"
+							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+							data-wallpaper-mode={WALLPAPER_BANNER}
+						>
+							<div class="flex items-center transition nav-item-text font-bold">
+								<Icon
+									name="material-symbols:image-outline"
+									class="text-[1.1rem] mr-2"
+								/>
+								{i18n(I18nKey.wallpaperBanner)}
+							</div>
+							<Icon
+								name="material-symbols:chevron-right-rounded"
+								class="transition text-[1.25rem] text-(--primary)"
+							/>
+						</button>
+						<button
+							type="button"
+							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+							data-wallpaper-mode={WALLPAPER_FULLSCREEN}
+						>
+							<div class="flex items-center transition nav-item-text font-bold">
+								<Icon
+									name="material-symbols:wallpaper"
+									class="text-[1.1rem] mr-2"
+								/>
+								{i18n(I18nKey.wallpaperFullscreen)}
+							</div>
+							<Icon
+								name="material-symbols:chevron-right-rounded"
+								class="transition text-[1.25rem] text-(--primary)"
+							/>
+						</button>
+					</>
+				)}
+			</div>
+		)
+	}
+	{
+		processedLinks.map((link) => (
+			<div class="mobile-menu-item">
+				{link.children && link.children.length > 0 ? (
+					<div class="mobile-dropdown" data-mobile-dropdown>
+						<button
+							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left
                             hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-                        data-mobile-dropdown-trigger
-                        aria-expanded="false"
-                    >
-                        <div class="flex items-center transition nav-item-text font-bold">
-                            {link.icon && <Icon name={link.icon} class="text-[1.1rem] mr-2" />}
-                            {getLocalizedName(link.name)}
-                        </div>
-                        <Icon name="material-symbols:keyboard-arrow-down-rounded"
-                              class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
-                        />
-                    </button>
-                    <div class="mobile-submenu" data-mobile-submenu>
-                        {link.children.map((child) => (
-                            <a href={child.external ? child.url : url(child.url)} 
-                               class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-4
+							data-mobile-dropdown-trigger
+							aria-expanded="false"
+						>
+							<div class="flex items-center transition nav-item-text font-bold">
+								{link.icon && (
+									<Icon
+										name={link.icon}
+										class="text-[1.1rem] mr-2"
+									/>
+								)}
+								{getLocalizedName(link.name)}
+							</div>
+							<Icon
+								name="material-symbols:keyboard-arrow-down-rounded"
+								class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
+							/>
+						</button>
+						<div class="mobile-submenu" data-mobile-submenu>
+							{link.children.map((child) => (
+								<a
+									href={
+										child.external
+											? child.url
+											: url(child.url)
+									}
+									class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-4
                                    hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-                               target={child.external ? "_blank" : null}
-                            >
-                                <div class="flex items-center transition nav-subitem-text font-medium">
-                                    {child.icon && <Icon name={child.icon} class="text-[1.1rem] mr-2" />}
-                                    {getLocalizedName(child.name)}
-                                </div>
-                                {child.external && <Icon name="fa7-solid:arrow-up-right-from-square"
-                                      class="transition text-[0.75rem] nav-arrow"
-                                />}
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            ) : (
-                <a href={link.external ? link.url : url(link.url)} class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4
+									target={child.external ? "_blank" : null}
+								>
+									<div class="flex items-center transition nav-subitem-text font-medium">
+										{child.icon && (
+											<Icon
+												name={child.icon}
+												class="text-[1.1rem] mr-2"
+											/>
+										)}
+										{getLocalizedName(child.name)}
+									</div>
+									{child.external && (
+										<Icon
+											name="fa7-solid:arrow-up-right-from-square"
+											class="transition text-[0.75rem] nav-arrow"
+										/>
+									)}
+								</a>
+							))}
+						</div>
+					</div>
+				) : (
+					<a
+						href={link.external ? link.url : url(link.url)}
+						class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4
                     hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition
                 "
-                   target={link.external ? "_blank" : null}
-                >
-                    <div class="flex items-center transition nav-item-text font-bold">
-                        {link.icon && <Icon name={link.icon} class="text-[1.1rem] mr-2" />}
-                        {getLocalizedName(link.name)}
-                    </div>
-                    {!link.external && <Icon name="material-symbols:chevron-right-rounded"
-                          class="transition text-[1.25rem] text-(--primary)"
-                    />}
-                    {link.external && <Icon name="fa7-solid:arrow-up-right-from-square"
-                          class="transition text-[0.75rem] nav-arrow"
-                    />}
-                </a>
-            )}
-        </div>
-    ))}
+						target={link.external ? "_blank" : null}
+					>
+						<div class="flex items-center transition nav-item-text font-bold">
+							{link.icon && (
+								<Icon
+									name={link.icon}
+									class="text-[1.1rem] mr-2"
+								/>
+							)}
+							{getLocalizedName(link.name)}
+						</div>
+						{!link.external && (
+							<Icon
+								name="material-symbols:chevron-right-rounded"
+								class="transition text-[1.25rem] text-(--primary)"
+							/>
+						)}
+						{link.external && (
+							<Icon
+								name="fa7-solid:arrow-up-right-from-square"
+								class="transition text-[0.75rem] nav-arrow"
+							/>
+						)}
+					</a>
+				)}
+			</div>
+		))
+	}
 </div>
 
 <style>
-    @reference "../../styles/main.css";
+	@reference "../../styles/main.css";
 
-    .mobile-submenu {
-        @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
-    }
-    
-    .mobile-dropdown[data-expanded="true"] .mobile-submenu {
-        @apply max-h-96;
-    }
-    
-    .mobile-dropdown[data-expanded="true"] .mobile-dropdown-arrow {
-        @apply rotate-180;
-    }
+	.mobile-submenu {
+		@apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
+	}
 
-    .nav-item-text {
-        @apply text-black/75 dark:text-white/75;
-    }
+	.mobile-dropdown[data-expanded="true"] .mobile-submenu {
+		@apply max-h-96;
+	}
 
-    .nav-subitem-text {
-        @apply text-black/60 dark:text-white/60;
-    }
+	.mobile-dropdown[data-expanded="true"] .mobile-dropdown-arrow {
+		@apply rotate-180;
+	}
 
-    .nav-arrow {
-        @apply text-black/25 dark:text-white/25;
-    }
+	.nav-item-text {
+		@apply text-black/75 dark:text-white/75;
+	}
+
+	.nav-subitem-text {
+		@apply text-black/60 dark:text-white/60;
+	}
+
+	.nav-arrow {
+		@apply text-black/25 dark:text-white/25;
+	}
 </style>
 
 <script>
 	const closeSiblingDropdowns = (activeDropdown: Element) => {
-		const mobileDropdowns = document.querySelectorAll("[data-mobile-dropdown]");
+		const mobileDropdowns = document.querySelectorAll(
+			"[data-mobile-dropdown]",
+		);
 		mobileDropdowns.forEach((dropdown) => {
 			if (dropdown === activeDropdown) return;
 			dropdown.setAttribute("data-expanded", "false");
@@ -155,6 +292,47 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 	document.addEventListener("click", (event) => {
 		const target = event.target;
 		if (!(target instanceof Element)) return;
+
+		const actionButton = target.closest(
+			"[data-nav-action], [data-wallpaper-mode]",
+		);
+		if (actionButton instanceof HTMLElement) {
+			event.preventDefault();
+
+			(async () => {
+				const [{ panelManager }, { setWallpaperMode }] =
+					await Promise.all([
+						import("../../utils/panel-manager.js"),
+						import("../../utils/setting-utils"),
+					]);
+
+				const action = actionButton.dataset.navAction;
+				const wallpaperMode = actionButton.dataset.wallpaperMode;
+
+				await panelManager.closePanel("nav-menu-panel");
+
+				if (action === "mobile-toc") {
+					await panelManager.togglePanel("mobile-toc-panel", true);
+					return;
+				}
+
+				if (action === "display-settings") {
+					await panelManager.togglePanel("display-setting", true);
+					return;
+				}
+
+				if (
+					wallpaperMode === "banner" ||
+					wallpaperMode === "fullscreen"
+				) {
+					setWallpaperMode(wallpaperMode);
+				}
+			})().catch((error) => {
+				console.error("Failed to handle nav menu action:", error);
+			});
+
+			return;
+		}
 
 		const trigger = target.closest("[data-mobile-dropdown-trigger]");
 		if (!(trigger instanceof HTMLElement)) return;
