@@ -50,7 +50,6 @@
 	// Whether the error toast is visible
 	let showError = false;
 
-	
 	let currentSong = {
 		title: "Sample Song",
 		artist: "Sample Artist",
