@@ -116,26 +116,6 @@ const bannerOffsetByPosition = {
 const bannerOffset =
 	bannerOffsetByPosition[siteConfig.banner.position || "center"];
 
-// 构建字体配置的 CSS 变量
-// ASCII 字体优先级最高（用于英文、数字等），CJK 字体作为回退
-let bodyFontFamily = "";
-if (siteConfig.font) {
-	const fonts: string[] = [];
-	// 先添加 ASCII 字体（优先级最高）
-	if (siteConfig.font.asciiFont?.fontFamily) {
-		const asciiFont = siteConfig.font.asciiFont.fontFamily;
-		// 如果字体名包含空格，需要用引号包围
-		fonts.push(asciiFont.includes(" ") ? `"${asciiFont}"` : asciiFont);
-	}
-	// 再添加 CJK 字体（作为回退）
-	if (siteConfig.font.cjkFont?.fontFamily) {
-		const cjkFont = siteConfig.font.cjkFont.fontFamily;
-		// 如果字体名包含空格，需要用引号包围
-		fonts.push(cjkFont.includes(" ") ? `"${cjkFont}"` : cjkFont);
-	}
-	// 组合成完整的 font-family 字符串
-	bodyFontFamily = fonts.join(", ");
-}
 ---
 
 <!doctype html>
@@ -359,7 +339,6 @@ if (siteConfig.font) {
 	<body
 		class="min-h-screen"
 		class:list={[{ "is-home": isHomePage, "enable-banner": enableBanner }]}
-		style={bodyFontFamily ? `font-family: ${bodyFontFamily};` : ""}
 	>
 		<!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显�?-->
 		{shouldShowTopHighlight && <div class="top-gradient-highlight" />}

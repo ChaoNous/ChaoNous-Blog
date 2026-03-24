@@ -4,8 +4,23 @@
 
 /* 导入本地中文字体：朱雀仿宋 - 使用 optional 避免阻塞渲染 */
 @font-face {
-  font-family: 'Zhuque Fangsong';
+  font-family: 'Zhuque Fangsong CJK';
   src: url('/assets/fonts/ZhuqueFangsong-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: optional;
+  unicode-range:
+    U+3000-303F,
+    U+3400-4DBF,
+    U+4E00-9FFF,
+    U+F900-FAFF,
+    U+FF00-FFEF,
+    U+20000-2A6DF;
+}
+
+@font-face {
+  font-family: 'Source Han Serif SC CJK';
+  src: local('Source Han Serif SC');
   font-weight: normal;
   font-style: normal;
   font-display: optional;
@@ -34,6 +49,10 @@
 /* Migrate from v3 config */
 @theme {
   --font-sans: "Cinzel", Georgia, "Zhuque Fangsong", "Source Han Serif SC";
+  --font-latin: "Cinzel", Georgia;
+  --font-cjk: "Zhuque Fangsong CJK", "Source Han Serif SC CJK";
+  --font-content-latin-first: "Cinzel", Georgia, "Zhuque Fangsong CJK", "Source Han Serif SC CJK";
+  --font-content-cjk-first: "Zhuque Fangsong CJK", "Source Han Serif SC CJK", "Cinzel", Georgia;
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
@@ -61,8 +80,23 @@ html {
 }
 
 body {
+  font-family: var(--font-content-latin-first);
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+:lang(zh),
+:lang(zh-CN),
+:lang(zh-Hans),
+:lang(ja),
+:lang(ko) {
+  font-family: var(--font-content-cjk-first);
+}
+
+:lang(en),
+:lang(en-US),
+:lang(en-GB) {
+  font-family: var(--font-content-latin-first);
 }
 
 html::-webkit-scrollbar,
