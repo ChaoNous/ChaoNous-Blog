@@ -165,11 +165,11 @@ if (siteConfig.font) {
 		<!-- Iconify 图标 CDN -->
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
 
-		<!-- 关键字体预加载 - 使用 optional 避免布局偏移 -->
-		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" media="print" onload="this.media='all'" />
+		<!-- 关键字体预加载 - 合并 Cinzel + Almendra SC 为单次请求，减少 HTTP 往返，使用 optional 避免布局偏移 -->
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Almendra+SC&display=optional" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Almendra+SC&display=optional" media="print" onload="this.media='all'" />
 		<noscript>
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=optional" />
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Almendra+SC&display=optional" />
 		</noscript>
 
 		<!-- Banner 图片预加载 - 高优先级确保 LCP -->

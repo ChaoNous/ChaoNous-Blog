@@ -69,14 +69,6 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 	? toMathSansBoldItalic(siteConfig.navbarTitle.text)
 	: siteConfig.title;
 ---
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Almendra+SC&display=optional" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almendra+SC&display=optional" media="print" onload="this.setAttribute('media', 'all')" />
-<noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almendra+SC&display=optional" />
-</noscript>
-
 <div id="navbar" class="z-50 onload-animation group" data-transparent-mode={navbarTransparentMode} data-is-home={isHomePage}>
     <div class="absolute h-8 left-0 right-0 -top-8 bg-(--card-bg) transition"></div> <!-- used for onload animation -->
     <div class:list={[className, "overflow-visible! max-w-(--page-width) h-18 mx-auto flex items-center justify-between px-4"]}>
