@@ -12,7 +12,6 @@ import { url } from "../../utils/url-utils";
 
 interface Props {
 	links: NavBarLink[];
-	showMobileToc?: boolean;
 	showDisplaySettings?: boolean;
 	showWallpaperModes?: boolean;
 }
@@ -58,7 +57,6 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 );
 
 const {
-	showMobileToc = false,
 	showDisplaySettings = false,
 	showWallpaperModes = false,
 } = Astro.props;
@@ -71,27 +69,8 @@ const {
 	]}
 >
 	{
-		(showMobileToc || showDisplaySettings || showWallpaperModes) && (
+		(showDisplaySettings || showWallpaperModes) && (
 			<div class="mb-2 border-b border-black/5 pb-2 dark:border-white/10">
-				{showMobileToc && (
-					<button
-						type="button"
-						class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-						data-nav-action="mobile-toc"
-					>
-						<div class="flex items-center transition nav-item-text font-bold">
-							<Icon
-								name="material-symbols:format-list-bulleted"
-								class="text-[1.1rem] mr-2"
-							/>
-							{i18n(I18nKey.tableOfContents)}
-						</div>
-						<Icon
-							name="material-symbols:chevron-right-rounded"
-							class="transition text-[1.25rem] text-(--primary)"
-						/>
-					</button>
-				)}
 				{showDisplaySettings && (
 					<button
 						type="button"
@@ -293,9 +272,7 @@ const {
 		const target = event.target;
 		if (!(target instanceof Element)) return;
 
-		const actionButton = target.closest(
-			"[data-nav-action], [data-wallpaper-mode]",
-		);
+		const actionButton = target.closest("[data-nav-action], [data-wallpaper-mode]");
 		if (actionButton instanceof HTMLElement) {
 			event.preventDefault();
 
@@ -310,14 +287,6 @@ const {
 				const wallpaperMode = actionButton.dataset.wallpaperMode;
 
 				await panelManager.closePanel("nav-menu-panel");
-
-				if (action === "mobile-toc") {
-					if (typeof window.mobileTOCInit === "function") {
-						window.mobileTOCInit();
-					}
-					await panelManager.togglePanel("mobile-toc-panel", true);
-					return;
-				}
 
 				if (action === "display-settings") {
 					await panelManager.togglePanel("display-setting", true);

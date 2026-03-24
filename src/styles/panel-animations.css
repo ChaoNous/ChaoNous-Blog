@@ -25,14 +25,6 @@
 }
 
 /* 特定面板的动画调整 */
-#mobile-toc-panel {
-  transform-origin: top right;
-}
-
-#mobile-toc-panel.float-panel-closed {
-  transform: scaleY(0) scaleX(0.7);
-}
-
 #display-setting {
   transform-origin: top right;
 }
@@ -69,10 +61,6 @@
 @media (max-width: 768px) {
   .float-panel-closed {
     transform: scaleY(0) scaleX(0.85);
-  }
-
-  #mobile-toc-panel.float-panel-closed {
-    transform: scaleY(0) scaleX(0.8);
   }
 
   #wallpaper-mode-panel.float-panel-closed {

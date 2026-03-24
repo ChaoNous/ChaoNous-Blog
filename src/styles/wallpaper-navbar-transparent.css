@@ -104,7 +104,7 @@ body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
 }
 
 /* 子组件样式 (Sub-Components) */
-:is(.dropdown-content, #nav-menu-panel, #mobile-toc-panel, #display-setting, #search-panel, .music-player .mini-player, .float-panel) {
+:is(.dropdown-content, #nav-menu-panel, #display-setting, #search-panel, .music-player .mini-player, .float-panel) {
   /* 使用面板专用变量 */
   background: var(--panel-bg);
   backdrop-filter: var(--panel-blur);
@@ -145,7 +145,7 @@ body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
   }
 
   /* 非首页时，移动端各个弹出面板不透明 */
-  #navbar:not([data-is-home="true"]) :is(#nav-menu-panel, #mobile-toc-panel, #search-panel, #display-setting) {
+  #navbar:not([data-is-home="true"]) :is(#nav-menu-panel, #search-panel, #display-setting) {
     background: var(--card-bg);
     backdrop-filter: none;
   }

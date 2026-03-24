@@ -6,7 +6,6 @@ import { LinkPreset, type NavBarLink } from "../types/config";
 import { url } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
 import LightDarkSwitch from "./LightDarkSwitch.svelte";
-import MobileTOC from "./MobileTOC.svelte";
 import Search from "./Search.svelte";
 import WallpaperSwitch from "./WallpaperSwitch.svelte";
 import DisplaySettings from "./widget/DisplaySettings.svelte";
@@ -136,9 +135,6 @@ const desktopWallpaperSwitchClass =
 			<div id="search-container">
 				<Search client:only="svelte"></Search>
 			</div>
-			{siteConfig.toc.enable && (
-				<MobileTOC client:only="svelte" hideTrigger={true}></MobileTOC>
-			)}
 			{
 				!siteConfig.themeColor.fixed && (
 					<button
@@ -173,7 +169,6 @@ const desktopWallpaperSwitchClass =
 		</div>
 		<NavMenuPanel
 			links={links}
-			showMobileToc={!isHomePage && siteConfig.toc.enable}
 			showDisplaySettings={!siteConfig.themeColor.fixed}
 			showWallpaperModes={modeSwitchDisplay !== "off"}
 		></NavMenuPanel>

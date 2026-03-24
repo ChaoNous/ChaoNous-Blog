@@ -19,7 +19,6 @@ declare global {
 			}>;
 		};
 
-		mobileTOCInit?: () => void;
 		initSemifullScrollDetection?: () => void;
 		/** Navbar scroll handler reference used to remove stale listeners across Swup page swaps. */
 		semifullScrollHandler?: () => void;

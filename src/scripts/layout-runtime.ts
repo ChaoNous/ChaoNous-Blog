@@ -110,10 +110,6 @@ async function initializePanelManager() {
 					"search-bar",
 					"search-switch",
 				]);
-				setClickOutsideToClose("mobile-toc-panel", [
-					"mobile-toc-panel",
-					"mobile-toc-switch",
-				]);
 				setClickOutsideToClose("wallpaper-mode-panel", [
 					"wallpaper-mode-panel",
 					"wallpaper-mode-switch",

@@ -9,11 +9,6 @@ export function initializeArticleToc() {
 		}, 100);
 	}
 
-	if (typeof window.mobileTOCInit === "function") {
-		window.setTimeout(() => {
-			window.mobileTOCInit!();
-		}, 100);
-	}
 }
 
 export function markTocNotReady() {

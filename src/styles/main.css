@@ -200,7 +200,6 @@ body::-webkit-scrollbar {
   .is-theme-transitioning #display-setting,
   .is-theme-transitioning #nav-menu-panel,
   .is-theme-transitioning #translate-panel,
-  .is-theme-transitioning #mobile-toc-panel,
   .is-theme-transitioning #search-panel {
     transition: none !important;
     backdrop-filter: none !important;
