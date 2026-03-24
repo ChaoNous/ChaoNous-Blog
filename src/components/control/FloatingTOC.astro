@@ -462,12 +462,17 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 				if (level < minLevel) minLevel = level;
 			});
 
+			// 使用相对深度：显示从 minLevel 开始的 depthLevels 级标题
+			const depthLevels = parseInt(this.wrapper?.dataset.depth || "3");
+			const maxVisibleDepth = minLevel + depthLevels;
+
 			let html = "";
 			let h1Count = 0;
 			allHeadings.forEach((heading) => {
 				const level = parseInt(heading.tagName[1]);
 
-				if (level >= minLevel + maxLevel) return;
+				// 显示 depth < maxVisibleDepth 的标题
+				if (level >= maxVisibleDepth) return;
 
 				this.headings.push(heading as HTMLElement);
 

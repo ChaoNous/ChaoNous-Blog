@@ -70,12 +70,24 @@
 		];
 		let h1Count = 0;
 
+		// 计算最小深度
+		let minLevel = 6;
+		headings.forEach((heading) => {
+			if (heading.id) {
+				const level = Number.parseInt(heading.tagName.charAt(1), 10);
+				if (level < minLevel) minLevel = level;
+			}
+		});
+
+		// 使用相对深度：显示从 minLevel 开始的 tocDepth 级标题
+		const maxVisibleDepth = minLevel + tocDepth;
+
 		headings.forEach((heading) => {
 			if (heading.id) {
 				const level = Number.parseInt(heading.tagName.charAt(1), 10);
 
-
-				if (level > tocDepth) {
+				// 显示 depth < maxVisibleDepth 的标题
+				if (level >= maxVisibleDepth) {
 					return;
 				}
 
@@ -83,7 +95,7 @@
 				let badge = "";
 
 
-				if (level === 1) {
+				if (level === minLevel) {
 					h1Count++;
 					if (
 						useJapaneseBadge &&

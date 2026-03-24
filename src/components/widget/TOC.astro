@@ -399,8 +399,10 @@ const className = Astro.props.class;
 			];
 
 			let heading1Count = 1;
+			// 使用相对深度：显示从 minDepth 开始的 maxLevel 级标题
+			const maxVisibleDepth = minDepth + maxLevel;
 			const tocHTML = headings
-				.filter((heading) => heading.depth < minDepth + maxLevel)
+				.filter((heading) => heading.depth < maxVisibleDepth)
 				.map((heading) => {
 					const depthClass =
 						heading.depth === minDepth

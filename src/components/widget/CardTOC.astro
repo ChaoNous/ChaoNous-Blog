@@ -269,14 +269,19 @@ const headingsJson = JSON.stringify(headings);
 		private generateTOCFromHeadingsData(headingsData: HeadingData[]) {
 			if (!this.content) return;
 
-			const maxLevel = parseInt(this.wrapper.dataset.depth || "3", 10);
+			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
 			const useJapaneseBadge = this.wrapper.dataset.japaneseBadge === "true";
 			const japaneseKatakana = this.getJapaneseKatakana();
 
+			// 计算最小深度用于确定顶级标题
 			let minLevel = 6;
 			headingsData.forEach((heading) => {
 				if (heading.depth < minLevel) minLevel = heading.depth;
 			});
+
+			// 使用相对深度：显示从 minLevel 开始的 depthLevels 级标题
+			// 例如：depth=2，minLevel=2 时，显示 h2 和 h3 (depth < 4)
+			const maxVisibleDepth = minLevel + depthLevels;
 
 			this.headings = [];
 			let html = "";
@@ -284,7 +289,8 @@ const headingsJson = JSON.stringify(headings);
 
 			headingsData.forEach((heading) => {
 				const level = heading.depth;
-				if (level >= minLevel + maxLevel) return;
+				// 显示 depth < maxVisibleDepth 的标题
+				if (level >= maxVisibleDepth) return;
 
 				const domElement = document.getElementById(heading.slug);
 				if (domElement) {
@@ -350,7 +356,7 @@ const headingsJson = JSON.stringify(headings);
 				return;
 			}
 
-			const maxLevel = parseInt(this.wrapper.dataset.depth || "3", 10);
+			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
 			const useJapaneseBadge = this.wrapper.dataset.japaneseBadge === "true";
 			const japaneseKatakana = this.getJapaneseKatakana();
 
@@ -360,13 +366,17 @@ const headingsJson = JSON.stringify(headings);
 				if (level < minLevel) minLevel = level;
 			});
 
+			// 使用相对深度：显示从 minLevel 开始的 depthLevels 级标题
+			const maxVisibleDepth = minLevel + depthLevels;
+
 			this.headings = [];
 			let html = "";
 			let h1Count = 0;
 
 			allHeadings.forEach((heading) => {
 				const level = parseInt(heading.tagName[1], 10);
-				if (level >= minLevel + maxLevel) return;
+				// 显示 depth < maxVisibleDepth 的标题
+				if (level >= maxVisibleDepth) return;
 
 				this.headings.push(heading as HTMLElement);
 
