@@ -421,7 +421,7 @@ const transparentClass = shouldEnableTransparency
 						desktopShowSidebar) && (
 						<div id="left-sidebar-wrapper" class="contents">
 							<div
-								id="left-sidebar-static"
+								id="left-sidebar-column"
 								class={`${sidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start md:sticky md:top-0`}
 							>
 								<SideBar
@@ -439,6 +439,7 @@ const transparentClass = shouldEnableTransparency
 					hasRightSidebarComponents && (
 						<div id="right-sidebar-static" class="contents">
 							<div
+								id="right-sidebar-column"
 								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start md:sticky md:top-0`}
 							>
 								<RightSideBar headings={headings} />

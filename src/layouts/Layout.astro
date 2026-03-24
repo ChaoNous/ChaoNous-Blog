@@ -404,7 +404,8 @@ const bannerOffset =
 		.enable-banner #top-row {
 			@apply lg:h-[calc(var(--banner-height-home)-4.5rem)] transition-all duration-300;
 		}
-		.enable-banner.is-home #sidebar-sticky {
+		.enable-banner.is-home #left-sidebar-column,
+		.enable-banner.is-home #right-sidebar-column {
 			@apply lg:top-[calc(1rem_-_var(--banner-height-extend))];
 		}
 		.navbar-hidden {
