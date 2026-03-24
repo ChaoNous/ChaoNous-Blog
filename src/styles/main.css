@@ -33,11 +33,11 @@
 
 /* Migrate from v3 config */
 @theme {
-  --font-sans: "Cinzel", Georgia, "Zhuque Fangsong";
-  --font-latin: "Cinzel", Georgia;
+  --font-sans: "Cinzel", "Zhuque Fangsong";
+  --font-latin: "Cinzel";
   --font-cjk: "Zhuque Fangsong CJK";
-  --font-content-latin-first: "Cinzel", Georgia, "Zhuque Fangsong CJK";
-  --font-content-cjk-first: "Zhuque Fangsong CJK", "Cinzel", Georgia;
+  --font-content-latin-first: "Cinzel", "Zhuque Fangsong CJK";
+  --font-content-cjk-first: "Zhuque Fangsong CJK", "Cinzel";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
