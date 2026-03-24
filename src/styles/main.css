@@ -684,15 +684,19 @@ body::-webkit-scrollbar {
    渲染性能优化 - 提升页面加载和滚动流畅度
    ======================================== */
 
-/* 离屏内容优化 - 使用 content-visibility 跳过不可见内容的渲染 */
-.post-card-item,
-.widget,
-.card-base {
+/* 离屏内容优化 - 使用 content-visibility 跳过不可见内容的渲染
+   注意：只对纯静态、无交互子组件的容器使用，避免 Svelte/Web Components 事件失效 */
+
+/* 文章卡片：纯静态，可安全使用 */
+.post-card-item {
   content-visibility: auto;
   contain-intrinsic-size: 0 200px;
 }
 
-/* 文章内容区域优化 */
+/* .widget 已无 DOM 对应元素（类名未实际使用），规则移除 */
+/* .card-base 包含 MusicPlayer 等 Svelte 交互组件，不应施加 content-visibility */
+
+/* 文章正文：纯静态内容，可安全使用 */
 .custom-md {
   content-visibility: auto;
   contain-intrinsic-size: 0 500px;

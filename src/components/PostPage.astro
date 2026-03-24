@@ -84,9 +84,9 @@ const { page } = Astro.props;
 		@apply flex flex-col gap-4;
 	}
 
+	/* 注意：此处不使用 content-visibility: auto —— 该容器依赖 CSS animation 做入场动画，
+	   两者同时使用会导致离屏元素进入视口时动画计时已过、直接跳到终态，入场效果失效 */
 	#post-list-container > :global(*) {
-		content-visibility: auto;
-		contain-intrinsic-size: 200px;
 		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 		opacity: 0;
 		animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
