@@ -77,11 +77,7 @@ const mainPanelTop =
 // const mobileNonHomeMainTop = !isHomePage ? "5.5rem" : mainPanelTop;
 
 const finalMainPanelTop =
-	siteConfig.wallpaperMode.defaultMode === "banner"
-		? isHomePage
-			? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
-			: mainPanelTop
-		: "5.5rem";
+	siteConfig.wallpaperMode.defaultMode === "banner" ? mainPanelTop : "5.5rem";
 
 const hasLeftSidebarComponents =
 	widgetManager.getComponentsByPosition("top", "left", "desktop").length >
@@ -193,7 +189,6 @@ const transparentClass = shouldEnableTransparency
 				siteConfig.banner?.navbar?.transparentMode || "semi",
 			defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode,
 			BANNER_HEIGHT: BANNER_HEIGHT,
-			BANNER_HEIGHT_EXTEND: BANNER_HEIGHT_EXTEND,
 			pageScaling: siteConfig.pageScaling,
 		}}
 	>
@@ -201,13 +196,12 @@ const transparentClass = shouldEnableTransparency
 			navbarTransparentMode,
 			defaultWallpaperMode,
 			BANNER_HEIGHT,
-			BANNER_HEIGHT_EXTEND,
 			pageScaling,
 		};
 	</script>
 
 	<script>
-		import "../scripts/main-grid-runtime.js?rev=homepage-banner-gap";
+		import "../scripts/main-grid-runtime.js";
 	</script>
 
 	<!-- 全屏壁纸组件 - 在 banner 模式下由 JS 控制显隐 -->
@@ -368,7 +362,6 @@ const transparentClass = shouldEnableTransparency
 
 	<!-- Main content -->
 	<div
-		id="main-content-shell"
 		class={`absolute w-full z-30 pointer-events-none ${transparentClass}`}
 		style={`top: ${finalMainPanelTop}`}
 	>

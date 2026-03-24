@@ -2,17 +2,6 @@ const runtimeConfig = window.__mainGridRuntimeConfig || {};
 const navbarTransparentMode = runtimeConfig.navbarTransparentMode || "semi";
 const defaultWallpaperMode = runtimeConfig.defaultWallpaperMode || "banner";
 const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 35;
-const BANNER_HEIGHT_EXTEND = runtimeConfig.BANNER_HEIGHT_EXTEND || 30;
-
-function getMainContentTop(wallpaperMode) {
-	if (wallpaperMode !== "banner") {
-		return "5.5rem";
-	}
-
-	return document.body.classList.contains("is-home")
-		? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
-		: `${BANNER_HEIGHT}vh`;
-}
 
 function syncDesktopLayoutState() {
 	const mainGrid = document.getElementById("main-grid");
@@ -63,7 +52,8 @@ function syncDesktopLayoutState() {
 			".absolute.w-full.z-30.pointer-events-none",
 		);
 		if (mainContent) {
-			mainContent.style.top = getMainContentTop(wallpaperMode);
+			mainContent.style.top =
+				wallpaperMode === "banner" ? `${BANNER_HEIGHT}vh` : "5.5rem";
 		}
 
 		syncDesktopLayoutState();
@@ -106,7 +96,7 @@ function applyWallpaperMode() {
 			body.classList.remove("wallpaper-transparent", "no-banner-mode");
 			forceReflow();
 			if (mainContent) {
-				mainContent.style.top = getMainContentTop(wallpaperMode);
+				mainContent.style.removeProperty("top");
 			}
 			body.classList.add("enable-banner");
 			if (navbar) {
@@ -135,7 +125,7 @@ function applyWallpaperMode() {
 			body.classList.remove("enable-banner");
 			forceReflow();
 			if (mainContent) {
-				mainContent.style.top = getMainContentTop(wallpaperMode);
+				mainContent.style.removeProperty("top");
 			}
 			body.classList.add("wallpaper-transparent", "no-banner-mode");
 			if (navbar) {
@@ -158,7 +148,7 @@ function applyWallpaperMode() {
 			body.classList.remove("enable-banner", "wallpaper-transparent");
 			forceReflow();
 			if (mainContent) {
-				mainContent.style.top = getMainContentTop(wallpaperMode);
+				mainContent.style.removeProperty("top");
 			}
 			body.classList.add("no-banner-mode");
 			if (navbar) {
