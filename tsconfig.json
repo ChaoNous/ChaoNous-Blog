@@ -6,7 +6,7 @@
 		"jsx": "react-jsx",
 		"jsxImportSource": "react",
 		"baseUrl": ".",
-		"strictNullChecks": true,
+		"strict": true,
 		"allowJs": false,
 		"declaration": true,
 		"plugins": [
