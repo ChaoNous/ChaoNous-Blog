@@ -79,7 +79,7 @@ const mainPanelTop =
 const finalMainPanelTop =
 	siteConfig.wallpaperMode.defaultMode === "banner"
 		? isHomePage
-			? `${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh`
+			? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
 			: mainPanelTop
 		: "5.5rem";
 
@@ -207,7 +207,7 @@ const transparentClass = shouldEnableTransparency
 	</script>
 
 	<script>
-		import "../scripts/main-grid-runtime.js";
+		import "../scripts/main-grid-runtime.js?rev=homepage-banner-gap";
 	</script>
 
 	<!-- 全屏壁纸组件 - 在 banner 模式下由 JS 控制显隐 -->

@@ -10,7 +10,7 @@ function getMainContentTop(wallpaperMode) {
 	}
 
 	return document.body.classList.contains("is-home")
-		? `${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh`
+		? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
 		: `${BANNER_HEIGHT}vh`;
 }
 
