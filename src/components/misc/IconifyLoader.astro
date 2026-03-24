@@ -1,29 +1,22 @@
 ---
-// 全局Iconify加载器组件
-// 在页面头部加载，确保图标库尽早可用
-
 export interface Props {
-	preloadIcons?: string[]; // 需要预加载的图标列表
-	timeout?: number; // 加载超时时间
-	retryCount?: number; // 重试次数
+	preloadIcons?: string[];
+	timeout?: number;
+	retryCount?: number;
 }
 
 const { preloadIcons = [], timeout = 10000, retryCount = 3 } = Astro.props;
 ---
 
-<!-- Iconify图标库加载器 -->
 <script is:inline define:vars={{ preloadIcons, timeout, retryCount }}>
-	// 全局图标加载逻辑
 	(function () {
 		"use strict";
 
-		// 避免重复加载
 		if (window.__iconifyLoaderInitialized) {
 			return;
 		}
 		window.__iconifyLoaderInitialized = true;
 
-		// 图标加载器类
 		class IconifyLoader {
 			constructor() {
 				this.isLoaded = false;
@@ -89,7 +82,6 @@ const { preloadIcons = [], timeout = 10000, retryCount = 3 } = Astro.props;
 
 			loadScript(timeout) {
 				return new Promise((resolve, reject) => {
-					// 检查是否已经存在
 					if (this.isIconifyReady()) {
 						resolve();
 						return;
@@ -236,7 +228,6 @@ const { preloadIcons = [], timeout = 10000, retryCount = 3 } = Astro.props;
 						document.body.appendChild(tempIcon);
 					});
 
-					// 设置超时清理
 					setTimeout(() => {
 						cleanup();
 						resolve();
@@ -245,20 +236,16 @@ const { preloadIcons = [], timeout = 10000, retryCount = 3 } = Astro.props;
 			}
 		}
 
-		// 创建全局实例
 		window.__iconifyLoader = new IconifyLoader();
 
-		// 立即开始加载
 		window.__iconifyLoader.load().catch((error) => {
 			console.error("Failed to initialize Iconify:", error);
 		});
 
-		// 如果有预加载图标，添加到队列
 		if (preloadIcons && preloadIcons.length > 0) {
 			window.__iconifyLoader.addToPreloadQueue(preloadIcons);
 		}
 
-		// 导出便捷函数到全局
 		window.loadIconify = () => window.__iconifyLoader?.load();
 		window.preloadIcons = (icons) =>
 			window.__iconifyLoader?.addToPreloadQueue(icons);
@@ -268,7 +255,6 @@ const { preloadIcons = [], timeout = 10000, retryCount = 3 } = Astro.props;
 				: null;
 		};
 
-		// 页面可见性变化时重新检查
 		document.addEventListener("visibilitychange", () => {
 			if (!document.hidden && !window.__iconifyLoader.isLoaded) {
 				window.__iconifyLoader.load().catch(console.error);
@@ -277,7 +263,6 @@ const { preloadIcons = [], timeout = 10000, retryCount = 3 } = Astro.props;
 	})();
 </script>
 
-<!-- 为不支持JavaScript的情况提供备用方案 -->
 <noscript>
 	<style>
 		iconify-icon {
