@@ -299,7 +299,10 @@
 			const playPromise = audio.play();
 			if (playPromise !== undefined) {
 				playPromise.catch((error) => {
-					console.warn("Autoplay was blocked until user interaction.", error);
+					console.warn(
+						"Autoplay was blocked until user interaction.",
+						error,
+					);
 					autoplayFailed = true;
 					isPlaying = false;
 				});
@@ -500,7 +503,7 @@
 				() => {
 					lazyLoadPlaylist();
 				},
-				{ timeout: 5000 }
+				{ timeout: 5000 },
 			);
 		} else {
 			// Fallback for browsers without requestIdleCallback
@@ -962,7 +965,7 @@
 							}}
 							role="button"
 							tabindex="0"
-							aria-label={`Play ${song.title} - ${song.artist}` }
+							aria-label={`Play ${song.title} - ${song.artist}`}
 						>
 							<div
 								class="w-6 h-6 flex items-center justify-center"
@@ -1218,22 +1221,22 @@
 		}
 		@media (max-width: 768px) {
 			.music-player {
-				max-width: 280px !important;
+				max-width: min(280px, calc(100dvw - 1rem)) !important;
 				/*left: 0.5rem !important;*/
 				bottom: 0.5rem !important;
 				right: 0.5rem !important;
 			}
 			.mini-player {
-				width: 280px;
+				width: min(280px, calc(100dvw - 1rem));
 			}
 			.music-player.expanded {
-				width: calc(100vw - 16px);
+				width: calc(100dvw - 1rem);
 				max-width: none;
 				/*left: 0.5rem !important;*/
 				right: 0.5rem !important;
 			}
 			.playlist-panel {
-				width: calc(100vw - 16px) !important;
+				width: calc(100dvw - 1rem) !important;
 				/*left: 0.5rem !important;*/
 				right: 0.5rem !important;
 				max-width: none;

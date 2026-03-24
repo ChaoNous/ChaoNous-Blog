@@ -34,7 +34,6 @@
 	};
 
 	const generateTOC = () => {
-
 		useJapaneseBadge =
 			(window as any).siteConfig?.toc?.useJapaneseBadge || false;
 		tocDepth = (window as any).siteConfig?.toc?.depth || 3;
@@ -94,7 +93,6 @@
 				const text = (heading.textContent || "").replace(/#+\s*$/, "");
 				let badge = "";
 
-
 				if (level === minLevel) {
 					h1Count++;
 					if (
@@ -115,7 +113,6 @@
 	};
 
 	const generatePostList = () => {
-
 		const postCards = document.querySelectorAll(".card-base");
 		const items: Array<{
 			title: string;
@@ -125,7 +122,6 @@
 		}> = [];
 
 		postCards.forEach((card) => {
-
 			const titleLink = card.querySelector(
 				'a[href*="/posts/"].transition.group',
 			);
@@ -164,9 +160,7 @@
 	const scrollToHeading = (id: string) => {
 		const element = document.getElementById(id);
 		if (element) {
-
 			setPanelVisibility(false);
-
 
 			const offset = 80;
 			const elementPosition = element.offsetTop - offset;
@@ -180,7 +174,6 @@
 
 	const navigateToPost = (url: string) => {
 		setPanelVisibility(false);
-
 
 		navigateToPage(url);
 	};
@@ -241,9 +234,7 @@
 		) {
 			const swup = (window as any).swup;
 
-
 			swup.hooks.on("page:view", () => {
-
 				setTimeout(() => {
 					init();
 				}, 200);
@@ -251,7 +242,6 @@
 
 			swupListenersRegistered = true;
 		} else if (!swupListenersRegistered) {
-
 			window.addEventListener("popstate", () => {
 				setTimeout(init, 200);
 			});
@@ -261,9 +251,7 @@
 
 	const checkSwupAvailability = () => {
 		if (typeof window !== "undefined") {
-
 			swupReady = !!(window as any).swup;
-
 
 			if (!swupReady) {
 				const checkSwup = () => {
@@ -275,9 +263,7 @@
 					}
 				};
 
-
 				document.addEventListener("swup:enable", checkSwup);
-
 
 				setTimeout(() => {
 					if ((window as any).swup) {
@@ -288,7 +274,6 @@
 					}
 				}, 1000);
 			} else {
-
 				setupSwupListeners();
 			}
 		}
@@ -307,9 +292,7 @@
 	};
 
 	onMount(() => {
-
 		setTimeout(init, 100);
-
 
 		window.addEventListener("scroll", updateActiveHeading);
 
@@ -319,24 +302,20 @@
 			}
 			window.removeEventListener("scroll", updateActiveHeading);
 
-
 			if (typeof window !== "undefined" && (window as any).swup) {
 				const swup = (window as any).swup;
 				swup.hooks.off("page:view");
 			}
-
 
 			window.removeEventListener("popstate", init);
 			swupListenersRegistered = false;
 		};
 	});
 
-
 	if (typeof window !== "undefined") {
 		(window as any).mobileTOCInit = init;
 	}
 </script>
-
 
 {#if !isHomePage}
 	<button
@@ -352,10 +331,9 @@
 	</button>
 {/if}
 
-
 <div
 	id="mobile-toc-panel"
-	class="float-panel float-panel-closed mobile-toc-panel absolute md:w-[20rem] w-[calc(100vw-2rem)]
+	class="float-panel float-panel-closed mobile-toc-panel absolute md:w-[min(20rem,calc(100dvw-2rem))] w-[calc(100dvw-2rem)]
 		top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-4"
 >
 	<div class="flex items-center justify-between mb-4">
@@ -432,13 +410,13 @@
 
 <style>
 	.mobile-toc-panel {
+		box-sizing: border-box;
 		max-height: calc(100vh - 120px);
 		overflow-y: auto;
 		background: var(--card-bg);
 		border: 1px solid var(--line-color);
 		backdrop-filter: blur(10px);
 	}
-
 
 	:global(.theme-switch-btn)::before {
 		transition:
@@ -490,7 +468,6 @@
 		border-left: 3px solid var(--primary);
 		padding-left: 9px;
 	}
-
 
 	.toc-item.level-1 {
 		padding-left: 12px;
@@ -663,7 +640,6 @@
 	:global(.dark) .post-item:hover .post-category {
 		color: rgba(255, 255, 255, 0.75);
 	}
-
 
 	.mobile-toc-panel::-webkit-scrollbar {
 		width: 4px;
