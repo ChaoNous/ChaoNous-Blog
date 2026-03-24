@@ -12,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+dev-server.log
 
 # environment variables
 .env
@@ -58,6 +59,9 @@ lighthouse-*.html
 lighthouse-*.txt
 lighthouse-results/
 lighthouse-results-*/
+.playwright-cli/
+test-screenshots/
+test-report.md
 
 # Performance test scripts
 performance-*.mjs

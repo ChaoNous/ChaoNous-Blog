@@ -21,10 +21,8 @@ const imagesToCompress = [
 	{ path: "src/assets/posts/jingdezhen/jingdezhen-1.webp", maxSize: 200 },
 	{ path: "src/assets/desktop-banner/banner1.webp", maxSize: 150 },
 	{ path: "src/assets/desktop-banner/banner2.webp", maxSize: 100 },
-	{ path: "src/assets/desktop-banner/banner4.webp", maxSize: 100 },
 	{ path: "src/assets/mobile-banner/banner1.webp", maxSize: 150 },
 	{ path: "src/assets/mobile-banner/banner2.webp", maxSize: 100 },
-	{ path: "src/assets/mobile-banner/banner4.webp", maxSize: 100 },
 	{ path: "src/assets/home/home.webp", maxSize: 150 },
 	{ path: "public/images/diary/1.jpg", maxSize: 200 },
 ];
