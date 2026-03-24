@@ -33,11 +33,10 @@
 
 /* Migrate from v3 config */
 @theme {
-  --font-sans: "Cinzel", "Zhuque Fangsong";
+  --font-sans: "Cinzel", "Zhuque Fangsong CJK";
   --font-latin: "Cinzel";
   --font-cjk: "Zhuque Fangsong CJK";
-  --font-content-latin-first: "Cinzel", "Zhuque Fangsong CJK";
-  --font-content-cjk-first: "Zhuque Fangsong CJK", "Cinzel";
+  --font-content: "Cinzel", "Zhuque Fangsong CJK";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
@@ -65,23 +64,9 @@ html {
 }
 
 body {
-  font-family: var(--font-content-latin-first);
+  font-family: var(--font-content);
   scrollbar-width: none;
   -ms-overflow-style: none;
-}
-
-:lang(zh),
-:lang(zh-CN),
-:lang(zh-Hans),
-:lang(ja),
-:lang(ko) {
-  font-family: var(--font-content-cjk-first);
-}
-
-:lang(en),
-:lang(en-US),
-:lang(en-GB) {
-  font-family: var(--font-content-latin-first);
 }
 
 html::-webkit-scrollbar,
