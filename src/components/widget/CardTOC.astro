@@ -125,22 +125,26 @@ const headingsJson = JSON.stringify(headings);
 	}
 
 	:global(.card-toc-dot) {
+		display: block;
 		width: 0.5rem;
 		height: 0.5rem;
 		background: var(--line-divider);
 		border-radius: 50%;
 		margin-right: 0.75rem;
 		margin-left: 0.25rem;
+		margin-top: calc((1.5em - 0.5rem) / 2);
 		flex-shrink: 0;
 	}
 
 	:global(.card-toc-dot-small) {
+		display: block;
 		width: 0.35rem;
 		height: 0.35rem;
 		background: var(--line-divider);
 		border-radius: 50%;
 		margin-right: 0.75rem;
 		margin-left: 0.35rem;
+		margin-top: calc((1.5em - 0.35rem) / 2);
 		flex-shrink: 0;
 	}
 
