@@ -70,7 +70,7 @@ const { isPostPage = false } = Astro.props;
 
   .back-to-top-btn-left
     right: auto
-    left: 6rem
+    left: unquote('max(1.5rem, calc(50vw - (var(--page-width) / 2) + 1rem))')
     transform: translateX(-5rem)
 
     &.hide

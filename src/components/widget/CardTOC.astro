@@ -93,9 +93,15 @@ const headingsJson = JSON.stringify(headings);
 	}
 
 	:global(.card-toc-item.active) {
-		background-color: var(--btn-card-bg-active);
-		color: var(--primary);
-		font-weight: 500;
+		background-color: color-mix(
+			in oklch,
+			var(--primary) 10%,
+			var(--card-bg) 90%
+		);
+		color: var(--text-secondary);
+		font-weight: 600;
+		box-shadow: inset 0 0 0 1px
+			color-mix(in oklch, var(--primary) 18%, transparent);
 	}
 
 	:global(.card-toc-badge) {
@@ -115,7 +121,7 @@ const headingsJson = JSON.stringify(headings);
 
 	:global(.card-toc-item.active .card-toc-badge) {
 		background: var(--primary);
-		color: var(--btn-content);
+		color: #fff;
 	}
 
 	:global(.card-toc-dot) {
