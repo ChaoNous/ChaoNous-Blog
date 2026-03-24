@@ -52,8 +52,12 @@ body.wallpaper-transparent
 
 /* 桌面端（>= 1280px）banner 模式下主内容区 top 值 */
 @media (min-width: 1280px) {
-	body.enable-banner .absolute.w-full.z-30 {
+	body.enable-banner:not(.is-home) #main-content-shell {
 		top: 35vh !important;
+	}
+
+	body.enable-banner.is-home #main-content-shell {
+		top: calc(var(--banner-height-home) + 2rem) !important;
 	}
 }
 
