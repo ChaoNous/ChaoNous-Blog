@@ -72,7 +72,7 @@ export const siteConfig: SiteConfig = {
 		// "mobile" = 仅移动端显示
 		// "desktop" = 仅桌面端显示
 		// "both" = 两端都显示
-		showModeSwitchOnMobile: "desktop",
+		showModeSwitchOnMobile: "both",
 	},
 
 	banner: {
@@ -166,18 +166,16 @@ export const siteConfig: SiteConfig = {
 		// 开发时请将字体放在 public/assets/fonts/，构建时会自动复制
 		asciiFont: {
 			// ASCII 字体 - 用于英文字符
-			fontFamily:
-				"'Cinzel'",
+			fontFamily: "'Cinzel'",
 			fontWeight: "400",
 			localFonts: [], // 本地字体文件
 			enableCompress: false,
 		},
 		cjkFont: {
 			// CJK 字体 - 用于中日韩文字
-			fontFamily:
-				"'Zhuque Fangsong UI'",
+			fontFamily: "'Zhuque Fangsong UI'",
 			fontWeight: "400",
-			localFonts: [ "ZhuqueFangsong-Regular.ttf" ], // 本地字体文件（相对于 public/assets/font/）
+			localFonts: ["ZhuqueFangsong-Regular.ttf"], // 本地字体文件（相对于 public/assets/font/）
 			enableCompress: true,
 		},
 	},

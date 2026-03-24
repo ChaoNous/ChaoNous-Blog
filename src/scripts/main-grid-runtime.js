@@ -4,9 +4,62 @@ const defaultWallpaperMode = runtimeConfig.defaultWallpaperMode || "banner";
 const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 35;
 const BANNER_HEIGHT_EXTEND = runtimeConfig.BANNER_HEIGHT_EXTEND || 30;
 
+function getResponsiveBannerHeightVh() {
+	const width = window.innerWidth;
+	const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+
+	if (width <= 1279 && isLandscape) {
+		return 60;
+	}
+
+	if (width <= 479) {
+		return 70;
+	}
+
+	if (width <= 767) {
+		return 75;
+	}
+
+	if (width <= 1279) {
+		return 70;
+	}
+
+	return BANNER_HEIGHT;
+}
+
+function syncBannerPosition(wallpaperMode) {
+	const bannerWrapper = document.getElementById("banner-wrapper");
+	if (!bannerWrapper) {
+		return;
+	}
+
+	if (wallpaperMode !== "banner") {
+		bannerWrapper.style.removeProperty("height");
+		bannerWrapper.style.removeProperty("top");
+		return;
+	}
+
+	const width = window.innerWidth;
+	const responsiveBannerHeight = getResponsiveBannerHeightVh();
+
+	if (width <= 1279) {
+		bannerWrapper.style.height = `${responsiveBannerHeight}vh`;
+		bannerWrapper.style.top = "0px";
+		return;
+	}
+
+	bannerWrapper.style.removeProperty("height");
+	bannerWrapper.style.top = `-${BANNER_HEIGHT_EXTEND}vh`;
+}
+
 function getMainContentTop(wallpaperMode) {
 	if (wallpaperMode !== "banner") {
 		return "5.5rem";
+	}
+
+	const responsiveBannerHeight = getResponsiveBannerHeightVh();
+	if (window.innerWidth <= 1279) {
+		return `${responsiveBannerHeight}vh`;
 	}
 
 	return document.body.classList.contains("is-home")
@@ -59,6 +112,8 @@ function syncDesktopLayoutState() {
 	}
 
 	requestAnimationFrame(() => {
+		syncBannerPosition(wallpaperMode);
+
 		const mainContent = document.getElementById("main-content-shell");
 		if (mainContent) {
 			mainContent.style.top = getMainContentTop(wallpaperMode);
@@ -101,13 +156,17 @@ function applyWallpaperMode() {
 			}
 			body.classList.remove("wallpaper-transparent", "no-banner-mode");
 			forceReflow();
+			syncBannerPosition(wallpaperMode);
 			if (mainContent) {
 				mainContent.style.top = getMainContentTop(wallpaperMode);
 			}
 			body.classList.add("enable-banner");
 			if (navbar) {
 				navbar.removeAttribute("data-dynamic-transparent");
-				navbar.setAttribute("data-transparent-mode", navbarTransparentMode);
+				navbar.setAttribute(
+					"data-transparent-mode",
+					navbarTransparentMode,
+				);
 				if (
 					navbarTransparentMode === "semifull" &&
 					window.initSemifullScrollDetection
@@ -121,6 +180,8 @@ function applyWallpaperMode() {
 		case "fullscreen":
 			if (bannerWrapper) {
 				bannerWrapper.style.display = "none";
+				bannerWrapper.style.removeProperty("height");
+				bannerWrapper.style.removeProperty("top");
 			}
 			if (fullscreenWallpaper) {
 				fullscreenWallpaper.style.display = "block";
@@ -144,6 +205,8 @@ function applyWallpaperMode() {
 		case "none":
 			if (bannerWrapper) {
 				bannerWrapper.style.display = "none";
+				bannerWrapper.style.removeProperty("height");
+				bannerWrapper.style.removeProperty("top");
 			}
 			if (fullscreenWallpaper) {
 				fullscreenWallpaper.style.display = "none";
@@ -228,6 +291,10 @@ function setupSwupLayoutSync() {
 }
 
 window.addEventListener("wallpaper-mode-change", function () {
+	applyWallpaperMode();
+});
+
+window.addEventListener("resize", function () {
 	applyWallpaperMode();
 });
 
