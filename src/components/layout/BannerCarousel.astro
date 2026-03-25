@@ -43,8 +43,14 @@ const firstImageIndex = 0;
 
 				return (
 					<li
-						class="banner-item carousel-item absolute inset-0 overflow-hidden bg-black opacity-0 scale-110"
+						class:list={[
+							"banner-item carousel-item absolute inset-0 overflow-hidden bg-black",
+							isFirstImage
+								? "opacity-100 scale-100"
+								: "opacity-0 scale-110",
+						]}
 						data-index={index}
+						style={isFirstImage ? "z-index: 2;" : "z-index: 1;"}
 					>
 						{/* 使用 picture 元素让浏览器只加载匹配的图片 */}
 						<picture class="absolute inset-0 block h-full w-full">

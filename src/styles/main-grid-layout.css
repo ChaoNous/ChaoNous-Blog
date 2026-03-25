@@ -65,6 +65,11 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
 
 /* 移动端无侧边栏布局修正（< 768px） */
 @media (max-width: 767px) {
+  .banner-title,
+  .banner-subtitle {
+    animation: none;
+  }
+
   #main-grid,
   #main-grid > * {
     min-width: 0;

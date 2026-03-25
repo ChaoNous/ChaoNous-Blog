@@ -15,6 +15,9 @@ const {
 	class: className = "",
 } = Astro.props;
 const textData = Array.isArray(text) ? JSON.stringify(text) : text;
+const initialText = Array.isArray(text)
+	? (text.find((item) => item && item.trim()) ?? text[0] ?? "")
+	: text;
 ---
 
 <span
@@ -22,7 +25,7 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 	data-text={textData}
 	data-speed={speed}
 	data-delete-speed={deleteSpeed}
-	data-pause-time={pauseTime}></span>
+	data-pause-time={pauseTime}>{initialText || "\u00A0"}</span>
 
 <script>
 	// @ts-nocheck
@@ -58,6 +61,7 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 		let charIndex = 0;
 		let isDeleting = false;
 		let destroyed = false;
+		let hasPaintedInitialText = Boolean(el.textContent?.trim());
 
 		const schedule = (delay) => {
 			if (destroyed) return;
@@ -68,6 +72,14 @@ const textData = Array.isArray(text) ? JSON.stringify(text) : text;
 			if (destroyed) return;
 
 			const currentText = texts[textIndex] || "";
+
+			if (hasPaintedInitialText) {
+				hasPaintedInitialText = false;
+				charIndex = 0;
+				el.textContent = "";
+				schedule(speed);
+				return;
+			}
 
 			if (!isDeleting) {
 				charIndex += 1;
