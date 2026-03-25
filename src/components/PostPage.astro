@@ -84,10 +84,23 @@ const { page } = Astro.props;
 		@apply flex flex-col gap-4;
 	}
 
-	/* 优化 Speed Index：移除初始 opacity: 0 */
+	/* 使用 content-visibility 优化渲染性能 */
 	#post-list-container > :global(*) {
-		/* 性能优化：使用 content-visibility */
 		content-visibility: auto;
 		contain-intrinsic-size: 0 200px;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		animation: fadeInSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+		animation-delay: calc(var(--content-delay) + var(--i) * var(--interval));
+	}
+
+	@keyframes fadeInSlide {
+		from {
+			opacity: 0;
+			transform: translateX(-8px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
 	}
 </style>

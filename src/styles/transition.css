@@ -71,15 +71,13 @@ html.is-animating .transition-swup-fade {
   }
 }
 
-/* 页面加载动画 - yukina风格，优化 Speed Index */
+/* 页面加载动画 - 优化 Speed Index */
 .onload-animation {
-  opacity: 1;
-  animation: none;
+  animation: fade-in-up 150ms ease-out forwards;
 }
 
 .onload-animation-fade-in {
-  opacity: 1;
-  animation: none;
+  animation: fade-in 150ms ease-out forwards;
 }
 
 @keyframes fade-in {
