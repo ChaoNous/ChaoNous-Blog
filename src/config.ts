@@ -221,7 +221,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.webp", // 头像路径，不以 '/' 开头表示 src 目录
 	name: "ChaoNous",
-	bio: "即使在他人看来是多么愚蠢和荒谬，然而只有遵循自己的选择，才能找到无怨无悔的人生。",
+	bio: "行路难！行路难！多歧路，今安在？长风破浪会有时，直挂云帆济沧海。",
 	typewriter: {
 		enable: true, // 是否启用打字机效果
 		speed: 80, // 打字速度
