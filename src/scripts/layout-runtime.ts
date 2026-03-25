@@ -1,7 +1,5 @@
 import { pathsEqual, url } from "../utils/url-utils";
 import { DARK_MODE, DEFAULT_THEME } from "../constants/constants";
-import { widgetConfigs } from "../config";
-import { initSakura } from "../utils/sakura-manager";
 import { BANNER_HEIGHT } from "../constants/constants";
 import {
   cleanupBannerRuntime,
@@ -168,20 +166,6 @@ function initCustomScrollbar() {
 
     element.setAttribute("data-scrollbar-initialized", "true");
   });
-}
-
-function setupSakura() {
-  const sakuraConfig = (widgetConfigs as any)?.sakura;
-  if (!sakuraConfig || !sakuraConfig.enable) return;
-  if ((window as any).sakuraInitialized) return;
-  initSakura(sakuraConfig);
-  (window as any).sakuraInitialized = true;
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", setupSakura);
-} else {
-  setupSakura();
 }
 
 let fancyboxSelectors: string[] = [];

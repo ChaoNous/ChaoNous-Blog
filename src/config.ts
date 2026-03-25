@@ -8,7 +8,6 @@ import type {
   NavBarConfig,
   PermalinkConfig,
   ProfileConfig,
-  SakuraConfig,
   ShareConfig,
   SidebarLayoutConfig,
   SiteConfig,
@@ -401,39 +400,11 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
   },
 };
 
-export const sakuraConfig: SakuraConfig = {
-  enable: false, // 是否启用樱花飘落效果
-  sakuraNum: 21, // 樱花数量
-  limitTimes: -1, // 限制次数，-1 表示无限
-  size: {
-    min: 0.5, // 最小尺寸
-    max: 1.1, // 最大尺寸
-  },
-  opacity: {
-    min: 0.3, // 最小透明度
-    max: 0.9, // 最大透明度
-  },
-  speed: {
-    horizontal: {
-      min: -1.7, // 水平最小速度
-      max: -1.2, // 水平最大速度
-    },
-    vertical: {
-      min: 1.5, // 垂直最小速度
-      max: 2.2, // 垂直最大速度
-    },
-    rotation: 0.03, // 旋转速度
-    fadeSpeed: 0.03, // 淡出速度，配合垂直最小速度调整
-  },
-  zIndex: 100, // 层级，建议设置为较高值避免被其他元素遮挡
-};
-
 // 组件配置汇总
 export const widgetConfigs = {
   profile: profileConfig,
   music: musicPlayerConfig,
   layout: sidebarLayoutConfig,
-  sakura: sakuraConfig,
   fullscreenWallpaper: fullscreenWallpaperConfig,
   share: shareConfig,
 } as const;
