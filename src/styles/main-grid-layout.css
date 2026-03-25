@@ -535,35 +535,35 @@ body.wallpaper-transparent
 @media (max-width: 1279px) and (orientation: landscape) {
   #banner-wrapper:not(.mobile-hide-banner) {
     top: 0 !important;
-    height: 40vh !important;
+    height: 20vh !important;
   }
 
   /* 横屏主内容区跟随 banner */
   .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 40vh !important;
-    min-height: calc(100vh - 40vh) !important;
+    top: 20vh !important;
+    min-height: calc(100vh - 20vh) !important;
   }
 
   .banner-container {
-    height: 40vh;
-    min-height: 200px;
+    height: 20vh;
+    min-height: 120px;
   }
 
   .banner-text-overlay {
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1rem;
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
   }
 
   .banner-title {
-    font-size: 2.2rem !important;
-    line-height: 1.3;
+    font-size: 1.8rem !important;
+    line-height: 1.2;
   }
 
   .banner-subtitle {
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
   }
 }
 
