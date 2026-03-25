@@ -5,7 +5,6 @@ import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
 import SharePanel from "@components/post/SharePanel.astro";
-import Encryptor from "@components/Encryptor.astro";
 import Twikoo from "@components/comment/Twikoo.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
@@ -80,7 +79,6 @@ const posterAvatarUrl = await resolveSharePosterImage({
 	src: profileConfig.avatar,
 });
 
-const isEncrypted = Boolean(entry.data.encrypted && entry.data.password);
 const normalizedCategory = entry.data.category || undefined;
 
 dayjs.extend(utc);
@@ -123,25 +121,14 @@ const jsonLd = buildBlogPostingJsonLd({
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
 	lastModified={lastModified}
 >
-	{
-		isEncrypted ? (
-			<Encryptor password={entry.data.password}>
-				<Markdown class="mb-6 markdown-content onload-animation">
-					<Content />
-				</Markdown>
-			</Encryptor>
-		) : (
-			<Markdown class="mb-6 markdown-content onload-animation">
-				<Content />
-			</Markdown>
-		)
-	}
+	<Markdown class="mb-6 markdown-content onload-animation">
+		<Content />
+	</Markdown>
 
 	{
 		shareConfig.enable && (
 			<SharePanel
 				slot="post-actions"
-				class="encrypted-hidden"
 				title={entry.data.title}
 				author={entry.data.author || profileConfig.name}
 				description={entry.data.description || ""}
@@ -156,14 +143,7 @@ const jsonLd = buildBlogPostingJsonLd({
 
 	{
 		licenseConfig.enable && (
-			<div
-				slot="post-actions"
-				id="license-component"
-				class:list={[
-					"encrypted-hidden-wrapper",
-					{ "encrypted-hidden": isEncrypted },
-				]}
-			>
+			<div slot="post-actions" id="license-component">
 				<License
 					title={entry.data.title}
 					id={entry.id}
@@ -182,7 +162,7 @@ const jsonLd = buildBlogPostingJsonLd({
 	}
 
 	{
-		commentConfig.enable && !isEncrypted && (
+		commentConfig.enable && (
 			<div slot="post-actions" class="comment-wrapper">
 				<Twikoo
 					envId={commentConfig.envId}

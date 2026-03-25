@@ -141,38 +141,25 @@ export const siteConfig: SiteConfig = {
     depth: 2, // 目录深度，1-6。例如 h1 则提取 h1，为 2 时从 h1 到 h2，以此类推
     useJapaneseBadge: false, // 使用日文徽章（未启用显示 "Table of Contents"..）
   },
-  showCoverInContent: true, // 是否在文章内容中显示封面图
-  generateOgImages: true, // 是否生成 OpenGraph 图片
-  favicon: [
-    // 配置 favicon
-    // {
-    //   src: '/favicon/icon.png',    // 图片路径
-    //   theme: 'light',              // 适配主题，可选 'light' | 'dark'
-    //   sizes: '32x32',              // 图片尺寸
-    // }
-  ],
+  showCoverInContent: true,
+  generateOgImages: true,
+  favicon: [],
 
-  // 字体配置
   font: {
-    // 注意：若要自定义字体，请在 src/styles/main.css 中引入
-    // 若使用本地字体（TTF格式），请放在 src/assets/fonts/ 目录下
-    // 开发时请将字体放在 public/assets/fonts/，构建时会自动复制
     asciiFont: {
-      // ASCII 字体 - 用于英文字符
       fontFamily: "'Cinzel'",
       fontWeight: "400",
-      localFonts: [], // 本地字体文件
+      localFonts: [],
       enableCompress: false,
     },
     cjkFont: {
-      // CJK 字体 - 用于中日韩文字
       fontFamily: "'Zhuque Fangsong UI'",
       fontWeight: "400",
-      localFonts: ["ZhuqueFangsong-Regular.ttf"], // 本地字体文件（相对于 public/assets/font/）
+      localFonts: ["ZhuqueFangsong-Regular.ttf"],
       enableCompress: true,
     },
   },
-  showLastModified: false, // 是否显示"最后修改时间"
+  showLastModified: false,
 };
 
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
@@ -254,37 +241,13 @@ export const licenseConfig: LicenseConfig = {
   url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
 
-// Permalink 自定义链接配置
 export const permalinkConfig: PermalinkConfig = {
-  enable: false, // 是否启用 permalink 自定义文章链接
-  /**
-   * permalink 格式模板
-   * 可用变量：
-   * - %year% : 4位年份 (2024)
-   * - %monthnum% : 2位月份 (01-12)
-   * - %day% : 2位日期 (01-31)
-   * - %hour% : 2位小时 (00-23)
-   * - %minute% : 2位分钟 (00-59)
-   * - %second% : 2位秒钟 (00-59)
-   * - %post_id% : 文章自增ID（需要在同级目录下）
-   * - %postname% : 文章slug
-   * - %category% : 文章分类，默认 "uncategorized"
-   *
-   * 示例：
-   * - "%year%-%monthnum%-%postname%" => "/2024-12-my-post/"
-   * - "%post_id%-%postname%" => "/42-my-post/"
-   * - "%category%-%postname%" => "/tech-my-post/"
-   *
-   * 注意：格式以 "/" 开头和结尾，否则自动添加
-   */
-  format: "%postname%", // 默认格式
+  enable: false,
+  format: "%postname%",
 };
 
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
-  // 代码块主题配置（如需自定义主题，请在 astro.config.mjs 中配置）
-  // 若使用暗色主题，建议使用 github-dark；若使用亮色主题，建议使用 github-light
   theme: "github-dark",
-  // 主题切换时隐藏代码块，避免闪烁
   hideDuringThemeTransition: true,
 };
 
@@ -315,36 +278,26 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 };
 
 export const footerConfig: FooterConfig = {
-  enable: false, // 是否启用 Footer HTML
-  customHtml: "", // HTML 字符串，支持多行
+  enable: false,
+  customHtml: "",
 };
 
-/**
- * 侧边栏布局配置
- * 可配置多个侧边栏组件，支持响应式布局
- * sidebar: 默认显示位置，left 或 right，左右都显示时配置 layout.position 为 "both"
- */
-
-// 评论配置 - Twikoo
 export const commentConfig = {
   enable: true,
-  envId: "https://twikoo-cloudflare.198665x.workers.dev", // Twikoo 环境 ID，从 Twikoo 控制台获取
-  region: "", // 环境地域，默认为空，可选 "ap-shanghai" 等
-  lang: "zh-CN", // 语言
+  envId: "https://twikoo-cloudflare.198665x.workers.dev",
+  region: "",
+  lang: "zh-CN",
 };
 
 export const sidebarLayoutConfig: SidebarLayoutConfig = {
-  // 侧边栏组件配置
   properties: [
     {
-      // 个人资料组件
       type: "profile",
-      position: "sticky", // 显示位置："top" 置顶，"sticky" 粘性定位
-      class: "onload-animation", // CSS 动画类
-      animationDelay: 0, // 动画延迟
+      position: "sticky",
+      class: "onload-animation",
+      animationDelay: 0,
     },
     {
-      // 分类组件
       type: "categories",
       position: "sticky",
       class: "onload-animation",
@@ -354,21 +307,18 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       },
     },
     {
-      // 目录组件
       type: "card-toc",
       position: "sticky",
       class: "onload-animation",
       animationDelay: 300,
     },
     {
-      // 网站统计组件
       type: "site-stats",
       position: "sticky",
       class: "onload-animation",
       animationDelay: 200,
     },
     {
-      // 日历组件
       type: "calendar",
       position: "sticky",
       class: "onload-animation",
@@ -376,26 +326,23 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
     },
   ],
 
-  // 左右侧边栏组件配置
   components: {
     left: ["profile", "categories", "card-toc"],
     right: ["site-stats", "calendar"],
     drawer: ["profile", "categories"],
   },
 
-  // 默认动画配置
   defaultAnimation: {
-    enable: true, // 是否启用默认动画
-    baseDelay: 0, // 基础延迟
-    increment: 50, // 每个组件延迟增量
+    enable: true,
+    baseDelay: 0,
+    increment: 50,
   },
 
-  // 响应式配置
   responsive: {
     breakpoints: {
-      mobile: 768, // 移动端断点
-      tablet: 1280, // 平板端断点
-      desktop: 1280, // 桌面端断点
+      mobile: 768,
+      tablet: 1280,
+      desktop: 1280,
     },
   },
 };

@@ -3,7 +3,6 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
-import PasswordProtection from "@components/PasswordProtection.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import {
@@ -12,7 +11,6 @@ import {
 	initPostIdMap,
 } from "@utils/permalink-utils";
 import { permalinkConfig } from "@/config";
-import CryptoJS from "crypto-js";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { licenseConfig } from "src/config";
@@ -56,14 +54,6 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 
-const isEncrypted = Boolean(entry.data.encrypted && entry.data.password);
-const encryptedContent = isEncrypted
-	? CryptoJS.AES.encrypt(
-			`CHAONOUS-VERIFY:${entry.body}`,
-			String(entry.data.password),
-		).toString()
-	: "";
-
 const posterCoverUrl = await resolveSharePosterImage({
 	src: entry.data.image,
 	basePath: getFileDirFromPath(entry.filePath || ""),
@@ -96,18 +86,12 @@ const jsonLd = buildBlogPostingJsonLd({
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
 	lastModified={lastModified}
 >
-	{
-		isEncrypted ? (
-			<PasswordProtection encryptedContent={encryptedContent} />
-		) : (
-			<Markdown class="mb-6 markdown-content onload-animation">
-				<Content />
-			</Markdown>
-		)
-	}
+	<Markdown class="mb-6 markdown-content onload-animation">
+		<Content />
+	</Markdown>
 
 	{
-		!isEncrypted && licenseConfig.enable && (
+		licenseConfig.enable && (
 			<License
 				slot="post-actions"
 				title={entry.data.title}
