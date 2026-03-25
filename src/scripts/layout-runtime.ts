@@ -190,6 +190,7 @@ if (document.readyState === "loading") {
 
 let fancyboxSelectors: string[] = [];
 let Fancybox: any;
+let fancyboxStylesLoaded = false;
 
 function checkKatex() {
 	if (document.querySelector(".katex")) {
@@ -214,6 +215,11 @@ async function initFancybox() {
 		const mod = await import("@fancyapps/ui");
 		Fancybox = mod.Fancybox;
 		await import("@fancyapps/ui/dist/fancybox/fancybox.css");
+	}
+
+	if (!fancyboxStylesLoaded) {
+		await import("../styles/fancybox-custom.css");
+		fancyboxStylesLoaded = true;
 	}
 
 	if (fancyboxSelectors.length > 0) {

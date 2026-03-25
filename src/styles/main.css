@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "./local-fonts.css";
 
-@import "./albums.css";
-
 @import "./transition.css";
 @import "./animation-enhancements.css";
 

@@ -17,7 +17,7 @@
 		"dev": "astro dev",
 		"start": "astro preview",
 		"check": "astro check",
-		"build": "node scripts/compress-fonts.js && astro build && node --no-deprecation scripts/run-pagefind.js",
+		"build": "node scripts/compress-fonts.js && astro build && node --no-deprecation scripts/run-pagefind.js && node scripts/optimize-render-blocking.js",
 		"submit": "node scripts/indexnow-submit.js",
 		"preview": "astro preview",
 		"astro": "astro",
