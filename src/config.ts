@@ -98,7 +98,7 @@ export const siteConfig: SiteConfig = {
 		},
 
 		waves: {
-			enable: true, // 是否显示波浪动画
+			enable: false, // 是否显示波浪动画
 			performanceMode: false, // 性能模式，减少动画帧率（性能提升约30%）
 			mobileDisable: false, // 移动端是否禁用
 		},
