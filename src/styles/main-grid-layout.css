@@ -535,18 +535,18 @@ body.wallpaper-transparent
 @media (max-width: 1279px) and (orientation: landscape) {
   #banner-wrapper:not(.mobile-hide-banner) {
     top: 0 !important;
-    height: 60vh !important;
+    height: 40vh !important;
   }
 
   /* 横屏主内容区跟随 banner */
   .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 60vh !important;
-    min-height: calc(100vh - 60vh) !important;
+    top: 40vh !important;
+    min-height: calc(100vh - 40vh) !important;
   }
 
   .banner-container {
-    height: 60vh;
-    min-height: 300px;
+    height: 40vh;
+    min-height: 200px;
   }
 
   .banner-text-overlay {
@@ -590,8 +590,8 @@ body.wallpaper-transparent
 /* 视口高度极小（<= 500px）— 横屏手机等极端情况 */
 @media (max-height: 500px) {
   #banner-wrapper {
-    height: 85vh !important;
-    min-height: 350px !important;
+    height: 60vh !important;
+    min-height: 200px !important;
   }
 
   .banner-text-overlay {
@@ -602,7 +602,7 @@ body.wallpaper-transparent
   }
 
   .banner-title {
-    font-size: 2.8rem !important;
+    font-size: 2.2rem !important;
     line-height: 1.1 !important;
     margin-bottom: 0.5rem !important;
   }
@@ -662,32 +662,6 @@ body.wallpaper-transparent
   .banner-subtitle {
     font-size: 1.125rem !important;
     line-height: 1.4 !important;
-  }
-}
-
-/* 视口高度 701px - 非超大屏下的高度适配 */
-@media (orientation: landscape) and (max-height: 500px) {
-  #banner-wrapper {
-    height: 90vh !important;
-    min-height: 300px !important;
-  }
-
-  .banner-text-overlay {
-    padding: 1rem 2rem !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-  }
-
-  .banner-title {
-    font-size: 2.8rem !important;
-    line-height: 1.1 !important;
-    margin-bottom: 0.5rem !important;
-  }
-
-  .banner-subtitle {
-    font-size: 1rem !important;
-    line-height: 1.2 !important;
   }
 }
 
