@@ -7,6 +7,19 @@ import {
 import { siteConfig } from "@/config";
 import type { LIGHT_DARK_MODE, WALLPAPER_MODE } from "@/types/config";
 
+// UI 显示范围 0-100，实际 hue 范围 0-360
+const UI_TO_HUE_MULTIPLIER = 3.6;
+
+// UI 值转换为实际 hue 值
+function uiToHue(uiValue: number): number {
+	return Math.round(uiValue * UI_TO_HUE_MULTIPLIER);
+}
+
+// 实际 hue 值转换为 UI 值
+export function hueToUi(hue: number): number {
+	return Math.round(hue / UI_TO_HUE_MULTIPLIER);
+}
+
 export function getDefaultHue(): number {
 	const fallback = "250";
 	const configCarrier = document.getElementById("config-carrier");
@@ -17,6 +30,25 @@ export function getDefaultHue(): number {
 	return Number.parseInt(configCarrier.dataset.hue || fallback);
 }
 
+// 获取 UI 显示值（0-100）
+export function getHueUI(): number {
+	const stored = localStorage.getItem("hue");
+	const actualHue = stored ? Number.parseInt(stored) : getDefaultHue();
+	return hueToUi(actualHue);
+}
+
+// 设置 UI 值，自动转换为实际 hue
+export function setHueUI(uiValue: number): void {
+	const actualHue = uiToHue(uiValue);
+	localStorage.setItem("hue", String(actualHue));
+	const r = document.querySelector(":root") as HTMLElement;
+	if (!r) {
+		return;
+	}
+	r.style.setProperty("--hue", String(actualHue));
+}
+
+// 保留原有函数以保持向后兼容
 export function getHue(): number {
 	const stored = localStorage.getItem("hue");
 	return stored ? Number.parseInt(stored) : getDefaultHue();

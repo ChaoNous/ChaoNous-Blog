@@ -2,25 +2,25 @@
 	import I18nKey from "@i18n/i18nKey";
 	import { i18n } from "@i18n/translation";
 	import Icon from "@iconify/svelte";
-	import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
+	import { getDefaultHue, getHueUI, setHueUI, hueToUi } from "@utils/setting-utils";
 	import { onMount } from "svelte";
 
-	let hue = 250;
-	let defaultHue = 250;
+	let hueUI = 70; // UI 显示值 0-100
+	let defaultHueUI = 70;
 	let isMounted = false;
 
 	function resetHue() {
-		hue = defaultHue;
+		hueUI = defaultHueUI;
 	}
 
 	onMount(() => {
 		isMounted = true;
-		defaultHue = getDefaultHue();
-		hue = getHue();
+		defaultHueUI = hueToUi(getDefaultHue());
+		hueUI = getHueUI();
 	});
 
-	$: if (isMounted && (hue || hue === 0)) {
-		setHue(hue);
+	$: if (isMounted && (hueUI || hueUI === 0)) {
+		setHueUI(hueUI);
 	}
 </script>
 
@@ -38,8 +38,8 @@
 			<button
 				aria-label="Reset to Default"
 				class="btn-regular w-7 h-7 rounded-md active:scale-90"
-				class:opacity-0={hue === defaultHue}
-				class:pointer-events-none={hue === defaultHue}
+				class:opacity-0={hueUI === defaultHueUI}
+				class:pointer-events-none={hueUI === defaultHueUI}
 				on:click={resetHue}
 			>
 				<div class="text-(--btn-content)">
@@ -56,7 +56,7 @@
 				class="transition bg-(--btn-regular-bg) w-10 h-7 rounded-md flex justify-center
             font-bold text-sm items-center text-(--btn-content)"
 			>
-				{hue}
+				{hueUI}
 			</div>
 		</div>
 	</div>
@@ -67,11 +67,11 @@
 			aria-label={i18n(I18nKey.themeColor)}
 			type="range"
 			min="0"
-			max="360"
-			bind:value={hue}
+			max="100"
+			bind:value={hueUI}
 			class="slider"
 			id="colorSlider"
-			step="5"
+			step="1"
 			style="width: 100%"
 		/>
 	</div>
