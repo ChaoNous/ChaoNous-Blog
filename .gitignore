@@ -52,6 +52,7 @@ src/data/bilibili-data.json
 
 # Lighthouse reports & test scripts
 lighthouse-report.json
+lighthouse-verify.json
 lighthouse-*.js
 lighthouse-*.cjs
 lighthouse-*.mjs
