@@ -1416,6 +1416,20 @@
 				padding: 0.375rem 0.625rem;
 			}
 		}
+		/* Music player font - use full Zhuque Fangsong without unicode-range limit */
+		@font-face {
+			font-family: "Zhuque Fangsong Music";
+			src: url("/assets/fonts/ZhuqueFangsong-Regular-Full.woff2") format("woff2");
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		/* Apply Zhuque Fangsong to all text in music player */
+		.music-player {
+			font-family: "Zhuque Fangsong Music", "Zhuque Fangsong UI", "Cinzel", sans-serif;
+		}
+
 		/* Keep the disc rotation smooth and resumable */
 		@keyframes spin-continuous {
 			from {
