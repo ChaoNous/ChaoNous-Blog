@@ -14,6 +14,7 @@ interface Props {
 	widths?: number[];
 	fetchpriority?: "high" | "low" | "auto";
 	decoding?: "async" | "sync" | "auto";
+	aspectRatio?: string;
 }
 
 import { Image } from "astro:assets";
@@ -31,6 +32,7 @@ const {
 	widths,
 	fetchpriority = "auto",
 	decoding = "async",
+	aspectRatio,
 } = Astro.props;
 const className = Astro.props.class;
 
@@ -70,7 +72,7 @@ const isBilibiliImage = !isLocal && src.includes("hdslb.com");
 const referrerPolicy = !isLocal && isBilibiliImage ? "no-referrer" : undefined;
 ---
 
-<div id={id} class:list={[className, "overflow-hidden relative"]}>
+<div id={id} class:list={[className, "overflow-hidden relative"]} style={aspectRatio ? `aspect-ratio: ${aspectRatio}` : undefined}>
 	<div
 		class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"
 	>

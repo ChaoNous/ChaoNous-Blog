@@ -1,5 +1,17 @@
 @import "./generated-zhuque-ui-font.css";
 
+/* Cinzel 字体回退配置 - 减少 CLS */
+@font-face {
+  font-family: "Cinzel";
+  src: local("Georgia"), local("Times New Roman");
+  font-weight: 400;
+  font-style: normal;
+  ascent-override: 90%;
+  descent-override: 10%;
+  line-gap-override: 0%;
+  size-adjust: 105%;
+}
+
 @font-face {
   font-family: "Cinzel";
   src: url("/assets/fonts/Cinzel-400.woff2") format("woff2");
