@@ -75,15 +75,8 @@ body::-webkit-scrollbar {
 }
 
 @layer components {
-  /* CSS containment for performance optimization */
-  [data-contain="layout"] {
-    contain: layout style;
-  }
-
-  #sidebar {
-    contain: layout style;
-  }
-
+  
+  
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 0.5s;
