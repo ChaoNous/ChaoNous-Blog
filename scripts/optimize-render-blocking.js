@@ -38,6 +38,10 @@ const removableInlineStylePatterns = [
 	/\.skills-grid-container/,
 ];
 
+function getDistFilePath(href) {
+	return path.join(rootDir, "dist", href.replace(/^\//, "").replace(/\//g, path.sep));
+}
+
 async function optimizeHomepage() {
 	let html;
 
@@ -51,6 +55,8 @@ async function optimizeHomepage() {
 		throw error;
 	}
 
+	const criticalStyleHrefs = [];
+
 	html = html.replace(
 		/<link rel="stylesheet" href="([^"]+)">/g,
 		(fullMatch, href) => {
@@ -61,12 +67,13 @@ async function optimizeHomepage() {
 			if (
 				blockingStylesheetPatterns.some((pattern) => pattern.test(baseName))
 			) {
-				return fullMatch;
+				criticalStyleHrefs.push(href);
+				return "";
 			}
 			if (
 				asyncStylesheetPatterns.some((pattern) => pattern.test(baseName))
 			) {
-				return `<link rel="stylesheet" href="${href}" media="print" onload="this.media='all'">`;
+				return `<link rel="preload" as="style" href="${href}" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}"></noscript>`;
 			}
 			return "";
 		},
@@ -80,6 +87,17 @@ async function optimizeHomepage() {
 		}
 		return styleBlock;
 	});
+
+	const criticalStyleBlocks = await Promise.all(
+		criticalStyleHrefs.map(async (href) => {
+			const css = await fs.readFile(getDistFilePath(href), "utf-8");
+			return `<style data-critical-css="${path.posix.basename(href)}">${css}</style>`;
+		}),
+	);
+
+	if (criticalStyleBlocks.length > 0) {
+		html = html.replace("</head>", `${criticalStyleBlocks.join("")}</head>`);
+	}
 
 	await fs.writeFile(homepagePath, html, "utf-8");
 }
