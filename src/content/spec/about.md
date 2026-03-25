@@ -1,18 +1,13 @@
-这个网站是 **ChaoNous Blog**，基于 Astro 框架构建的个人博客。
+## 关于本站
 
-## 关于我
+ChaoNous Blog —— 一个记录技术探索与个人成长的空间。
 
-一个对技术和设计有兴趣的人，喜欢折腾静态网站和开源项目。
-
-## 网站特点
-
-- Material Design 3 设计风格
-- 深色 / 浅色模式切换
-- 文章归档、标签、分类与全文搜索
-- 相册、时间线等独立页面
-- RSS、Atom 与 Sitemap 输出
+基于 Astro 构建，追求简洁与性能。
 
 ## 联系方式
 
-- 网站：[chaonous.com](https://chaonous.com)
-- GitHub：[github.com/ChaoNous](https://github.com/ChaoNous)
+- [GitHub](https://github.com/ChaoNous)
+- [Bilibili](https://space.bilibili.com/432268688)
+- [知乎](https://www.zhihu.com/people/80-57-6-25)
+- [Steam](https://steamcommunity.com/id/ChaoNous/)
+- [Discord](https://discord.com/users/1248814878656041003)
