@@ -369,7 +369,25 @@ const desktopWallpaperSwitchClass =
 {
 	import.meta.env.PROD && (
 		<script is:inline define:vars={{ scriptUrl: url("/pagefind/pagefind.js") }}>
-			async function loadPagefind() {
+			// 延迟加载 Pagefind - 非首屏关键资源
+			function loadPagefind() {
+				// 检查是否有搜索面板被点击
+				const searchContainer = document.getElementById("search-container");
+				if (searchContainer) {
+					// 用户点击搜索时才加载 Pagefind
+					searchContainer.addEventListener("click", initPagefind, { once: true });
+					searchContainer.addEventListener("focusin", initPagefind, { once: true });
+				}
+
+				// 或者延迟 5 秒后加载
+				setTimeout(initPagefind, 5000);
+			}
+
+			let pagefindLoaded = false;
+			async function initPagefind() {
+				if (pagefindLoaded) return;
+				pagefindLoaded = true;
+
 				try {
 					const response = await fetch(scriptUrl, { method: "HEAD" });
 					if (!response.ok) {
@@ -397,18 +415,10 @@ const desktopWallpaperSwitchClass =
 				}
 			}
 
-			function scheduleLoadPagefind() {
-				if ("requestIdleCallback" in window) {
-					requestIdleCallback(loadPagefind, { timeout: 3000 });
-				} else {
-					setTimeout(loadPagefind, 3000);
-				}
-			}
-
 			if (document.readyState === "loading") {
-				document.addEventListener("DOMContentLoaded", scheduleLoadPagefind);
+				document.addEventListener("DOMContentLoaded", loadPagefind);
 			} else {
-				scheduleLoadPagefind();
+				loadPagefind();
 			}
 		</script>
 	)
