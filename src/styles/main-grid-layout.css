@@ -15,6 +15,9 @@
   animation: fadeInUp 1s ease-out 0.3s both;
   min-height: 1.5em; /* 避免打字机效果导致布局跳动 */
   line-height: 1.2; /* 保持行高稳定 */
+  font-family: var(--font-cjk), var(--font-content);
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
 }
 
 @keyframes fadeInUp {
