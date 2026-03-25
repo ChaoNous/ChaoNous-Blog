@@ -81,6 +81,26 @@
 	let errorMessage = "";
 	// Whether the error toast is visible
 	let showError = false;
+	// Whether the full music font has been loaded
+	let musicFontLoaded = false;
+
+	// Lazy load the full music font only when needed (saves ~4.8MB)
+	function loadMusicFont() {
+		if (musicFontLoaded || typeof document === "undefined") return;
+		musicFontLoaded = true;
+		const fontFace = new FontFace(
+			"Zhuque Fangsong Music",
+			"url(/assets/fonts/ZhuqueFangsong-Regular-Full.woff2)",
+			{ weight: "400", style: "normal", display: "swap" }
+		);
+		fontFace.load().then((loaded) => {
+			document.fonts.add(loaded);
+			// Force re-render to apply new font
+			playerRoot?.style.setProperty("--font-loaded", "1");
+		}).catch(() => {
+			// Font load failed, UI font fallback will be used
+		});
+	}
 
 	const localPlaylist: Song[] = [
 		createSong({
@@ -246,6 +266,7 @@
 
 	function togglePlay() {
 		if (!audio || !currentSong.url) return;
+		loadMusicFont();
 		if (isPlaying) {
 			audio.pause();
 		} else {
@@ -254,6 +275,7 @@
 	}
 
 	function toggleExpanded() {
+		loadMusicFont();
 		isExpanded = !isExpanded;
 		if (isExpanded) {
 			showPlaylist = false;
@@ -1416,16 +1438,11 @@
 				padding: 0.375rem 0.625rem;
 			}
 		}
-		/* Music player font - use full Zhuque Fangsong without unicode-range limit */
-		@font-face {
-			font-family: "Zhuque Fangsong Music";
-			src: url("/assets/fonts/ZhuqueFangsong-Regular-Full.woff2") format("woff2");
-			font-weight: 400;
-			font-style: normal;
-			font-display: swap;
-		}
+		/* Music player font - loaded dynamically via JavaScript to save ~4.8MB */
+		/* Font is lazy loaded when user interacts with the player */
 
 		/* Apply Zhuque Fangsong to all text in music player */
+		/* Falls back to UI font (409KB) until full font is loaded */
 		.music-player {
 			font-family: "Zhuque Fangsong Music", "Zhuque Fangsong UI", "Cinzel", sans-serif;
 		}
