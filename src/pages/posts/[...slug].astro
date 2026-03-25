@@ -81,6 +81,7 @@ const posterAvatarUrl = await resolveSharePosterImage({
 });
 
 const isEncrypted = Boolean(entry.data.encrypted && entry.data.password);
+const normalizedCategory = entry.data.category || undefined;
 
 dayjs.extend(utc);
 const lastModified = dayjs(entry.data.updated || entry.data.published)
@@ -110,7 +111,7 @@ const jsonLd = buildBlogPostingJsonLd({
 	imageUrl: imageAbsoluteUrl,
 	wordCount: remarkPluginFrontmatter?.words,
 	tags: entry.data.tags,
-	category: entry.data.category,
+	category: normalizedCategory,
 	defaultLang: siteConfig.lang,
 });
 ---

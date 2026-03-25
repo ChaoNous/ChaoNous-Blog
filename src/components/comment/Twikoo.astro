@@ -257,6 +257,10 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 <script>
 	import { registerPageScript } from "../../scripts/page-lifecycle.js";
 
+	type TwikooGlobal = {
+		init: (options: Record<string, unknown>) => void;
+	};
+
 	function initTwikoo() {
 		const container = document.getElementById("twikoo-comment");
 		if (!container || container.querySelector("tk-time")) return;
@@ -272,9 +276,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		script.async = true;
 
 		script.onload = () => {
-			declare const twikoo: {
-				init: (options: Record<string, unknown>) => void;
-			};
+			const twikoo = (window as Window & { twikoo?: TwikooGlobal }).twikoo;
+			if (!twikoo) return;
+
 			twikoo.init({
 				envId,
 				el: "#twikoo-comment",
@@ -297,7 +301,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		let savedScrollPos = 0;
 
 		container.addEventListener("click", (e) => {
-			const target = e.target as HTMLElement;
+			const target = e.target;
+			if (!(target instanceof HTMLElement)) return;
 			if (
 				target.closest(".tk-like") ||
 				target.closest(".tk-submit") ||

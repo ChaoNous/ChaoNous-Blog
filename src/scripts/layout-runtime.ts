@@ -54,7 +54,7 @@ function scheduleIdleTask(task: () => void, timeout = IDLE_FALLBACK_DELAY) {
 		return;
 	}
 
-	window.setTimeout(task, timeout);
+	globalThis.setTimeout(task, timeout);
 }
 
 function runOnDocumentReady(callback: () => void | Promise<void>) {

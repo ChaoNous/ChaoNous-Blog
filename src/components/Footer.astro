@@ -3,9 +3,10 @@ import { footerConfig, profileConfig } from "../config";
 import { url } from "../utils/url-utils";
 
 const currentYear = new Date().getFullYear();
+const rawCustomFooterHtml = footerConfig.customHtml ?? "";
 const customFooterHtml =
-	footerConfig.enable && footerConfig.customHtml.trim() !== ""
-		? footerConfig.customHtml.trim()
+	footerConfig.enable && rawCustomFooterHtml.trim() !== ""
+		? rawCustomFooterHtml.trim()
 		: "";
 ---
 
