@@ -313,10 +313,6 @@ export type FullscreenWallpaperConfig = {
   blur?: number;
 };
 
-export type ShareConfig = {
-  enable: boolean;
-};
-
 export type CommentConfig = {
   enable: boolean;
   envId: string;

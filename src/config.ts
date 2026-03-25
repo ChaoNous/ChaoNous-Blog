@@ -8,7 +8,6 @@ import type {
   NavBarConfig,
   PermalinkConfig,
   ProfileConfig,
-  ShareConfig,
   SidebarLayoutConfig,
   SiteConfig,
 } from "./types/config";
@@ -251,10 +250,6 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
   hideDuringThemeTransition: true,
 };
 
-export const shareConfig: ShareConfig = {
-  enable: true, // 是否启用分享功能
-};
-
 export const announcementConfig: AnnouncementConfig = {
   title: "",
   content: "",
@@ -353,5 +348,4 @@ export const widgetConfigs = {
   music: musicPlayerConfig,
   layout: sidebarLayoutConfig,
   fullscreenWallpaper: fullscreenWallpaperConfig,
-  share: shareConfig,
 } as const;

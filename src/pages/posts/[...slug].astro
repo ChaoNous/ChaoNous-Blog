@@ -4,7 +4,6 @@ import { render } from "astro:content";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
-import SharePanel from "@components/post/SharePanel.astro";
 import Twikoo from "@components/comment/Twikoo.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
@@ -15,7 +14,6 @@ import {
 	commentConfig,
 	licenseConfig,
 	permalinkConfig,
-	shareConfig,
 } from "src/config";
 import { profileConfig, siteConfig } from "../../config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
@@ -124,22 +122,6 @@ const jsonLd = buildBlogPostingJsonLd({
 	<Markdown class="mb-6 markdown-content onload-animation">
 		<Content />
 	</Markdown>
-
-	{
-		shareConfig.enable && (
-			<SharePanel
-				slot="post-actions"
-				title={entry.data.title}
-				author={entry.data.author || profileConfig.name}
-				description={entry.data.description || ""}
-				pubDate={formatDateToYYYYMMDD(entry.data.published)}
-				coverImage={posterCoverUrl}
-				url={Astro.url.toString()}
-				siteTitle={siteConfig.title}
-				avatar={posterAvatarUrl}
-			/>
-		)
-	}
 
 	{
 		licenseConfig.enable && (
