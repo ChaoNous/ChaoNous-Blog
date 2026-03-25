@@ -158,13 +158,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
     line-height: 1.3;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
   }
-
-  /* 小屏波浪高度缩小 */
-  .waves {
-    height: 8vh;
-    min-height: 60px;
-    max-height: 80px;
-  }
 }
 
 /* 中小屏手机（480px - 767px） */
@@ -210,13 +203,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
     font-size: 1.125rem;
     line-height: 1.4;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
-  }
-
-  /* 波浪高度 */
-  .waves {
-    height: 10vh;
-    min-height: 70px;
-    max-height: 100px;
   }
 }
 
@@ -267,13 +253,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
     font-size: 1.375rem;
     line-height: 1.4;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
-  }
-
-  /* 波浪高度 */
-  .waves {
-    height: 12vh;
-    min-height: 80px;
-    max-height: 120px;
   }
 
   /* 平板端双侧边栏 padding 修正 */
@@ -342,13 +321,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
   /* banner carousel 防止溢出 */
   #banner-carousel {
     overflow: hidden;
-  }
-
-  /* 桌面端波浪高度 */
-  .waves {
-    height: 15vh;
-    min-height: 80px;
-    max-height: 150px;
   }
 }
 
@@ -607,83 +579,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
   }
 }
 
-/* 波浪全局基础样式 */
-.waves {
-  overflow: visible;
-  z-index: 5;
-  transform: translateZ(0);
-  will-change: transform;
-  contain: layout style paint;
-}
-
-.waves svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* 波浪 use 元素 will-change（配合 CSS animation） */
-.waves use {
-  will-change: fill;
-}
-
-/* 波浪容器 #header-waves 优化 */
-#header-waves {
-  isolation: isolate;
-  contain: layout style paint;
-  margin-bottom: -1px; /* 防止页面背景色透出 1px 缝隙 */
-}
-
-/* 主题切换时暂停 will-change 以避免重绘抖动 */
-.theme-changing #header-waves,
-.theme-changing #header-waves svg,
-.theme-changing #header-waves use {
-  will-change: auto;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* 非桌面端 #header-waves 过渡动画 */
-@media (max-width: 1279px) {
-  #header-waves {
-    overflow: visible;
-    z-index: 5;
-    transition:
-      transform 0.3s ease-in,
-      opacity 0.2s ease-in;
-  }
-
-  /* banner 隐藏时波浪同步滑出 */
-  .mobile-hide-banner #header-waves {
-    transform: translateY(-100%);
-    opacity: 0;
-    transition:
-      transform 0.25s ease-in,
-      opacity 0.15s ease-in;
-  }
-
-  .waves svg {
-    min-height: 60px;
-  }
-
-  /* 非桌面端波浪绝对定位修正（防止高度影响文档流） */
-  .waves {
-    bottom: -1px !important;
-    position: absolute !important;
-  }
-}
-
-/* 极小屏幕（<= 360px）波浪高度 */
-@media (max-width: 360px) {
-  .waves {
-    height: 6vh !important;
-    min-height: 50px !important;
-    max-height: 70px !important;
-  }
-}
-
 /* 视口高度极小（<= 500px）— 横屏手机等极端情况 */
 @media (max-height: 500px) {
   #banner-wrapper {
@@ -707,12 +602,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
   .banner-subtitle {
     font-size: 0.9rem !important;
     line-height: 1.2 !important;
-  }
-
-  .waves {
-    height: 5vh !important;
-    min-height: 40px !important;
-    max-height: 50px !important;
   }
 }
 
@@ -740,12 +629,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
     font-size: 1rem !important;
     line-height: 1.3 !important;
   }
-
-  .waves {
-    height: 6vh !important;
-    min-height: 50px !important;
-    max-height: 60px !important;
-  }
 }
 
 /* 视口高度 601px - 700px */
@@ -772,12 +655,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
     font-size: 1.125rem !important;
     line-height: 1.4 !important;
   }
-
-  .waves {
-    height: 8vh !important;
-    min-height: 60px !important;
-    max-height: 80px !important;
-  }
 }
 
 /* 视口高度 701px - 非超大屏下的高度适配 */
@@ -803,12 +680,6 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
   .banner-subtitle {
     font-size: 1rem !important;
     line-height: 1.2 !important;
-  }
-
-  .waves {
-    height: 4vh !important;
-    min-height: 30px !important;
-    max-height: 40px !important;
   }
 }
 

@@ -97,12 +97,6 @@ export const siteConfig: SiteConfig = {
 			interval: 4, // 轮播间隔，单位：秒
 		},
 
-		waves: {
-			enable: false, // 是否显示波浪动画
-			performanceMode: false, // 性能模式，减少动画帧率（性能提升约30%）
-			mobileDisable: false, // 移动端是否禁用
-		},
-
 		// PicFlow API 随机图片配置
 		imageApi: {
 			enable: false, // 是否启用随机图片API

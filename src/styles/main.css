@@ -203,22 +203,6 @@ body::-webkit-scrollbar {
     backdrop-filter: none !important;
   }
 
-  .is-theme-transitioning #header-waves {
-    
-    color: var(--page-bg);
-    isolation: isolate;
-    
-    contain: layout style paint;
-    transform: translateZ(0);
-    background: transparent;
-  }
-
-  .is-theme-transitioning #header-waves use {
-    will-change: transform;
-    
-    transform: translateZ(0);
-  }
-
   .card-base {
     @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150;
     contain: layout style;

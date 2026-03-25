@@ -289,64 +289,6 @@ const transparentClass = shouldEnableTransparency
 				</div>
 			)
 		}
-
-		<!-- Water waves effect -->
-		{
-			siteConfig.banner.waves?.enable && (
-				<div
-					class="waves absolute -bottom-px z-20 h-[10vh] max-h-37.5 min-h-12.5 w-full pointer-events-none md:h-[15vh]"
-					id="header-waves"
-					style="transform: translateZ(0); will-change: fill; opacity: 1;"
-				>
-					<svg
-						class="waves"
-						xmlns="http://www.w3.org/2000/svg"
-						xmlns:xlink="http://www.w3.org/1999/xlink"
-						viewBox="0 20 150 32"
-						preserveAspectRatio="none"
-						shape-rendering="auto"
-						style="transform: translateZ(0); backface-visibility: hidden;"
-					>
-						<defs>
-							<path
-								id="gentle-wave"
-								d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v48h-352z"
-							/>
-						</defs>
-						<g class="parallax" style="transform: translateZ(0);">
-							<use
-								xlink:href="#gentle-wave"
-								x="48"
-								y="0"
-								class="opacity-25 fill-(--page-bg)"
-								style="animation-delay: -2s; animation-duration: 7s; will-change: transform;"
-							/>
-							<use
-								xlink:href="#gentle-wave"
-								x="48"
-								y="3"
-								class="opacity-50 fill-(--page-bg)"
-								style="animation-delay: -3s; animation-duration: 10s; will-change: transform;"
-							/>
-							<use
-								xlink:href="#gentle-wave"
-								x="48"
-								y="5"
-								class="opacity-75 fill-(--page-bg)"
-								style="animation-delay: -4s; animation-duration: 13s; will-change: transform;"
-							/>
-							<use
-								xlink:href="#gentle-wave"
-								x="48"
-								y="7"
-								class="fill-(--page-bg)"
-								style="animation-delay: -5s; animation-duration: 20s; will-change: transform;"
-							/>
-						</g>
-					</svg>
-				</div>
-			)
-		}
 	</div>
 
 	<!-- Main content -->
