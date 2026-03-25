@@ -7,20 +7,23 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const homepagePath = path.join(rootDir, "dist", "index.html");
 
-const keepStylesheetPatterns = [
+const blockingStylesheetPatterns = [
+	/^MainGridLayout\..+\.css$/,
+	/^index\..+\.css$/,
+	/^main\..+\.css$/,
+	/^variables\..+\.css$/,
+];
+
+const asyncStylesheetPatterns = [
 	/^PostPage\..+\.css$/,
 	/^LightDarkSwitch\..+\.css$/,
 	/^Search\..+\.css$/,
 	/^WallpaperSwitch\..+\.css$/,
 	/^DisplaySettings\..+\.css$/,
-	/^MainGridLayout\..+\.css$/,
-	/^index\..+\.css$/,
 	/^Icon\..+\.css$/,
 	/^generated-zhuque-ui-font\..+\.css$/,
 	/^local-fonts\..+\.css$/,
-	/^main\..+\.css$/,
 	/^transition\..+\.css$/,
-	/^variables\..+\.css$/,
 	/^animation-enhancements\..+\.css$/,
 	/^gradient-buttons\..+\.css$/,
 ];
@@ -55,10 +58,17 @@ async function optimizeHomepage() {
 			if (href.startsWith("/_astro/")) {
 				return "";
 			}
-			const shouldKeep = keepStylesheetPatterns.some((pattern) =>
-				pattern.test(baseName),
-			);
-			return shouldKeep ? fullMatch : "";
+			if (
+				blockingStylesheetPatterns.some((pattern) => pattern.test(baseName))
+			) {
+				return fullMatch;
+			}
+			if (
+				asyncStylesheetPatterns.some((pattern) => pattern.test(baseName))
+			) {
+				return `<link rel="stylesheet" href="${href}" media="print" onload="this.media='all'">`;
+			}
+			return "";
 		},
 	);
 
