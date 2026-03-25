@@ -1,5 +1,6 @@
 ---
 import ConfigCarrier from "@components/ConfigCarrier.astro";
+import JsonLd from "@components/seo/JsonLd.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import { musicPlayerConfig, profileConfig, siteConfig } from "@/config";
 
@@ -133,6 +134,15 @@ const bannerOffset =
 		<!-- DNS 预解析和预连接优化 -->
 		<link rel="dns-prefetch" href="https://code.iconify.design" />
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
+
+		<!-- 关键页面 prefetch（仅首页加载时启用） -->
+		{isHomePage && (
+			<>
+				<link rel="prefetch" href={url("/archive/")} />
+				<link rel="prefetch" href={url("/about/")} />
+				<link rel="prefetch" href={url("/friends/")} />
+			</>
+		)}
 
 		<!-- 预加载关键字体（首屏渲染必需） -->
 		<link
@@ -331,6 +341,9 @@ const bannerOffset =
 			title={profileConfig.name}
 			href={`${Astro.site}rss.xml`}
 		/>
+
+		<!-- 结构化数据 -->
+		<JsonLd type={setOGTypeArticle ? "article" : "website"} />
 	</head>
 	<body
 		class="min-h-screen"
@@ -418,6 +431,7 @@ const bannerOffset =
 				import("../scripts/btc-analysis-chart.js");
 				import("../scripts/code-collapse.js");
 				import("../scripts/copy-code-buttons.js");
+				import("../scripts/theme-optimizer.js");
 			});
 		});
 	} else {
@@ -426,10 +440,7 @@ const bannerOffset =
 			import("../scripts/btc-analysis-chart.js");
 			import("../scripts/code-collapse.js");
 			import("../scripts/copy-code-buttons.js");
+			import("../scripts/theme-optimizer.js");
 		});
 	}
-</script>
-
-<script>
-	import "../scripts/theme-optimizer.js";
 </script>

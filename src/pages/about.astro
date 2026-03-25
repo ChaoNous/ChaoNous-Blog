@@ -1,6 +1,7 @@
 ---
 import { getEntry, render } from "astro:content";
 import Markdown from "@components/misc/Markdown.astro";
+import JsonLd from "@components/seo/JsonLd.astro";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
@@ -16,6 +17,7 @@ const title = i18n(I18nKey.about);
 ---
 
 <MainGridLayout title={title}>
+	<JsonLd type="person" slot="head" />
 	<!-- 引入右侧边栏布局管理器 -->
 	<script>
 		import("../scripts/right-sidebar-layout.js");
