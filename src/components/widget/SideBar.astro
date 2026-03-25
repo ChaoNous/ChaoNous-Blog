@@ -210,10 +210,6 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 		}
 	}
 
-	type SidebarWindow = Window & {
-		__sidebarManager?: SidebarManager | null;
-	};
-
 	function registerSidebarManager() {
 		if (typeof window.registerPageScript !== "function") {
 			setTimeout(registerSidebarManager, 0);
@@ -225,7 +221,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 				return document.getElementById("sidebar") !== null;
 			},
 			init() {
-				const sidebarWindow = window as SidebarWindow;
+				const sidebarWindow = window;
 				sidebarWindow.__sidebarManager?.destroy();
 				sidebarWindow.__sidebarManager = new SidebarManager();
 				return () => {

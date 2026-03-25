@@ -71,15 +71,15 @@ html.is-animating .transition-swup-fade {
   }
 }
 
-/* 页面加载动画 - yukina风格 */
+/* 页面加载动画 - yukina风格，优化 Speed Index */
 .onload-animation {
-  opacity: 0;
-  animation: fade-in-up 300ms ease-out forwards;
+  opacity: 1;
+  animation: none;
 }
 
 .onload-animation-fade-in {
-  opacity: 0;
-  animation: fade-in 300ms ease-in forwards;
+  opacity: 1;
+  animation: none;
 }
 
 @keyframes fade-in {
@@ -91,21 +91,21 @@ html.is-animating .transition-swup-fade {
   }
 }
 
-/* 渐进式动画延迟 */
+/* 渐进式动画延迟 - 已禁用以优化 Speed Index */
 .onload-animation:nth-child(1) {
-  animation-delay: 0ms;
+  /* animation-delay: 0ms; */
 }
 .onload-animation:nth-child(2) {
-  animation-delay: 50ms;
+  /* animation-delay: 50ms; */
 }
 .onload-animation:nth-child(3) {
-  animation-delay: 100ms;
+  /* animation-delay: 100ms; */
 }
 .onload-animation:nth-child(4) {
-  animation-delay: 150ms;
+  /* animation-delay: 150ms; */
 }
 .onload-animation:nth-child(5) {
-  animation-delay: 200ms;
+  /* animation-delay: 200ms; */
 }
 
 /* 特殊元素的动画 */

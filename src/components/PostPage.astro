@@ -84,25 +84,10 @@ const { page } = Astro.props;
 		@apply flex flex-col gap-4;
 	}
 
-	/* 注意：此处不使用 content-visibility: auto —— 该容器依赖 CSS animation 做入场动画，
-	   两者同时使用会导致离屏元素进入视口时动画计时已过、直接跳到终态，入场效果失效 */
+	/* 优化 Speed Index：移除初始 opacity: 0 */
 	#post-list-container > :global(*) {
-		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-		opacity: 0;
-		animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-		animation-delay: calc(
-			var(--content-delay) + var(--i) * var(--interval)
-		);
-	}
-
-	@keyframes fadeInSlide {
-		from {
-			opacity: 0;
-			transform: translateX(-10px);
-		}
-		to {
-			opacity: 1;
-			transform: translateX(0);
-		}
+		/* 性能优化：使用 content-visibility */
+		content-visibility: auto;
+		contain-intrinsic-size: 0 200px;
 	}
 </style>
