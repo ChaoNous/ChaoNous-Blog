@@ -39,13 +39,13 @@ const headingsJson = JSON.stringify(headings);
 	:global(widget-layout[data-id="card-toc"]) {
 		display: flex;
 		flex-direction: column;
-		max-height: var(--card-toc-max-height, calc(100vh - 8rem));
+		flex: 0 1 auto;
+		min-height: 0;
 		overflow: visible !important;
 	}
 
 	#card-toc {
 		display: flex;
-		flex: 1;
 		flex-direction: column;
 		min-height: 0;
 		overflow: visible;
@@ -53,15 +53,15 @@ const headingsJson = JSON.stringify(headings);
 
 	.card-toc-wrapper {
 		display: flex;
-		flex: 1;
 		flex-direction: column;
 		min-height: 0;
 	}
 
 	.toc-scroll-container {
-		flex: 1;
+		flex: 0 1 auto;
 		min-height: 0;
 		overflow-y: auto;
+		max-height: calc(100vh - 12rem);
 	}
 
 	.toc-scroll-container::-webkit-scrollbar {
@@ -416,28 +416,8 @@ const headingsJson = JSON.stringify(headings);
 		}
 
 		private syncMaxHeight() {
-			if (!this.widgetElement) return;
-
-			if (window.innerWidth < 1280) {
-				this.widgetElement.style.removeProperty("--card-toc-max-height");
-				return;
-			}
-
-			const rightSidebar = document.getElementById("right-sidebar-sticky");
-			if (rightSidebar) {
-				this.widgetElement.style.setProperty(
-					"--card-toc-max-height",
-					`${Math.round(rightSidebar.getBoundingClientRect().height)}px`,
-				);
-				return;
-			}
-
-			const rect = this.widgetElement.getBoundingClientRect();
-			const availableHeight = window.innerHeight - rect.top - 32;
-			this.widgetElement.style.setProperty(
-				"--card-toc-max-height",
-				`${Math.max(200, Math.round(availableHeight))}px`,
-			);
+			// 目录组件现在使用弹性高度，自动适应内容
+			// 保留方法以避免报错，但不再动态设置 max-height
 		}
 
 		private updateActiveHeading() {
