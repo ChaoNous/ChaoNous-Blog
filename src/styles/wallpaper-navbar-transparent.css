@@ -56,7 +56,8 @@
 
 /* 移动端 Full 模式 (仅首页) */
 @media (max-width: 1279px) {
-  body.wallpaper-transparent #navbar[data-transparent-mode="full"][data-is-home="true"] {
+  body.wallpaper-transparent
+    #navbar[data-transparent-mode="full"][data-is-home="true"] {
     --nav-bg: transparent;
     --nav-blur: none;
     --nav-shadow: none;
@@ -65,14 +66,18 @@
 }
 
 /* Semi-Full 混合模式 (未滚动时透明) */
-body.wallpaper-transparent #navbar[data-transparent-mode="semifull"]:not(.scrolled) {
+body.wallpaper-transparent
+  #navbar[data-transparent-mode="semifull"]:not(.scrolled) {
   --nav-bg: transparent;
   --nav-blur: none;
   --nav-shadow: none;
   --nav-radius: 0;
 }
 /* 移动端首页特殊处理 */
-body.wallpaper-transparent #navbar[data-transparent-mode="semifull"][data-is-home="true"]:not(.scrolled) {
+body.wallpaper-transparent
+  #navbar[data-transparent-mode="semifull"][data-is-home="true"]:not(
+    .scrolled
+  ) {
   --nav-bg: transparent;
   --nav-blur: none;
   --nav-shadow: none;
@@ -104,7 +109,14 @@ body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
 }
 
 /* 子组件样式 (Sub-Components) */
-:is(.dropdown-content, #nav-menu-panel, #display-setting, #search-panel, .music-player .mini-player, .float-panel) {
+:is(
+  .dropdown-content,
+  #nav-menu-panel,
+  #display-setting,
+  #search-panel,
+  .music-player .mini-player,
+  .float-panel
+) {
   /* 使用面板专用变量 */
   background: var(--panel-bg);
   backdrop-filter: var(--panel-blur);
@@ -119,10 +131,13 @@ body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
 
 /* Banner 模式下的特殊增强 */
 @media (min-width: 1280px) {
-  body.wallpaper-transparent :is(.dropdown-content, #display-setting, #search-panel) {
+  body.wallpaper-transparent
+    :is(.dropdown-content, #display-setting, #search-panel) {
     background: rgba(255, 255, 255, 0.85);
   }
-  :root.dark body.wallpaper-transparent :is(.dropdown-content, #display-setting, #search-panel) {
+  :root.dark
+    body.wallpaper-transparent
+    :is(.dropdown-content, #display-setting, #search-panel) {
     background: rgba(24, 25, 38, 0.85);
   }
 }
@@ -137,15 +152,21 @@ body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
   }
 
   /* 搜索框内部颜色处理 */
-  body:has(#navbar[data-dynamic-transparent="none"]) #search-panel #search-bar-inside {
+  body:has(#navbar[data-dynamic-transparent="none"])
+    #search-panel
+    #search-bar-inside {
     background: rgba(0, 0, 0, 0.08);
   }
-  :root.dark body:has(#navbar[data-dynamic-transparent="none"]) #search-panel #search-bar-inside {
+  :root.dark
+    body:has(#navbar[data-dynamic-transparent="none"])
+    #search-panel
+    #search-bar-inside {
     background: rgba(255, 255, 255, 0.15);
   }
 
   /* 非首页时，移动端各个弹出面板不透明 */
-  #navbar:not([data-is-home="true"]) :is(#nav-menu-panel, #search-panel, #display-setting) {
+  #navbar:not([data-is-home="true"])
+    :is(#nav-menu-panel, #search-panel, #display-setting) {
     background: var(--card-bg);
     backdrop-filter: none;
   }

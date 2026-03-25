@@ -19,26 +19,42 @@
 
 /* 主题色渐变按钮 */
 .btn-gradient-primary {
-  background: linear-gradient(135deg, oklch(from var(--primary) l c h) 0%, oklch(from var(--primary) calc(l + 0.1) c calc(h + 30)) 100%);
+  background: linear-gradient(
+    135deg,
+    oklch(from var(--primary) l c h) 0%,
+    oklch(from var(--primary) calc(l + 0.1) c calc(h + 30)) 100%
+  );
   color: white;
   box-shadow: 0 2px 4px oklch(from var(--primary) l c h / 0.3);
 }
 
 /* 夜间模式下主题色渐变按钮更暗 */
 .dark .btn-gradient-primary {
-  background: linear-gradient(135deg, oklch(from var(--primary) calc(l - 0.1) c h) 0%, oklch(from var(--primary) l c calc(h + 30)) 100%);
+  background: linear-gradient(
+    135deg,
+    oklch(from var(--primary) calc(l - 0.1) c h) 0%,
+    oklch(from var(--primary) l c calc(h + 30)) 100%
+  );
   box-shadow: 0 2px 4px oklch(from var(--primary) calc(l - 0.1) c h / 0.4);
 }
 
 .btn-gradient-primary:hover {
-  background: linear-gradient(135deg, oklch(from var(--primary) calc(l + 0.05) c h) 0%, oklch(from var(--primary) calc(l + 0.15) c calc(h + 30)) 100%);
+  background: linear-gradient(
+    135deg,
+    oklch(from var(--primary) calc(l + 0.05) c h) 0%,
+    oklch(from var(--primary) calc(l + 0.15) c calc(h + 30)) 100%
+  );
   box-shadow: 0 4px 8px oklch(from var(--primary) l c h / 0.4);
   transform: translateY(-2px);
 }
 
 /* 夜间模式下悬停效果 */
 .dark .btn-gradient-primary:hover {
-  background: linear-gradient(135deg, oklch(from var(--primary) l c h) 0%, oklch(from var(--primary) calc(l + 0.1) c calc(h + 30)) 100%);
+  background: linear-gradient(
+    135deg,
+    oklch(from var(--primary) l c h) 0%,
+    oklch(from var(--primary) calc(l + 0.1) c calc(h + 30)) 100%
+  );
   box-shadow: 0 4px 8px oklch(from var(--primary) l c h / 0.5);
 }
 

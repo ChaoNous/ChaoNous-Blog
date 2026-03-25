@@ -62,24 +62,36 @@ body::-webkit-scrollbar {
   left: 0;
   right: 0;
   height: 180px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.3) 30%,
+    rgba(255, 255, 255, 0.15) 60%,
+    rgba(255, 255, 255, 0.05) 80%,
+    transparent 100%
+  );
   pointer-events: none;
   z-index: 20;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :root.dark .top-gradient-highlight {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.05) 80%, transparent 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.3) 30%,
+    rgba(0, 0, 0, 0.15) 60%,
+    rgba(0, 0, 0, 0.05) 80%,
+    transparent 100%
+  );
 }
 
 @layer components {
-  
-  
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 0.5s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    
+
     mix-blend-mode: normal;
   }
 
@@ -95,11 +107,10 @@ body::-webkit-scrollbar {
 
   ::view-transition-new(root) {
     animation-name: theme-fade-in;
-    
+
     z-index: 1;
   }
 
-  
   @keyframes theme-fade-out {
     0% {
       opacity: 1;
@@ -121,7 +132,8 @@ body::-webkit-scrollbar {
   .transition,
   [class*="border"],
   [class*="transition"] {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.15s;
   }
@@ -133,8 +145,6 @@ body::-webkit-scrollbar {
     animation: none !important;
   }
 
-  
-  
   .is-theme-transitioning .expressive-code,
   .is-theme-transitioning .expressive-code * {
     transition: none !important;
@@ -142,15 +152,12 @@ body::-webkit-scrollbar {
     will-change: auto !important;
   }
 
-  
-  
   .is-theme-transitioning .expressive-code {
     content-visibility: hidden !important;
-    
+
     opacity: 0.99;
   }
 
-  
   .is-theme-transitioning .expressive-code:not(.hide-during-transition) {
     content-visibility: visible !important;
     opacity: 1 !important;
@@ -179,20 +186,46 @@ body::-webkit-scrollbar {
   }
 
   .is-theme-transitioning:not(.use-view-transition) #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode] > div,
-  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode].scrolled > div,
-  .is-theme-transitioning:not(.use-view-transition) body.wallpaper-transparent #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) body.wallpaper-transparent #navbar[data-transparent-mode] > div,
-  .is-theme-transitioning:not(.use-view-transition) body.wallpaper-transparent #navbar[data-transparent-mode].scrolled > div,
-  .is-theme-transitioning:not(.use-view-transition) #banner-wrapper ~ * #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-  .is-theme-transitioning:not(.use-view-transition) body:has(#banner-wrapper) #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
+  .is-theme-transitioning:not(.use-view-transition)
+    #navbar[data-transparent-mode]
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    #navbar[data-transparent-mode].scrolled
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    body.wallpaper-transparent
+    #navbar
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    body.wallpaper-transparent
+    #navbar[data-transparent-mode]
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    body.wallpaper-transparent
+    #navbar[data-transparent-mode].scrolled
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    #banner-wrapper
+    ~ *
+    #navbar
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode]
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    body:has(#banner-wrapper)
+    #navbar
+    > div,
+  .is-theme-transitioning:not(.use-view-transition)
+    body:has(#banner-wrapper)
+    #navbar[data-transparent-mode]
+    > div {
     transition: none !important;
     backdrop-filter: none !important;
   }
 
-  
   .is-theme-transitioning .dropdown-content,
   .is-theme-transitioning .float-panel,
   .is-theme-transitioning #display-setting,
@@ -224,7 +257,6 @@ body::-webkit-scrollbar {
     -webkit-backdrop-filter: blur(8px) !important;
   }
 
-  
   .wallpaper-transparent .card-base .card-base,
   body.wallpaper-transparent .card-base .card-base {
     background: var(--card-bg-transparent) !important;
@@ -331,8 +363,6 @@ body::-webkit-scrollbar {
     @apply opacity-0 pointer-events-none;
   }
 
-  
-
   .hide-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -363,7 +393,6 @@ body::-webkit-scrollbar {
     @apply text-black/25 dark:text-white/25;
   }
 
-  
   .floating-toc-item {
     @apply flex items-center gap-2 py-2 px-2 rounded-lg text-sm leading-relaxed;
     @apply text-black/70 dark:text-white/70;
@@ -398,7 +427,6 @@ body::-webkit-scrollbar {
     @apply overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0;
   }
 
-  
   .dropdown-container {
     @apply relative;
   }
@@ -597,12 +625,10 @@ body::-webkit-scrollbar {
 }
 
 @media (min-width: 769px) {
-  
   .post-list-container.list-mode {
     gap: 0.75rem;
   }
 
-  
   .post-list-container.grid-mode {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

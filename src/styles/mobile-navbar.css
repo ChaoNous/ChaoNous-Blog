@@ -22,8 +22,13 @@
 
 /* 移动端 (仅首页) - 亮色 */
 @media (max-width: 1279px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="semi"][data-is-home="true"] > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"] > div {
+  #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="semi"][data-is-home="true"]
+    > div,
+  body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semi"][data-is-home="true"]
+    > div {
     backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.55);
@@ -34,7 +39,10 @@
 /* 桌面端 - 暗色 */
 @media (min-width: 1280px) {
   :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
-  :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div {
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semi"]
+    > div {
     backdrop-filter: blur(20px);
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(0, 0, 0, 0.55);
@@ -44,8 +52,15 @@
 
 /* 移动端 (仅首页) - 暗色 */
 @media (max-width: 1279px) {
-  :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semi"][data-is-home="true"] > div,
-  :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"][data-is-home="true"] > div {
+  :root.dark
+    #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="semi"][data-is-home="true"]
+    > div,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semi"][data-is-home="true"]
+    > div {
     backdrop-filter: blur(20px);
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(0, 0, 0, 0.55);
@@ -62,7 +77,10 @@
   #banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
   body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div,
   :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
-  :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="full"]
+    > div {
     background: transparent;
     box-shadow: none;
     border: 1px solid transparent;
@@ -72,10 +90,22 @@
 
 /* 移动端 (仅首页) */
 @media (max-width: 1279px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="full"][data-is-home="true"] > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"] > div,
-  :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="full"][data-is-home="true"] > div,
-  :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="full"][data-is-home="true"] > div {
+  #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="full"][data-is-home="true"]
+    > div,
+  body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="full"][data-is-home="true"]
+    > div,
+  :root.dark
+    #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="full"][data-is-home="true"]
+    > div,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="full"][data-is-home="true"]
+    > div {
     background: transparent;
     box-shadow: none;
     border: 1px solid transparent;
@@ -94,8 +124,13 @@
 }
 
 @media (max-width: 1279px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"][data-is-home="true"] > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"] > div {
+  #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="semifull"][data-is-home="true"]
+    > div,
+  body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semifull"][data-is-home="true"]
+    > div {
     background: transparent;
     box-shadow: none;
     border: 1px solid transparent;
@@ -105,15 +140,24 @@
 /* 桌面端 - 滚动后 */
 @media (min-width: 1280px) {
   #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"].scrolled > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > div {
+  body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semifull"].scrolled
+    > div {
     backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
-  :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"].scrolled > div,
-  :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > div {
+  :root.dark
+    #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="semifull"].scrolled
+    > div,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semifull"].scrolled
+    > div {
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -122,16 +166,28 @@
 
 /* 移动端 - 滚动后 */
 @media (max-width: 1279px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled > div {
+  #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
+    > div,
+  body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
+    > div {
     backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
-  :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled > div,
-  :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled > div {
+  :root.dark
+    #banner-wrapper
+    ~ *
+    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
+    > div,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
+    > div {
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -218,14 +274,38 @@
 
   /* 暗色模式 */
   :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] .float-panel,
-  :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] .float-panel,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-is-home="true"]
+    .float-panel,
   :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] .dropdown-content,
-  :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] .dropdown-content,
-  :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] ~ * #display-setting,
-  :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] ~ * #display-setting,
-  :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #nav-menu-panel,
-  :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #search-panel,
-  :root.dark body:has(#banner-wrapper) #navbar[data-is-home="true"] #display-setting {
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-is-home="true"]
+    .dropdown-content,
+  :root.dark
+    #banner-wrapper
+    ~ *
+    #navbar[data-is-home="true"]
+    ~ *
+    #display-setting,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-is-home="true"]
+    ~ *
+    #display-setting,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-is-home="true"]
+    #nav-menu-panel,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-is-home="true"]
+    #search-panel,
+  :root.dark
+    body:has(#banner-wrapper)
+    #navbar[data-is-home="true"]
+    #display-setting {
     background: rgba(24, 25, 38, 0.85);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   }

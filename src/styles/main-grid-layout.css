@@ -17,7 +17,9 @@
   line-height: 1.2; /* 保持行高稳定 */
   font-family: var(--font-cjk), var(--font-content);
   font-variant-ligatures: none;
-  font-feature-settings: "liga" 0, "clig" 0;
+  font-feature-settings:
+    "liga" 0,
+    "clig" 0;
 }
 
 @keyframes fadeInUp {
@@ -43,7 +45,8 @@ body.no-banner-mode #toc-inner-wrapper {
 }
 
 /* 全屏壁纸模式下，TOC 容器在加载完成后显示毛玻璃背景 */
-body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded="true"]) {
+body.wallpaper-transparent
+  #toc-inner-wrapper:has(table-of-contents[data-loaded="true"]) {
   background: var(--card-bg-transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -567,7 +570,12 @@ body.wallpaper-transparent #toc-inner-wrapper:has(table-of-contents[data-loaded=
 /* 非桌面端暗色模式下 banner 文字叠层渐变背景 */
 @media (max-width: 1279px) and (prefers-color-scheme: dark) {
   .banner-text-overlay {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      transparent 100%
+    );
   }
 
   .banner-title {

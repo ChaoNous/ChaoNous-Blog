@@ -142,7 +142,11 @@
   left: 0;
   right: 0;
   height: 2.5rem;
-  background: linear-gradient(to bottom, transparent 0%, var(--codeblock-bg) 90%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--codeblock-bg) 90%
+  );
   pointer-events: none;
 }
 

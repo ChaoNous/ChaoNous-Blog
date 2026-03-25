@@ -156,7 +156,12 @@
 
 /* 深色主题 - 函数调用 - 绿色 */
 :global(.dark) #decrypted-content .astro-code code .hljs-function,
-:global(.dark) #decrypted-content .astro-code code .hljs-function > .hljs-title {
+:global(.dark)
+  #decrypted-content
+  .astro-code
+  code
+  .hljs-function
+  > .hljs-title {
   color: #a6e22e !important;
 }
 
@@ -240,7 +245,12 @@
 
 /* 亮色主题 - 函数调用 - 紫色 */
 :root:not(.dark) #decrypted-content .astro-code code .hljs-function,
-:root:not(.dark) #decrypted-content .astro-code code .hljs-function > .hljs-title {
+:root:not(.dark)
+  #decrypted-content
+  .astro-code
+  code
+  .hljs-function
+  > .hljs-title {
   color: #6f42c1 !important;
 }
 
@@ -287,7 +297,10 @@
 
 /* 隐藏最后的空行 */
 #decrypted-content .astro-code code span.line:last-child:empty,
-#decrypted-content .astro-code code span.line:last-child:has(> span:empty:only-child) {
+#decrypted-content
+  .astro-code
+  code
+  span.line:last-child:has(> span:empty:only-child) {
   display: none;
 }
 

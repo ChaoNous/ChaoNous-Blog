@@ -4,18 +4,18 @@
 import { definePlugin } from "@expressive-code/core";
 
 export function pluginLanguageBadge() {
-	return definePlugin({
-		name: "Language Badge",
-		hooks: {
-			postprocessRenderedBlock: ({ codeBlock, renderData }) => {
-				// 把语言信息添加到 .frame 上
-				const language = codeBlock.language;
-				if (language && renderData.blockAst.properties) {
-					renderData.blockAst.properties["data-language"] = language;
-				}
-			},
-		},
-		baseStyles: ({}) => `
+  return definePlugin({
+    name: "Language Badge",
+    hooks: {
+      postprocessRenderedBlock: ({ codeBlock, renderData }) => {
+        // 把语言信息添加到 .frame 上
+        const language = codeBlock.language;
+        if (language && renderData.blockAst.properties) {
+          renderData.blockAst.properties["data-language"] = language;
+        }
+      },
+    },
+    baseStyles: ({}) => `
       .frame[data-language]:not(.has-title):not(.is-terminal) {
         position: relative;
         
@@ -48,5 +48,5 @@ export function pluginLanguageBadge() {
         }
       }
     `,
-	});
+  });
 }

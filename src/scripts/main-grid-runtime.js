@@ -5,311 +5,308 @@ const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 35;
 const BANNER_HEIGHT_EXTEND = runtimeConfig.BANNER_HEIGHT_EXTEND || 30;
 
 function getResponsiveBannerHeightVh() {
-	const width = window.innerWidth;
-	const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+  const width = window.innerWidth;
+  const isLandscape = window.matchMedia("(orientation: landscape)").matches;
 
-	if (width <= 1279 && isLandscape) {
-		return 60;
-	}
+  if (width <= 1279 && isLandscape) {
+    return 60;
+  }
 
-	if (width <= 479) {
-		return 70;
-	}
+  if (width <= 479) {
+    return 70;
+  }
 
-	if (width <= 767) {
-		return 75;
-	}
+  if (width <= 767) {
+    return 75;
+  }
 
-	if (width <= 1279) {
-		return 70;
-	}
+  if (width <= 1279) {
+    return 70;
+  }
 
-	return BANNER_HEIGHT;
+  return BANNER_HEIGHT;
 }
 
 function syncBannerPosition(wallpaperMode) {
-	const bannerWrapper = document.getElementById("banner-wrapper");
-	if (!bannerWrapper) {
-		return;
-	}
+  const bannerWrapper = document.getElementById("banner-wrapper");
+  if (!bannerWrapper) {
+    return;
+  }
 
-	if (wallpaperMode !== "banner") {
-		bannerWrapper.style.removeProperty("height");
-		bannerWrapper.style.removeProperty("top");
-		return;
-	}
+  if (wallpaperMode !== "banner") {
+    bannerWrapper.style.removeProperty("height");
+    bannerWrapper.style.removeProperty("top");
+    return;
+  }
 
-	const width = window.innerWidth;
-	const responsiveBannerHeight = getResponsiveBannerHeightVh();
+  const width = window.innerWidth;
+  const responsiveBannerHeight = getResponsiveBannerHeightVh();
 
-	if (width <= 1279) {
-		bannerWrapper.style.height = `${responsiveBannerHeight}vh`;
-		bannerWrapper.style.top = "0px";
-		return;
-	}
+  if (width <= 1279) {
+    bannerWrapper.style.height = `${responsiveBannerHeight}vh`;
+    bannerWrapper.style.top = "0px";
+    return;
+  }
 
-	bannerWrapper.style.removeProperty("height");
-	bannerWrapper.style.top = `-${BANNER_HEIGHT_EXTEND}vh`;
+  bannerWrapper.style.removeProperty("height");
+  bannerWrapper.style.top = `-${BANNER_HEIGHT_EXTEND}vh`;
 }
 
 function getMainContentTop(wallpaperMode) {
-	if (wallpaperMode !== "banner") {
-		return "5.5rem";
-	}
+  if (wallpaperMode !== "banner") {
+    return "5.5rem";
+  }
 
-	const responsiveBannerHeight = getResponsiveBannerHeightVh();
-	if (window.innerWidth <= 1279) {
-		return `${responsiveBannerHeight}vh`;
-	}
+  const responsiveBannerHeight = getResponsiveBannerHeightVh();
+  if (window.innerWidth <= 1279) {
+    return `${responsiveBannerHeight}vh`;
+  }
 
-	return document.body.classList.contains("is-home")
-		? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
-		: `${BANNER_HEIGHT}vh`;
+  return document.body.classList.contains("is-home")
+    ? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
+    : `${BANNER_HEIGHT}vh`;
 }
 
 function syncDesktopLayoutState() {
-	const mainGrid = document.getElementById("main-grid");
-	if (mainGrid) {
-		mainGrid.setAttribute("data-layout-mode", "list");
-	}
+  const mainGrid = document.getElementById("main-grid");
+  if (mainGrid) {
+    mainGrid.setAttribute("data-layout-mode", "list");
+  }
 
-	const rightSidebar = document.querySelector(".right-sidebar-container");
-	if (rightSidebar) {
-		rightSidebar.classList.remove("hidden-in-grid-mode");
-	}
+  const rightSidebar = document.querySelector(".right-sidebar-container");
+  if (rightSidebar) {
+    rightSidebar.classList.remove("hidden-in-grid-mode");
+  }
 
-	const postListContainer = document.getElementById("post-list-container");
-	if (postListContainer) {
-		postListContainer.classList.remove("list-mode", "grid-mode");
-		postListContainer.classList.add("list-mode", "flex", "flex-col");
-		postListContainer.classList.remove(
-			"grid",
-			"grid-cols-1",
-			"lg:grid-cols-2",
-			"gap-6",
-		);
-	}
+  const postListContainer = document.getElementById("post-list-container");
+  if (postListContainer) {
+    postListContainer.classList.remove("list-mode", "grid-mode");
+    postListContainer.classList.add("list-mode", "flex", "flex-col");
+    postListContainer.classList.remove(
+      "grid",
+      "grid-cols-1",
+      "lg:grid-cols-2",
+      "gap-6",
+    );
+  }
 }
 
 (function applyInitialWallpaperClasses() {
-	const wallpaperMode =
-		localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
-	const body = document.body;
+  const wallpaperMode =
+    localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
+  const body = document.body;
 
-	switch (wallpaperMode) {
-		case "banner":
-			body.classList.add("enable-banner");
-			body.classList.remove("wallpaper-transparent", "no-banner-mode");
-			break;
-		case "fullscreen":
-			body.classList.remove("enable-banner");
-			body.classList.add("wallpaper-transparent", "no-banner-mode");
-			break;
-		case "none":
-			body.classList.remove("enable-banner", "wallpaper-transparent");
-			body.classList.add("no-banner-mode");
-			break;
-	}
+  switch (wallpaperMode) {
+    case "banner":
+      body.classList.add("enable-banner");
+      body.classList.remove("wallpaper-transparent", "no-banner-mode");
+      break;
+    case "fullscreen":
+      body.classList.remove("enable-banner");
+      body.classList.add("wallpaper-transparent", "no-banner-mode");
+      break;
+    case "none":
+      body.classList.remove("enable-banner", "wallpaper-transparent");
+      body.classList.add("no-banner-mode");
+      break;
+  }
 
-	requestAnimationFrame(() => {
-		syncBannerPosition(wallpaperMode);
+  requestAnimationFrame(() => {
+    syncBannerPosition(wallpaperMode);
 
-		const mainContent = document.getElementById("main-content-shell");
-		if (mainContent) {
-			mainContent.style.top = getMainContentTop(wallpaperMode);
-		}
+    const mainContent = document.getElementById("main-content-shell");
+    if (mainContent) {
+      mainContent.style.top = getMainContentTop(wallpaperMode);
+    }
 
-		syncDesktopLayoutState();
-	});
+    syncDesktopLayoutState();
+  });
 })();
 
 function applyWallpaperMode() {
-	const wallpaperMode =
-		localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
-	const bannerWrapper = document.getElementById("banner-wrapper");
-	const fullscreenWallpaper = document.querySelector(
-		"[data-fullscreen-wallpaper]",
-	);
-	const navbar = document.getElementById("navbar");
-	const body = document.body;
-	const mainContent = document.getElementById("main-content-shell");
-	const tocWrapper = document.getElementById("toc-wrapper");
+  const wallpaperMode =
+    localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
+  const bannerWrapper = document.getElementById("banner-wrapper");
+  const fullscreenWallpaper = document.querySelector(
+    "[data-fullscreen-wallpaper]",
+  );
+  const navbar = document.getElementById("navbar");
+  const body = document.body;
+  const mainContent = document.getElementById("main-content-shell");
+  const tocWrapper = document.getElementById("toc-wrapper");
 
-	const forceReflow = () => {
-		void document.body.offsetHeight;
-	};
+  const forceReflow = () => {
+    void document.body.offsetHeight;
+  };
 
-	switch (wallpaperMode) {
-		case "banner":
-			if (bannerWrapper) {
-				bannerWrapper.style.display = "block";
-			}
-			if (fullscreenWallpaper) {
-				fullscreenWallpaper.style.display = "none";
-			}
-			if (tocWrapper) {
-				const scrollTop = document.documentElement.scrollTop;
-				const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
-				if (scrollTop <= bannerHeight) {
-					tocWrapper.classList.add("toc-hide");
-				}
-			}
-			body.classList.remove("wallpaper-transparent", "no-banner-mode");
-			forceReflow();
-			syncBannerPosition(wallpaperMode);
-			if (mainContent) {
-				mainContent.style.top = getMainContentTop(wallpaperMode);
-			}
-			body.classList.add("enable-banner");
-			if (navbar) {
-				navbar.removeAttribute("data-dynamic-transparent");
-				navbar.setAttribute(
-					"data-transparent-mode",
-					navbarTransparentMode,
-				);
-				if (
-					navbarTransparentMode === "semifull" &&
-					window.initSemifullScrollDetection
-				) {
-					window.initSemifullScrollDetection();
-				}
-			}
-			forceReflow();
-			break;
+  switch (wallpaperMode) {
+    case "banner":
+      if (bannerWrapper) {
+        bannerWrapper.style.display = "block";
+      }
+      if (fullscreenWallpaper) {
+        fullscreenWallpaper.style.display = "none";
+      }
+      if (tocWrapper) {
+        const scrollTop = document.documentElement.scrollTop;
+        const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
+        if (scrollTop <= bannerHeight) {
+          tocWrapper.classList.add("toc-hide");
+        }
+      }
+      body.classList.remove("wallpaper-transparent", "no-banner-mode");
+      forceReflow();
+      syncBannerPosition(wallpaperMode);
+      if (mainContent) {
+        mainContent.style.top = getMainContentTop(wallpaperMode);
+      }
+      body.classList.add("enable-banner");
+      if (navbar) {
+        navbar.removeAttribute("data-dynamic-transparent");
+        navbar.setAttribute("data-transparent-mode", navbarTransparentMode);
+        if (
+          navbarTransparentMode === "semifull" &&
+          window.initSemifullScrollDetection
+        ) {
+          window.initSemifullScrollDetection();
+        }
+      }
+      forceReflow();
+      break;
 
-		case "fullscreen":
-			if (bannerWrapper) {
-				bannerWrapper.style.display = "none";
-				bannerWrapper.style.removeProperty("height");
-				bannerWrapper.style.removeProperty("top");
-			}
-			if (fullscreenWallpaper) {
-				fullscreenWallpaper.style.display = "block";
-			}
-			if (tocWrapper) {
-				tocWrapper.classList.remove("toc-hide");
-			}
-			body.classList.remove("enable-banner");
-			forceReflow();
-			if (mainContent) {
-				mainContent.style.top = getMainContentTop(wallpaperMode);
-			}
-			body.classList.add("wallpaper-transparent", "no-banner-mode");
-			if (navbar) {
-				navbar.setAttribute("data-dynamic-transparent", "semi");
-				navbar.removeAttribute("data-transparent-mode");
-			}
-			forceReflow();
-			break;
+    case "fullscreen":
+      if (bannerWrapper) {
+        bannerWrapper.style.display = "none";
+        bannerWrapper.style.removeProperty("height");
+        bannerWrapper.style.removeProperty("top");
+      }
+      if (fullscreenWallpaper) {
+        fullscreenWallpaper.style.display = "block";
+      }
+      if (tocWrapper) {
+        tocWrapper.classList.remove("toc-hide");
+      }
+      body.classList.remove("enable-banner");
+      forceReflow();
+      if (mainContent) {
+        mainContent.style.top = getMainContentTop(wallpaperMode);
+      }
+      body.classList.add("wallpaper-transparent", "no-banner-mode");
+      if (navbar) {
+        navbar.setAttribute("data-dynamic-transparent", "semi");
+        navbar.removeAttribute("data-transparent-mode");
+      }
+      forceReflow();
+      break;
 
-		case "none":
-			if (bannerWrapper) {
-				bannerWrapper.style.display = "none";
-				bannerWrapper.style.removeProperty("height");
-				bannerWrapper.style.removeProperty("top");
-			}
-			if (fullscreenWallpaper) {
-				fullscreenWallpaper.style.display = "none";
-			}
-			if (tocWrapper) {
-				tocWrapper.classList.remove("toc-hide");
-			}
-			body.classList.remove("enable-banner", "wallpaper-transparent");
-			forceReflow();
-			if (mainContent) {
-				mainContent.style.top = getMainContentTop(wallpaperMode);
-			}
-			body.classList.add("no-banner-mode");
-			if (navbar) {
-				navbar.setAttribute("data-dynamic-transparent", "none");
-				navbar.removeAttribute("data-transparent-mode");
-			}
-			forceReflow();
-			break;
-	}
+    case "none":
+      if (bannerWrapper) {
+        bannerWrapper.style.display = "none";
+        bannerWrapper.style.removeProperty("height");
+        bannerWrapper.style.removeProperty("top");
+      }
+      if (fullscreenWallpaper) {
+        fullscreenWallpaper.style.display = "none";
+      }
+      if (tocWrapper) {
+        tocWrapper.classList.remove("toc-hide");
+      }
+      body.classList.remove("enable-banner", "wallpaper-transparent");
+      forceReflow();
+      if (mainContent) {
+        mainContent.style.top = getMainContentTop(wallpaperMode);
+      }
+      body.classList.add("no-banner-mode");
+      if (navbar) {
+        navbar.setAttribute("data-dynamic-transparent", "none");
+        navbar.removeAttribute("data-transparent-mode");
+      }
+      forceReflow();
+      break;
+  }
 }
 
 function initWallpaperModeWithRetry() {
-	applyWallpaperMode();
+  applyWallpaperMode();
 
-	const wallpaperMode =
-		localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
-	if (wallpaperMode !== "fullscreen") {
-		return;
-	}
+  const wallpaperMode =
+    localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
+  if (wallpaperMode !== "fullscreen") {
+    return;
+  }
 
-	if (document.querySelector("[data-fullscreen-wallpaper]")) {
-		applyWallpaperMode();
-		return;
-	}
+  if (document.querySelector("[data-fullscreen-wallpaper]")) {
+    applyWallpaperMode();
+    return;
+  }
 
-	const observer = new MutationObserver(() => {
-		if (!document.querySelector("[data-fullscreen-wallpaper]")) {
-			return;
-		}
+  const observer = new MutationObserver(() => {
+    if (!document.querySelector("[data-fullscreen-wallpaper]")) {
+      return;
+    }
 
-		observer.disconnect();
-		applyWallpaperMode();
-	});
+    observer.disconnect();
+    applyWallpaperMode();
+  });
 
-	observer.observe(document.body, {
-		childList: true,
-		subtree: true,
-	});
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
 
-	window.setTimeout(() => {
-		observer.disconnect();
-	}, 2000);
+  window.setTimeout(() => {
+    observer.disconnect();
+  }, 2000);
 }
 
 function setupSwupLayoutSync() {
-	if (typeof window === "undefined" || !window.swup?.hooks) {
-		return false;
-	}
+  if (typeof window === "undefined" || !window.swup?.hooks) {
+    return false;
+  }
 
-	if (window.__mainGridRuntimeHooksRegistered) {
-		return true;
-	}
+  if (window.__mainGridRuntimeHooksRegistered) {
+    return true;
+  }
 
-	window.__mainGridRuntimeHooksRegistered = true;
+  window.__mainGridRuntimeHooksRegistered = true;
 
-	window.swup.hooks.on("content:replace", function () {
-		if (document.getElementById("main-grid")) {
-			syncDesktopLayoutState();
-			delete window.__pendingLayoutMode;
-		}
-	});
+  window.swup.hooks.on("content:replace", function () {
+    if (document.getElementById("main-grid")) {
+      syncDesktopLayoutState();
+      delete window.__pendingLayoutMode;
+    }
+  });
 
-	window.swup.hooks.on("page:view", function () {
-		applyWallpaperMode();
-		requestAnimationFrame(() => {
-			syncDesktopLayoutState();
-		});
-	});
+  window.swup.hooks.on("page:view", function () {
+    applyWallpaperMode();
+    requestAnimationFrame(() => {
+      syncDesktopLayoutState();
+    });
+  });
 
-	return true;
+  return true;
 }
 
 window.addEventListener("wallpaper-mode-change", function () {
-	applyWallpaperMode();
+  applyWallpaperMode();
 });
 
 window.addEventListener("resize", function () {
-	applyWallpaperMode();
+  applyWallpaperMode();
 });
 
 if (document.readyState === "loading") {
-	document.addEventListener("DOMContentLoaded", () => {
-		initWallpaperModeWithRetry();
-		syncDesktopLayoutState();
-	});
+  document.addEventListener("DOMContentLoaded", () => {
+    initWallpaperModeWithRetry();
+    syncDesktopLayoutState();
+  });
 } else {
-	initWallpaperModeWithRetry();
-	syncDesktopLayoutState();
+  initWallpaperModeWithRetry();
+  syncDesktopLayoutState();
 }
 
 if (!setupSwupLayoutSync()) {
-	document.addEventListener("swup:enable", setupSwupLayoutSync, {
-		once: true,
-	});
+  document.addEventListener("swup:enable", setupSwupLayoutSync, {
+    once: true,
+  });
 }

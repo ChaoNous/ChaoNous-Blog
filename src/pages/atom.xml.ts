@@ -6,17 +6,17 @@ import { initPostIdMap } from "@/utils/permalink-utils";
 import { parseMarkdown, processImagesInContent } from "@/utils/feed-utils";
 
 export async function GET(context: APIContext) {
-	if (!context.site) {
-		throw Error("site not set");
-	}
+  if (!context.site) {
+    throw Error("site not set");
+  }
 
-	const posts = (await getSortedPosts()).filter(
-		(post) => !post.data.encrypted && post.data.draft !== true,
-	);
+  const posts = (await getSortedPosts()).filter(
+    (post) => !post.data.encrypted && post.data.draft !== true,
+  );
 
-	initPostIdMap(posts);
+  initPostIdMap(posts);
 
-	let atomFeed = `<?xml version="1.0" encoding="utf-8"?>
+  let atomFeed = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>${siteConfig.title}</title>
   <subtitle>${siteConfig.subtitle || "No description"}</subtitle>
@@ -26,12 +26,12 @@ export async function GET(context: APIContext) {
   <updated>${new Date().toISOString()}</updated>
   <language>${siteConfig.lang}</language>`;
 
-	for (const post of posts) {
-		const body = parseMarkdown(post.body);
-		const content = await processImagesInContent(body, post, context);
-		const postUrl = new URL(getPostUrl(post), context.site).href;
+  for (const post of posts) {
+    const body = parseMarkdown(post.body);
+    const content = await processImagesInContent(body, post, context);
+    const postUrl = new URL(getPostUrl(post), context.site).href;
 
-		atomFeed += `
+    atomFeed += `
   <entry>
     <title>${post.data.title}</title>
     <link href="${postUrl}" rel="alternate" type="text/html"/>
@@ -44,21 +44,21 @@ export async function GET(context: APIContext) {
       <name>${profileConfig.name}</name>
     </author>`;
 
-		if (post.data.category) {
-			atomFeed += `
+    if (post.data.category) {
+      atomFeed += `
     <category term="${post.data.category}"></category>`;
-		}
+    }
 
-		atomFeed += `
+    atomFeed += `
   </entry>`;
-	}
+  }
 
-	atomFeed += `
+  atomFeed += `
 </feed>`;
 
-	return new Response(atomFeed, {
-		headers: {
-			"Content-Type": "application/atom+xml; charset=utf-8",
-		},
-	});
+  return new Response(atomFeed, {
+    headers: {
+      "Content-Type": "application/atom+xml; charset=utf-8",
+    },
+  });
 }
