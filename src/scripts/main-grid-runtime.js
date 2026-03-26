@@ -8,20 +8,24 @@ function getResponsiveBannerHeightVh() {
   const width = window.innerWidth;
   const isLandscape = window.matchMedia("(orientation: landscape)").matches;
 
+  // 横屏模式：20vh（与CSS一致）
   if (width <= 1279 && isLandscape) {
-    return 60;
+    return 20;
   }
 
+  // 小屏手机竖屏：40vh
   if (width <= 479) {
-    return 70;
+    return 40;
   }
 
+  // 中小屏手机竖屏：45vh
   if (width <= 767) {
-    return 75;
+    return 45;
   }
 
+  // 平板竖屏：45vh
   if (width <= 1279) {
-    return 70;
+    return 45;
   }
 
   return BANNER_HEIGHT;
