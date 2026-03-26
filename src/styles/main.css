@@ -11,10 +11,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Cinzel", "Zhuque Fangsong UI";
-  --font-latin: "Cinzel";
+  --font-sans: "Crimson Pro", "Zhuque Fangsong UI";
+  --font-latin: "Crimson Pro";
   --font-cjk: "Zhuque Fangsong UI";
-  --font-content: "Cinzel", "Zhuque Fangsong UI";
+  --font-content: "Crimson Pro", "Zhuque Fangsong UI";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
@@ -44,9 +44,9 @@ body {
 }
 
 body.is-home {
-  --font-sans: "Cinzel", "Zhuque Fangsong UI";
+  --font-sans: "Crimson Pro", "Zhuque Fangsong UI";
   --font-cjk: "Zhuque Fangsong UI";
-  --font-content: "Cinzel", "Zhuque Fangsong UI";
+  --font-content: "Crimson Pro", "Zhuque Fangsong UI";
 }
 
 html::-webkit-scrollbar,
