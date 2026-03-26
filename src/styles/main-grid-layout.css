@@ -133,10 +133,10 @@ body.wallpaper-transparent
     min-height: calc(100vh - 40vh);
   }
 
-  /* 手机端竖屏模式完整显示banner */
+  /* 手机端竖屏模式填满banner，消除黑边 */
   .banner-container img,
   .carousel-item img {
-    object-fit: contain !important;
+    object-fit: cover !important;
     object-position: center center !important;
   }
 
@@ -186,10 +186,10 @@ body.wallpaper-transparent
     min-height: calc(100vh - 45vh);
   }
 
-  /* 手机端竖屏模式完整显示banner */
+  /* 手机端竖屏模式填满banner，消除黑边 */
   .banner-container img,
   .carousel-item img {
-    object-fit: contain !important;
+    object-fit: cover !important;
     object-position: center center !important;
   }
 
