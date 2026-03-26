@@ -655,10 +655,10 @@ body.wallpaper-transparent
     height: 20vh !important;
   }
 
-  /* 横屏主内容区跟随 banner */
+  /* 横屏主内容区跟随 banner，增加 1.5rem 间距 */
   .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 20vh !important;
-    min-height: calc(100vh - 20vh) !important;
+    top: calc(20vh + 1.5rem) !important;
+    min-height: calc(100vh - 20vh - 1.5rem) !important;
   }
 
   .banner-container {
