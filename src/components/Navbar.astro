@@ -127,7 +127,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		</div>
 		<div class="flex items-center gap-1">
 			<div id="search-container">
-				<Search client:only="svelte" showMobileTrigger={false}></Search>
+				<Search client:only="svelte"></Search>
 			</div>
 			{
 				!siteConfig.themeColor.fixed && (
@@ -161,8 +161,6 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		<NavMenuPanel
 			links={links}
 			showDisplaySettings={!siteConfig.themeColor.fixed}
-			showSearchAction={true}
-			showThemeToggle={true}
 		></NavMenuPanel>
 		<DisplaySettings client:only="svelte"></DisplaySettings>
 	</div>

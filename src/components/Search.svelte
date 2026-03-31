@@ -18,12 +18,6 @@
 	let focusTimer: NodeJS.Timeout;
 	let blurTimer: NodeJS.Timeout;
 
-	interface Props {
-		showMobileTrigger?: boolean;
-	}
-
-	let { showMobileTrigger = true }: Props = $props();
-
 	const fakeResult: SearchResult[] = [
 		{
 			url: url("/"),
@@ -42,11 +36,6 @@
 				"Try running <mark>npm build && npm preview</mark> instead.",
 		},
 	];
-
-	const togglePanel = () => {
-		const panel = document.getElementById("search-panel");
-		panel?.classList.toggle("float-panel-closed");
-	};
 
 	const toggleDesktopSearch = () => {
 		// 如果窗口刚获得焦点，不自动展开搜索框
@@ -269,18 +258,6 @@
 		/>
 	</div>
 </div>
-
-{#if showMobileTrigger}
-	<!-- toggle btn for phone/tablet view -->
-	<button
-		onclick={togglePanel}
-		aria-label="Search Panel"
-		id="search-switch"
-		class="btn-plain scale-animation lg:hidden! rounded-lg w-11 h-11 active:scale-90"
-	>
-		<Icon icon="material-symbols:search" class="text-[1.25rem]"></Icon>
-	</button>
-{/if}
 
 <!-- search panel -->
 <div

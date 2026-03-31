@@ -1,22 +1,12 @@
 ---
 import type { MarkdownHeading } from "astro";
 
-
-
 interface Props {
 	class?: string;
-	headings: MarkdownHeading[];
-}
-
-let { headings = [] } = Astro.props;
-
-let minDepth = 10;
-for (const heading of headings) {
-	minDepth = Math.min(minDepth, heading.depth);
+	headings?: MarkdownHeading[];
 }
 
 const className = Astro.props.class;
-
 ---
 
 <table-of-contents class:list={[className, "group"]} id="toc">
@@ -155,10 +145,6 @@ const className = Astro.props.class;
 			});
 		};
 
-		fallback = () => {
-			this.syncActiveHeadingsFromScroll();
-		};
-
 		markActiveHeading = (idx: number) => {
 			this.active[idx] = true;
 		};
@@ -236,10 +222,6 @@ const className = Astro.props.class;
 				}
 			}
 		};
-
-		isInRange(value: number, min: number, max: number) {
-			return min < value && value < max;
-		}
 
 		connectedCallback() {
 
