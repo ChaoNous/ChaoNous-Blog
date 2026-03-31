@@ -471,7 +471,7 @@ body::-webkit-scrollbar {
     @apply rotate-180;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     .dropdown-container {
       @apply hidden;
     }
@@ -601,7 +601,7 @@ body::-webkit-scrollbar {
   margin-bottom: 0.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   #post-list-container {
     display: flex !important;
     flex-direction: column !important;
@@ -622,7 +622,7 @@ body::-webkit-scrollbar {
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1024px) {
   .post-list-container.list-mode {
     gap: 0.75rem;
   }

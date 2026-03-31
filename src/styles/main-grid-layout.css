@@ -66,8 +66,8 @@ body.wallpaper-transparent
   }
 }
 
-/* 移动端无侧边栏布局修正（< 768px） */
-@media (max-width: 767px) {
+/* 移动端无侧边栏布局修正（< 1024px） */
+@media (max-width: 1023px) {
   .banner-title,
   .banner-subtitle {
     animation: none;
@@ -257,8 +257,8 @@ body.wallpaper-transparent
   }
 }
 
-/* 平板端（768px - 1279px）竖屏模式 */
-@media (min-width: 768px) and (max-width: 1279px) and (orientation: portrait) {
+/* 平板/大移动端（768px - 1023px）竖屏模式 */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
   #main-grid,
   #main-grid > * {
     min-width: 0;
@@ -339,7 +339,7 @@ body.wallpaper-transparent
 }
 
 /* 平板端横屏模式保持原样 */
-@media (min-width: 768px) and (max-width: 1279px) and (orientation: landscape) {
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
   #main-grid,
   #main-grid > * {
     min-width: 0;
@@ -644,7 +644,7 @@ body.wallpaper-transparent
 }
 
 /* 平板 no-banner-layout */
-@media (min-width: 768px) and (max-width: 1279px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .absolute.w-full.z-30.no-banner-layout {
     top: 5.5rem !important;
     min-height: calc(100vh - 5.5rem) !important;
