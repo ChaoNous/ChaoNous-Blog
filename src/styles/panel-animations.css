@@ -49,22 +49,10 @@
   transform: scaleY(0) scaleX(0.65);
 }
 
-#wallpaper-mode-panel {
-  transform-origin: top right;
-}
-
-#wallpaper-mode-panel.float-panel-closed {
-  transform: scaleY(0) scaleX(0.5);
-}
-
 /* 移动端 */
 @media (max-width: 768px) {
   .float-panel-closed {
     transform: scaleY(0) scaleX(0.85);
-  }
-
-  #wallpaper-mode-panel.float-panel-closed {
-    transform: scaleY(0) scaleX(0.7);
   }
 }
 

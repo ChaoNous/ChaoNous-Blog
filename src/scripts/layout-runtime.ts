@@ -104,10 +104,6 @@ async function initializePanelManager() {
           "search-bar",
           "search-switch",
         ]);
-        setClickOutsideToClose("wallpaper-mode-panel", [
-          "wallpaper-mode-panel",
-          "wallpaper-mode-switch",
-        ]);
 
         return panelManager;
       } catch (error) {

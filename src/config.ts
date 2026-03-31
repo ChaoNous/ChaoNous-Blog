@@ -2,7 +2,6 @@ import type {
   AnnouncementConfig,
   ExpressiveCodeConfig,
   FooterConfig,
-  FullscreenWallpaperConfig,
   LicenseConfig,
   MusicPlayerConfig,
   NavBarConfig,
@@ -62,16 +61,6 @@ export const siteConfig: SiteConfig = {
     useNewStyle: false, // 是否使用新版标签样式
   },
 
-  // 壁纸模式配置
-  wallpaperMode: {
-    defaultMode: "banner", // 默认模式："banner" 横幅模式，"fullscreen" 全屏壁纸，"none" 无壁纸
-    // 移动端显示模式切换按钮
-    // "off" = 不显示
-    // "mobile" = 仅移动端显示
-    // "desktop" = 仅桌面端显示
-    // "both" = 两端都显示
-    showModeSwitchOnMobile: "both",
-  },
 
   banner: {
     // 横幅图片配置，数量大于 1 时自动启用轮播
@@ -161,28 +150,7 @@ export const siteConfig: SiteConfig = {
   showLastModified: false,
 };
 
-export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
-  src: {
-    desktop: [
-      "/assets/desktop-banner/banner1.webp",
-      "/assets/desktop-banner/banner2.webp",
-      "/assets/desktop-banner/banner3.webp",
-    ],
-    mobile: [
-      "/assets/mobile-banner/banner1.webp",
-      "/assets/mobile-banner/banner2.webp",
-      "/assets/mobile-banner/banner3.webp",
-    ],
-  },
-  position: "center", // 壁纸位置，对应 object-position
-  carousel: {
-    enable: true, // 是否启用轮播
-    interval: 5, // 轮播间隔，单位：秒
-  },
-  zIndex: -1, // 层级，默认置于底层
-  opacity: 0.8, // 透明度
-  blur: 0, // 模糊度，单位：像素
-};
+
 
 export const navBarConfig: NavBarConfig = {
   links: [
@@ -340,5 +308,4 @@ export const widgetConfigs = {
   profile: profileConfig,
   music: musicPlayerConfig,
   layout: sidebarLayoutConfig,
-  fullscreenWallpaper: fullscreenWallpaperConfig,
 } as const;

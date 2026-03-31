@@ -1,6 +1,5 @@
 const runtimeConfig = window.__mainGridRuntimeConfig || {};
 const navbarTransparentMode = runtimeConfig.navbarTransparentMode || "semi";
-const defaultWallpaperMode = runtimeConfig.defaultWallpaperMode || "banner";
 const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 35;
 const BANNER_HEIGHT_EXTEND = runtimeConfig.BANNER_HEIGHT_EXTEND || 30;
 
@@ -31,15 +30,9 @@ function getResponsiveBannerHeightVh() {
   return { value: BANNER_HEIGHT, unit: "vh" };
 }
 
-function syncBannerPosition(wallpaperMode) {
+function syncBannerPosition() {
   const bannerWrapper = document.getElementById("banner-wrapper");
   if (!bannerWrapper) {
-    return;
-  }
-
-  if (wallpaperMode !== "banner") {
-    bannerWrapper.style.removeProperty("height");
-    bannerWrapper.style.removeProperty("top");
     return;
   }
 
@@ -56,11 +49,7 @@ function syncBannerPosition(wallpaperMode) {
   bannerWrapper.style.top = `-${BANNER_HEIGHT_EXTEND}vh`;
 }
 
-function getMainContentTop(wallpaperMode) {
-  if (wallpaperMode !== "banner") {
-    return "5.5rem";
-  }
-
+function getMainContentTop() {
   const banner = getResponsiveBannerHeightVh();
   if (window.innerWidth <= 1279) {
     return `${banner.value}${banner.unit}`;
@@ -95,45 +84,25 @@ function syncDesktopLayoutState() {
   }
 }
 
-(function applyInitialWallpaperClasses() {
-  const wallpaperMode =
-    localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
+(function applyInitialLayout() {
   const body = document.body;
-
-  switch (wallpaperMode) {
-    case "banner":
-      body.classList.add("enable-banner");
-      body.classList.remove("wallpaper-transparent", "no-banner-mode");
-      break;
-    case "fullscreen":
-      body.classList.remove("enable-banner");
-      body.classList.add("wallpaper-transparent", "no-banner-mode");
-      break;
-    case "none":
-      body.classList.remove("enable-banner", "wallpaper-transparent");
-      body.classList.add("no-banner-mode");
-      break;
-  }
+  body.classList.add("enable-banner");
+  body.classList.remove("wallpaper-transparent", "no-banner-mode");
 
   requestAnimationFrame(() => {
-    syncBannerPosition(wallpaperMode);
+    syncBannerPosition();
 
     const mainContent = document.getElementById("main-content-shell");
     if (mainContent) {
-      mainContent.style.top = getMainContentTop(wallpaperMode);
+      mainContent.style.top = getMainContentTop();
     }
 
     syncDesktopLayoutState();
   });
 })();
 
-function applyWallpaperMode() {
-  const wallpaperMode =
-    localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
+function applyBannerLayout() {
   const bannerWrapper = document.getElementById("banner-wrapper");
-  const fullscreenWallpaper = document.querySelector(
-    "[data-fullscreen-wallpaper]",
-  );
   const navbar = document.getElementById("navbar");
   const body = document.body;
   const mainContent = document.getElementById("main-content-shell");
@@ -143,124 +112,37 @@ function applyWallpaperMode() {
     void document.body.offsetHeight;
   };
 
-  switch (wallpaperMode) {
-    case "banner":
-      if (bannerWrapper) {
-        bannerWrapper.style.display = "block";
-      }
-      if (fullscreenWallpaper) {
-        fullscreenWallpaper.style.display = "none";
-      }
-      if (tocWrapper) {
-        const scrollTop = document.documentElement.scrollTop;
-        const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
-        if (scrollTop <= bannerHeight) {
-          tocWrapper.classList.add("toc-hide");
-        }
-      }
-      body.classList.remove("wallpaper-transparent", "no-banner-mode");
-      forceReflow();
-      syncBannerPosition(wallpaperMode);
-      if (mainContent) {
-        mainContent.style.top = getMainContentTop(wallpaperMode);
-      }
-      body.classList.add("enable-banner");
-      if (navbar) {
-        navbar.removeAttribute("data-dynamic-transparent");
-        navbar.setAttribute("data-transparent-mode", navbarTransparentMode);
-        if (
-          navbarTransparentMode === "semifull" &&
-          window.initSemifullScrollDetection
-        ) {
-          window.initSemifullScrollDetection();
-        }
-      }
-      forceReflow();
-      break;
-
-    case "fullscreen":
-      if (bannerWrapper) {
-        bannerWrapper.style.display = "none";
-        bannerWrapper.style.removeProperty("height");
-        bannerWrapper.style.removeProperty("top");
-      }
-      if (fullscreenWallpaper) {
-        fullscreenWallpaper.style.display = "block";
-      }
-      if (tocWrapper) {
-        tocWrapper.classList.remove("toc-hide");
-      }
-      body.classList.remove("enable-banner");
-      forceReflow();
-      if (mainContent) {
-        mainContent.style.top = getMainContentTop(wallpaperMode);
-      }
-      body.classList.add("wallpaper-transparent", "no-banner-mode");
-      if (navbar) {
-        navbar.setAttribute("data-dynamic-transparent", "semi");
-        navbar.removeAttribute("data-transparent-mode");
-      }
-      forceReflow();
-      break;
-
-    case "none":
-      if (bannerWrapper) {
-        bannerWrapper.style.display = "none";
-        bannerWrapper.style.removeProperty("height");
-        bannerWrapper.style.removeProperty("top");
-      }
-      if (fullscreenWallpaper) {
-        fullscreenWallpaper.style.display = "none";
-      }
-      if (tocWrapper) {
-        tocWrapper.classList.remove("toc-hide");
-      }
-      body.classList.remove("enable-banner", "wallpaper-transparent");
-      forceReflow();
-      if (mainContent) {
-        mainContent.style.top = getMainContentTop(wallpaperMode);
-      }
-      body.classList.add("no-banner-mode");
-      if (navbar) {
-        navbar.setAttribute("data-dynamic-transparent", "none");
-        navbar.removeAttribute("data-transparent-mode");
-      }
-      forceReflow();
-      break;
+  if (bannerWrapper) {
+    bannerWrapper.style.display = "block";
   }
-}
-
-function initWallpaperModeWithRetry() {
-  applyWallpaperMode();
-
-  const wallpaperMode =
-    localStorage.getItem("wallpaperMode") || defaultWallpaperMode;
-  if (wallpaperMode !== "fullscreen") {
-    return;
-  }
-
-  if (document.querySelector("[data-fullscreen-wallpaper]")) {
-    applyWallpaperMode();
-    return;
-  }
-
-  const observer = new MutationObserver(() => {
-    if (!document.querySelector("[data-fullscreen-wallpaper]")) {
-      return;
+  
+  if (tocWrapper) {
+    const scrollTop = document.documentElement.scrollTop;
+    const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
+    if (scrollTop <= bannerHeight) {
+      tocWrapper.classList.add("toc-hide");
     }
-
-    observer.disconnect();
-    applyWallpaperMode();
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  window.setTimeout(() => {
-    observer.disconnect();
-  }, 2000);
+  }
+  
+  body.classList.remove("wallpaper-transparent", "no-banner-mode");
+  forceReflow();
+  syncBannerPosition();
+  if (mainContent) {
+    mainContent.style.top = getMainContentTop();
+  }
+  body.classList.add("enable-banner");
+  
+  if (navbar) {
+    navbar.removeAttribute("data-dynamic-transparent");
+    navbar.setAttribute("data-transparent-mode", navbarTransparentMode);
+    if (
+      navbarTransparentMode === "semifull" &&
+      window.initSemifullScrollDetection
+    ) {
+      window.initSemifullScrollDetection();
+    }
+  }
+  forceReflow();
 }
 
 function setupSwupLayoutSync() {
@@ -282,7 +164,7 @@ function setupSwupLayoutSync() {
   });
 
   window.swup.hooks.on("page:view", function () {
-    applyWallpaperMode();
+    applyBannerLayout();
     requestAnimationFrame(() => {
       syncDesktopLayoutState();
     });
@@ -291,21 +173,17 @@ function setupSwupLayoutSync() {
   return true;
 }
 
-window.addEventListener("wallpaper-mode-change", function () {
-  applyWallpaperMode();
-});
-
 window.addEventListener("resize", function () {
-  applyWallpaperMode();
+  applyBannerLayout();
 });
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
-    initWallpaperModeWithRetry();
+    applyBannerLayout();
     syncDesktopLayoutState();
   });
 } else {
-  initWallpaperModeWithRetry();
+  applyBannerLayout();
   syncDesktopLayoutState();
 }
 

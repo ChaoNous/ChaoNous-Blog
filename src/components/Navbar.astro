@@ -7,7 +7,6 @@ import { url } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
 import LightDarkSwitch from "./LightDarkSwitch.svelte";
 import Search from "./Search.svelte";
-import WallpaperSwitch from "./WallpaperSwitch.svelte";
 import DisplaySettings from "./widget/DisplaySettings.svelte";
 import DropdownMenu from "./widget/DropdownMenu.astro";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
@@ -15,8 +14,6 @@ import NavMenuPanel from "./widget/NavMenuPanel.astro";
 const className = Astro.props.class;
 const navbarTransparentMode =
 	siteConfig.banner?.navbar?.transparentMode || "semi";
-const modeSwitchDisplay =
-	siteConfig.wallpaperMode?.showModeSwitchOnMobile || "desktop";
 const isHomePage = Astro.url.pathname === "/" || Astro.url.pathname === "";
 
 let links: NavBarLink[] = navBarConfig.links.map(
@@ -62,10 +59,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 	? toMathSansBoldItalic(siteConfig.navbarTitle.text)
 	: siteConfig.title;
 
-const desktopWallpaperSwitchClass =
-	modeSwitchDisplay === "desktop" || modeSwitchDisplay === "both"
-		? "hidden md:block"
-		: "hidden";
+
 ---
 <div
 	id="navbar"
@@ -149,11 +143,6 @@ const desktopWallpaperSwitchClass =
 					</button>
 				)
 			}
-			<div
-				class:list={[desktopWallpaperSwitchClass]}
-			>
-				<WallpaperSwitch client:only="svelte"></WallpaperSwitch>
-			</div>
 			<LightDarkSwitch client:only="svelte"></LightDarkSwitch>
 			<button
 				aria-label="Menu"
@@ -170,7 +159,6 @@ const desktopWallpaperSwitchClass =
 		<NavMenuPanel
 			links={links}
 			showDisplaySettings={!siteConfig.themeColor.fixed}
-			showWallpaperModes={modeSwitchDisplay !== "off"}
 		></NavMenuPanel>
 		<DisplaySettings client:only="svelte"></DisplaySettings>
 	</div>

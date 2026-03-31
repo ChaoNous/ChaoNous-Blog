@@ -2,10 +2,8 @@ import {
   DARK_MODE,
   DEFAULT_THEME,
   LIGHT_MODE,
-  // WALLPAPER_BANNER,
 } from "@constants/constants";
-import { siteConfig } from "@/config";
-import type { LIGHT_DARK_MODE, WALLPAPER_MODE } from "@/types/config";
+import type { LIGHT_DARK_MODE } from "@/types/config";
 
 // UI 显示范围 0-100，实际 hue 范围 0-360
 const UI_TO_HUE_MULTIPLIER = 3.6;
@@ -176,17 +174,4 @@ export function getStoredTheme(): LIGHT_DARK_MODE {
   return (localStorage.getItem("theme") as LIGHT_DARK_MODE) || DEFAULT_THEME;
 }
 
-export function getStoredWallpaperMode(): WALLPAPER_MODE {
-  return (
-    (localStorage.getItem("wallpaperMode") as WALLPAPER_MODE) ||
-    siteConfig.wallpaperMode.defaultMode
-  );
-}
 
-export function setWallpaperMode(mode: WALLPAPER_MODE): void {
-  localStorage.setItem("wallpaperMode", mode);
-  // 触发自定义事件通知其他组件壁纸模式已改变
-  window.dispatchEvent(
-    new CustomEvent("wallpaper-mode-change", { detail: { mode } }),
-  );
-}

@@ -247,11 +247,6 @@ enum I18nKey {
   atomCopied = "atomCopied",
   atomCopyFailed = "atomCopyFailed",
 
-  // Wallpaper mode
-  wallpaperBanner = "wallpaperBanner",
-  wallpaperFullscreen = "wallpaperFullscreen",
-  wallpaperNone = "wallpaperNone",
-
   // 站点统计
   siteStats = "siteStats",
   siteStatsPostCount = "siteStatsPostCount",

@@ -1,8 +1,6 @@
 import type {
   DARK_MODE,
   LIGHT_MODE,
-  WALLPAPER_BANNER,
-  WALLPAPER_FULLSCREEN,
 } from "../constants/constants";
 
 export type SiteConfig = {
@@ -85,10 +83,6 @@ export type SiteConfig = {
     useNewStyle?: boolean;
   };
 
-  wallpaperMode: {
-    defaultMode: "banner" | "fullscreen";
-    showModeSwitchOnMobile?: "off" | "mobile" | "desktop" | "both";
-  };
 
   banner: {
     src:
@@ -198,9 +192,6 @@ export type PermalinkConfig = {
 
 export type LIGHT_DARK_MODE = typeof LIGHT_MODE | typeof DARK_MODE;
 
-export type WALLPAPER_MODE =
-  | typeof WALLPAPER_BANNER
-  | typeof WALLPAPER_FULLSCREEN;
 
 export type BlogPostData = {
   body: string;
@@ -295,23 +286,6 @@ export type SidebarLayoutConfig = {
   };
 };
 
-export type FullscreenWallpaperConfig = {
-  src:
-    | string
-    | string[]
-    | {
-        desktop?: string | string[];
-        mobile?: string | string[];
-      };
-  position?: "top" | "center" | "bottom";
-  carousel?: {
-    enable: boolean;
-    interval: number;
-  };
-  zIndex?: number;
-  opacity?: number;
-  blur?: number;
-};
 
 export type CommentConfig = {
   enable: boolean;

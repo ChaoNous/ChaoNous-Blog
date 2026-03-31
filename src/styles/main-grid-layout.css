@@ -34,27 +34,6 @@
   }
 }
 
-/* 无 banner 模式下强制主内容区域从导航栏底部开始 */
-body.no-banner-mode .absolute.w-full.z-30 {
-  top: 5.5rem !important;
-}
-
-/* TOC 无 banner 模式下的定位修正 */
-body.no-banner-mode #toc-inner-wrapper {
-  top: 5.5rem !important;
-  height: calc(100vh - 8rem) !important;
-}
-
-/* 全屏壁纸模式下，TOC 容器在加载完成后显示毛玻璃背景 */
-body.wallpaper-transparent
-  #toc-inner-wrapper:has(table-of-contents[data-loaded="true"]) {
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-radius: var(--radius-large);
-  padding: 0.5rem;
-  box-shadow: none !important;
-}
 
 /* 桌面端（>= 1280px）banner 模式下主内容区 top 值 */
 @media (min-width: 1280px) {

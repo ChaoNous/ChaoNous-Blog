@@ -6,11 +6,10 @@ import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
-import FullscreenWallpaper from "../components/misc/FullscreenWallpaper.astro";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
 import TypewriterText from "../components/TypewriterText.astro";
 import TOC from "../components/widget/TOC.astro";
-import { fullscreenWallpaperConfig, siteConfig } from "../config";
+import { siteConfig } from "../config";
 import { BANNER_HEIGHT, BANNER_HEIGHT_EXTEND } from "../constants/constants";
 import { resolveBannerImages } from "../utils/banner-utils";
 import { widgetManager } from "../utils/widget-manager";
@@ -53,17 +52,11 @@ const hasBannerLink = !!siteConfig.banner.credit.url;
 const isHomePage = Astro.url.pathname === "/" || Astro.url.pathname === "";
 const showHomeText = siteConfig.banner.homeText?.enable && isHomePage;
 
-const mainPanelTop =
-	siteConfig.wallpaperMode.defaultMode === "banner"
-		? `${BANNER_HEIGHT}vh`
-		: "5.5rem";
+const mainPanelTop = `${BANNER_HEIGHT}vh`;
 
-const finalMainPanelTop =
-	siteConfig.wallpaperMode.defaultMode === "banner"
-		? isHomePage
-			? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
-			: mainPanelTop
-		: "5.5rem";
+const finalMainPanelTop = isHomePage
+	? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
+	: mainPanelTop;
 
 const hasLeftSidebarComponents =
 	widgetManager.getComponentsByPosition("top", "left", "desktop").length >
@@ -122,12 +115,6 @@ const mainContentClass = `
 	.trim()
 	.replace(/\s+/g, " ");
 
-const shouldEnableTransparency =
-	siteConfig.wallpaperMode.defaultMode === "fullscreen";
-
-const transparentClass = shouldEnableTransparency
-	? "wallpaper-transparent"
-	: "";
 ---
 
 <Layout
@@ -143,7 +130,6 @@ const transparentClass = shouldEnableTransparency
 		define:vars={{
 			navbarTransparentMode:
 				siteConfig.banner?.navbar?.transparentMode || "semi",
-			defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode,
 			BANNER_HEIGHT: BANNER_HEIGHT,
 			BANNER_HEIGHT_EXTEND: BANNER_HEIGHT_EXTEND,
 			pageScaling: siteConfig.pageScaling,
@@ -151,7 +137,6 @@ const transparentClass = shouldEnableTransparency
 	>
 		window.__mainGridRuntimeConfig = {
 			navbarTransparentMode,
-			defaultWallpaperMode,
 			BANNER_HEIGHT,
 			BANNER_HEIGHT_EXTEND,
 			pageScaling,
@@ -161,9 +146,6 @@ const transparentClass = shouldEnableTransparency
 	<script>
 		import "../scripts/main-grid-runtime.js?rev=sticky-home-banner";
 	</script>
-
-	<!-- 全屏壁纸组件 - 在 banner 模式下由 JS 控制显隐 -->
-	<FullscreenWallpaper config={fullscreenWallpaperConfig} />
 
 	<!-- Iconify 图标加载器 -->
 	<IconifyLoader />
@@ -265,7 +247,7 @@ const transparentClass = shouldEnableTransparency
 	<!-- Main content -->
 	<div
 		id="main-content-shell"
-		class={`absolute w-full z-30 pointer-events-none ${transparentClass}`}
+		class="absolute w-full z-30 pointer-events-none"
 		style={`top: ${finalMainPanelTop}`}
 	>
 		<!-- The pointer-events-none here prevent blocking the click event of the TOC -->
@@ -325,7 +307,7 @@ const transparentClass = shouldEnableTransparency
 						<div id="left-sidebar-wrapper" class="contents">
 							<div
 								id="left-sidebar-column"
-								class={`${sidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start lg:sticky lg:top-0`}
+								class={`${sidebarClass} flex flex-col w-full pt-0 self-start lg:sticky lg:top-0`}
 							>
 								<SideBar
 									class="w-full"
@@ -384,9 +366,7 @@ const transparentClass = shouldEnableTransparency
 							"hidden xl:block transition absolute top-0 w-(--toc-width) items-center",
 							"-left-(--toc-width)",
 							{
-								"toc-hide":
-									siteConfig.wallpaperMode.defaultMode ===
-									"banner",
+								"toc-hide": true,
 							},
 						]}
 					>
