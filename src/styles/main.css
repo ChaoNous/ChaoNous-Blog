@@ -250,8 +250,8 @@ body::-webkit-scrollbar {
   body.wallpaper-transparent .card-base .card-base {
     @apply rounded-(--radius-large) overflow-hidden;
     background: var(--card-bg-transparent) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+    backdrop-filter: blur(3px) !important;
+    -webkit-backdrop-filter: blur(3px) !important;
     box-shadow: none !important;
     contain: layout style;
     /* 为无底色背景提供更清晰、更有质感的精致分割线 */
@@ -264,17 +264,17 @@ body::-webkit-scrollbar {
 
   .wallpaper-transparent .float-panel {
     @apply bg-(--card-bg-transparent);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(3px);
   }
 
   .wallpaper-transparent #navbar > div {
     @apply bg-(--card-bg-transparent);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(3px);
   }
 
   .wallpaper-transparent .btn-card {
     @apply bg-(--card-bg-transparent);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(3px);
   }
 
   .wallpaper-transparent ~ * .music-player .mini-player,
