@@ -387,11 +387,11 @@ const bannerOffset =
 	}
 
 	@layer components {
+		.enable-banner #banner-wrapper {
+			@apply lg:h-[var(--banner-height)];
+		}
 		.enable-banner.is-home #banner-wrapper {
 			@apply lg:h-(--banner-height-home) lg:translate-y-[var(--banner-height-extend)];
-		}
-		.enable-banner #banner-wrapper {
-			@apply lg:h-[var(--banner-height-home)];
 		}
 		.enable-banner.is-home #banner-container {
 			@apply lg:h-(--banner-height-home) lg:translate-y-0;
