@@ -10,25 +10,25 @@ function getResponsiveBannerHeightVh() {
 
   // 横屏模式：20vh（与CSS一致）
   if (width <= 1279 && isLandscape) {
-    return 20;
+    return { value: 20, unit: "vh" };
   }
 
-  // 小屏手机竖屏：30vh
+  // 小屏手机竖屏：固定 220px
   if (width <= 479) {
-    return 30;
+    return { value: 220, unit: "px" };
   }
 
-  // 中小屏手机竖屏：35vh
+  // 中小屏手机竖屏：固定 260px
   if (width <= 767) {
-    return 35;
+    return { value: 260, unit: "px" };
   }
 
   // 平板竖屏：45vh
   if (width <= 1279) {
-    return 45;
+    return { value: 45, unit: "vh" };
   }
 
-  return BANNER_HEIGHT;
+  return { value: BANNER_HEIGHT, unit: "vh" };
 }
 
 function syncBannerPosition(wallpaperMode) {
@@ -44,18 +44,10 @@ function syncBannerPosition(wallpaperMode) {
   }
 
   const width = window.innerWidth;
-  const responsiveBannerHeight = getResponsiveBannerHeightVh();
+  const banner = getResponsiveBannerHeightVh();
 
   if (width <= 1279) {
-    // 手机端使用 visualViewport 获取实际可见高度，确保浏览器UI显隐时效果一致
-    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-    if (!isLandscape && width <= 767 && window.visualViewport) {
-      const visibleHeight = window.visualViewport.height;
-      const bannerPx = visibleHeight * (responsiveBannerHeight / 100);
-      bannerWrapper.style.height = `${bannerPx}px`;
-    } else {
-      bannerWrapper.style.height = `${responsiveBannerHeight}vh`;
-    }
+    bannerWrapper.style.height = `${banner.value}${banner.unit}`;
     bannerWrapper.style.top = "0px";
     return;
   }
@@ -69,16 +61,14 @@ function getMainContentTop(wallpaperMode) {
     return "5.5rem";
   }
 
-  const responsiveBannerHeight = getResponsiveBannerHeightVh();
+  const banner = getResponsiveBannerHeightVh();
   if (window.innerWidth <= 1279) {
     // 手机端竖屏需要额外偏移 3rem，避免遮挡 banner 副标题
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-    if (!isLandscape && window.innerWidth <= 767 && window.visualViewport) {
-      const visibleHeight = window.visualViewport.height;
-      const bannerPx = visibleHeight * (responsiveBannerHeight / 100);
-      return `calc(${bannerPx}px + 3rem)`;
+    if (!isLandscape && window.innerWidth <= 767) {
+      return `calc(${banner.value}${banner.unit} + 3rem)`;
     }
-    return `${responsiveBannerHeight}vh`;
+    return `${banner.value}${banner.unit}`;
   }
 
   return document.body.classList.contains("is-home")
