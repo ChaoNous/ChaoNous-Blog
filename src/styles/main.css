@@ -248,26 +248,26 @@ body::-webkit-scrollbar {
   body.wallpaper-transparent .card-base,
   body.wallpaper-transparent .card-base .card-base {
     @apply rounded-(--radius-large) overflow-hidden;
-    background: var(--card-bg-transparent) !important;
-    backdrop-filter: blur(3px) !important;
-    -webkit-backdrop-filter: blur(3px) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     box-shadow: none !important;
     contain: layout style;
   }
 
   .wallpaper-transparent .float-panel {
-    @apply bg-(--card-bg-transparent);
-    backdrop-filter: blur(3px);
+    @apply bg-transparent;
+    backdrop-filter: none;
   }
 
   .wallpaper-transparent #navbar > div {
-    @apply bg-(--card-bg-transparent);
-    backdrop-filter: blur(3px);
+    @apply bg-transparent;
+    backdrop-filter: none;
   }
 
   .wallpaper-transparent .btn-card {
-    @apply bg-(--card-bg-transparent);
-    backdrop-filter: blur(3px);
+    @apply bg-transparent;
+    backdrop-filter: none;
   }
 
   .wallpaper-transparent ~ * .music-player .mini-player,
@@ -276,8 +276,8 @@ body::-webkit-scrollbar {
   body.wallpaper-transparent .music-player .mini-player,
   body.wallpaper-transparent .music-player .expanded-player,
   body.wallpaper-transparent .music-player .playlist-panel {
-    background-color: var(--card-bg-transparent) !important;
-    backdrop-filter: blur(8px) !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
   }
   h1,
   h2,
@@ -301,7 +301,7 @@ body::-webkit-scrollbar {
     @apply transition-colors duration-150;
   }
   .card-shadow {
-    @apply drop-shadow-[0_2px_4px_rgba(0,0,0,0.005)];
+    @apply drop-shadow-none;
   }
   .is-theme-transitioning .expand-animation::before {
     transition: transform 75ms ease-out !important;
@@ -343,8 +343,7 @@ body::-webkit-scrollbar {
     }
   }
   .btn-regular {
-    @apply transition-colors duration-150 flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active)
-        text-black dark:text-white;
+    @apply transition-colors duration-150 flex items-center justify-center bg-transparent hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active)
   }
 
   .link-underline {

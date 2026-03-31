@@ -13,10 +13,10 @@
 @media (min-width: 1280px) {
   #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
   body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.55);
-        border: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
 
@@ -29,10 +29,10 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"][data-is-home="true"]
     > div {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.55);
-        border: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
 
@@ -43,10 +43,10 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"]
     > div {
-    backdrop-filter: none;
-    background: rgba(0, 0, 0, 0.55);
-        border: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
 
@@ -61,10 +61,10 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"][data-is-home="true"]
     > div {
-    backdrop-filter: none;
-    background: rgba(0, 0, 0, 0.55);
-        border: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
 
@@ -143,10 +143,10 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"].scrolled
     > div {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.55);
-        border: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   :root.dark
@@ -173,10 +173,10 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
     > div {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.55);
-        border: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   :root.dark
@@ -229,9 +229,9 @@
   body:has(#banner-wrapper) #nav-menu-panel,
   #banner-wrapper ~ * #search-panel,
   body:has(#banner-wrapper) #search-panel {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   /* 暗色模式 */
@@ -245,8 +245,8 @@
   :root.dark body:has(#banner-wrapper) #nav-menu-panel,
   :root.dark #banner-wrapper ~ * #search-panel,
   :root.dark body:has(#banner-wrapper) #search-panel {
-    background: rgba(24, 25, 38, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    background: transparent !important;
+    box-shadow: none !important;
   }
 }
 
@@ -261,9 +261,9 @@
   body:has(#banner-wrapper) #navbar[data-is-home="true"] #nav-menu-panel,
   body:has(#banner-wrapper) #navbar[data-is-home="true"] #search-panel,
   body:has(#banner-wrapper) #navbar[data-is-home="true"] #display-setting {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    backdrop-filter: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   /* 暗色模式 */
@@ -300,7 +300,7 @@
     body:has(#banner-wrapper)
     #navbar[data-is-home="true"]
     #display-setting {
-    background: rgba(24, 25, 38, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    background: transparent !important;
+    box-shadow: none !important;
   }
 }
