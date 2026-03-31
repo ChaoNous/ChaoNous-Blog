@@ -13,14 +13,14 @@ function getResponsiveBannerHeightVh() {
     return 20;
   }
 
-  // 小屏手机竖屏：40vh
+  // 小屏手机竖屏：30vh
   if (width <= 479) {
-    return 40;
+    return 30;
   }
 
-  // 中小屏手机竖屏：45vh
+  // 中小屏手机竖屏：35vh
   if (width <= 767) {
-    return 45;
+    return 35;
   }
 
   // 平板竖屏：45vh
@@ -63,6 +63,11 @@ function getMainContentTop(wallpaperMode) {
 
   const responsiveBannerHeight = getResponsiveBannerHeightVh();
   if (window.innerWidth <= 1279) {
+    // 手机端竖屏需要额外偏移 3rem，避免遮挡 banner 副标题
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+    if (!isLandscape && window.innerWidth <= 767) {
+      return `calc(${responsiveBannerHeight}vh + 3rem)`;
+    }
     return `${responsiveBannerHeight}vh`;
   }
 
