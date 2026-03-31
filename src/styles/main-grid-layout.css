@@ -142,14 +142,18 @@ body.wallpaper-transparent
 
   /* banner 文字叠层从顶部锚定，防止打字机效果导致布局跳动 */
   .banner-text-overlay {
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
     padding: 1rem;
-    padding-top: 4.5rem;
+    padding-top: 3rem;
     text-align: center;
   }
 
+  /* 覆盖内层 Tailwind flex 居中类 */
   .banner-text-overlay > div {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    height: auto !important;
     margin-bottom: 0;
     width: 95%;
     text-align: center;
@@ -196,14 +200,18 @@ body.wallpaper-transparent
 
   /* banner 文字叠层从顶部锚定，防止打字机效果导致布局跳动 */
   .banner-text-overlay {
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
     padding: 1.5rem;
-    padding-top: 5rem;
+    padding-top: 3.5rem;
     text-align: center;
   }
 
+  /* 覆盖内层 Tailwind flex 居中类 */
   .banner-text-overlay > div {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    height: auto !important;
     margin-bottom: 0;
     width: 90%;
     text-align: center;
