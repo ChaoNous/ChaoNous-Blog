@@ -321,20 +321,9 @@ body.wallpaper-transparent
   }
 
   /* 平板端双侧边栏主内容区宽度 */
-  .mobile-both-sidebar main {
-    width: 100%;
-    margin: 0 auto;
-  }
-
-  #left-sidebar-column,
-  #right-sidebar-column {
+  #left-sidebar-column {
     width: 100%;
     max-width: 100%;
-  }
-
-  /* 平板端双侧边栏 footer 占满宽度 */
-  .mobile-both-sidebar .footer {
-    grid-column: 1 / -1;
   }
 }
 
@@ -382,24 +371,9 @@ body.wallpaper-transparent
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
   }
 
-  .mobile-both-sidebar {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .mobile-both-sidebar main {
-    width: 100%;
-    margin: 0 auto;
-  }
-
-  #left-sidebar-column,
-  #right-sidebar-column {
+  #left-sidebar-column {
     width: 100%;
     max-width: 100%;
-  }
-
-  .mobile-both-sidebar .footer {
-    grid-column: 1 / -1;
   }
 }
 

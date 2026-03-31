@@ -2,7 +2,6 @@
 import FloatingTOC from "@components/control/FloatingTOC.astro";
 import Footer from "@components/Footer.astro";
 import BannerCarousel from "@components/layout/BannerCarousel.astro";
-import RightSideBar from "@components/layout/RightSideBar.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
@@ -72,11 +71,7 @@ const hasLeftSidebarComponents =
 	widgetManager.getComponentsByPosition("sticky", "left", "desktop").length >
 		0;
 
-const hasRightSidebarComponents =
-	widgetManager.getComponentsByPosition("top", "right", "desktop").length >
-		0 ||
-	widgetManager.getComponentsByPosition("sticky", "right", "desktop").length >
-		0;
+
 
 const hasMobileDrawerComponents =
 	widgetManager.getComponentsByPosition("top", "drawer", "mobile").length >
@@ -91,24 +86,13 @@ const hasTabletLeftSidebarComponents =
 
 const mobileShowSidebar = hasMobileDrawerComponents;
 const tabletShowSidebar = hasTabletLeftSidebarComponents;
-const desktopShowSidebar =
-	hasLeftSidebarComponents || hasRightSidebarComponents;
-
+const desktopShowSidebar = hasLeftSidebarComponents;
 const desktopShowLeftSidebar = hasLeftSidebarComponents;
-const desktopShowRightSidebar = hasRightSidebarComponents;
 
 const tabletShowLeftSidebar = hasTabletLeftSidebarComponents;
-const tabletShowRightSidebar = false; // 平板端暂不显示右侧边栏，与 tabletShowLeftSidebar 保持对称
-const tabletAnySidebar = tabletShowLeftSidebar;
-
-let desktopGridCols = "lg:grid-cols-1";
-if (desktopShowLeftSidebar && desktopShowRightSidebar) {
-	desktopGridCols = "lg:grid-cols-[21rem_1fr_21rem]";
-} else if (desktopShowLeftSidebar) {
-	desktopGridCols = "lg:grid-cols-[21rem_1fr]";
-} else if (desktopShowRightSidebar) {
-	desktopGridCols = "lg:grid-cols-[1fr_21rem]";
-}
+const desktopGridCols = desktopShowLeftSidebar
+	? "lg:grid-cols-[21rem_1fr]"
+	: "lg:grid-cols-1";
 
 const gridCols = `
 	grid-cols-1
@@ -124,22 +108,11 @@ const sidebarClass = `
 	.trim()
 	.replace(/\s+/g, " ");
 
-const rightSidebarClass = `
-	hidden
-	${desktopShowRightSidebar ? `lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-80 lg:min-w-0 ${desktopShowLeftSidebar ? "lg:col-start-3 lg:col-end-4" : "lg:col-start-2 lg:col-end-3"} lg:col-span-1` : "lg:hidden"}
+const rightSidebarClass = "hidden";
 
-`
-	.trim()
-	.replace(/\s+/g, " ");
-
-let desktopMainPos = "lg:col-span-1";
-if (desktopShowLeftSidebar && desktopShowRightSidebar) {
-	desktopMainPos = "lg:col-start-2 lg:col-end-3";
-} else if (desktopShowLeftSidebar) {
-	desktopMainPos = "lg:col-start-2 lg:col-end-3";
-} else if (desktopShowRightSidebar) {
-	desktopMainPos = "lg:col-start-1 lg:col-end-2";
-}
+const desktopMainPos = desktopShowLeftSidebar
+	? "lg:col-start-2 lg:col-end-3"
+	: "lg:col-span-1";
 
 const mainContentClass = `
 	transition-swup-fade overflow-hidden w-full min-w-0
@@ -297,7 +270,7 @@ const transparentClass = shouldEnableTransparency
 		<div class="relative max-w-(--page-width) mx-auto pointer-events-auto">
 			<div
 				id="main-grid"
-				class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-none md:grid-rows-[auto] md:items-start mx-auto gap-8 px-2 md:px-4 ${!mobileShowSidebar || !hasMobileDrawerComponents ? "mobile-no-sidebar" : ""} ${hasRightSidebarComponents ? "mobile-both-sidebar" : ""}`}
+				class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-none md:grid-rows-[auto] md:items-start mx-auto gap-8 px-2 md:px-4 ${!mobileShowSidebar || !hasMobileDrawerComponents ? "mobile-no-sidebar" : ""}`}
 				data-layout-mode="list"
 			>
 				<!-- Banner image credit -->
@@ -363,18 +336,7 @@ const transparentClass = shouldEnableTransparency
 					)
 				}
 
-				{
-					hasRightSidebarComponents && (
-						<div id="right-sidebar-static" class="contents">
-							<div
-								id="right-sidebar-column"
-								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start xl:sticky xl:top-0`}
-							>
-								<RightSideBar headings={headings} />
-							</div>
-						</div>
-					)
-				}
+
 
 				<main
 					id="swup-container"

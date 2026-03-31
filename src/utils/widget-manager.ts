@@ -125,7 +125,7 @@ export class WidgetManager {
 
     return (
       this.config.components.left.length > 0 ||
-      this.config.components.right.length > 0
+      (this.config.components.right?.length || 0) > 0
     );
   }
 
@@ -141,8 +141,9 @@ export class WidgetManager {
     type: WidgetComponentType,
     sidebar: "left" | "right" | "drawer" = "left",
   ): void {
-    if (!this.config.components[sidebar].includes(type)) {
-      this.config.components[sidebar].push(type);
+    const list = this.config.components[sidebar];
+    if (list && !list.includes(type)) {
+      list.push(type);
     }
   }
 
@@ -150,9 +151,11 @@ export class WidgetManager {
     this.config.components.left = this.config.components.left.filter(
       (t) => t !== type,
     );
-    this.config.components.right = this.config.components.right.filter(
-      (t) => t !== type,
-    );
+    if (this.config.components.right) {
+      this.config.components.right = this.config.components.right.filter(
+        (t) => t !== type,
+      );
+    }
     this.config.components.drawer = this.config.components.drawer.filter(
       (t) => t !== type,
     );

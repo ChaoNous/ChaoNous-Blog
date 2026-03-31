@@ -317,7 +317,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
   components: {
     left: ["profile", "site-stats", "categories", "card-toc"],
-    right: [],
     drawer: ["profile", "site-stats", "categories"],
   },
 

@@ -77,9 +77,9 @@ function syncDesktopLayoutState() {
     mainGrid.setAttribute("data-layout-mode", "list");
   }
 
-  const rightSidebar = document.querySelector(".right-sidebar-container");
-  if (rightSidebar) {
-    rightSidebar.classList.remove("hidden-in-grid-mode");
+  const leftSidebar = document.querySelector(".sidebar-container");
+  if (leftSidebar) {
+    leftSidebar.classList.remove("hidden-in-grid-mode");
   }
 
   const postListContainer = document.getElementById("post-list-container");

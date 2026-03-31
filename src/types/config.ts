@@ -278,7 +278,7 @@ export type SidebarLayoutConfig = {
   properties: WidgetComponentConfig[];
   components: {
     left: WidgetComponentType[];
-    right: WidgetComponentType[];
+    right?: WidgetComponentType[];
     drawer: WidgetComponentType[];
   };
   defaultAnimation: {
