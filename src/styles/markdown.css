@@ -1,25 +1,49 @@
 @reference "tailwindcss";
 
 .custom-md {
+  font-size: 1.04rem;
+  line-height: 1.92;
+  letter-spacing: 0.005em;
+
   @media (min-width: 768px) {
-    font-size: 1.125rem;
-    line-height: 1.9;
+    font-size: 1.16rem;
+    line-height: 1.98;
   }
 
   h1 {
     @apply text-3xl;
+    font-size: clamp(2rem, 2.2vw, 2.8rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
   }
 
   @media (min-width: 768px) {
     h2 {
-      font-size: 1.875rem;
-      line-height: 1.35;
+      font-size: 2.1rem;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+      margin-top: 3.25rem;
+      margin-bottom: 1rem;
     }
 
     h3 {
-      font-size: 1.5rem;
-      line-height: 1.45;
+      font-size: 1.62rem;
+      line-height: 1.28;
+      margin-top: 2.6rem;
+      margin-bottom: 0.85rem;
     }
+  }
+
+  p,
+  ul,
+  ol,
+  blockquote,
+  .table-wrapper,
+  .katex-display {
+    margin-top: 1.15rem;
+    margin-bottom: 1.15rem;
   }
 
   :is(h1, h2, h3, h4, h5, h6) {
@@ -90,6 +114,8 @@
   blockquote {
     @apply not-italic border-transparent relative;
     font-weight: inherit;
+    padding-left: 1.2rem;
+    color: color-mix(in oklch, currentColor 78%, transparent);
 
     &:before {
       @apply content-[''] absolute left-0 block transition bg-(--btn-regular-bg) h-full w-1 rounded-full;
@@ -203,6 +229,11 @@
     display: block;
     padding-right: 3rem;
     box-sizing: border-box;
+  }
+
+  img {
+    margin-top: 1.75rem;
+    margin-bottom: 1.75rem;
   }
 }
 

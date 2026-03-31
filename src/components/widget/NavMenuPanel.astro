@@ -57,13 +57,17 @@ const { showDisplaySettings = false } = Astro.props;
 <div
 	id="nav-menu-panel"
 	class:list={[
-		"float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto",
+		"float-panel mobile-command-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto",
 	]}
 >
-	<div class="mb-2 border-b border-black/5 pb-2 dark:border-white/10">
+	<div class="mobile-command-header px-3 pt-2 pb-3">
+		<div class="mobile-command-kicker">Navigate</div>
+		<div class="mobile-command-title">{i18n(I18nKey.navLinks)}</div>
+	</div>
+	<div class="mobile-command-actions mb-2 border-b border-black/5 pb-2 dark:border-white/10">
 						<button
 							type="button"
-							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+							class="group mobile-command-primary flex justify-between items-center py-3 pl-3 pr-2 rounded-xl gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
 							data-nav-action="search"
 						>
 							<div class="flex items-center transition nav-item-text font-bold">
@@ -80,7 +84,7 @@ const { showDisplaySettings = false } = Astro.props;
 						</button>
 						<button
 							type="button"
-							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+							class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
 							data-nav-action="theme-toggle"
 						>
 							<div class="flex items-center transition nav-item-text font-bold">
@@ -99,7 +103,7 @@ const { showDisplaySettings = false } = Astro.props;
 		showDisplaySettings && (
 				<button
 					type="button"
-					class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+					class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
 					data-nav-action="display-settings"
 				>
 					<div class="flex items-center transition nav-item-text font-bold">
@@ -121,8 +125,8 @@ const { showDisplaySettings = false } = Astro.props;
 			<div class="mobile-menu-item">
 				{link.children && link.children.length > 0 ? (
 					<div class="mobile-dropdown" data-mobile-dropdown>
-						<button
-							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left
+				<button
+							class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4 w-full text-left
                             hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
 							data-mobile-dropdown-trigger
 							aria-expanded="false"
@@ -149,7 +153,7 @@ const { showDisplaySettings = false } = Astro.props;
 											? child.url
 											: url(child.url)
 									}
-									class="group flex justify-between items-center py-2 pl-6 pr-1 rounded-lg gap-4
+									class="group flex justify-between items-center py-2.5 pl-6 pr-2 rounded-xl gap-4
                                    hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
 									target={child.external ? "_blank" : null}
 								>
@@ -175,7 +179,7 @@ const { showDisplaySettings = false } = Astro.props;
 				) : (
 					<a
 						href={link.external ? link.url : url(link.url)}
-						class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4
+						class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4
                     hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition
                 "
 						target={link.external ? "_blank" : null}
@@ -213,6 +217,40 @@ const { showDisplaySettings = false } = Astro.props;
 
 	.mobile-submenu {
 		@apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
+	}
+
+	.mobile-command-panel {
+		width: min(24rem, calc(100vw - 1.5rem));
+	}
+
+	.mobile-command-header {
+		border-bottom: 1px solid color-mix(in oklch, currentColor 8%, transparent);
+		margin-bottom: 0.5rem;
+	}
+
+	.mobile-command-kicker {
+		font-size: 0.7rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		opacity: 0.55;
+		margin-bottom: 0.35rem;
+	}
+
+	.mobile-command-title {
+		font-size: 1.15rem;
+		line-height: 1.2;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+	}
+
+	.mobile-command-actions {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+
+	.mobile-command-primary {
+		margin-bottom: 0.2rem;
 	}
 
 	.mobile-dropdown[data-expanded="true"] .mobile-submenu {

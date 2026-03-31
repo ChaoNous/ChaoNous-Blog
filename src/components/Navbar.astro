@@ -71,12 +71,12 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 	<div
 		class:list={[
 			className,
-			"overflow-visible! max-w-(--page-width) h-18 mx-auto flex items-center justify-between px-4",
+			"navbar-shell overflow-visible! max-w-(--page-width) h-18 mx-auto flex items-center justify-between px-4 md:px-5",
 		]}
 	>
 		<a
 			href={url("/")}
-			class="btn-plain scale-animation rounded-lg h-10 md:h-13 md:in-[.enable-banner]:h-10 md:in-[.enable-banner]:group-[.scrolled]:h-13 px-5 font-bold active:scale-95 shrink-0 transition-all duration-300"
+			class="navbar-brand btn-plain scale-animation rounded-lg h-10 md:h-13 md:in-[.enable-banner]:h-10 md:in-[.enable-banner]:group-[.scrolled]:h-13 px-3 md:px-4 font-bold active:scale-95 shrink-0 transition-all duration-300"
 		>
 			<div class="flex flex-row items-center text-md">
 				{
@@ -117,7 +117,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		</a>
 		<div
 			id="navbar-links-container"
-			class="hidden lg:flex items-center space-x-1 transition-opacity duration-300"
+			class="navbar-links hidden lg:flex items-center gap-1 transition-opacity duration-300"
 		>
 			{
 				links.map((l) => {
@@ -125,7 +125,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 				})
 			}
 		</div>
-		<div class="flex items-center gap-1">
+		<div class="navbar-actions flex items-center gap-1">
 			<div id="search-container">
 				<Search client:only="svelte"></Search>
 			</div>
@@ -396,6 +396,37 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 </script>
 
 <style>
+	.navbar-shell {
+		position: relative;
+	}
+
+	.navbar-links {
+		margin-inline: auto;
+	}
+
+	.navbar-brand {
+		min-width: fit-content;
+	}
+
+	.navbar-actions {
+		margin-left: 0.75rem;
+	}
+
+	:global(#navbar .dropdown-item),
+	:global(#navbar .dropdown-container > a),
+	:global(#navbar .dropdown-container > button) {
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		font-size: 0.78rem;
+		font-weight: 600;
+	}
+
+	:global(#navbar .dropdown-item) {
+		text-transform: none;
+		letter-spacing: 0.01em;
+		font-size: 0.92rem;
+	}
+
 	.navbar-brand-text {
 		font-family: "Crimson Pro";
 		font-size: clamp(2.2rem, 2.35vw, 2.9rem);
@@ -435,5 +466,15 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+	}
+
+	@media (max-width: 1279px) {
+		.navbar-shell {
+			gap: 0.5rem;
+		}
+
+		.navbar-brand {
+			padding-inline: 0.5rem;
+		}
 	}
 </style>

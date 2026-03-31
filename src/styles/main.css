@@ -622,3 +622,144 @@ html {
     display: none !important;
   }
 }
+
+:root {
+  --page-bg: oklch(0.978 0.004 var(--hue));
+  --card-bg: transparent;
+  --float-panel-bg: color-mix(in oklch, white 84%, transparent);
+}
+
+:root.dark {
+  --page-bg: oklch(0.17 0.01 var(--hue));
+  --float-panel-bg: color-mix(in oklch, oklch(0.19 0.016 var(--hue)) 82%, transparent);
+}
+
+html {
+  font-size: 112%;
+  background:
+    radial-gradient(circle at top, color-mix(in oklch, var(--primary) 6%, transparent) 0%, transparent 34%),
+    var(--page-bg);
+  text-shadow: none;
+}
+
+html.dark {
+  background:
+    radial-gradient(circle at top, color-mix(in oklch, var(--primary) 8%, transparent) 0%, transparent 36%),
+    var(--page-bg);
+}
+
+body {
+  letter-spacing: 0.008em;
+  line-height: 1.7;
+}
+
+.text-100 {
+  color: color-mix(in oklch, currentColor 94%, transparent);
+}
+
+.text-90 {
+  color: color-mix(in oklch, currentColor 88%, transparent);
+}
+
+.text-75,
+.text-70 {
+  color: color-mix(in oklch, currentColor 72%, transparent);
+}
+
+.text-60,
+.text-50 {
+  color: color-mix(in oklch, currentColor 58%, transparent);
+}
+
+.text-30,
+.text-25 {
+  color: color-mix(in oklch, currentColor 38%, transparent);
+}
+
+.meta-icon {
+  width: 1.65rem;
+  height: 1.65rem;
+  margin-right: 0.55rem;
+  background: transparent !important;
+  color: color-mix(in oklch, var(--primary) 82%, white 18%);
+}
+
+.post-list-container.list-mode {
+  gap: 1.75rem;
+}
+
+.post-list-container.grid-mode {
+  gap: 1.5rem;
+}
+
+.post-card-item + .post-card-item {
+  position: relative;
+}
+
+.post-card-item + .post-card-item::before {
+  content: "";
+  position: absolute;
+  top: -0.8rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklch, currentColor 10%, transparent) 14%,
+    color-mix(in oklch, currentColor 10%, transparent) 86%,
+    transparent 100%
+  );
+}
+
+.float-panel,
+.dropdown-content,
+#display-setting,
+#nav-menu-panel,
+#search-panel {
+  background: var(--float-panel-bg) !important;
+  backdrop-filter: blur(20px) saturate(115%) !important;
+}
+
+#navbar > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
+body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
+  background: color-mix(in oklch, var(--page-bg) 70%, transparent) !important;
+  backdrop-filter: blur(18px) saturate(115%) !important;
+}
+
+#navbar[data-transparent-mode="full"] > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
+body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
+.floating-toc-item,
+.card-toc-item {
+  color: color-mix(in oklch, currentColor 64%, transparent);
+}
+
+.floating-toc-item.active,
+.card-toc-item.active {
+  color: color-mix(in oklch, var(--primary) 82%, white 18%);
+}
+
+.floating-toc-item:hover,
+.card-toc-item:hover {
+  background: color-mix(in oklch, var(--primary) 6%, transparent);
+}
+
+@media (max-width: 1023px) {
+  html {
+    font-size: 106%;
+  }
+
+  .post-list-container.list-mode {
+    gap: 1.2rem;
+  }
+
+  .post-card-item + .post-card-item::before {
+    top: -0.55rem;
+  }
+}

@@ -80,22 +80,23 @@ const headingsJson = JSON.stringify(headings);
 	:global(.card-toc-item) {
 		display: flex;
 		align-items: flex-start;
-		padding: 0.5rem 0.75rem;
+		padding: 0.6rem 0.8rem;
 		color: var(--text-secondary);
 		text-decoration: none;
-		font-size: 0.875rem;
-		line-height: 1.5;
-		border-radius: 0.5rem;
+		font-size: 0.9rem;
+		line-height: 1.55;
+		border-radius: 0.85rem;
 		transition: all 0.2s;
 		cursor: pointer;
 	}
 
 	:global(.card-toc-item:hover) {
 		color: var(--primary);
+		background: color-mix(in oklch, var(--primary) 5%, transparent);
 	}
 
 	:global(.card-toc-item.active) {
-		color: var(--text-secondary);
+		color: var(--primary);
 		font-weight: 600;
 		box-shadow: none;
 	}
@@ -116,8 +117,8 @@ const headingsJson = JSON.stringify(headings);
 	}
 
 	:global(.card-toc-item.active .card-toc-badge) {
-		background: var(--primary);
-		color: #fff;
+		background: transparent;
+		color: var(--primary);
 	}
 
 	:global(.card-toc-dot) {

@@ -27,14 +27,14 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 <div
 	class:list={[
-		"card-base flex flex-col-reverse md:flex-col w-full rounded-(--radius-large) overflow-hidden relative",
+		"card-base post-card-shell flex flex-col-reverse md:flex-col w-full rounded-(--radius-large) overflow-hidden relative",
 		className,
 	]}
 	style={style}
 >
 	<div
 		class:list={[
-			"pl-7 md:pl-10 pr-7 md:pr-3 pt-7 md:pt-8 pb-7 relative",
+			"post-card-body pl-6 md:pl-10 pr-6 md:pr-4 pt-6 md:pt-8 pb-6 md:pb-7 relative",
 			{
 				"w-full md:w-[calc(100%-3.25rem-0.75rem)]": !hasCover,
 				"w-full md:w-[calc(100%-var(--coverWidth)-0.75rem)]": hasCover,
@@ -43,12 +43,12 @@ const { remarkPluginFrontmatter } = await render(entry);
 	>
 		<a
 			href={url}
-			class="transition group w-full block font-black mb-3 text-3xl text-100
+			class="post-card-title transition group w-full block font-black mb-3 text-3xl text-100
 				hover:text-(--primary) dark:hover:text-(--primary)
 				active:text-(--title-active) dark:active:text-(--title-active)
 				before:w-1 before:h-7 before:rounded-md before:bg-(--primary)
 				before:absolute
-				before:top-9.5 before:left-4.5 before:hidden md:before:block"
+				before:top-8 before:left-3 before:hidden md:before:block"
 		>
 			{
 				pinned && (
@@ -59,14 +59,6 @@ const { remarkPluginFrontmatter } = await render(entry);
 				)
 			}
 			{title}
-			<Icon
-				class="inline text-[2rem] text-(--primary) md:hidden translate-y-0.5 absolute"
-				name="material-symbols:chevron-right-rounded"
-			/>
-			<Icon
-				class="text-(--primary) text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0"
-				name="material-symbols:chevron-right-rounded"
-			/>
 		</a>
 
 		<PostMetadata
@@ -81,8 +73,8 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 		<div
 			class:list={[
-				"transition text-100 font-bold text-lg leading-8 mb-3.5 pr-4",
-				{ "line-clamp-2 md:line-clamp-1": !description },
+				"post-card-excerpt transition text-100 font-bold text-lg leading-8 mb-1 pr-0 md:pr-8",
+				{ "line-clamp-3 md:line-clamp-2": !description },
 			]}
 		>
 			{description || remarkPluginFrontmatter.excerpt}
@@ -95,17 +87,17 @@ const { remarkPluginFrontmatter } = await render(entry);
 				href={url}
 				aria-label={title}
 				class:list={[
-					"group",
-					"max-h-[20vh] md:max-h-none mx-4 mt-4 -mb-2 md:mb-0 md:mx-0 md:mt-0",
-					"md:w-(--coverWidth) relative md:absolute md:top-3 md:bottom-3 md:right-3 rounded-xl overflow-hidden active:scale-95",
+					"group post-card-cover",
+					"max-h-[28vh] md:max-h-none mx-4 mt-4 -mb-1 md:mb-0 md:mx-0 md:mt-0",
+					"md:w-(--coverWidth) relative md:absolute md:top-4 md:bottom-4 md:right-4 rounded-xl overflow-hidden active:scale-95",
 				]}
 				style="aspect-ratio: 16/9;"
 			>
-				<div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition" />
+				<div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/18 group-active:bg-black/28 transition" />
 				<div class="absolute pointer-events-none z-20 w-full h-full flex items-center justify-center ">
 					<Icon
 						name="material-symbols:chevron-right-rounded"
-						class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-5xl"
+						class="transition opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 text-white text-5xl"
 					/>
 				</div>
 				<ImageWrapper
@@ -123,7 +115,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 			<a
 				href={url}
 				aria-label={title}
-				class="!hidden md:flex! btn-regular w-13 absolute right-3 top-3 bottom-3 rounded-xl bg-(--enter-btn-bg) hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95"
+				class="post-card-enter !hidden md:flex! btn-regular w-13 absolute right-4 top-4 bottom-4 rounded-xl bg-(--enter-btn-bg) hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95"
 			>
 				<Icon
 					name="material-symbols:chevron-right-rounded"
@@ -135,3 +127,63 @@ const { remarkPluginFrontmatter } = await render(entry);
 </div>
 
 <style define:vars={{ coverWidth }}></style>
+<style>
+	.post-card-shell {
+		padding-block: 0.25rem;
+	}
+
+	.post-card-body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	.post-card-title {
+		font-size: clamp(2rem, 2.3vw, 3rem);
+		line-height: 1.04;
+		letter-spacing: -0.03em;
+		text-wrap: balance;
+	}
+
+	.post-card-excerpt {
+		font-size: clamp(1rem, 1.02rem + 0.18vw, 1.18rem);
+		line-height: 1.8;
+		font-weight: 430;
+		color: color-mix(in oklch, currentColor 72%, transparent);
+		text-wrap: pretty;
+		max-width: 42rem;
+	}
+
+	.post-card-cover img {
+		transform: scale(1.01);
+		transition:
+			transform 360ms ease,
+			filter 360ms ease;
+	}
+
+	.post-card-cover:hover img {
+		transform: scale(1.045);
+		filter: saturate(1.03) contrast(1.02);
+	}
+
+	.post-card-enter {
+		opacity: 0.82;
+	}
+
+	.post-card-enter:hover {
+		opacity: 1;
+	}
+
+	@media (max-width: 767px) {
+		.post-card-title {
+			font-size: 1.7rem;
+			line-height: 1.12;
+			letter-spacing: -0.02em;
+		}
+
+		.post-card-excerpt {
+			font-size: 0.98rem;
+			line-height: 1.72;
+		}
+	}
+</style>

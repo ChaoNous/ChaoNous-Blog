@@ -315,11 +315,25 @@
 	}
 	.search-bar-bg {
 		@apply bg-black/4 hover:bg-black/6 focus-within:bg-black/6 dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10;
+		border: 1px solid color-mix(in oklch, currentColor 8%, transparent);
 	}
 	.search-icon-color {
 		@apply text-black dark:text-white;
+		opacity: 0.7;
 	}
 	.search-input-color {
 		@apply text-black dark:text-white;
+	}
+
+	:global(.search-panel) {
+		padding: 0.6rem;
+	}
+
+	:global(.search-panel a) {
+		border: 1px solid transparent;
+	}
+
+	:global(.search-panel a:hover) {
+		border-color: color-mix(in oklch, currentColor 8%, transparent);
 	}
 </style>
