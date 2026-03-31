@@ -313,18 +313,12 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
       class: "onload-animation",
       animationDelay: 200,
     },
-    {
-      type: "calendar",
-      position: "sticky",
-      class: "onload-animation",
-      animationDelay: 250,
-    },
   ],
 
   components: {
-    left: ["profile", "categories", "card-toc"],
-    right: ["site-stats", "calendar"],
-    drawer: ["profile", "categories"],
+    left: ["profile", "site-stats", "categories", "card-toc"],
+    right: [],
+    drawer: ["profile", "site-stats", "categories"],
   },
 
   defaultAnimation: {
