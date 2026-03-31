@@ -27,16 +27,17 @@
 html {
   @apply scroll-smooth;
   @apply text-black;
+  font-size: 110%; /* 适当放大全局字体 */
   scrollbar-width: none;
   -ms-overflow-style: none;
   background-color: hsl(var(--hue), 40%, 96%);
   /* 增强全屏背景下的文字可读性 */
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
 
   &.dark {
     @apply text-white;
     background-color: hsl(var(--hue), 25%, 10%);
-    text-shadow: 0 0 1px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.8);
   }
 }
 
@@ -44,7 +45,7 @@ body {
   font-family: var(--font-content);
   scrollbar-width: none;
   -ms-overflow-style: none;
-  font-weight: 450;
+  font-weight: 500; /* 再次加深字重以提升可读性 */
 }
 
 body.is-home {
@@ -252,11 +253,11 @@ body::-webkit-scrollbar {
     -webkit-backdrop-filter: none !important;
     box-shadow: none !important;
     contain: layout style;
-    /* 为无底色背景提供视觉分割线 */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    /* 为无底色背景提供更清晰、更有质感的精致分割线 */
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 
     &.dark {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.35);
     }
   }
 

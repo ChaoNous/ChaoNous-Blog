@@ -43,12 +43,12 @@ const { remarkPluginFrontmatter } = await render(entry);
 	>
 		<a
 			href={url}
-			class="transition group w-full block font-bold mb-3 text-2xl text-100
-        hover:text-(--primary) dark:hover:text-(--primary)
-        active:text-(--title-active) dark:active:text-(--title-active)
-        before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
-        before:absolute
-        before:top-8.75 before:left-4.5 before:hidden md:before:block"
+			class="transition group w-full block font-black mb-3 text-3xl text-100
+				hover:text-(--primary) dark:hover:text-(--primary)
+				active:text-(--title-active) dark:active:text-(--title-active)
+				before:w-1 before:h-7 before:rounded-md before:bg-(--primary)
+				before:absolute
+				before:top-9.5 before:left-4.5 before:hidden md:before:block"
 		>
 			{
 				pinned && (
@@ -81,7 +81,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 		<div
 			class:list={[
-				"transition text-100 font-medium text-base leading-7 mb-3.5 pr-4",
+				"transition text-100 font-bold text-lg leading-8 mb-3.5 pr-4",
 				{ "line-clamp-2 md:line-clamp-1": !description },
 			]}
 		>
