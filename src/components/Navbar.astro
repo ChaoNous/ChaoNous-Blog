@@ -312,45 +312,30 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 </script>
 
 <style>
+	#navbar :is(a, button, span, svg) {
+		color: #fff !important;
+	}
+
 	.navbar-brand-text {
 		font-family: "Crimson Pro";
 		font-size: clamp(2.2rem, 2.35vw, 2.9rem);
 		line-height: 1;
 		letter-spacing: 0.08em;
-		background:
-			linear-gradient(
-				135deg,
-				#6d1f4f 0%,
-				#a11f2f 24%,
-				#d7a437 48%,
-				#f0c84e 63%,
-				#f2b22d 78%,
-				#a02a2d 100%
-			);
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
+		background: none;
+		-webkit-background-clip: initial;
+		background-clip: initial;
+		color: #fff !important;
+		-webkit-text-fill-color: #fff;
 		text-transform: none;
-		text-shadow:
-			0 1px 0 rgba(255, 236, 178, 0.22),
-			0 2px 8px rgba(83, 17, 33, 0.35),
-			0 0 18px rgba(166, 41, 45, 0.2);
+		text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 	}
 
 	:global(.group.scrolled) .navbar-brand-text {
-		background:
-			linear-gradient(
-				135deg,
-				#5e1a45 0%,
-				#92202c 24%,
-				#c9952f 48%,
-				#e7bd47 63%,
-				#e1a42a 78%,
-				#8e2429 100%
-			);
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
+		background: none;
+		-webkit-background-clip: initial;
+		background-clip: initial;
+		color: #fff !important;
+		-webkit-text-fill-color: #fff;
 	}
 </style>
 
