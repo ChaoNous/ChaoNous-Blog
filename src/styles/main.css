@@ -29,9 +29,11 @@ html {
   @apply text-black/80;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  background-color: hsl(var(--hue), 20%, 98%);
 
   &.dark {
     @apply text-white/80;
+    background-color: hsl(var(--hue), 15%, 11%);
   }
 }
 
@@ -234,33 +236,18 @@ body::-webkit-scrollbar {
     backdrop-filter: none !important;
   }
 
-  .card-base {
-    @apply rounded-(--radius-large) overflow-hidden;
-    background: transparent !important;
-    contain: layout style;
-  }
-  .card-base-transparent {
-    @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg-transparent) backdrop-blur-sm transition-colors duration-150;
-    contain: layout style;
-  }
-
-  .wallpaper-transparent .card-base {
-    background: var(--card-bg-transparent) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-  }
-
-  body.wallpaper-transparent .card-base {
-    background: var(--card-bg-transparent) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-  }
-
+  .card-base,
+  .card-base-transparent,
+  .wallpaper-transparent .card-base,
+  body.wallpaper-transparent .card-base,
   .wallpaper-transparent .card-base .card-base,
   body.wallpaper-transparent .card-base .card-base {
-    background: var(--card-bg-transparent) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
+    @apply rounded-(--radius-large) overflow-hidden;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    contain: layout style;
   }
 
   .wallpaper-transparent .float-panel {

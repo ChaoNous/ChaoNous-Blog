@@ -368,9 +368,14 @@ const bannerOffset =
 		bannerOffset,
 		"banner-height-home": `${BANNER_HEIGHT_HOME}vh`,
 		"banner-height": `${BANNER_HEIGHT}vh`,
+		hue: configHue,
 	}}
 >
 	@reference "../styles/main.css";
+
+	:root {
+		--hue: var(--hue, ${configHue});
+	}
 
 	/* Hide Google Translate UI overlays if injected by the browser or extensions */
 	.goog-te-banner-frame,
