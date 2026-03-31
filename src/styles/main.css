@@ -50,8 +50,9 @@ body {
   -ms-overflow-style: none;
   font-weight: 450;
   background:
-    radial-gradient(circle at top, color-mix(in oklch, var(--primary) 6%, transparent) 0%, transparent 34%),
-    var(--page-bg);
+    radial-gradient(circle at 12% 14%, var(--page-bg-accent-soft) 0%, transparent 30%),
+    radial-gradient(circle at 82% 10%, var(--page-bg-accent) 0%, transparent 26%),
+    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
   background-attachment: fixed;
   transition:
     background-color 0.2s ease,
@@ -632,13 +633,21 @@ html {
 }
 
 :root {
-  --page-bg: oklch(0.978 0.004 var(--hue));
+  --page-bg: oklch(0.978 0.007 var(--hue));
+  --page-bg-top: oklch(0.985 0.012 var(--hue));
+  --page-bg-bottom: oklch(0.962 0.01 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.86 0.03 var(--hue)) 22%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.8 0.045 var(--hue)) 16%, transparent);
   --card-bg: transparent;
   --float-panel-bg: color-mix(in oklch, white 84%, transparent);
 }
 
 :root.dark {
-  --page-bg: oklch(0.17 0.01 var(--hue));
+  --page-bg: oklch(0.17 0.016 var(--hue));
+  --page-bg-top: oklch(0.205 0.024 var(--hue));
+  --page-bg-bottom: oklch(0.14 0.018 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.44 0.06 var(--hue)) 16%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.5 0.08 var(--hue)) 12%, transparent);
   --float-panel-bg: color-mix(in oklch, oklch(0.19 0.016 var(--hue)) 82%, transparent);
 }
 
@@ -654,8 +663,9 @@ html.dark {
 
 html.dark body {
   background:
-    radial-gradient(circle at top, color-mix(in oklch, var(--primary) 8%, transparent) 0%, transparent 36%),
-    var(--page-bg);
+    radial-gradient(circle at 14% 16%, var(--page-bg-accent-soft) 0%, transparent 30%),
+    radial-gradient(circle at 84% 12%, var(--page-bg-accent) 0%, transparent 24%),
+    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 50%, var(--page-bg-bottom) 100%);
 }
 
 body {
