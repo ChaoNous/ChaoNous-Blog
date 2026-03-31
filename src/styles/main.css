@@ -235,7 +235,8 @@ body::-webkit-scrollbar {
   }
 
   .card-base {
-    @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition-colors duration-150;
+    @apply rounded-(--radius-large) overflow-hidden;
+    background: transparent !important;
     contain: layout style;
   }
   .card-base-transparent {
