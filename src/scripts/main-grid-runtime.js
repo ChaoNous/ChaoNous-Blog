@@ -87,7 +87,6 @@ function syncDesktopLayoutState() {
 (function applyInitialLayout() {
   const body = document.body;
   body.classList.add("enable-banner");
-  body.classList.remove("wallpaper-transparent", "no-banner-mode");
 
   requestAnimationFrame(() => {
     syncBannerPosition();
@@ -115,7 +114,7 @@ function applyBannerLayout() {
   if (bannerWrapper) {
     bannerWrapper.style.display = "block";
   }
-  
+
   if (tocWrapper) {
     const scrollTop = document.documentElement.scrollTop;
     const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
@@ -123,15 +122,14 @@ function applyBannerLayout() {
       tocWrapper.classList.add("toc-hide");
     }
   }
-  
-  body.classList.remove("wallpaper-transparent", "no-banner-mode");
+
   forceReflow();
   syncBannerPosition();
   if (mainContent) {
     mainContent.style.top = getMainContentTop();
   }
   body.classList.add("enable-banner");
-  
+
   if (navbar) {
     navbar.removeAttribute("data-dynamic-transparent");
     navbar.setAttribute("data-transparent-mode", navbarTransparentMode);

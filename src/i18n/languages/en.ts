@@ -181,11 +181,6 @@ export const en: Translation = {
   [Key.atomCopied]: "Atom link copied to clipboard!",
   [Key.atomCopyFailed]: "Copy failed, please copy the link manually",
 
-  // Wallpaper mode
-  [Key.wallpaperBanner]: "Banner Mode",
-  [Key.wallpaperFullscreen]: "Fullscreen Mode",
-  [Key.wallpaperNone]: "Pure Mode",
-
   // Skills Page
   [Key.skills]: "Skills",
   [Key.skillsSubtitle]: "My technical skills and expertise",

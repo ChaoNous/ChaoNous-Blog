@@ -65,50 +65,23 @@ const {
 	{
 		showDisplaySettings && (
 			<div class="mb-2 border-b border-black/5 pb-2 dark:border-white/10">
-				{showDisplaySettings && (
-					<button
-						type="button"
-						class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-						data-nav-action="display-settings"
-					>
-						<div class="flex items-center transition nav-item-text font-bold">
-							<Icon
-								name="material-symbols:palette-outline"
-								class="text-[1.1rem] mr-2"
-							/>
-							{i18n(I18nKey.themeColor)}
-						</div>
+				<button
+					type="button"
+					class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+					data-nav-action="display-settings"
+				>
+					<div class="flex items-center transition nav-item-text font-bold">
 						<Icon
-							name="material-symbols:chevron-right-rounded"
-							class="transition text-[1.25rem] text-(--primary)"
+							name="material-symbols:palette-outline"
+							class="text-[1.1rem] mr-2"
 						/>
-					</button>
-				)}
-							</div>
-							<Icon
-								name="material-symbols:chevron-right-rounded"
-								class="transition text-[1.25rem] text-(--primary)"
-							/>
-						</button>
-						<button
-							type="button"
-							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-							data-wallpaper-mode={WALLPAPER_FULLSCREEN}
-						>
-							<div class="flex items-center transition nav-item-text font-bold">
-								<Icon
-									name="material-symbols:wallpaper"
-									class="text-[1.1rem] mr-2"
-								/>
-								{i18n(I18nKey.wallpaperFullscreen)}
-							</div>
-							<Icon
-								name="material-symbols:chevron-right-rounded"
-								class="transition text-[1.25rem] text-(--primary)"
-							/>
-						</button>
-					</>
-				)}
+						{i18n(I18nKey.themeColor)}
+					</div>
+					<Icon
+						name="material-symbols:chevron-right-rounded"
+						class="transition text-[1.25rem] text-(--primary)"
+					/>
+				</button>
 			</div>
 		)
 	}

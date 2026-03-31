@@ -37,7 +37,9 @@ html {
   &.dark {
     @apply text-white;
     background-color: hsl(var(--hue), 25%, 10%);
-    text-shadow: 0 0 1px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.8);
+    text-shadow:
+      0 0 1px rgba(0, 0, 0, 0.9),
+      0 1px 3px rgba(0, 0, 0, 0.8);
   }
 }
 
@@ -199,18 +201,6 @@ body::-webkit-scrollbar {
     #navbar[data-transparent-mode].scrolled
     > div,
   .is-theme-transitioning:not(.use-view-transition)
-    body.wallpaper-transparent
-    #navbar
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    body.wallpaper-transparent
-    #navbar[data-transparent-mode]
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    body.wallpaper-transparent
-    #navbar[data-transparent-mode].scrolled
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
     #banner-wrapper
     ~ *
     #navbar
@@ -336,7 +326,13 @@ body::-webkit-scrollbar {
     display: none;
   }
 
-  .text-90, .text-75, .text-70, .text-60, .text-50, .text-30, .text-25 {
+  .text-90,
+  .text-75,
+  .text-70,
+  .text-60,
+  .text-50,
+  .text-30,
+  .text-25 {
     @apply text-black dark:text-white;
   }
 
