@@ -253,23 +253,23 @@ body::-webkit-scrollbar {
   .wallpaper-transparent .card-base,
   body.wallpaper-transparent .card-base,
   body.wallpaper-transparent .card-base .card-base {
-    backdrop-filter: blur(3px) !important;
-    -webkit-backdrop-filter: blur(3px) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
   }
 
   .wallpaper-transparent .float-panel {
     @apply bg-transparent;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(10px);
   }
 
   .wallpaper-transparent #navbar > div {
     @apply bg-transparent;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(10px);
   }
 
   .wallpaper-transparent .btn-card {
     @apply bg-transparent;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(10px);
   }
 
   .wallpaper-transparent ~ * .music-player .mini-player,
