@@ -47,9 +47,15 @@ function syncBannerPosition(wallpaperMode) {
   const responsiveBannerHeight = getResponsiveBannerHeightVh();
 
   if (width <= 1279) {
-    // 手机端使用 svh 确保浏览器 UI 显隐时效果一致
-    const unit = width <= 767 ? "svh" : "vh";
-    bannerWrapper.style.height = `${responsiveBannerHeight}${unit}`;
+    // 手机端使用 visualViewport 获取实际可见高度，确保浏览器UI显隐时效果一致
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+    if (!isLandscape && width <= 767 && window.visualViewport) {
+      const visibleHeight = window.visualViewport.height;
+      const bannerPx = visibleHeight * (responsiveBannerHeight / 100);
+      bannerWrapper.style.height = `${bannerPx}px`;
+    } else {
+      bannerWrapper.style.height = `${responsiveBannerHeight}vh`;
+    }
     bannerWrapper.style.top = "0px";
     return;
   }
@@ -67,8 +73,10 @@ function getMainContentTop(wallpaperMode) {
   if (window.innerWidth <= 1279) {
     // 手机端竖屏需要额外偏移 3rem，避免遮挡 banner 副标题
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-    if (!isLandscape && window.innerWidth <= 767) {
-      return `calc(${responsiveBannerHeight}svh + 3rem)`;
+    if (!isLandscape && window.innerWidth <= 767 && window.visualViewport) {
+      const visibleHeight = window.visualViewport.height;
+      const bannerPx = visibleHeight * (responsiveBannerHeight / 100);
+      return `calc(${bannerPx}px + 3rem)`;
     }
     return `${responsiveBannerHeight}vh`;
   }
