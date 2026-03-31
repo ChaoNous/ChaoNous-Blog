@@ -856,3 +856,111 @@ body.enable-banner.is-home #main-content-shell {
     align-items: center !important;
   }
 }
+
+:root {
+  --home-hero-height-mobile: 42vh;
+  --home-hero-min-mobile: 16rem;
+  --home-hero-max-mobile: 26rem;
+  --home-copy-width: min(46rem, calc(100vw - 2rem));
+}
+
+.banner-copy-shell,
+.banner-copy-inner,
+.banner-copy-stack {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.banner-copy-inner {
+  width: var(--home-copy-width);
+}
+
+.banner-copy-stack {
+  gap: 0.85rem;
+}
+
+.banner-text-overlay {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08), transparent 38%),
+    linear-gradient(
+      180deg,
+      rgba(5, 8, 18, 0.12) 0%,
+      rgba(5, 8, 18, 0.24) 34%,
+      rgba(5, 8, 18, 0.64) 100%
+    );
+}
+
+.banner-title {
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  margin-inline: auto;
+  text-wrap: balance;
+  max-width: 10ch;
+}
+
+.banner-subtitle {
+  font-size: clamp(1rem, 0.96rem + 0.85vw, 1.6rem);
+  line-height: 1.65;
+  letter-spacing: 0.02em;
+  max-width: 34rem;
+  margin-inline: auto;
+  opacity: 0.96;
+}
+
+#main-grid {
+  align-items: start;
+  gap: clamp(1.4rem, 2vw, 2.2rem);
+}
+
+#left-sidebar-column {
+  gap: 1rem;
+}
+
+@media (max-width: 1023px) {
+  body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
+    height: var(--home-hero-height-mobile);
+    min-height: var(--home-hero-min-mobile);
+    max-height: var(--home-hero-max-mobile);
+  }
+
+  body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
+    top: var(--home-hero-height-mobile);
+    min-height: calc(100vh - var(--home-hero-height-mobile));
+  }
+
+  .banner-copy-inner {
+    width: min(22rem, calc(100vw - 1.8rem));
+  }
+
+  .banner-copy-stack {
+    gap: 0.6rem;
+  }
+
+  .banner-title {
+    font-size: clamp(2.45rem, 7vw, 3.85rem);
+    line-height: 0.98;
+    max-width: 8ch;
+  }
+
+  .banner-subtitle {
+    font-size: 1rem;
+    line-height: 1.58;
+    max-width: 18rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .banner-copy-inner {
+    width: min(52rem, calc(100vw - 6rem));
+  }
+
+  .banner-copy-stack {
+    gap: 1rem;
+  }
+
+  .banner-text-overlay {
+    padding-bottom: 5.5rem;
+  }
+}

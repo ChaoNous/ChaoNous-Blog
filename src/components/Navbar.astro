@@ -71,7 +71,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 	<div
 		class:list={[
 			className,
-			"navbar-shell overflow-visible! max-w-(--page-width) h-18 mx-auto flex items-center justify-between px-4 md:px-5",
+			"navbar-shell overflow-visible! max-w-(--page-width) h-18 mx-auto grid grid-cols-[auto_1fr_auto] items-center px-4 md:px-5",
 		]}
 	>
 		<a
@@ -117,7 +117,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		</a>
 		<div
 			id="navbar-links-container"
-			class="navbar-links hidden lg:flex items-center gap-1 transition-opacity duration-300"
+			class="navbar-links hidden lg:flex items-center justify-center gap-1 transition-all duration-300"
 		>
 			{
 				links.map((l) => {
@@ -234,62 +234,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 			return document.getElementById("navbar") !== null;
 		},
 		init() {
-			const searchContainer = document.getElementById("search-container");
-			const navbarLinksContainer = document.getElementById(
-				"navbar-links-container",
-			);
-			const navbar = document.getElementById("navbar");
 			const cleanups: Array<() => void> = [];
-
-			if (searchContainer && navbarLinksContainer && navbar) {
-				const hideLinks = () => {
-					if (
-						window.matchMedia("(min-width: 1280px)").matches &&
-						window.matchMedia("(hover: hover)").matches
-					) {
-						navbarLinksContainer.style.opacity = "0";
-					}
-				};
-
-				const showLinks = () => {
-					if (!navbar.classList.contains("is-searching")) {
-						navbarLinksContainer.style.opacity = "1";
-					}
-				};
-
-				searchContainer.addEventListener("mouseenter", hideLinks);
-				searchContainer.addEventListener("mouseleave", showLinks);
-				searchContainer.addEventListener("touchstart", hideLinks, {
-					passive: true,
-				});
-				searchContainer.addEventListener("touchend", showLinks);
-				cleanups.push(() =>
-					searchContainer.removeEventListener("mouseenter", hideLinks),
-				);
-				cleanups.push(() =>
-					searchContainer.removeEventListener("mouseleave", showLinks),
-				);
-				cleanups.push(() =>
-					searchContainer.removeEventListener("touchstart", hideLinks),
-				);
-				cleanups.push(() =>
-					searchContainer.removeEventListener("touchend", showLinks),
-				);
-
-				const observer = new MutationObserver(() => {
-					if (
-						!navbar.classList.contains("is-searching") &&
-						!searchContainer.matches(":hover")
-					) {
-						showLinks();
-					}
-				});
-				observer.observe(navbar, {
-					attributes: true,
-					attributeFilter: ["class"],
-				});
-				cleanups.push(() => observer.disconnect());
-			}
 
 			const wirePanelButton = async (
 				buttonId: string,
@@ -398,10 +343,12 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 <style>
 	.navbar-shell {
 		position: relative;
+		column-gap: 1rem;
 	}
 
 	.navbar-links {
-		margin-inline: auto;
+		justify-self: center;
+		min-width: 0;
 	}
 
 	.navbar-brand {
@@ -410,6 +357,14 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 
 	.navbar-actions {
 		margin-left: 0.75rem;
+		justify-self: end;
+		flex-shrink: 0;
+	}
+
+	:global(#navbar.is-searching) .navbar-links {
+		opacity: 0;
+		transform: translateY(-0.35rem);
+		pointer-events: none;
 	}
 
 	:global(#navbar .dropdown-item),
@@ -470,6 +425,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 
 	@media (max-width: 1279px) {
 		.navbar-shell {
+			display: flex;
 			gap: 0.5rem;
 		}
 

@@ -11,7 +11,10 @@ import TypewriterText from "../components/TypewriterText.astro";
 import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
 import { BANNER_HEIGHT, BANNER_HEIGHT_EXTEND } from "../constants/constants";
-import { resolveBannerImages } from "../utils/banner-utils";
+import {
+	normalizeBannerSources,
+	resolveBannerImages,
+} from "../utils/banner-utils";
 import { widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
 import "../styles/main-grid-layout.css";
@@ -35,6 +38,10 @@ const bannerImages = await resolveBannerImages(
 	siteConfig.banner.src,
 	siteConfig.banner.imageApi,
 );
+const desktopBannerSources = normalizeBannerSources(bannerImages.desktop);
+const mobileBannerSources = normalizeBannerSources(bannerImages.mobile);
+const firstDesktopBanner = desktopBannerSources[0];
+const firstMobileBanner = mobileBannerSources[0] || firstDesktopBanner;
 
 const {
 	title,
@@ -120,6 +127,30 @@ const mainContentClass = `
 	setOGTypeArticle={setOGTypeArticle}
 	postSlug={postSlug}
 >
+	<Fragment slot="head">
+		{
+			firstDesktopBanner && (
+				<link
+					rel="preload"
+					as="image"
+					href={firstDesktopBanner}
+					media="(min-width: 768px)"
+					fetchpriority="high"
+				/>
+			)
+		}
+		{
+			firstMobileBanner && (
+				<link
+					rel="preload"
+					as="image"
+					href={firstMobileBanner}
+					media="(max-width: 767px)"
+					fetchpriority="high"
+				/>
+			)
+		}
+	</Fragment>
 	<script
 		is:inline
 		define:vars={{
@@ -184,9 +215,9 @@ const mainContentClass = `
 						{ hidden: !showHomeText },
 					]}
 				>
-					<div class="max-w-(--page-width) w-full px-0 md:px-4 mx-auto flex items-center justify-center h-full">
-						<div class="w-4/5 lg:w-3/4 text-center mb-0">
-							<div class="flex flex-col">
+					<div class="banner-copy-shell max-w-(--page-width) w-full px-0 md:px-4 mx-auto flex items-center justify-center h-full">
+						<div class="banner-copy-inner w-4/5 lg:w-3/4 text-center mb-0">
+							<div class="banner-copy-stack flex flex-col">
 								{siteConfig.banner.homeText?.title && (
 									<h1 class="banner-title text-6xl lg:text-8xl text-white drop-shadow-lg mb-2 lg:mb-4">
 										{siteConfig.banner.homeText.title}

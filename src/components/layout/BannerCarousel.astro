@@ -65,9 +65,11 @@ const firstImageIndex = 0;
 								alt={`Banner image ${index + 1}`}
 								class="w-full h-full object-cover"
 								style={imageStyle}
+								sizes="100vw"
 								loading={imageLoading}
 								fetchpriority={imagePriority}
 								decoding={isFirstImage ? "sync" : "async"}
+								draggable="false"
 								{...(isFirstImage && { fetchpriority: "high" })}
 							/>
 						</picture>
