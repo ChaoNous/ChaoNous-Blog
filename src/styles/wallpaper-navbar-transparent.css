@@ -13,7 +13,7 @@
 
   /* --- 面板变量 (默认跟随 Navbar，特定情况分离) --- */
   --panel-bg: var(--card-bg-transparent);
-  --panel-blur: blur(20px);
+  --panel-blur: none;
 }
 
 /* Dark Mode 适配 */
@@ -27,7 +27,7 @@
 /* Semi (毛玻璃) */
 #navbar[data-dynamic-transparent="semi"] {
   --nav-bg: var(--card-bg-transparent);
-  --nav-blur: blur(8px);
+  --nav-blur: none;
   --nav-shadow: var(--shadow-lg);
 }
 
@@ -87,7 +87,7 @@ body.wallpaper-transparent
 /* 混合模式滚动后 -> 回归毛玻璃 */
 body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
   --nav-bg: var(--card-bg-transparent);
-  --nav-blur: blur(8px);
+  --nav-blur: none;
   --nav-shadow: var(--shadow-lg);
   --nav-radius: var(--radius-std);
 }

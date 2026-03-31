@@ -263,15 +263,15 @@ body::-webkit-scrollbar {
   }
 
   .wallpaper-transparent .float-panel {
-    @apply bg-(--card-bg-transparent) backdrop-blur-sm;
+    @apply bg-(--card-bg-transparent);
   }
 
   .wallpaper-transparent #navbar > div {
-    @apply bg-(--card-bg-transparent) backdrop-blur-sm;
+    @apply bg-(--card-bg-transparent);
   }
 
   .wallpaper-transparent .btn-card {
-    @apply bg-(--card-bg-transparent) backdrop-blur-sm;
+    @apply bg-(--card-bg-transparent);
   }
 
   .wallpaper-transparent ~ * .music-player .mini-player,

@@ -13,7 +13,7 @@
 @media (min-width: 1280px) {
   #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
   body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -29,7 +29,7 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"][data-is-home="true"]
     > div {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -43,7 +43,7 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"]
     > div {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -61,7 +61,7 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"][data-is-home="true"]
     > div {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -143,7 +143,7 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"].scrolled
     > div {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -173,7 +173,7 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
     > div {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(255, 255, 255, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -229,7 +229,7 @@
   body:has(#banner-wrapper) #nav-menu-panel,
   #banner-wrapper ~ * #search-panel,
   body:has(#banner-wrapper) #search-panel {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
@@ -261,7 +261,7 @@
   body:has(#banner-wrapper) #navbar[data-is-home="true"] #nav-menu-panel,
   body:has(#banner-wrapper) #navbar[data-is-home="true"] #search-panel,
   body:has(#banner-wrapper) #navbar[data-is-home="true"] #display-setting {
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
