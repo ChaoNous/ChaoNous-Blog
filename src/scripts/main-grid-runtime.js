@@ -47,7 +47,9 @@ function syncBannerPosition(wallpaperMode) {
   const responsiveBannerHeight = getResponsiveBannerHeightVh();
 
   if (width <= 1279) {
-    bannerWrapper.style.height = `${responsiveBannerHeight}vh`;
+    // 手机端使用 svh 确保浏览器 UI 显隐时效果一致
+    const unit = width <= 767 ? "svh" : "vh";
+    bannerWrapper.style.height = `${responsiveBannerHeight}${unit}`;
     bannerWrapper.style.top = "0px";
     return;
   }
@@ -66,7 +68,7 @@ function getMainContentTop(wallpaperMode) {
     // 手机端竖屏需要额外偏移 3rem，避免遮挡 banner 副标题
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
     if (!isLandscape && window.innerWidth <= 767) {
-      return `calc(${responsiveBannerHeight}vh + 3rem)`;
+      return `calc(${responsiveBannerHeight}svh + 3rem)`;
     }
     return `${responsiveBannerHeight}vh`;
   }
