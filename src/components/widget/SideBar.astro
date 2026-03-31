@@ -63,7 +63,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 					components={mobileTopComponents}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="flex flex-col w-full gap-4 md:hidden"
+					wrapperClass="flex flex-col w-full gap-4 lg:hidden"
 				/>
 			)
 		}
@@ -74,7 +74,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 					components={tabletTopComponents}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden md:flex lg:hidden flex-col w-full gap-4"
+					wrapperClass="sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-4"
 				/>
 			)
 		}
@@ -85,7 +85,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 					components={desktopTopComponents}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden lg:flex flex-col w-full gap-4"
+					wrapperClass="sidebar-content hidden xl:flex flex-col w-full gap-4"
 				/>
 			)
 		}
@@ -96,7 +96,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 					components={mobileStickyComponents}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="flex flex-col w-full gap-4 md:hidden"
+					wrapperClass="flex flex-col w-full gap-4 lg:hidden"
 				/>
 			)
 		}
@@ -107,7 +107,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 					components={tabletStickyComponents}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden md:flex lg:hidden flex-col w-full gap-4"
+					wrapperClass="sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-4"
 				/>
 			)
 		}
@@ -118,7 +118,7 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 					components={desktopStickyComponents}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden lg:flex flex-col w-full gap-4"
+					wrapperClass="sidebar-content hidden xl:flex flex-col w-full gap-4"
 				/>
 			)
 		}
@@ -126,13 +126,13 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 </div>
 
 <style>
-	@media (max-width: 1280px) {
+	@media (max-width: 1023px) {
 		#sidebar {
 			display: var(--sidebar-mobile-display, block);
 		}
 	}
 
-	@media (min-width: 769px) and (max-width: 1279px) {
+	@media (min-width: 1024px) and (max-width: 1279px) {
 		#sidebar {
 			display: var(--sidebar-tablet-display, block);
 		}

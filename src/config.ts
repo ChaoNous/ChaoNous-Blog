@@ -335,7 +335,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
   responsive: {
     breakpoints: {
-      mobile: 768,
+      mobile: 1024,
       tablet: 1280,
       desktop: 1280,
     },

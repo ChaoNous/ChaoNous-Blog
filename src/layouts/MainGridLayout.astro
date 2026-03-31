@@ -101,18 +101,18 @@ const tabletShowLeftSidebar = hasTabletLeftSidebarComponents;
 const tabletShowRightSidebar = false; // 平板端暂不显示右侧边栏，与 tabletShowLeftSidebar 保持对称
 const tabletAnySidebar = tabletShowLeftSidebar;
 
-let desktopGridCols = "lg:grid-cols-1";
+let desktopGridCols = "xl:grid-cols-1";
 if (desktopShowLeftSidebar && desktopShowRightSidebar) {
-	desktopGridCols = "lg:grid-cols-[18rem_1fr_18rem]";
+	desktopGridCols = "xl:grid-cols-[18rem_1fr_18rem]";
 } else if (desktopShowLeftSidebar) {
-	desktopGridCols = "lg:grid-cols-[18rem_1fr]";
+	desktopGridCols = "xl:grid-cols-[18rem_1fr]";
 } else if (desktopShowRightSidebar) {
-	desktopGridCols = "lg:grid-cols-[1fr_18rem]";
+	desktopGridCols = "xl:grid-cols-[1fr_18rem]";
 }
 
 const gridCols = `
 	${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
-	${tabletAnySidebar ? "md:grid-cols-[minmax(15rem,18rem)_minmax(0,1fr)]" : "md:grid-cols-1"}
+	${tabletAnySidebar ? "lg:grid-cols-[minmax(15rem,18rem)_minmax(0,1fr)]" : "lg:grid-cols-1"}
 	${desktopGridCols}
 `
 	.trim()
@@ -120,35 +120,35 @@ const gridCols = `
 
 const sidebarClass = `
 	${mobileShowSidebar && hasMobileDrawerComponents ? "block" : "hidden"}
-	${tabletShowLeftSidebar ? "md:block md:mb-4 md:w-full md:max-w-full md:min-w-0" : "md:hidden"}
-	${desktopShowLeftSidebar ? "lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-80 lg:col-start-1 lg:col-end-2 lg:min-w-0" : "lg:hidden"}
+	${tabletShowLeftSidebar ? "lg:block lg:mb-4 lg:w-full lg:max-w-full lg:min-w-0" : "lg:hidden"}
+	${desktopShowLeftSidebar ? "xl:block xl:mb-4 xl:row-start-1 xl:row-end-2 xl:max-w-80 xl:col-start-1 xl:col-end-2 xl:min-w-0" : "xl:hidden"}
 `
 	.trim()
 	.replace(/\s+/g, " ");
 
 const rightSidebarClass = `
 	hidden
-	${tabletShowRightSidebar ? "md:block md:mb-4 md:w-full md:max-w-full md:min-w-0" : "md:hidden"}
-	${desktopShowRightSidebar ? `lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-80 lg:min-w-0 ${desktopShowLeftSidebar ? "lg:col-start-3 lg:col-end-4" : "lg:col-start-2 lg:col-end-3"} lg:col-span-1` : "lg:hidden"}
+	${tabletShowRightSidebar ? "lg:block lg:mb-4 lg:w-full lg:max-w-full lg:min-w-0" : "lg:hidden"}
+	${desktopShowRightSidebar ? `xl:block xl:mb-4 xl:row-start-1 xl:row-end-2 xl:max-w-80 xl:min-w-0 ${desktopShowLeftSidebar ? "xl:col-start-3 xl:col-end-4" : "xl:col-start-2 xl:col-end-3"} xl:col-span-1` : "xl:hidden"}
 
 `
 	.trim()
 	.replace(/\s+/g, " ");
 
-let desktopMainPos = "lg:col-span-1";
+let desktopMainPos = "xl:col-span-1";
 if (desktopShowLeftSidebar && desktopShowRightSidebar) {
-	desktopMainPos = "lg:col-start-2 lg:col-end-3";
+	desktopMainPos = "xl:col-start-2 xl:col-end-3";
 } else if (desktopShowLeftSidebar) {
-	desktopMainPos = "lg:col-start-2 lg:col-end-3";
+	desktopMainPos = "xl:col-start-2 xl:col-end-3";
 } else if (desktopShowRightSidebar) {
-	desktopMainPos = "lg:col-start-1 lg:col-end-2";
+	desktopMainPos = "xl:col-start-1 xl:col-end-2";
 }
 
 const mainContentClass = `
 	transition-swup-fade overflow-hidden w-full min-w-0
 	col-span-1 row-start-1 row-end-2
-	${tabletAnySidebar ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}
-	${desktopShowSidebar ? desktopMainPos : "lg:col-span-1"}
+	${tabletAnySidebar ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}
+	${desktopShowSidebar ? desktopMainPos : "xl:col-span-1"}
 `
 	.trim()
 	.replace(/\s+/g, " ");
@@ -354,7 +354,7 @@ const transparentClass = shouldEnableTransparency
 						<div id="left-sidebar-wrapper" class="contents">
 							<div
 								id="left-sidebar-column"
-								class={`${sidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start md:sticky md:top-0`}
+								class={`${sidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start lg:sticky lg:top-0`}
 							>
 								<SideBar
 									class="w-full"
@@ -372,7 +372,7 @@ const transparentClass = shouldEnableTransparency
 						<div id="right-sidebar-static" class="contents">
 							<div
 								id="right-sidebar-column"
-								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start md:sticky md:top-0`}
+								class={`right-sidebar-container ${rightSidebarClass} ${transparentClass} flex flex-col w-full pt-0 self-start xl:sticky xl:top-0`}
 							>
 								<RightSideBar headings={headings} />
 							</div>
@@ -421,7 +421,7 @@ const transparentClass = shouldEnableTransparency
 					<div
 						id="toc-wrapper"
 						class:list={[
-							"hidden lg:block transition absolute top-0 w-(--toc-width) items-center",
+							"hidden xl:block transition absolute top-0 w-(--toc-width) items-center",
 							"-left-(--toc-width)",
 							{
 								"toc-hide":
