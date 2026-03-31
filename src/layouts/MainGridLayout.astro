@@ -189,12 +189,14 @@ const transparentClass = shouldEnableTransparency
 		class="absolute z-10 w-full transition duration-700 overflow-hidden h-[var(--banner-height-home)]"
 		style={`top: -${BANNER_HEIGHT_EXTEND}vh`}
 	>
-		<BannerCarousel
-			bannerImages={bannerImages}
-			position={siteConfig.banner.position}
-			carouselEnabled={siteConfig.banner.carousel?.enable}
-			carouselInterval={siteConfig.banner.carousel?.interval || 3}
-		/>
+		<div class="banner-inner-wrapper h-full w-full transition-all duration-700">
+			<BannerCarousel
+				bannerImages={bannerImages}
+				position={siteConfig.banner.position}
+				carouselEnabled={siteConfig.banner.carousel?.enable}
+				carouselInterval={siteConfig.banner.carousel?.interval || 3}
+			/>
+		</div>
 
 		<!-- Home page text overlay -->
 		{
