@@ -407,8 +407,6 @@ function throttle(func: Function, limit: number) {
 }
 
 function syncDesktopViewportState() {
-  removePostPageActionButtons();
-
   const scrollTop = document.documentElement.scrollTop;
   const bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100);
 

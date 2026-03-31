@@ -169,111 +169,30 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 </div>
 
 <script>
-	const searchContainer = document.getElementById("search-container");
-	const navbarLinksContainer = document.getElementById(
-		"navbar-links-container",
-	);
+	import { registerPageScript } from "../scripts/page-lifecycle.js";
 
-	if (searchContainer && navbarLinksContainer) {
-		const hideLinks = () => {
-			if (
-				window.matchMedia("(min-width: 1280px)").matches &&
-				window.matchMedia("(hover: hover)").matches
-			) {
-				navbarLinksContainer.style.opacity = "0";
-			}
-		};
-
-		const showLinks = () => {
-			const navbar = document.getElementById("navbar");
-			if (navbar && !navbar.classList.contains("is-searching")) {
-				navbarLinksContainer.style.opacity = "1";
-			}
-		};
-
-		searchContainer.addEventListener("mouseenter", hideLinks);
-		searchContainer.addEventListener("mouseleave", showLinks);
-		searchContainer.addEventListener("touchstart", hideLinks, {
-			passive: true,
-		});
-		searchContainer.addEventListener("touchend", showLinks);
-
-		const navbar = document.getElementById("navbar");
-		if (navbar) {
-			const observer = new MutationObserver((mutations) => {
-				mutations.forEach((mutation) => {
-					if (
-						mutation.type === "attributes" &&
-						mutation.attributeName === "class"
-					) {
-						if (!navbar.classList.contains("is-searching")) {
-							if (!searchContainer.matches(":hover")) {
-								showLinks();
-							}
-						}
-					}
-				});
-			});
-			observer.observe(navbar, { attributes: true });
-		}
-	}
-
-	async function loadButtonScript() {
-		try {
-			const { panelManager } = await import("../utils/panel-manager.js");
-
-			let settingBtn = document.getElementById("display-settings-switch");
-			if (settingBtn) {
-				settingBtn.onclick = async function () {
-					await panelManager.togglePanel("display-setting");
-				};
-			}
-
-			let menuBtn = document.getElementById("nav-menu-switch");
-			if (menuBtn) {
-				menuBtn.onclick = async function () {
-					await panelManager.togglePanel("nav-menu-panel");
-				};
-			}
-		} catch (error) {
-			console.error("Failed to load panel manager:", error);
-			let settingBtn = document.getElementById("display-settings-switch");
-			if (settingBtn) {
-				settingBtn.onclick = function () {
-					let settingPanel = document.getElementById("display-setting");
-					if (settingPanel) {
-						settingPanel.classList.toggle("float-panel-closed");
-					}
-				};
-			}
-
-			let menuBtn = document.getElementById("nav-menu-switch");
-			if (menuBtn) {
-				menuBtn.onclick = function () {
-					let menuPanel = document.getElementById("nav-menu-panel");
-					if (menuPanel) {
-						menuPanel.classList.toggle("float-panel-closed");
-					}
-				};
-			}
-		}
-	}
-
-	loadButtonScript();
+	const pagefindScriptUrl = import.meta.env.PROD
+		? "/pagefind/pagefind.js"
+		: "";
+	type NavbarPanelId = "display-setting" | "nav-menu-panel";
 
 	function initSemifullScrollDetection() {
 		const navbar = document.getElementById("navbar");
-		if (!navbar) return;
+		if (!(navbar instanceof HTMLElement)) return () => {};
+		const navbarElement = navbar;
 
 		if (window.semifullScrollHandler) {
 			window.removeEventListener("scroll", window.semifullScrollHandler);
+			window.semifullScrollHandler = undefined;
 		}
 
-		const isHomePage = navbar.dataset.isHome === "true";
+		const isHomePage = navbarElement.dataset.isHome === "true";
 
 		if (!isHomePage) {
-			navbar.classList.add("scrolled");
-			return;
+			navbarElement.classList.add("scrolled");
+			return () => {
+				navbarElement.classList.remove("scrolled");
+			};
 		}
 
 		let ticking = false;
@@ -282,10 +201,10 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 			const scrollTop = window.scrollY || document.documentElement.scrollTop;
 			const threshold = 50;
 
-			if (navbar && scrollTop > threshold) {
-				navbar.classList.add("scrolled");
-			} else if (navbar) {
-				navbar.classList.remove("scrolled");
+			if (scrollTop > threshold) {
+				navbarElement.classList.add("scrolled");
+			} else {
+				navbarElement.classList.remove("scrolled");
 			}
 
 			ticking = false;
@@ -301,17 +220,180 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		window.semifullScrollHandler = requestTick;
 		window.addEventListener("scroll", requestTick, { passive: true });
 		updateNavbarState();
+
+		return () => {
+			window.removeEventListener("scroll", requestTick);
+			if (window.semifullScrollHandler === requestTick) {
+				window.semifullScrollHandler = undefined;
+			}
+		};
 	}
 
 	window.initSemifullScrollDetection = initSemifullScrollDetection;
 
-	if (document.readyState === "loading") {
-		document.addEventListener(
-			"DOMContentLoaded",
-			initSemifullScrollDetection,
-		);
-	} else {
-		initSemifullScrollDetection();
+	registerPageScript("navbar-interactions", {
+		shouldRun() {
+			return document.getElementById("navbar") !== null;
+		},
+		init() {
+			const searchContainer = document.getElementById("search-container");
+			const navbarLinksContainer = document.getElementById(
+				"navbar-links-container",
+			);
+			const navbar = document.getElementById("navbar");
+			const cleanups: Array<() => void> = [];
+
+			if (searchContainer && navbarLinksContainer && navbar) {
+				const hideLinks = () => {
+					if (
+						window.matchMedia("(min-width: 1280px)").matches &&
+						window.matchMedia("(hover: hover)").matches
+					) {
+						navbarLinksContainer.style.opacity = "0";
+					}
+				};
+
+				const showLinks = () => {
+					if (!navbar.classList.contains("is-searching")) {
+						navbarLinksContainer.style.opacity = "1";
+					}
+				};
+
+				searchContainer.addEventListener("mouseenter", hideLinks);
+				searchContainer.addEventListener("mouseleave", showLinks);
+				searchContainer.addEventListener("touchstart", hideLinks, {
+					passive: true,
+				});
+				searchContainer.addEventListener("touchend", showLinks);
+				cleanups.push(() =>
+					searchContainer.removeEventListener("mouseenter", hideLinks),
+				);
+				cleanups.push(() =>
+					searchContainer.removeEventListener("mouseleave", showLinks),
+				);
+				cleanups.push(() =>
+					searchContainer.removeEventListener("touchstart", hideLinks),
+				);
+				cleanups.push(() =>
+					searchContainer.removeEventListener("touchend", showLinks),
+				);
+
+				const observer = new MutationObserver(() => {
+					if (
+						!navbar.classList.contains("is-searching") &&
+						!searchContainer.matches(":hover")
+					) {
+						showLinks();
+					}
+				});
+				observer.observe(navbar, {
+					attributes: true,
+					attributeFilter: ["class"],
+				});
+				cleanups.push(() => observer.disconnect());
+			}
+
+			const wirePanelButton = async (
+				buttonId: string,
+				panelId: NavbarPanelId,
+			) => {
+				const button = document.getElementById(buttonId);
+				if (!(button instanceof HTMLElement)) return;
+
+				try {
+					const { panelManager } = await import("../utils/panel-manager.js");
+					const handleClick = async () => {
+						await panelManager.togglePanel(panelId);
+					};
+					button.addEventListener("click", handleClick);
+					cleanups.push(() =>
+						button.removeEventListener("click", handleClick),
+					);
+				} catch (error) {
+					console.error("Failed to load panel manager:", error);
+					const fallbackClick = () => {
+						document
+							.getElementById(panelId)
+							?.classList.toggle("float-panel-closed");
+					};
+					button.addEventListener("click", fallbackClick);
+					cleanups.push(() =>
+						button.removeEventListener("click", fallbackClick),
+					);
+				}
+			};
+
+			void wirePanelButton("display-settings-switch", "display-setting");
+			void wirePanelButton("nav-menu-switch", "nav-menu-panel");
+
+			const cleanupSemifullScrollDetection = initSemifullScrollDetection();
+			cleanups.push(cleanupSemifullScrollDetection);
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		},
+	});
+
+	if (pagefindScriptUrl) {
+		registerPageScript("navbar-pagefind-loader", {
+			shouldRun() {
+				return document.getElementById("search-container") !== null;
+			},
+			init() {
+				let cancelled = false;
+				let timerId: number | undefined;
+				let pagefindLoaded = false;
+				const searchContainer = document.getElementById("search-container");
+
+				async function initPagefind() {
+					if (pagefindLoaded || cancelled) return;
+					pagefindLoaded = true;
+
+					try {
+						const response = await fetch(pagefindScriptUrl, {
+							method: "HEAD",
+						});
+						if (!response.ok) {
+							throw new Error(
+								`Pagefind script not found: ${response.status}`,
+							);
+						}
+
+						const pagefind = await import(pagefindScriptUrl);
+						await pagefind.options({ excerptLength: 20 });
+						window.pagefind = pagefind;
+						document.dispatchEvent(new CustomEvent("pagefindready"));
+					} catch (error) {
+						console.error("Failed to load Pagefind:", error);
+						window.pagefind = {
+							search: () => Promise.resolve({ results: [] }),
+						};
+						document.dispatchEvent(
+							new CustomEvent("pagefindloaderror"),
+						);
+					}
+				}
+
+				if (searchContainer) {
+					searchContainer.addEventListener("click", initPagefind, {
+						once: true,
+					});
+					searchContainer.addEventListener("focusin", initPagefind, {
+						once: true,
+					});
+				}
+
+				timerId = window.setTimeout(initPagefind, 5000);
+
+				return () => {
+					cancelled = true;
+					if (timerId !== undefined) {
+						window.clearTimeout(timerId);
+					}
+				};
+			},
+		});
 	}
 </script>
 
@@ -359,7 +441,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 </style>
 
 {
-	import.meta.env.PROD && (
+	false && (
 		<script is:inline define:vars={{ scriptUrl: url("/pagefind/pagefind.js") }}>
 			// 延迟加载 Pagefind - 非首屏关键资源
 			function loadPagefind() {

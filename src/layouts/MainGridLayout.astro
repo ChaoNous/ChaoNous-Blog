@@ -81,8 +81,6 @@ const mobileShowSidebar = hasMobileDrawerComponents;
 const tabletShowSidebar = hasTabletLeftSidebarComponents;
 const desktopShowSidebar = hasLeftSidebarComponents;
 const desktopShowLeftSidebar = hasLeftSidebarComponents;
-
-const tabletShowLeftSidebar = hasTabletLeftSidebarComponents;
 const desktopGridCols = desktopShowLeftSidebar
 	? "lg:grid-cols-[21rem_1fr]"
 	: "lg:grid-cols-1";
@@ -100,8 +98,6 @@ const sidebarClass = `
 `
 	.trim()
 	.replace(/\s+/g, " ");
-
-const rightSidebarClass = "hidden";
 
 const desktopMainPos = desktopShowLeftSidebar
 	? "lg:col-start-2 lg:col-end-3"

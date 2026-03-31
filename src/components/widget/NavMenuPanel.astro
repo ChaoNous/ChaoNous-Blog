@@ -256,77 +256,96 @@ const {
 </style>
 
 <script>
-	const closeSiblingDropdowns = (activeDropdown: Element) => {
-		const mobileDropdowns = document.querySelectorAll(
-			"[data-mobile-dropdown]",
-		);
-		mobileDropdowns.forEach((dropdown) => {
-			if (dropdown === activeDropdown) return;
-			dropdown.setAttribute("data-expanded", "false");
-			const otherTrigger = dropdown.querySelector(
-				"[data-mobile-dropdown-trigger]",
-			);
-			if (otherTrigger instanceof HTMLElement) {
-				otherTrigger.setAttribute("aria-expanded", "false");
-			}
-		});
-	};
+	import { registerPageScript } from "../../scripts/page-lifecycle.js";
 
-	document.addEventListener("click", (event) => {
-		const target = event.target;
-		if (!(target instanceof Element)) return;
-
-		const actionButton = target.closest("[data-nav-action]");
-		if (actionButton instanceof HTMLElement) {
-			event.preventDefault();
-
-			(async () => {
-				const [{ panelManager }] =
-					await Promise.all([
-						import("../../utils/panel-manager.js"),
-					]);
-
-				const action = actionButton.dataset.navAction;
-
-				await panelManager.closePanel("nav-menu-panel");
-
-				if (action === "search") {
-					await panelManager.togglePanel("search-panel", true);
-					return;
-				}
-
-				if (action === "theme-toggle") {
-					const schemeSwitch =
-						document.getElementById("scheme-switch");
-					if (schemeSwitch instanceof HTMLElement) {
-						schemeSwitch.click();
+	registerPageScript("mobile-nav-menu-panel", {
+		shouldRun() {
+			return document.getElementById("nav-menu-panel") !== null;
+		},
+		init() {
+			const closeSiblingDropdowns = (activeDropdown: Element) => {
+				const mobileDropdowns = document.querySelectorAll(
+					"[data-mobile-dropdown]",
+				);
+				mobileDropdowns.forEach((dropdown) => {
+					if (dropdown === activeDropdown) return;
+					dropdown.setAttribute("data-expanded", "false");
+					const otherTrigger = dropdown.querySelector(
+						"[data-mobile-dropdown-trigger]",
+					);
+					if (otherTrigger instanceof HTMLElement) {
+						otherTrigger.setAttribute("aria-expanded", "false");
 					}
+				});
+			};
+
+			const handleClick = (event: MouseEvent) => {
+				const target = event.target;
+				if (!(target instanceof Element)) return;
+
+				const actionButton = target.closest("[data-nav-action]");
+				if (actionButton instanceof HTMLElement) {
+					event.preventDefault();
+
+					(async () => {
+						const { panelManager } = await import(
+							"../../utils/panel-manager.js"
+						);
+						const action = actionButton.dataset.navAction;
+
+						await panelManager.closePanel("nav-menu-panel");
+
+						if (action === "search") {
+							await panelManager.togglePanel("search-panel", true);
+							return;
+						}
+
+						if (action === "theme-toggle") {
+							const schemeSwitch =
+								document.getElementById("scheme-switch");
+							if (schemeSwitch instanceof HTMLElement) {
+								schemeSwitch.click();
+							}
+							return;
+						}
+
+						if (action === "display-settings") {
+							await panelManager.togglePanel(
+								"display-setting",
+								true,
+							);
+						}
+					})().catch((error) => {
+						console.error(
+							"Failed to handle nav menu action:",
+							error,
+						);
+					});
+
 					return;
 				}
 
-				if (action === "display-settings") {
-					await panelManager.togglePanel("display-setting", true);
-					return;
-				}
-			})().catch((error) => {
-				console.error("Failed to handle nav menu action:", error);
-			});
+				const trigger = target.closest("[data-mobile-dropdown-trigger]");
+				if (!(trigger instanceof HTMLElement)) return;
 
-			return;
-		}
+				const dropdown = trigger.closest("[data-mobile-dropdown]");
+				if (!(dropdown instanceof HTMLElement)) return;
 
-		const trigger = target.closest("[data-mobile-dropdown-trigger]");
-		if (!(trigger instanceof HTMLElement)) return;
+				event.preventDefault();
+				const isExpanded =
+					dropdown.getAttribute("data-expanded") === "true";
+				closeSiblingDropdowns(dropdown);
 
-		const dropdown = trigger.closest("[data-mobile-dropdown]");
-		if (!(dropdown instanceof HTMLElement)) return;
+				const newState = (!isExpanded).toString();
+				dropdown.setAttribute("data-expanded", newState);
+				trigger.setAttribute("aria-expanded", newState);
+			};
 
-		event.preventDefault();
-		const isExpanded = dropdown.getAttribute("data-expanded") === "true";
-		closeSiblingDropdowns(dropdown);
+			document.addEventListener("click", handleClick);
 
-		const newState = (!isExpanded).toString();
-		dropdown.setAttribute("data-expanded", newState);
-		trigger.setAttribute("aria-expanded", newState);
+			return () => {
+				document.removeEventListener("click", handleClick);
+			};
+		},
 	});
 </script>

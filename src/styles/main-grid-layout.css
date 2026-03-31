@@ -92,8 +92,29 @@
   }
 
   /* 双侧边栏时 footer 占满宽度 */
-  .mobile-both-sidebar .footer {
+.mobile-both-sidebar .footer {
     grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 767px) and (orientation: portrait) {
+  .banner-container img,
+  .carousel-item img {
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  .banner-text-overlay {
+    align-items: flex-start !important;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .banner-text-overlay > div {
+    align-items: flex-start !important;
+    justify-content: center;
+    margin-bottom: 0;
+    text-align: center;
   }
 }
 
@@ -111,29 +132,15 @@
     min-height: calc(100vh - 220px);
   }
 
-  /* 手机端竖屏模式填满banner，消除黑边 */
-  .banner-container img,
-  .carousel-item img {
-    object-fit: cover !important;
-    object-position: center center !important;
-  }
-
   /* banner 文字叠层从顶部锚定，防止打字机效果导致布局跳动 */
   .banner-text-overlay {
-    align-items: flex-start !important;
-    justify-content: center;
     padding: 1rem;
     padding-top: 5.5rem;
-    text-align: center;
   }
 
   /* 覆盖内层 Tailwind flex 垂直居中，保留水平居中 */
   .banner-text-overlay > div {
-    align-items: flex-start !important;
-    justify-content: center;
-    margin-bottom: 0;
     width: 95%;
-    text-align: center;
   }
 
   /* 小屏标题字号缩小 */
@@ -166,29 +173,15 @@
     min-height: calc(100vh - 260px);
   }
 
-  /* 手机端竖屏模式填满banner，消除黑边 */
-  .banner-container img,
-  .carousel-item img {
-    object-fit: cover !important;
-    object-position: center center !important;
-  }
-
   /* banner 文字叠层从顶部锚定，防止打字机效果导致布局跳动 */
   .banner-text-overlay {
-    align-items: flex-start !important;
-    justify-content: center;
     padding: 1.5rem;
     padding-top: 6rem;
-    text-align: center;
   }
 
   /* 覆盖内层 Tailwind flex 垂直居中，保留水平居中 */
   .banner-text-overlay > div {
-    align-items: flex-start !important;
-    justify-content: center;
-    margin-bottom: 0;
     width: 90%;
-    text-align: center;
   }
 
   /* 标题字号 */
