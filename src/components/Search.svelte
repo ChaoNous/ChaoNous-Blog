@@ -18,6 +18,12 @@
 	let focusTimer: NodeJS.Timeout;
 	let blurTimer: NodeJS.Timeout;
 
+	interface Props {
+		showMobileTrigger?: boolean;
+	}
+
+	let { showMobileTrigger = true }: Props = $props();
+
 	const fakeResult: SearchResult[] = [
 		{
 			url: url("/"),
@@ -264,15 +270,17 @@
 	</div>
 </div>
 
-<!-- toggle btn for phone/tablet view -->
-<button
-	onclick={togglePanel}
-	aria-label="Search Panel"
-	id="search-switch"
-	class="btn-plain scale-animation lg:hidden! rounded-lg w-11 h-11 active:scale-90"
->
-	<Icon icon="material-symbols:search" class="text-[1.25rem]"></Icon>
-</button>
+{#if showMobileTrigger}
+	<!-- toggle btn for phone/tablet view -->
+	<button
+		onclick={togglePanel}
+		aria-label="Search Panel"
+		id="search-switch"
+		class="btn-plain scale-animation lg:hidden! rounded-lg w-11 h-11 active:scale-90"
+	>
+		<Icon icon="material-symbols:search" class="text-[1.25rem]"></Icon>
+	</button>
+{/if}
 
 <!-- search panel -->
 <div

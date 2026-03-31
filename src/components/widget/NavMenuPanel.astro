@@ -9,6 +9,8 @@ import { url } from "../../utils/url-utils";
 interface Props {
 	links: NavBarLink[];
 	showDisplaySettings?: boolean;
+	showSearchAction?: boolean;
+	showThemeToggle?: boolean;
 }
 
 const navTitleMap: Record<string, string> = {
@@ -53,6 +55,8 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 
 const {
 	showDisplaySettings = false,
+	showSearchAction = true,
+	showThemeToggle = true,
 } = Astro.props;
 ---
 
@@ -63,8 +67,52 @@ const {
 	]}
 >
 	{
-		showDisplaySettings && (
+		(showSearchAction || showThemeToggle || showDisplaySettings) && (
 			<div class="mb-2 border-b border-black/5 pb-2 dark:border-white/10">
+				{
+					showSearchAction && (
+						<button
+							type="button"
+							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+							data-nav-action="search"
+						>
+							<div class="flex items-center transition nav-item-text font-bold">
+								<Icon
+									name="material-symbols:search"
+									class="text-[1.1rem] mr-2"
+								/>
+								{i18n(I18nKey.search)}
+							</div>
+							<Icon
+								name="material-symbols:chevron-right-rounded"
+								class="transition text-[1.25rem] text-(--primary)"
+							/>
+						</button>
+					)
+				}
+				{
+					showThemeToggle && (
+						<button
+							type="button"
+							class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+							data-nav-action="theme-toggle"
+						>
+							<div class="flex items-center transition nav-item-text font-bold">
+								<Icon
+									name="material-symbols:dark-mode-outline-rounded"
+									class="text-[1.1rem] mr-2"
+								/>
+								{i18n(I18nKey.darkMode)}
+							</div>
+							<Icon
+								name="material-symbols:chevron-right-rounded"
+								class="transition text-[1.25rem] text-(--primary)"
+							/>
+						</button>
+					)
+				}
+				{
+		showDisplaySettings && (
 				<button
 					type="button"
 					class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
@@ -82,6 +130,8 @@ const {
 						class="transition text-[1.25rem] text-(--primary)"
 					/>
 				</button>
+				)
+				}
 			</div>
 		)
 	}
@@ -239,6 +289,20 @@ const {
 				const action = actionButton.dataset.navAction;
 
 				await panelManager.closePanel("nav-menu-panel");
+
+				if (action === "search") {
+					await panelManager.togglePanel("search-panel", true);
+					return;
+				}
+
+				if (action === "theme-toggle") {
+					const schemeSwitch =
+						document.getElementById("scheme-switch");
+					if (schemeSwitch instanceof HTMLElement) {
+						schemeSwitch.click();
+					}
+					return;
+				}
 
 				if (action === "display-settings") {
 					await panelManager.togglePanel("display-setting", true);
