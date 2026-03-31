@@ -181,7 +181,7 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
   },
   zIndex: -1, // 层级，默认置于底层
   opacity: 0.8, // 透明度
-  blur: 3, // 模糊度，单位：像素
+  blur: 1, // 模糊度，单位：像素
 };
 
 export const navBarConfig: NavBarConfig = {
