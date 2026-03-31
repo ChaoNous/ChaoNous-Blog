@@ -3,7 +3,7 @@ import { Icon } from "astro-icon/components";
 import { siteConfig } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
-import { getCategoryList, getSortedPosts } from "../../utils/content-utils";
+import { getSortedPosts } from "../../utils/content-utils";
 import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
@@ -15,7 +15,6 @@ const { class: className, style } = Astro.props;
 
 const siteStartDate = siteConfig.siteStartDate || "2025-01-01";
 const posts = await getSortedPosts();
-const categories = await getCategoryList();
 
 let totalWords = 0;
 for (const post of posts) {

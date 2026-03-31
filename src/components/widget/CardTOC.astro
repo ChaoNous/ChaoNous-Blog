@@ -173,7 +173,6 @@ const headingsJson = JSON.stringify(headings);
 	class CardTOC {
 		private wrapper: HTMLElement;
 		private content: HTMLElement | null;
-		private widgetElement: HTMLElement | null;
 		private headings: HTMLElement[] = [];
 		private tocItems: HTMLElement[] = [];
 		private activeIndex = -1;
@@ -200,7 +199,6 @@ const headingsJson = JSON.stringify(headings);
 		constructor(wrapper: HTMLElement) {
 			this.wrapper = wrapper;
 			this.content = wrapper.querySelector("[data-card-toc-content]");
-			this.widgetElement = wrapper.closest('widget-layout[data-id="card-toc"]');
 			this.init();
 		}
 

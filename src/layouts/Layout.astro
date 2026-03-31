@@ -41,10 +41,6 @@ const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
 const configHue = siteConfig.themeColor.hue;
 
-// Read the navbar transparency mode from the site config.
-const navbarTransparentMode =
-	siteConfig.banner?.navbar?.transparentMode || "semi";
-
 // Resolve the banner source for desktop and mobile variants.
 const getBannerSrc = (
 	src: typeof siteConfig.banner.src,

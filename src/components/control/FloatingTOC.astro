@@ -419,7 +419,6 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 			this.wrapper?.classList.add("active-toc");
 			this.headings = [];
 
-			const maxLevel = parseInt(this.wrapper?.dataset.depth || "3");
 			const useJapaneseBadge =
 				this.wrapper?.dataset.japaneseBadge === "true";
 
@@ -527,16 +526,6 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 			this.panel?.classList.remove("show");
 			this.btn?.classList.remove("active");
 			this.wrapper?.classList.remove("active");
-		}
-
-		private reinit() {
-			if (this.observer) {
-				this.observer.disconnect();
-			}
-			this.close();
-			this.generateTOC();
-			this.observeContent();
-			this.updateProgress();
 		}
 
 		destroy() {
