@@ -42,10 +42,11 @@ html {
 }
 
 body {
+  @apply text-black dark:text-white;
   font-family: var(--font-content);
   scrollbar-width: none;
   -ms-overflow-style: none;
-  font-weight: 500; /* 再次加深字重以提升可读性 */
+  font-weight: 450;
 }
 
 body.is-home {
@@ -333,11 +334,11 @@ body::-webkit-scrollbar {
         active:bg-(--btn-card-bg-active);
   }
   .btn-card.disabled {
-    @apply pointer-events-none text-black/10 dark:text-white/10;
+    @apply pointer-events-none text-black dark:text-white;
   }
   .btn-plain {
     @apply transition-colors duration-150 relative flex items-center justify-center bg-none
-        text-black/75 hover:text-(--primary) dark:text-white/75 dark:hover:text-(--primary);
+        text-black hover:text-(--primary) dark:text-white dark:hover:text-(--primary);
     &:not(.scale-animation) {
       @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active);
     }
@@ -347,7 +348,7 @@ body::-webkit-scrollbar {
   }
   .btn-regular {
     @apply transition-colors duration-150 flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active)
-        text-(--btn-content) dark:text-white/75;
+        text-black dark:text-white;
   }
 
   .link-underline {
@@ -368,26 +369,8 @@ body::-webkit-scrollbar {
     display: none;
   }
 
-  .text-90 {
-    @apply text-black/90 dark:text-white/90;
-  }
-  .text-75 {
-    @apply text-black/75 dark:text-white/75;
-  }
-  .text-70 {
-    @apply text-black/70 dark:text-white/70;
-  }
-  .text-60 {
-    @apply text-black/60 dark:text-white/60;
-  }
-  .text-50 {
-    @apply text-black/50 dark:text-white/50;
-  }
-  .text-30 {
-    @apply text-black/30 dark:text-white/30;
-  }
-  .text-25 {
-    @apply text-black/25 dark:text-white/25;
+  .text-90, .text-75, .text-70, .text-60, .text-50, .text-30, .text-25 {
+    @apply text-black dark:text-white;
   }
 
   .floating-toc-item {

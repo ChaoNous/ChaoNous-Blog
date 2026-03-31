@@ -332,9 +332,9 @@
 		@apply bg-black/4 hover:bg-black/6 focus-within:bg-black/6 dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10;
 	}
 	.search-icon-color {
-		@apply text-black/30 dark:text-white/30;
+		@apply text-black dark:text-white;
 	}
 	.search-input-color {
-		@apply text-black/50 dark:text-white/50;
+		@apply text-black dark:text-white;
 	}
 </style>

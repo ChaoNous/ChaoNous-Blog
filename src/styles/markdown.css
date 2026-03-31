@@ -66,7 +66,7 @@
     counter-reset: line;
     span.line {
       &:before {
-        @apply text-white/25 mr-4 w-4 inline-block select-none;
+        @apply text-white mr-4 w-4 inline-block select-none;
         content: counter(line);
         counter-increment: line;
         direction: rtl;
