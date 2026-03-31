@@ -323,3 +323,21 @@ body:has(#banner-wrapper) #search-panel {
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
+
+#navbar > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
+body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 10px 26px rgba(15, 18, 30, 0.08) !important;
+}
+
+:root.dark #navbar > div,
+:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
+:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 30px rgba(0, 0, 0, 0.22) !important;
+}
