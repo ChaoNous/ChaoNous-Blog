@@ -514,7 +514,7 @@ body::-webkit-scrollbar {
   width: 10%;
   height: 100%;
   left: calc(50% - 1px);
-  border-left: 2px dashed var(--line-color);
+  border-left: none;
   pointer-events: none;
   transition: all 0.3s;
   transform: translateY(-50%);

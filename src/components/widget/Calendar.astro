@@ -103,7 +103,7 @@ const yearSuffix = isChinese ? "年" : " ";
 			<div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
 			<div id="calendar-posts" class="mt-4">
 				<div
-					class="h-px w-full bg-(--line-divider) mb-2 hidden"
+					class="hidden"
 					id="calendar-posts-divider"
 				>
 				</div>
@@ -342,7 +342,7 @@ const yearSuffix = isChinese ? "年" : " ";
 					"bg-(--primary) text-white shadow-md border border-transparent";
 			} else if (isToday) {
 				bgClass =
-					"text-(--primary) font-bold bg-(--primary)/10 border border-(--primary)";
+					"text-(--primary) font-bold bg-(--primary)/10 border-none";
 			} else if (hasPost) {
 				bgClass =
 					"font-bold text-90 hover:bg-(--btn-plain-bg-hover) border border-transparent";
