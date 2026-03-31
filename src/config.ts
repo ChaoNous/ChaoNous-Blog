@@ -88,7 +88,7 @@ export const siteConfig: SiteConfig = {
       ],
     },
 
-    position: "top", // 图片位置，对应 object-position，可选 'top', 'center', 'bottom'，默认 'top'
+    position: "center", // 图片位置，对应 object-position，可选 'top', 'center', 'bottom'，默认 'center'
 
     carousel: {
       enable: true, // 是否启用轮播，数量大于 1 时生效；false 则随机显示一张
