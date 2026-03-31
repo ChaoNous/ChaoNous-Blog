@@ -7,8 +7,8 @@
     @apply shadow-none!;
   }
 
-  .title {
-    font-family: var(--font-content);
+  .title, code, pre, span {
+    font-family: var(--font-content) !important;
   }
 
   /* Copy button */

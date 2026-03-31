@@ -1447,7 +1447,7 @@
 		/* Apply Zhuque Fangsong to all text in music player */
 		/* Falls back to UI font (409KB) until full font is loaded */
 		.music-player {
-			font-family: "Zhuque Fangsong Music", "Zhuque Fangsong UI", "Cinzel", sans-serif;
+			font-family: "Crimson Pro", "Zhuque Fangsong UI";
 		}
 
 		/* Keep the disc rotation smooth and resumable */

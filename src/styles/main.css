@@ -12,6 +12,8 @@
 
 @theme {
   --font-sans: "Crimson Pro", "Zhuque Fangsong UI";
+  --font-serif: "Crimson Pro", "Zhuque Fangsong UI";
+  --font-mono: "Crimson Pro", "Zhuque Fangsong UI";
   --font-latin: "Crimson Pro";
   --font-cjk: "Zhuque Fangsong UI";
   --font-content: "Crimson Pro", "Zhuque Fangsong UI";
