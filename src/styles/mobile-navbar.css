@@ -4,7 +4,7 @@
 
 #navbar > div {
   background: var(--card-bg);
-  border-radius: 1.9rem;
+  border-radius: var(--radius-large);
   will-change: background, backdrop-filter, box-shadow;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -13,9 +13,9 @@
 @media (min-width: 1280px) {
   #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
   body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div {
-    backdrop-filter: none;
+    backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.55);
-        border: none;
+    border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 }
@@ -29,9 +29,9 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"][data-is-home="true"]
     > div {
-    backdrop-filter: none;
+    backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.55);
-        border: none;
+    border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 }
@@ -43,9 +43,9 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"]
     > div {
-    backdrop-filter: none;
+    backdrop-filter: blur(20px);
     background: rgba(0, 0, 0, 0.55);
-        border: none;
+    border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 }
@@ -61,9 +61,9 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semi"][data-is-home="true"]
     > div {
-    backdrop-filter: none;
+    backdrop-filter: blur(20px);
     background: rgba(0, 0, 0, 0.55);
-        border: none;
+    border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 }
@@ -143,9 +143,9 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"].scrolled
     > div {
-    backdrop-filter: none;
+    backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.55);
-        border: none;
+    border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
@@ -158,8 +158,9 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"].scrolled
     > div {
+    backdrop-filter: blur(20px);
     background: rgba(0, 0, 0, 0.55);
-        border: none;
+    border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 }
@@ -173,9 +174,9 @@
   body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
     > div {
-    backdrop-filter: none;
+    backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.55);
-        border: none;
+    border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
@@ -188,8 +189,9 @@
     body:has(#banner-wrapper)
     #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
     > div {
+    backdrop-filter: blur(20px);
     background: rgba(0, 0, 0, 0.55);
-        border: none;
+    border: 1px solid rgba(0, 0, 0, 0.55);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 }
@@ -198,7 +200,7 @@
 /* 小屏手机优化 */
 @media (max-width: 480px) {
   #navbar > div {
-    border-radius: 1.55rem;
+    border-radius: var(--radius-large);
     margin: 0;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -305,9 +307,6 @@
   }
 }
 
-#navbar > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode] > div,
 #banner-wrapper ~ * .float-panel,
 body:has(#banner-wrapper) .float-panel,
 #banner-wrapper ~ * .dropdown-content,
@@ -322,22 +321,4 @@ body:has(#banner-wrapper) #search-panel {
   border: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
-}
-
-#navbar > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 10px 26px rgba(15, 18, 30, 0.08) !important;
-}
-
-:root.dark #navbar > div,
-:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 12px 30px rgba(0, 0, 0, 0.22) !important;
 }

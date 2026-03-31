@@ -734,29 +734,19 @@ body {
 #navbar > div,
 #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
 body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
-  background: color-mix(in oklch, var(--page-bg) 70%, transparent) !important;
-  backdrop-filter: blur(18px) saturate(115%) !important;
-  border-radius: 1.9rem !important;
-  border: 1px solid color-mix(in oklch, currentColor 10%, transparent) !important;
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch, white 45%, transparent),
-    0 10px 28px color-mix(in oklch, black 7%, transparent) !important;
+  background: var(--card-bg) !important;
+  border-radius: var(--radius-large) !important;
+  will-change: background, backdrop-filter, box-shadow;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #navbar[data-transparent-mode="full"] > div,
 #banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
 body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
-  background: color-mix(in oklch, var(--page-bg) 36%, transparent) !important;
-  backdrop-filter: blur(14px) saturate(110%) !important;
-}
-
-html.dark #navbar > div,
-html.dark #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-html.dark body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
-  border-color: color-mix(in oklch, white 14%, transparent) !important;
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch, white 12%, transparent),
-    0 12px 32px color-mix(in oklch, black 22%, transparent) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  backdrop-filter: none !important;
 }
 
 .floating-toc-item,
