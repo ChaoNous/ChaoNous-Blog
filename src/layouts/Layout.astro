@@ -231,30 +231,39 @@ const bannerOffset =
 				pageScaling: siteConfig.pageScaling,
 			}}
 		>
-			// Load the theme from local storage
-			const theme = localStorage.getItem("theme") || DEFAULT_THEME;
-			let isDark = false;
-			switch (theme) {
-				case LIGHT_MODE:
-					document.documentElement.classList.remove("dark");
-					isDark = false;
-					break;
-				case DARK_MODE:
-					document.documentElement.classList.add("dark");
-					isDark = true;
-					break;
+			const storedTheme = localStorage.getItem("theme");
+			const initialColorScheme =
+				DEFAULT_THEME === LIGHT_MODE || DEFAULT_THEME === DARK_MODE
+					? DEFAULT_THEME
+					: "";
+
+			function getPreferredTheme() {
+				if (storedTheme === LIGHT_MODE || storedTheme === DARK_MODE) {
+					return storedTheme;
+				}
+				if (initialColorScheme) {
+					return initialColorScheme;
+				}
+				return window.matchMedia("(prefers-color-scheme: dark)").matches
+					? DARK_MODE
+					: LIGHT_MODE;
 			}
 
-			// Set the theme for Expressive Code based on current mode
-			const expressiveTheme = isDark ? "github-dark" : "github-light";
-			const currentTheme =
-				document.documentElement.getAttribute("data-theme");
-			if (currentTheme !== expressiveTheme) {
-				document.documentElement.setAttribute(
-					"data-theme",
-					expressiveTheme,
-				);
-			}
+			const themeValue = getPreferredTheme();
+			const isDark = themeValue === DARK_MODE;
+			document.documentElement.classList.toggle("dark", isDark);
+			document.documentElement.setAttribute(
+				"data-theme",
+				isDark ? "github-dark" : "github-light",
+			);
+
+			window.theme = {
+				themeValue,
+				getTheme: () => window.theme.themeValue,
+				setTheme: (value) => {
+					window.theme.themeValue = value;
+				},
+			};
 
 			// Load the hue from local storage
 			const hue = localStorage.getItem("hue") || configHue;
@@ -342,6 +351,9 @@ const bannerOffset =
 	>
 		<ConfigCarrier />
 		<slot />
+		<script>
+			import "../scripts/theme.ts";
+		</script>
 
 		<!-- Load the music player when the browser is idle to keep TBT low. -->
 		{musicPlayerConfig.enable && <MusicPlayer client:idle />}
@@ -418,23 +430,21 @@ const bannerOffset =
 	}
 
 	// 页面加载完成后延迟加载非关键脚本
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", () => {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", () => {
+				scheduleIdleTask(() => {
+					import("../scripts/asset-demystification-calculator.js");
+					import("../scripts/btc-analysis-chart.js");
+					import("../scripts/code-collapse.js");
+					import("../scripts/copy-code-buttons.js");
+				});
+			});
+		} else {
 			scheduleIdleTask(() => {
 				import("../scripts/asset-demystification-calculator.js");
 				import("../scripts/btc-analysis-chart.js");
 				import("../scripts/code-collapse.js");
 				import("../scripts/copy-code-buttons.js");
-				import("../scripts/theme-optimizer.js");
 			});
-		});
-	} else {
-		scheduleIdleTask(() => {
-			import("../scripts/asset-demystification-calculator.js");
-			import("../scripts/btc-analysis-chart.js");
-			import("../scripts/code-collapse.js");
-			import("../scripts/copy-code-buttons.js");
-			import("../scripts/theme-optimizer.js");
-		});
-	}
+		}
 </script>
