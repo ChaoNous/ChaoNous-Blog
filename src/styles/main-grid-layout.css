@@ -818,29 +818,31 @@ body.enable-banner.is-home #main-content-shell {
   }
 
   .banner-text-overlay {
-    align-items: flex-end !important;
+    align-items: center !important;
+    justify-content: center !important;
     padding: 1.25rem 1.1rem 2rem !important;
-    text-align: left !important;
+    text-align: center !important;
   }
 
   .banner-text-overlay > div {
     width: 100%;
-    align-items: flex-end !important;
-    text-align: left !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
   }
 
   .banner-title {
     font-size: clamp(2.35rem, 8vw, 3.7rem);
     line-height: 1;
     max-width: 9ch;
-    margin-inline: 0;
+    margin-inline: auto;
   }
 
   .banner-subtitle {
     font-size: 0.98rem;
     line-height: 1.5;
     max-width: 18rem;
-    margin-inline: 0;
+    margin-inline: auto;
   }
 }
 
@@ -850,6 +852,7 @@ body.enable-banner.is-home #main-content-shell {
   }
 
   .banner-text-overlay > div {
-    justify-content: flex-end !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
 }

@@ -4,7 +4,7 @@
 
 #navbar > div {
   background: var(--card-bg);
-  border-radius: var(--radius-large);
+  border-radius: 1.9rem;
   will-change: background, backdrop-filter, box-shadow;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -198,7 +198,7 @@
 /* 小屏手机优化 */
 @media (max-width: 480px) {
   #navbar > div {
-    border-radius: 0.5rem;
+    border-radius: 1.55rem;
     margin: 0;
     padding-left: 1rem;
     padding-right: 1rem;
