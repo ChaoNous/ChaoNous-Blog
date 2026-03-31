@@ -69,7 +69,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	:global(.tk-comments .tk-input),
 	:global(.tk-comments .tk-preview) {
-				background: transparent !important;
+		background: rgba(128, 128, 128, 0.05) !important;
 				border: none !important;
 		border-radius: 0.5rem !important;
 		color: inherit !important;
@@ -83,7 +83,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	:global(.tk-comments .tk-input:focus) {
 		border-color: var(--primary) !important;
-				background: transparent !important;
+		background: rgba(128, 128, 128, 0.02) !important;
 	}
 
 	:global(.tk-comments .tk-actions) {
@@ -104,7 +104,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	}
 
 	:global(.tk-comments .tk-submit) {
-				background: transparent !important;
+		background: rgba(128, 128, 128, 0.15) !important;
 		color: inherit !important;
 		border-radius: 0.5rem !important;
 		font-weight: 500 !important;
@@ -113,12 +113,12 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	}
 
 	:global(.tk-comments .tk-submit:hover) {
-				background: transparent !important;
+		background: rgba(128, 128, 128, 0.25) !important;
 		color: var(--primary) !important;
 	}
 
 	:global(.tk-comments .tk-preview-btn) {
-				background: transparent !important;
+		background: rgba(128, 128, 128, 0.1) !important;
 		color: inherit !important;
 		border-radius: 0.5rem !important;
 				border: none !important;
@@ -126,7 +126,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	}
 
 	:global(.tk-comments .tk-preview-btn:hover) {
-				background: transparent !important;
+		background: rgba(128, 128, 128, 0.2) !important;
 	}
 
 	:global(.tk-comments .tk-comment) {
@@ -145,7 +145,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	:global(.tk-comments .tk-avatar) {
 		border-radius: 50% !important;
-				box-shadow: none !important;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	}
 
 	:global(.tk-comments .tk-nick) {
@@ -222,7 +222,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 				border: none !important;
 		border-radius: 0.75rem !important;
 		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(10px);
+		backdrop-filter: none;
 	}
 
 	:global(.tk-comments .tk-content code) {

@@ -1,0 +1,10 @@
+﻿cc1e02e style: set text container background blur to 10px in fullscreen mode
+2033918 style: revert global blur and apply 3px blur specifically to text panels in fullscreen mode
+ed7a1b5 style: set fullscreen wallpaper blur to 3px
+ec4d10b style: full transparentization and flattening of UI components
+e52ce3a style: universal border removal across all site components
+f8bdb0c style: remove all borders and frames for a pure frosted-glass aesthetic
+56af4c3 style: reduce frosted glass blur from 5px to 3px for a subtler effect
+af0c8ba style: apply 5px frosted glass effect to text sections in wallpaper mode
+f99c325 style: reset wallpaper blur to 1px and remove all banner/navbar blur effects
+947a658 style: add suitable blur and frosted-glass effect to banners and fullscreen wallpaper
