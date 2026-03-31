@@ -17,13 +17,14 @@
 		"dev": "astro dev",
 		"start": "astro preview",
 		"check": "astro check",
-		"build": "node scripts/compress-fonts.js && astro build && node --no-deprecation scripts/run-pagefind.js && node scripts/optimize-render-blocking.js",
+		"build": "node scripts/compress-images.js && node scripts/compress-fonts.js && astro build && node --no-deprecation scripts/run-pagefind.js && node scripts/optimize-render-blocking.js",
 		"submit": "node scripts/indexnow-submit.js",
 		"preview": "astro preview",
 		"astro": "astro",
 		"type-check": "tsc --noEmit --isolatedDeclarations",
 		"format": "prettier --write ./src",
 		"preinstall": "npx only-allow pnpm",
+		"compress-images": "node scripts/compress-images.js",
 		"compress-fonts": "node scripts/compress-fonts.js"
 	},
 	"dependencies": {
