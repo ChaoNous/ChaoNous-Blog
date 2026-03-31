@@ -49,14 +49,10 @@ export default defineConfig({
 		swup({
 			theme: false,
 			animationClass: "transition-swup-",
-			containers: [
-				"#swup-container",
-				"#left-sidebar-column",
-				"#right-sidebar-column",
-			],
+			containers: ["#main-grid"],
 			smoothScrolling: false,
 			cache: true,
-			preload: false,
+			preload: true,
 			accessibility: true,
 			updateHead: true,
 			updateBodyClass: true,
