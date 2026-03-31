@@ -304,3 +304,22 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   }
 }
+
+#navbar > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
+body:has(#banner-wrapper) #navbar[data-transparent-mode] > div,
+#banner-wrapper ~ * .float-panel,
+body:has(#banner-wrapper) .float-panel,
+#banner-wrapper ~ * .dropdown-content,
+body:has(#banner-wrapper) .dropdown-content,
+#banner-wrapper ~ * #display-setting,
+body:has(#banner-wrapper) #display-setting,
+#banner-wrapper ~ * #nav-menu-panel,
+body:has(#banner-wrapper) #nav-menu-panel,
+#banner-wrapper ~ * #search-panel,
+body:has(#banner-wrapper) #search-panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}

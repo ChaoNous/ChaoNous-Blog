@@ -235,7 +235,8 @@ body::-webkit-scrollbar {
   .card-base,
   .card-base-transparent {
     @apply rounded-(--radius-large) overflow-hidden;
-    background: var(--card-bg) !important;
+    background: transparent !important;
+    border: none !important;
     box-shadow: none !important;
     contain: layout style;
   }
@@ -262,7 +263,7 @@ body::-webkit-scrollbar {
     @apply transition-colors duration-150;
   }
   .card-shadow {
-    @apply drop-shadow-[0_2px_4px_rgba(0,0,0,0.005)];
+    filter: none !important;
   }
   .is-theme-transitioning .expand-animation::before {
     transition: transform 75ms ease-out !important;
@@ -277,7 +278,11 @@ body::-webkit-scrollbar {
     @apply transition-colors duration-150 rounded-md p-1.5 -m-1.5 expand-animation;
   }
   .float-panel {
-    @apply top-21 rounded-(--radius-large) overflow-hidden bg-(--float-panel-bg) transition-colors duration-150 shadow-xl dark:shadow-none;
+    @apply top-21 rounded-(--radius-large) overflow-hidden transition-colors duration-150;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
   }
   .float-panel-closed {
     @apply -translate-y-1 opacity-0 pointer-events-none;
@@ -389,7 +394,10 @@ body::-webkit-scrollbar {
   }
 
   .dropdown-content {
-    @apply bg-(--float-panel-bg) rounded-(--radius-large) shadow-xl dark:shadow-none border-none py-2 min-w-48;
+    @apply rounded-(--radius-large) border-none py-2 min-w-48;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
   }
 
   .dropdown-item {
