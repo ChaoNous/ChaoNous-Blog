@@ -676,9 +676,15 @@ body.wallpaper-transparent
 
   .banner-text-overlay {
     padding: 0.5rem 1rem;
-    align-items: center !important;
-    justify-content: center !important;
+    padding-top: 1rem;
+    align-items: flex-start !important;
+    justify-content: center;
     text-align: center !important;
+  }
+
+  .banner-text-overlay > div {
+    align-items: flex-start !important;
+    justify-content: center;
   }
 
   .banner-title {
@@ -721,9 +727,15 @@ body.wallpaper-transparent
 
   .banner-text-overlay {
     padding: 1rem !important;
-    align-items: center !important;
-    justify-content: center !important;
+    padding-top: 2rem !important;
+    align-items: flex-start !important;
+    justify-content: center;
     text-align: center !important;
+  }
+
+  .banner-text-overlay > div {
+    align-items: flex-start !important;
+    justify-content: center;
   }
 
   .banner-title {
@@ -747,9 +759,15 @@ body.wallpaper-transparent
 
   .banner-text-overlay {
     padding: 1.5rem !important;
-    align-items: center !important;
-    justify-content: center !important;
+    padding-top: 4rem !important;
+    align-items: flex-start !important;
+    justify-content: center;
     text-align: center !important;
+  }
+
+  .banner-text-overlay > div {
+    align-items: flex-start !important;
+    justify-content: center;
   }
 
   .banner-title {
@@ -773,9 +791,15 @@ body.wallpaper-transparent
 
   .banner-text-overlay {
     padding: 2rem !important;
-    align-items: center !important;
-    justify-content: center !important;
+    padding-top: 5rem !important;
+    align-items: flex-start !important;
+    justify-content: center;
     text-align: center !important;
+  }
+
+  .banner-text-overlay > div {
+    align-items: flex-start !important;
+    justify-content: center;
   }
 
   .banner-title {
