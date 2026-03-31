@@ -734,19 +734,33 @@ body {
 #navbar > div,
 #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
 body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
-  background: var(--card-bg) !important;
+  background: rgba(0, 0, 0, 0.55) !important;
   border-radius: var(--radius-large) !important;
   will-change: background, backdrop-filter, box-shadow;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+  color: #fff !important;
 }
 
 #navbar[data-transparent-mode="full"] > div,
 #banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
 body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
-  background: transparent !important;
-  box-shadow: none !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
   border: none !important;
-  backdrop-filter: none !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+#navbar > div a,
+#navbar > div button,
+#navbar > div summary,
+#navbar > div [role="button"],
+#navbar > div .iconify,
+#navbar > div svg {
+  color: #fff !important;
+  stroke: currentColor;
 }
 
 .floating-toc-item,

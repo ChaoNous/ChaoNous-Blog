@@ -1,203 +1,18 @@
-/**
- * 导航栏半透明样式
- */
-
-#navbar > div {
-  background: var(--card-bg);
+/* Navbar stays in a dark visual state across all site themes and modes. */
+#navbar > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
+body:has(#banner-wrapper) #navbar[data-transparent-mode] > div,
+:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
+:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
+  background: rgba(0, 0, 0, 0.55);
   border-radius: var(--radius-large);
   will-change: background, backdrop-filter, box-shadow;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* 桌面端 - 亮色 */
-@media (min-width: 1280px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* 移动端 (仅首页) - 亮色 */
-@media (max-width: 1279px) {
-  #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="semi"][data-is-home="true"]
-    > div,
-  body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semi"][data-is-home="true"]
-    > div {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* 桌面端 - 暗色 */
-@media (min-width: 1280px) {
-  :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semi"]
-    > div {
-    backdrop-filter: blur(20px);
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(0, 0, 0, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  }
-}
-
-/* 移动端 (仅首页) - 暗色 */
-@media (max-width: 1279px) {
-  :root.dark
-    #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="semi"][data-is-home="true"]
-    > div,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semi"][data-is-home="true"]
-    > div {
-    backdrop-filter: blur(20px);
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(0, 0, 0, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  }
-}
-
-/**
- * 导航栏全透明样式
- */
-
-/* 桌面端 */
-@media (min-width: 1280px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div,
-  :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="full"]
-    > div {
-    background: transparent;
-    box-shadow: none;
-        border: none;
-    backdrop-filter: none;
-  }
-}
-
-/* 移动端 (仅首页) */
-@media (max-width: 1279px) {
-  #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="full"][data-is-home="true"]
-    > div,
-  body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="full"][data-is-home="true"]
-    > div,
-  :root.dark
-    #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="full"][data-is-home="true"]
-    > div,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="full"][data-is-home="true"]
-    > div {
-    background: transparent;
-    box-shadow: none;
-        border: none;
-    backdrop-filter: none;
-  }
-}
-
-/* --- 初始状态 (Initial) --- */
-@media (min-width: 1280px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"] > div,
-  body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"] > div {
-    background: transparent;
-    box-shadow: none;
-        border: none;
-  }
-}
-
-@media (max-width: 1279px) {
-  #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="semifull"][data-is-home="true"]
-    > div,
-  body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semifull"][data-is-home="true"]
-    > div {
-    background: transparent;
-    box-shadow: none;
-        border: none;
-  }
-}
-
-/* 桌面端 - 滚动后 */
-@media (min-width: 1280px) {
-  #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"].scrolled > div,
-  body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semifull"].scrolled
-    > div {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  :root.dark
-    #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="semifull"].scrolled
-    > div,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semifull"].scrolled
-    > div {
-    backdrop-filter: blur(20px);
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(0, 0, 0, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  }
-}
-
-/* 移动端 - 滚动后 */
-@media (max-width: 1279px) {
-  #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
-    > div,
-  body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
-    > div {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  :root.dark
-    #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
-    > div,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-transparent-mode="semifull"][data-is-home="true"].scrolled
-    > div {
-    backdrop-filter: blur(20px);
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(0, 0, 0, 0.55);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  }
-}
-
-
-/* 小屏手机优化 */
 @media (max-width: 480px) {
   #navbar > div {
     border-radius: var(--radius-large);
@@ -209,7 +24,6 @@
   }
 }
 
-/* 手机端/大屏移动端导航栏全宽优化 */
 @media (max-width: 1023px) {
   #navbar > div {
     max-width: none;
@@ -219,7 +33,6 @@
   }
 }
 
-/* 通用样式 */
 @media (min-width: 1280px) {
   #banner-wrapper ~ * .float-panel,
   body:has(#banner-wrapper) .float-panel,
@@ -236,7 +49,6 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
-  /* 暗色模式 */
   :root.dark #banner-wrapper ~ * .float-panel,
   :root.dark body:has(#banner-wrapper) .float-panel,
   :root.dark #banner-wrapper ~ * .dropdown-content,
@@ -252,7 +64,6 @@
   }
 }
 
-/* 移动端 (仅首页) */
 @media (max-width: 1279px) {
   #banner-wrapper ~ * #navbar[data-is-home="true"] .float-panel,
   body:has(#banner-wrapper) #navbar[data-is-home="true"] .float-panel,
@@ -268,7 +79,6 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
-  /* 暗色模式 */
   :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] .float-panel,
   :root.dark
     body:has(#banner-wrapper)
