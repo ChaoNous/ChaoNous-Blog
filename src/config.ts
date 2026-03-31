@@ -146,7 +146,7 @@ export const siteConfig: SiteConfig = {
 
   font: {
     asciiFont: {
-      fontFamily: "'Cinzel'",
+      fontFamily: "'Crimson Pro'",
       fontWeight: "400",
       localFonts: [],
       enableCompress: false,
