@@ -119,18 +119,18 @@ body.wallpaper-transparent
 
 /* 小屏手机（320px - 479px）竖屏模式 */
 @media (max-width: 479px) and (orientation: portrait) {
-  /* Banner wrapper 高度适配小屏 - 增加高度以获得更好的呼吸感 */
+  /* Banner wrapper 高度适配小屏 - 减小高度 */
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 50vh;
-    min-height: 340px;
-    max-height: 480px;
+    height: 40vh;
+    min-height: 280px;
+    max-height: 400px;
     top: 0;
   }
 
-  /* 主内容区跟随 banner 高度偏移 */
+  /* 主内容区下移，避免遮挡 banner 副标题 */
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: calc(50vh + 1rem);
-    min-height: calc(100vh - 50vh);
+    top: calc(40vh + 3rem);
+    min-height: calc(100vh - 40vh);
   }
 
   /* 手机端竖屏模式填满banner，消除黑边 */
@@ -172,18 +172,18 @@ body.wallpaper-transparent
 
 /* 中小屏手机（480px - 767px）竖屏模式 */
 @media (min-width: 480px) and (max-width: 767px) and (orientation: portrait) {
-  /* Banner wrapper 高度适配 - 增加高度以获得更好的呼吸感 */
+  /* Banner wrapper 高度适配 */
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 55vh;
-    min-height: 380px;
-    max-height: 520px;
+    height: 45vh;
+    min-height: 320px;
+    max-height: 450px;
     top: 0;
   }
 
-  /* 主内容区跟随 banner 高度偏移 */
+  /* 主内容区下移，避免遮挡 banner 副标题 */
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: calc(55vh + 1rem);
-    min-height: calc(100vh - 55vh);
+    top: calc(45vh + 3rem);
+    min-height: calc(100vh - 45vh);
   }
 
   /* 手机端竖屏模式填满banner，消除黑边 */
