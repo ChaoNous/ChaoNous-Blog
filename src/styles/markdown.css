@@ -131,7 +131,7 @@
     @apply w-full border-separate m-0 bg-[var(--card-bg)];
     border-spacing: 0;
 
-    border: 1px solid var(--line-divider);
+    border: none;
     border-radius: var(--radius-large);
 
     overflow: hidden;
@@ -140,8 +140,7 @@
   th,
   td {
     @apply px-4 py-3 whitespace-nowrap;
-    border-bottom: 1px solid var(--line-divider);
-    border-right: 1px solid var(--line-divider);
+    border: none;
     transition: none;
   }
 

@@ -246,7 +246,6 @@ body::-webkit-scrollbar {
   .card-base-transparent,
   .wallpaper-transparent .card-base,
   body.wallpaper-transparent .card-base,
-  .wallpaper-transparent .card-base .card-base,
   body.wallpaper-transparent .card-base .card-base {
     @apply rounded-(--radius-large) overflow-hidden;
     background: var(--card-bg-transparent) !important;
@@ -254,12 +253,6 @@ body::-webkit-scrollbar {
     -webkit-backdrop-filter: blur(3px) !important;
     box-shadow: none !important;
     contain: layout style;
-    /* 为无底色背景提供更清晰、更有质感的精致分割线 */
-    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-
-    &.dark {
-      border-bottom: 2px solid rgba(255, 255, 255, 0.35);
-    }
   }
 
   .wallpaper-transparent .float-panel {
@@ -429,7 +422,7 @@ body::-webkit-scrollbar {
   }
 
   .dropdown-content {
-    @apply bg-(--float-panel-bg) rounded-(--radius-large) shadow-xl dark:shadow-none border border-black/5 dark:border-white/10 py-2 min-w-48;
+    @apply bg-(--float-panel-bg) rounded-(--radius-large) shadow-xl dark:shadow-none border-none py-2 min-w-48;
   }
 
   .dropdown-item {

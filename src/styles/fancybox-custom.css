@@ -63,13 +63,13 @@
   height: 44px;
   transition: all 0.2s ease;
   backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
 }
 
 .fancybox__button:hover {
   background: rgba(0, 0, 0, 0.7);
   transform: scale(1.1);
-  border-color: rgba(255, 255, 255, 0.3);
+  border: none;
 }
 
 .fancybox__button svg {
