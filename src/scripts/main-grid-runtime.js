@@ -63,11 +63,6 @@ function getMainContentTop(wallpaperMode) {
 
   const banner = getResponsiveBannerHeightVh();
   if (window.innerWidth <= 1279) {
-    // 手机端竖屏需要额外偏移 3rem，避免遮挡 banner 副标题
-    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-    if (!isLandscape && window.innerWidth <= 767) {
-      return `calc(${banner.value}${banner.unit} + 3rem)`;
-    }
     return `${banner.value}${banner.unit}`;
   }
 
