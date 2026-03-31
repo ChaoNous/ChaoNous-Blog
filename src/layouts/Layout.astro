@@ -45,10 +45,6 @@ const configHue = siteConfig.themeColor.hue;
 const navbarTransparentMode =
 	siteConfig.banner?.navbar?.transparentMode || "semi";
 
-// Only show the top highlight in full and semifull transparent modes.
-const shouldShowTopHighlight =
-	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
-
 // Resolve the banner source for desktop and mobile variants.
 const getBannerSrc = (
 	src: typeof siteConfig.banner.src,
@@ -348,8 +344,6 @@ const bannerOffset =
 		class="min-h-screen"
 		class:list={[{ "is-home": isHomePage, "enable-banner": enableBanner }]}
 	>
-		{shouldShowTopHighlight && <div class="top-gradient-highlight" />}
-
 		<ConfigCarrier />
 		<slot />
 
