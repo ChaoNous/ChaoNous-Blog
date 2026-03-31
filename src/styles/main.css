@@ -29,11 +29,11 @@ html {
   @apply text-black/80;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  background-color: hsl(var(--hue), 20%, 98%);
+  background-color: hsl(var(--hue), 40%, 96%);
 
   &.dark {
     @apply text-white/80;
-    background-color: hsl(var(--hue), 15%, 11%);
+    background-color: hsl(var(--hue), 25%, 10%);
   }
 }
 
