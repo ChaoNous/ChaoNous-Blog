@@ -1303,7 +1303,7 @@
 		}
 		.progress-section div:hover,
 		.volume-bar:hover {
-			transform: scaleY(1.2);
+			/* removed scaling as per user request */
 			transition: transform 0.2s ease;
 		}
 		.volume-control {
@@ -1446,8 +1446,12 @@
 
 		/* Apply Zhuque Fangsong to all text in music player */
 		/* Falls back to UI font (409KB) until full font is loaded */
-		.music-player {
-			font-family: "Crimson Pro", "Zhuque Fangsong UI";
+		.music-player,
+		.music-player *,
+		.music-player button,
+		.music-player span,
+		.music-player div {
+			font-family: "Crimson Pro", "Zhuque Fangsong UI", sans-serif !important;
 		}
 
 		/* Keep the disc rotation smooth and resumable */
