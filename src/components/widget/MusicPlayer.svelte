@@ -711,7 +711,8 @@
 		</div>
 		<!-- Mini player shown when collapsed -->
 		<div
-			class="mini-player card-base bg-(--float-panel-bg) shadow-xl rounded-2xl p-3 transition-all duration-500 ease-in-out"
+			class="mini-player card-base rounded-2xl p-3 transition-all duration-500 ease-in-out"
+			style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow);"
 			class:opacity-0={isExpanded || isHidden}
 			class:scale-95={isExpanded || isHidden}
 			class:pointer-events-none={isExpanded || isHidden}
@@ -820,7 +821,8 @@
 		</div>
 		<!-- Full player shown when expanded -->
 		<div
-			class="expanded-player card-base bg-(--float-panel-bg) shadow-xl rounded-2xl p-4 transition-all duration-500 ease-in-out"
+			class="expanded-player card-base rounded-2xl p-4 transition-all duration-500 ease-in-out"
+			style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow);"
 			class:opacity-0={!isExpanded}
 			class:scale-95={!isExpanded}
 			class:pointer-events-none={!isExpanded}
@@ -1004,7 +1006,8 @@
 						{/if}
 					</button>
 					<div
-						class="volume-popover rounded-2xl p-3 card-base bg-(--float-panel-bg) shadow-xl"
+						class="volume-popover rounded-2xl p-3 card-base"
+						style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow);"
 					>
 						<div
 							class="volume-bar h-28 w-3 bg-(--btn-regular-bg) rounded-full cursor-pointer touch-none"
@@ -1055,6 +1058,7 @@
 			<div
 				bind:this={playlistPanel}
 				class="playlist-panel animate-slide-up float-panel fixed bottom-20 right-4 w-80 max-h-96 overflow-hidden z-50"
+				style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow); border-radius: var(--radius-large);"
 			>
 				<div
 					class="playlist-header flex items-center justify-between p-4 border-b border-(--line-divider)"
