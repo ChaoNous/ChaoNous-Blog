@@ -29,14 +29,6 @@ export const siteConfig: SiteConfig = {
     fixed: false,
   },
 
-  featurePages: {
-    projects: true,
-    skills: true,
-    timeline: true,
-    albums: true,
-    devices: true,
-  },
-
   navbarTitle: {
     mode: "text-icon",
     text: "ChaoNous",

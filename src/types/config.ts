@@ -44,14 +44,6 @@ export type SiteConfig = {
     fixed: boolean;
   };
 
-  featurePages: {
-    projects: boolean;
-    skills: boolean;
-    timeline: boolean;
-    albums: boolean;
-    devices: boolean;
-  };
-
   navbarTitle?: {
     mode?: "text-icon" | "logo";
     text: string;
@@ -142,13 +134,7 @@ export type Favicon = {
 export enum LinkPreset {
   Home = 0,
   Archive = 1,
-  About = 2,
-  Friends = 3,
-  Diary = 4,
-  Albums = 5,
-  Projects = 6,
-  Skills = 7,
-  Timeline = 8,
+  Friends = 2,
 }
 
 export type NavBarLink = {
