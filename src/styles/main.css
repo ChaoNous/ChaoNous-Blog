@@ -1,10 +1,12 @@
 @import "tailwindcss";
 @import "./local-fonts.css";
-
 @import "./transition.css";
 @import "./animation-enhancements.css";
-
 @import "./gradient-buttons.css";
+@import "./markdown.css";
+@import "./panel-animations.css";
+@import "./mobile-navbar.css";
+@import "./main-grid-layout.css";
 
 @plugin "@tailwindcss/typography";
 
@@ -711,22 +713,22 @@ html {
 
 :root.dark {
   --primary: oklch(0.75 0.14 var(--hue));
-  --page-bg: oklch(0.17 0.012 var(--hue));
-  --page-bg-top: oklch(0.2 0.02 var(--hue));
-  --page-bg-bottom: oklch(0.145 0.018 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.42 0.06 var(--hue)) 22%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.5 0.08 var(--hue)) 18%, transparent);
+  --page-bg: oklch(0.17 0.025 var(--hue));
+  --page-bg-top: oklch(0.2 0.04 var(--hue));
+  --page-bg-bottom: oklch(0.145 0.03 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.42 0.08 var(--hue)) 28%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.5 0.12 var(--hue)) 24%, transparent);
   --page-bg-accent-strong: color-mix(
     in oklch,
-    oklch(0.58 0.1 var(--hue)) 12%,
+    oklch(0.58 0.14 var(--hue)) 16%,
     transparent
   );
   --page-bg-paper-grain: color-mix(
     in oklch,
-    oklch(0.2 0.012 var(--hue)) 84%,
-    oklch(0.16 0.004 var(--hue)) 16%
+    oklch(0.2 0.025 var(--hue)) 84%,
+    oklch(0.16 0.015 var(--hue)) 16%
   );
-  --card-bg: oklch(0.23 0.015 var(--hue));
+  --card-bg: oklch(0.23 0.03 var(--hue));
   --card-bg-transparent: rgba(23, 23, 23, 0.8);
   --btn-content: oklch(0.75 0.1 var(--hue));
   --btn-regular-bg: oklch(0.33 0.035 var(--hue));
