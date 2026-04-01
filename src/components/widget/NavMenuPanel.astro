@@ -308,7 +308,7 @@ const { showDisplaySettings = false } = Astro.props;
 
 					(async () => {
 						const { panelManager } = await import(
-							"../../utils/panel-manager.js"
+							"../../utils/panel-manager"
 						);
 						const action = actionButton.dataset.navAction;
 

@@ -244,7 +244,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 				if (!(button instanceof HTMLElement)) return;
 
 				try {
-					const { panelManager } = await import("../utils/panel-manager.js");
+					const { panelManager } = await import("../utils/panel-manager");
 					const handleClick = async () => {
 						await panelManager.togglePanel(panelId);
 					};
