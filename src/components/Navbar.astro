@@ -235,39 +235,38 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		},
 		init() {
 			const cleanups: Array<() => void> = [];
+			const loadPanelManager = () => import("../utils/panel-manager");
 
-			const wirePanelButton = async (
+			const wirePanelButton = (
 				buttonId: string,
 				panelId: NavbarPanelId,
 			) => {
 				const button = document.getElementById(buttonId);
 				if (!(button instanceof HTMLElement)) return;
 
-				try {
-					const { panelManager } = await import("../utils/panel-manager");
-					const handleClick = async () => {
+				const handleClick = async (event: MouseEvent) => {
+					event.preventDefault();
+					event.stopPropagation();
+
+					try {
+						const { panelManager } = await loadPanelManager();
 						await panelManager.togglePanel(panelId);
-					};
-					button.addEventListener("click", handleClick);
-					cleanups.push(() =>
-						button.removeEventListener("click", handleClick),
-					);
-				} catch (error) {
-					console.error("Failed to load panel manager:", error);
-					const fallbackClick = () => {
+					} catch (error) {
+						console.error("Failed to load panel manager:", error);
 						document
 							.getElementById(panelId)
 							?.classList.toggle("float-panel-closed");
-					};
-					button.addEventListener("click", fallbackClick);
-					cleanups.push(() =>
-						button.removeEventListener("click", fallbackClick),
-					);
-				}
+					}
+				};
+
+				button.addEventListener("click", handleClick);
+				cleanups.push(() =>
+					button.removeEventListener("click", handleClick),
+				);
 			};
 
-			void wirePanelButton("display-settings-switch", "display-setting");
-			void wirePanelButton("nav-menu-switch", "nav-menu-panel");
+			wirePanelButton("display-settings-switch", "display-setting");
+			wirePanelButton("nav-menu-switch", "nav-menu-panel");
 
 			const cleanupSemifullScrollDetection = initSemifullScrollDetection();
 			cleanups.push(cleanupSemifullScrollDetection);

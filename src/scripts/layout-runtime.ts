@@ -74,6 +74,9 @@ async function initializePanelManager() {
     panelManagerInitialization = (async () => {
       try {
         const { panelManager } = await import("../utils/panel-manager");
+        const layoutWindow = window as Window & {
+          __panelManagerOutsideClickBound?: boolean;
+        };
 
         function setClickOutsideToClose(panel: string, ignores: string[]) {
           document.addEventListener("click", async (event) => {
@@ -91,19 +94,23 @@ async function initializePanelManager() {
           });
         }
 
-        setClickOutsideToClose("display-setting", [
-          "display-setting",
-          "display-settings-switch",
-        ]);
-        setClickOutsideToClose("nav-menu-panel", [
-          "nav-menu-panel",
-          "nav-menu-switch",
-        ]);
-        setClickOutsideToClose("search-panel", [
-          "search-panel",
-          "search-bar",
-          "search-switch",
-        ]);
+        if (!layoutWindow.__panelManagerOutsideClickBound) {
+          layoutWindow.__panelManagerOutsideClickBound = true;
+
+          setClickOutsideToClose("display-setting", [
+            "display-setting",
+            "display-settings-switch",
+          ]);
+          setClickOutsideToClose("nav-menu-panel", [
+            "nav-menu-panel",
+            "nav-menu-switch",
+          ]);
+          setClickOutsideToClose("search-panel", [
+            "search-panel",
+            "search-bar",
+            "search-switch",
+          ]);
+        }
 
         return panelManager;
       } catch (error) {
