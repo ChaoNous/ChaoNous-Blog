@@ -89,7 +89,7 @@ export const siteConfig: SiteConfig = {
       url: "",
     },
     navbar: {
-      transparentMode: "semifull",
+      transparentMode: "semi",
     },
   },
 
