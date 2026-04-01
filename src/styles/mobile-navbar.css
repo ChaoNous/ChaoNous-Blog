@@ -1,21 +1,6 @@
-/* Navbar stays in a dark visual state across all site themes and modes. */
-#navbar > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode] > div,
-:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: var(--radius-large);
-  will-change: background, backdrop-filter, box-shadow;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(20px);
-  border: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
 @media (max-width: 480px) {
   #navbar > div {
-    border-radius: var(--radius-large);
+    border-radius: 0.5rem !important;
     margin: 0;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -24,111 +9,12 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode] > div,
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 768px) {
   #navbar > div {
     max-width: none;
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+    backdrop-filter: none !important;
   }
-}
-
-@media (min-width: 1280px) {
-  #banner-wrapper ~ * .float-panel,
-  body:has(#banner-wrapper) .float-panel,
-  #banner-wrapper ~ * .dropdown-content,
-  body:has(#banner-wrapper) .dropdown-content,
-  #banner-wrapper ~ * #display-setting,
-  body:has(#banner-wrapper) #display-setting,
-  #banner-wrapper ~ * #nav-menu-panel,
-  body:has(#banner-wrapper) #nav-menu-panel,
-  #banner-wrapper ~ * #search-panel,
-  body:has(#banner-wrapper) #search-panel {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  }
-
-  :root.dark #banner-wrapper ~ * .float-panel,
-  :root.dark body:has(#banner-wrapper) .float-panel,
-  :root.dark #banner-wrapper ~ * .dropdown-content,
-  :root.dark body:has(#banner-wrapper) .dropdown-content,
-  :root.dark #banner-wrapper ~ * #display-setting,
-  :root.dark body:has(#banner-wrapper) #display-setting,
-  :root.dark #banner-wrapper ~ * #nav-menu-panel,
-  :root.dark body:has(#banner-wrapper) #nav-menu-panel,
-  :root.dark #banner-wrapper ~ * #search-panel,
-  :root.dark body:has(#banner-wrapper) #search-panel {
-    background: rgba(24, 25, 38, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-  }
-}
-
-@media (max-width: 1279px) {
-  #banner-wrapper ~ * #navbar[data-is-home="true"] .float-panel,
-  body:has(#banner-wrapper) #navbar[data-is-home="true"] .float-panel,
-  #banner-wrapper ~ * #navbar[data-is-home="true"] .dropdown-content,
-  body:has(#banner-wrapper) #navbar[data-is-home="true"] .dropdown-content,
-  #banner-wrapper ~ * #navbar[data-is-home="true"] ~ * #display-setting,
-  body:has(#banner-wrapper) #navbar[data-is-home="true"] ~ * #display-setting,
-  body:has(#banner-wrapper) #navbar[data-is-home="true"] #nav-menu-panel,
-  body:has(#banner-wrapper) #navbar[data-is-home="true"] #search-panel,
-  body:has(#banner-wrapper) #navbar[data-is-home="true"] #display-setting {
-    backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  }
-
-  :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] .float-panel,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-is-home="true"]
-    .float-panel,
-  :root.dark #banner-wrapper ~ * #navbar[data-is-home="true"] .dropdown-content,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-is-home="true"]
-    .dropdown-content,
-  :root.dark
-    #banner-wrapper
-    ~ *
-    #navbar[data-is-home="true"]
-    ~ *
-    #display-setting,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-is-home="true"]
-    ~ *
-    #display-setting,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-is-home="true"]
-    #nav-menu-panel,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-is-home="true"]
-    #search-panel,
-  :root.dark
-    body:has(#banner-wrapper)
-    #navbar[data-is-home="true"]
-    #display-setting {
-    background: rgba(24, 25, 38, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-  }
-}
-
-#banner-wrapper ~ * .float-panel,
-body:has(#banner-wrapper) .float-panel,
-#banner-wrapper ~ * .dropdown-content,
-body:has(#banner-wrapper) .dropdown-content,
-#banner-wrapper ~ * #display-setting,
-body:has(#banner-wrapper) #display-setting,
-#banner-wrapper ~ * #nav-menu-panel,
-body:has(#banner-wrapper) #nav-menu-panel,
-#banner-wrapper ~ * #search-panel,
-body:has(#banner-wrapper) #search-panel {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
 }

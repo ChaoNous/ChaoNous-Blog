@@ -633,22 +633,121 @@ html {
 }
 
 :root {
-  --page-bg: oklch(0.975 0.011 var(--hue));
-  --page-bg-top: oklch(0.985 0.02 var(--hue));
-  --page-bg-bottom: oklch(0.955 0.016 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.85 0.05 var(--hue)) 30%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.79 0.072 var(--hue)) 24%, transparent);
-  --card-bg: transparent;
-  --float-panel-bg: color-mix(in oklch, white 84%, transparent);
+  --radius-large: 1rem;
+  --primary: oklch(0.7 0.14 var(--hue));
+  --page-bg: oklch(0.95 0.01 var(--hue));
+  --page-bg-top: oklch(0.98 0.02 var(--hue));
+  --page-bg-bottom: oklch(0.93 0.018 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.88 0.055 var(--hue)) 34%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.8 0.085 var(--hue)) 28%, transparent);
+  --card-bg: white;
+  --card-bg-transparent: rgba(255, 255, 255, 0.8);
+  --btn-content: oklch(0.55 0.12 var(--hue));
+  --btn-regular-bg: oklch(0.95 0.025 var(--hue));
+  --btn-regular-bg-hover: oklch(0.9 0.05 var(--hue));
+  --btn-regular-bg-active: oklch(0.85 0.08 var(--hue));
+  --btn-plain-bg-hover: oklch(0.95 0.025 var(--hue));
+  --btn-plain-bg-active: oklch(0.98 0.01 var(--hue));
+  --btn-card-bg-hover: oklch(0.98 0.005 var(--hue));
+  --btn-card-bg-active: oklch(0.9 0.03 var(--hue));
+  --deep-text: oklch(0.25 0.02 var(--hue));
+  --title-active: oklch(0.6 0.1 var(--hue));
+  --line-divider: rgba(0, 0, 0, 0.08);
+  --line-color: rgba(0, 0, 0, 0.1);
+  --meta-divider: rgba(0, 0, 0, 0.2);
+  --content-meta: rgba(0, 0, 0, 0.7);
+  --selection-bg: oklch(0.9 0.05 var(--hue));
+  --codeblock-bg: oklch(0.97 0.005 var(--hue));
+  --codeblock-topbar-bg: oklch(0.94 0.01 var(--hue));
+  --link-underline: oklch(0.93 0.04 var(--hue));
+  --link-hover: oklch(0.95 0.025 var(--hue));
+  --link-active: oklch(0.9 0.05 var(--hue));
+  --float-panel-bg: white;
+  --color-selection-bar: linear-gradient(
+    to right,
+    oklch(0.8 0.1 0) 0%,
+    oklch(0.8 0.1 30) 8.33%,
+    oklch(0.8 0.1 60) 16.67%,
+    oklch(0.8 0.1 90) 25%,
+    oklch(0.8 0.1 120) 33.33%,
+    oklch(0.8 0.1 150) 41.67%,
+    oklch(0.8 0.1 180) 50%,
+    oklch(0.8 0.1 210) 58.33%,
+    oklch(0.8 0.1 240) 66.67%,
+    oklch(0.8 0.1 270) 75%,
+    oklch(0.8 0.1 300) 83.33%,
+    oklch(0.8 0.1 330) 91.67%,
+    oklch(0.8 0.1 360) 100%
+  );
+  --toc-badge-bg: oklch(0.9 0.045 var(--hue));
+  --toc-btn-hover: oklch(0.92 0.015 var(--hue));
+  --toc-btn-active: oklch(0.9 0.015 var(--hue));
+  --toc-item-active: oklch(0.7 0.13 var(--hue));
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --radius-std: 0.75rem;
+  --nav-bg: var(--card-bg);
+  --nav-blur: none;
+  --nav-shadow: var(--shadow-sm);
+  --nav-radius: var(--radius-std);
+  --panel-bg: var(--card-bg-transparent);
+  --panel-blur: blur(20px);
+  --navbar-foreground: var(--deep-text);
+  --navbar-overlay-foreground: white;
 }
 
 :root.dark {
-  --page-bg: oklch(0.168 0.022 var(--hue));
-  --page-bg-top: oklch(0.212 0.036 var(--hue));
-  --page-bg-bottom: oklch(0.136 0.028 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.46 0.09 var(--hue)) 22%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.54 0.12 var(--hue)) 18%, transparent);
-  --float-panel-bg: color-mix(in oklch, oklch(0.19 0.016 var(--hue)) 82%, transparent);
+  --primary: oklch(0.75 0.14 var(--hue));
+  --page-bg: oklch(0.16 0.014 var(--hue));
+  --page-bg-top: oklch(0.2 0.026 var(--hue));
+  --page-bg-bottom: oklch(0.13 0.02 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.42 0.085 var(--hue)) 24%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.54 0.11 var(--hue)) 22%, transparent);
+  --card-bg: oklch(0.23 0.015 var(--hue));
+  --card-bg-transparent: rgba(23, 23, 23, 0.8);
+  --btn-content: oklch(0.75 0.1 var(--hue));
+  --btn-regular-bg: oklch(0.33 0.035 var(--hue));
+  --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue));
+  --btn-regular-bg-active: oklch(0.43 0.045 var(--hue));
+  --btn-plain-bg-hover: oklch(0.3 0.035 var(--hue));
+  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
+  --btn-card-bg-hover: oklch(0.3 0.03 var(--hue));
+  --btn-card-bg-active: oklch(0.35 0.035 var(--hue));
+  --deep-text: oklch(0.94 0.012 var(--hue));
+  --title-active: oklch(0.82 0.1 var(--hue));
+  --line-divider: rgba(255, 255, 255, 0.08);
+  --line-color: rgba(255, 255, 255, 0.1);
+  --meta-divider: rgba(255, 255, 255, 0.2);
+  --content-meta: rgba(255, 255, 255, 0.6);
+  --selection-bg: oklch(0.4 0.08 var(--hue));
+  --codeblock-bg: oklch(0.17 0.015 var(--hue));
+  --codeblock-topbar-bg: oklch(0.12 0.015 var(--hue));
+  --link-underline: oklch(0.4 0.08 var(--hue));
+  --link-hover: oklch(0.4 0.08 var(--hue));
+  --link-active: oklch(0.35 0.07 var(--hue));
+  --float-panel-bg: oklch(0.19 0.015 var(--hue));
+  --color-selection-bar: linear-gradient(
+    to right,
+    oklch(0.7 0.1 0) 0%,
+    oklch(0.7 0.1 30) 8.33%,
+    oklch(0.7 0.1 60) 16.67%,
+    oklch(0.7 0.1 90) 25%,
+    oklch(0.7 0.1 120) 33.33%,
+    oklch(0.7 0.1 150) 41.67%,
+    oklch(0.7 0.1 180) 50%,
+    oklch(0.7 0.1 210) 58.33%,
+    oklch(0.7 0.1 240) 66.67%,
+    oklch(0.7 0.1 270) 75%,
+    oklch(0.7 0.1 300) 83.33%,
+    oklch(0.7 0.1 330) 91.67%,
+    oklch(0.7 0.1 360) 100%
+  );
+  --toc-badge-bg: var(--btn-regular-bg);
+  --toc-btn-hover: oklch(0.22 0.02 var(--hue));
+  --toc-btn-active: oklch(0.25 0.02 var(--hue));
+  --toc-item-active: oklch(0.35 0.07 var(--hue));
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
 
 html {
@@ -741,30 +840,76 @@ body {
 #display-setting,
 #nav-menu-panel,
 #search-panel {
-  background: var(--float-panel-bg) !important;
-  backdrop-filter: blur(20px) saturate(115%) !important;
+  background: var(--panel-bg) !important;
+  backdrop-filter: var(--panel-blur) !important;
+  box-shadow: var(--shadow-lg) !important;
+  border: none !important;
+  transition:
+    background 0.3s ease,
+    backdrop-filter 0.3s ease,
+    box-shadow 0.3s ease !important;
 }
 
 #navbar > div,
 #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
 body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
-  background: rgba(0, 0, 0, 0.55) !important;
-  border-radius: var(--radius-large) !important;
+  background: var(--nav-bg) !important;
+  border-radius: var(--nav-radius) !important;
   will-change: background, backdrop-filter, box-shadow;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none !important;
-  backdrop-filter: blur(20px) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
-  color: #fff !important;
+  outline: none;
+  backdrop-filter: var(--nav-blur) !important;
+  box-shadow: var(--nav-shadow) !important;
+  color: var(--navbar-foreground) !important;
 }
 
 #navbar[data-transparent-mode="full"] > div,
 #banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
 body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
-  background: rgba(0, 0, 0, 0.55) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
-  border: none !important;
-  backdrop-filter: blur(20px) !important;
+  --nav-bg: transparent;
+  --nav-blur: none;
+  --nav-shadow: none;
+  --navbar-foreground: var(--navbar-overlay-foreground);
+}
+
+#navbar[data-transparent-mode="semifull"]:not(.scrolled) > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div,
+body:has(#banner-wrapper)
+  #navbar[data-transparent-mode="semifull"]:not(.scrolled)
+  > div {
+  --nav-bg: transparent;
+  --nav-blur: none;
+  --nav-shadow: none;
+  --navbar-foreground: var(--navbar-overlay-foreground);
+}
+
+#navbar[data-transparent-mode="semi"] > div,
+#navbar[data-transparent-mode="semifull"].scrolled > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
+body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div,
+#banner-wrapper ~ * #navbar[data-transparent-mode="semifull"].scrolled > div,
+body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > div {
+  --nav-bg: rgba(255, 255, 255, 0.55);
+  --nav-blur: blur(20px);
+  --nav-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+:root.dark #navbar[data-transparent-mode="semi"] > div,
+:root.dark #navbar[data-transparent-mode="semifull"].scrolled > div,
+:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
+:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div,
+:root.dark
+  #banner-wrapper
+  ~ *
+  #navbar[data-transparent-mode="semifull"].scrolled
+  > div,
+:root.dark
+  body:has(#banner-wrapper)
+  #navbar[data-transparent-mode="semifull"].scrolled
+  > div {
+  --nav-bg: rgba(0, 0, 0, 0.55);
+  --nav-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 #navbar > div a,
@@ -773,7 +918,7 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
 #navbar > div [role="button"],
 #navbar > div .iconify,
 #navbar > div svg {
-  color: #fff !important;
+  color: inherit !important;
   stroke: currentColor;
 }
 
