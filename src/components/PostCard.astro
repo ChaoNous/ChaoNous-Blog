@@ -27,7 +27,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 <div
 	class:list={[
-		"card-base post-card-shell flex flex-col-reverse md:flex-col w-full rounded-(--radius-large) overflow-hidden relative btn-plain",
+		"card-base post-card-shell flex flex-col-reverse md:flex-col w-full rounded-(--radius-large) overflow-hidden relative",
 		className,
 	]}
 	style={style}
@@ -43,7 +43,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 	>
 		<a
 			href={url}
-			class="post-card-title transition group w-full block font-black mb-3 text-3xl text-100
+			class="post-card-title btn-plain transition group w-full block font-black mb-3 text-3xl text-100
 				hover:text-(--primary) dark:hover:text-(--primary)
 				active:text-(--title-active) dark:active:text-(--title-active)"
 			>
