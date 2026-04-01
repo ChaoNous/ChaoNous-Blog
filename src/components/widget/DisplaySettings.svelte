@@ -80,7 +80,7 @@
 			bind:value={hueUI}
 			class="slider"
 			id="colorSlider"
-			step="10"
+			step="12"
 			style="width: 100%"
 		/>
 	</div>
