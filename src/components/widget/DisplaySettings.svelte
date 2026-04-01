@@ -113,18 +113,12 @@
 
 	.color-bar-container
 		padding 0.25rem
-		border-radius 0.5rem
-		background rgba(0, 0, 0, 0.05)
-
-	:global(html.dark) .color-bar-container
-		background rgba(255, 255, 255, 0.08)
 
 	.color-bar
 		display flex
 		height 2rem
 		border-radius 0.375rem
 		overflow hidden
-		box-shadow inset 0 1px 3px rgba(0, 0, 0, 0.1)
 
 	.color-segment
 		flex 1
@@ -137,10 +131,7 @@
 		justify-content center
 
 		&:hover
-			flex 1.15
-
-		&.selected
-			flex 1.2
+			opacity 0.9
 
 		.indicator
 			position absolute
@@ -152,5 +143,4 @@
 			border-left 0.4rem solid transparent
 			border-right 0.4rem solid transparent
 			border-bottom 0.5rem solid rgba(255, 255, 255, 0.85)
-			filter drop-shadow(0 -1px 2px rgba(0, 0, 0, 0.3))
 </style>
