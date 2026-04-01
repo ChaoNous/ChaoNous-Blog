@@ -79,13 +79,27 @@ const componentMap = {
 				...component.customProps,
 			};
 
-			if ((component.type === "toc" || component.type === "card-toc") && headings) {
-				return (
-					<ComponentToRender {...sharedProps} headings={headings} />
-				);
-			}
+			const showDivider = index > 0;
 
-			return <ComponentToRender {...sharedProps} />;
+			return (
+				<>
+					{showDivider && <div class="sidebar-divider" />}
+					{(component.type === "toc" || component.type === "card-toc") && headings ? (
+						<ComponentToRender {...sharedProps} headings={headings} />
+					) : (
+						<ComponentToRender {...sharedProps} />
+					)}
+				</>
+			);
 		})
 	}
 </div>
+
+<style>
+	.sidebar-divider {
+		height: 1px;
+		background: oklch(0.6 0.12 var(--hue));
+		margin: 0.75rem 0;
+		width: 100%;
+	}
+</style>
