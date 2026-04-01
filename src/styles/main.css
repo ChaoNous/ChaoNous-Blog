@@ -989,21 +989,24 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > d
 
 /* Theme-colored dividers */
 .theme-divider {
-  height: 1px;
+  height: 0.25rem;
   background: var(--theme-divider);
+  border-radius: 0.25rem;
   width: 100%;
 }
 
 .sidebar-divider {
-  height: 1px;
+  height: 0.25rem;
   background: var(--theme-divider);
+  border-radius: 0.25rem;
   margin: 0.75rem 0;
   width: 100%;
 }
 
 .post-divider {
-  height: 1px;
+  height: 0.25rem;
   background: var(--theme-divider);
+  border-radius: 0.25rem;
   margin: 0.5rem 0;
   width: 100%;
 }
