@@ -702,6 +702,7 @@ html {
   --nav-radius: var(--radius-std);
   --panel-bg: var(--card-bg-transparent);
   --panel-blur: blur(20px);
+  --display-panel-bg: rgba(255, 252, 247, 0.94);
   --navbar-foreground: var(--deep-text);
   --navbar-overlay-foreground: white;
 }
@@ -768,6 +769,7 @@ html {
   --toc-item-active: oklch(0.35 0.07 var(--hue));
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --display-panel-bg: rgba(22, 22, 24, 0.94);
 }
 
 html {
@@ -865,6 +867,7 @@ body {
 }
 
 #display-setting {
+  background: var(--display-panel-bg) !important;
   border: 1px solid var(--line-color) !important;
 }
 
