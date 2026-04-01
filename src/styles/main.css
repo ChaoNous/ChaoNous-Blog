@@ -637,44 +637,44 @@ html {
 :root {
   --radius-large: 1rem;
   --primary: oklch(0.7 0.14 var(--hue));
-  --page-bg: oklch(0.935 0.012 var(--hue));
-  --page-bg-top: oklch(0.95 0.02 var(--hue));
-  --page-bg-bottom: oklch(0.91 0.018 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.84 0.05 var(--hue)) 28%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.76 0.08 var(--hue)) 22%, transparent);
+  --page-bg: oklch(0.92 0.008 var(--hue));
+  --page-bg-top: oklch(0.94 0.012 var(--hue));
+  --page-bg-bottom: oklch(0.89 0.01 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.82 0.03 var(--hue)) 24%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.74 0.05 var(--hue)) 18%, transparent);
   --page-bg-accent-strong: color-mix(
     in oklch,
-    oklch(0.72 0.1 var(--hue)) 14%,
+    oklch(0.68 0.06 var(--hue)) 10%,
     transparent
   );
   --page-bg-paper-grain: color-mix(
     in oklch,
-    oklch(0.965 0.012 var(--hue)) 82%,
-    oklch(0.98 0.004 var(--hue)) 18%
+    oklch(0.95 0.006 var(--hue)) 82%,
+    oklch(0.97 0.003 var(--hue)) 18%
   );
-  --card-bg: white;
-  --card-bg-transparent: rgba(255, 255, 255, 0.8);
-  --btn-content: oklch(0.55 0.12 var(--hue));
-  --btn-regular-bg: oklch(0.95 0.025 var(--hue));
-  --btn-regular-bg-hover: oklch(0.9 0.05 var(--hue));
-  --btn-regular-bg-active: oklch(0.85 0.08 var(--hue));
-  --btn-plain-bg-hover: oklch(0.95 0.025 var(--hue));
-  --btn-plain-bg-active: oklch(0.98 0.01 var(--hue));
-  --btn-card-bg-hover: oklch(0.98 0.005 var(--hue));
-  --btn-card-bg-active: oklch(0.9 0.03 var(--hue));
-  --deep-text: oklch(0.25 0.02 var(--hue));
-  --title-active: oklch(0.6 0.1 var(--hue));
-  --line-divider: rgba(0, 0, 0, 0.08);
-  --line-color: rgba(0, 0, 0, 0.1);
-  --meta-divider: rgba(0, 0, 0, 0.2);
-  --content-meta: rgba(0, 0, 0, 0.7);
-  --selection-bg: oklch(0.9 0.05 var(--hue));
-  --codeblock-bg: oklch(0.97 0.005 var(--hue));
-  --codeblock-topbar-bg: oklch(0.94 0.01 var(--hue));
-  --link-underline: oklch(0.93 0.04 var(--hue));
-  --link-hover: oklch(0.95 0.025 var(--hue));
-  --link-active: oklch(0.9 0.05 var(--hue));
-  --float-panel-bg: white;
+  --card-bg: oklch(0.96 0.004 var(--hue));
+  --card-bg-transparent: oklch(0.96 0.004 var(--hue) / 0.85);
+  --btn-content: oklch(0.5 0.1 var(--hue));
+  --btn-regular-bg: oklch(0.94 0.018 var(--hue));
+  --btn-regular-bg-hover: oklch(0.9 0.04 var(--hue));
+  --btn-regular-bg-active: oklch(0.85 0.06 var(--hue));
+  --btn-plain-bg-hover: oklch(0.94 0.018 var(--hue));
+  --btn-plain-bg-active: oklch(0.97 0.008 var(--hue));
+  --btn-card-bg-hover: oklch(0.98 0.004 var(--hue));
+  --btn-card-bg-active: oklch(0.9 0.02 var(--hue));
+  --deep-text: oklch(0.32 0.015 var(--hue));
+  --title-active: oklch(0.55 0.08 var(--hue));
+  --line-divider: rgba(0, 0, 0, 0.06);
+  --line-color: rgba(0, 0, 0, 0.08);
+  --meta-divider: rgba(0, 0, 0, 0.15);
+  --content-meta: rgba(0, 0, 0, 0.65);
+  --selection-bg: oklch(0.88 0.04 var(--hue));
+  --codeblock-bg: oklch(0.96 0.004 var(--hue));
+  --codeblock-topbar-bg: oklch(0.93 0.008 var(--hue));
+  --link-underline: oklch(0.9 0.03 var(--hue));
+  --link-hover: oklch(0.92 0.02 var(--hue));
+  --link-active: oklch(0.88 0.04 var(--hue));
+  --float-panel-bg: oklch(0.96 0.004 var(--hue));
   --color-selection-bar: linear-gradient(
     to right,
     oklch(0.8 0.1 0) 0%,
@@ -691,12 +691,12 @@ html {
     oklch(0.8 0.1 330) 91.67%,
     oklch(0.8 0.1 360) 100%
   );
-  --toc-badge-bg: oklch(0.9 0.045 var(--hue));
-  --toc-btn-hover: oklch(0.92 0.015 var(--hue));
-  --toc-btn-active: oklch(0.9 0.015 var(--hue));
-  --toc-item-active: oklch(0.7 0.13 var(--hue));
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --toc-badge-bg: oklch(0.88 0.03 var(--hue));
+  --toc-btn-hover: oklch(0.9 0.01 var(--hue));
+  --toc-btn-active: oklch(0.88 0.01 var(--hue));
+  --toc-item-active: oklch(0.65 0.1 var(--hue));
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.06);
   --radius-std: 0.75rem;
   --nav-bg: var(--card-bg);
   --nav-blur: none;
@@ -704,53 +704,53 @@ html {
   --nav-radius: var(--radius-std);
   --panel-bg: var(--card-bg-transparent);
   --panel-blur: blur(20px);
-  --display-panel-bg: rgba(255, 255, 255, 0.78);
-  --display-panel-border: rgba(0, 0, 0, 0.08);
-  --display-panel-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+  --display-panel-bg: oklch(0.96 0.004 var(--hue) / 0.78);
+  --display-panel-border: rgba(0, 0, 0, 0.06);
+  --display-panel-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
   --navbar-foreground: var(--deep-text);
   --navbar-overlay-foreground: var(--deep-text);
 }
 
 :root.dark {
   --primary: oklch(0.75 0.14 var(--hue));
-  --page-bg: oklch(0.17 0.025 var(--hue));
-  --page-bg-top: oklch(0.2 0.04 var(--hue));
-  --page-bg-bottom: oklch(0.145 0.03 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.42 0.08 var(--hue)) 28%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.5 0.12 var(--hue)) 24%, transparent);
+  --page-bg: oklch(0.19 0.018 var(--hue));
+  --page-bg-top: oklch(0.21 0.025 var(--hue));
+  --page-bg-bottom: oklch(0.165 0.015 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.38 0.05 var(--hue)) 20%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.45 0.07 var(--hue)) 16%, transparent);
   --page-bg-accent-strong: color-mix(
     in oklch,
-    oklch(0.58 0.14 var(--hue)) 16%,
+    oklch(0.52 0.08 var(--hue)) 10%,
     transparent
   );
   --page-bg-paper-grain: color-mix(
     in oklch,
-    oklch(0.2 0.025 var(--hue)) 84%,
-    oklch(0.16 0.015 var(--hue)) 16%
+    oklch(0.21 0.018 var(--hue)) 84%,
+    oklch(0.17 0.01 var(--hue)) 16%
   );
-  --card-bg: oklch(0.23 0.03 var(--hue));
-  --card-bg-transparent: rgba(23, 23, 23, 0.8);
-  --btn-content: oklch(0.75 0.1 var(--hue));
-  --btn-regular-bg: oklch(0.33 0.035 var(--hue));
-  --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue));
-  --btn-regular-bg-active: oklch(0.43 0.045 var(--hue));
-  --btn-plain-bg-hover: oklch(0.3 0.035 var(--hue));
-  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
-  --btn-card-bg-hover: oklch(0.3 0.03 var(--hue));
-  --btn-card-bg-active: oklch(0.35 0.035 var(--hue));
-  --deep-text: oklch(0.94 0.012 var(--hue));
-  --title-active: oklch(0.82 0.1 var(--hue));
-  --line-divider: rgba(255, 255, 255, 0.08);
-  --line-color: rgba(255, 255, 255, 0.1);
-  --meta-divider: rgba(255, 255, 255, 0.2);
-  --content-meta: rgba(255, 255, 255, 0.6);
-  --selection-bg: oklch(0.4 0.08 var(--hue));
-  --codeblock-bg: oklch(0.17 0.015 var(--hue));
-  --codeblock-topbar-bg: oklch(0.12 0.015 var(--hue));
-  --link-underline: oklch(0.4 0.08 var(--hue));
-  --link-hover: oklch(0.4 0.08 var(--hue));
-  --link-active: oklch(0.35 0.07 var(--hue));
-  --float-panel-bg: oklch(0.19 0.015 var(--hue));
+  --card-bg: oklch(0.22 0.018 var(--hue));
+  --card-bg-transparent: oklch(0.22 0.018 var(--hue) / 0.85);
+  --btn-content: oklch(0.72 0.08 var(--hue));
+  --btn-regular-bg: oklch(0.28 0.025 var(--hue));
+  --btn-regular-bg-hover: oklch(0.32 0.03 var(--hue));
+  --btn-regular-bg-active: oklch(0.36 0.035 var(--hue));
+  --btn-plain-bg-hover: oklch(0.26 0.025 var(--hue));
+  --btn-plain-bg-active: oklch(0.23 0.018 var(--hue));
+  --btn-card-bg-hover: oklch(0.26 0.02 var(--hue));
+  --btn-card-bg-active: oklch(0.3 0.025 var(--hue));
+  --deep-text: oklch(0.86 0.01 var(--hue));
+  --title-active: oklch(0.78 0.08 var(--hue));
+  --line-divider: rgba(255, 255, 255, 0.06);
+  --line-color: rgba(255, 255, 255, 0.08);
+  --meta-divider: rgba(255, 255, 255, 0.15);
+  --content-meta: rgba(255, 255, 255, 0.55);
+  --selection-bg: oklch(0.35 0.06 var(--hue));
+  --codeblock-bg: oklch(0.18 0.012 var(--hue));
+  --codeblock-topbar-bg: oklch(0.14 0.012 var(--hue));
+  --link-underline: oklch(0.35 0.06 var(--hue));
+  --link-hover: oklch(0.38 0.06 var(--hue));
+  --link-active: oklch(0.32 0.05 var(--hue));
+  --float-panel-bg: oklch(0.21 0.012 var(--hue));
   --color-selection-bar: linear-gradient(
     to right,
     oklch(0.7 0.1 0) 0%,
@@ -768,15 +768,15 @@ html {
     oklch(0.7 0.1 360) 100%
   );
   --toc-badge-bg: var(--btn-regular-bg);
-  --toc-btn-hover: oklch(0.22 0.02 var(--hue));
-  --toc-btn-active: oklch(0.25 0.02 var(--hue));
-  --toc-item-active: oklch(0.35 0.07 var(--hue));
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
-  --display-panel-bg: rgba(17, 17, 19, 0.78);
-  --display-panel-border: rgba(255, 255, 255, 0.1);
-  --display-panel-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
-  --navbar-overlay-foreground: white;
+  --toc-btn-hover: oklch(0.24 0.015 var(--hue));
+  --toc-btn-active: oklch(0.26 0.015 var(--hue));
+  --toc-item-active: oklch(0.38 0.06 var(--hue));
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --display-panel-bg: oklch(0.22 0.018 var(--hue) / 0.78);
+  --display-panel-border: rgba(255, 255, 255, 0.08);
+  --display-panel-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+  --navbar-overlay-foreground: oklch(0.88 0.01 var(--hue));
 }
 
 html {
