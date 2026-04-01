@@ -711,12 +711,13 @@
 		</div>
 		<!-- Mini player shown when collapsed -->
 		<div
-			class="mini-player card-base rounded-2xl p-3 transition-all duration-500 ease-in-out"
-			style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow);"
+			class="mini-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
+			style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
 			class:opacity-0={isExpanded || isHidden}
 			class:scale-95={isExpanded || isHidden}
 			class:pointer-events-none={isExpanded || isHidden}
 		>
+				<div class="mini-player-surface p-3" style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;">
 			<div class="flex items-center gap-3">
 				<!-- Cover image area that toggles play and pause -->
 				<div
@@ -818,15 +819,17 @@
 					</button>
 				</div>
 			</div>
+					</div>
 		</div>
 		<!-- Full player shown when expanded -->
 		<div
-			class="expanded-player card-base rounded-2xl p-4 transition-all duration-500 ease-in-out"
-			style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow);"
+			class="expanded-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
+			style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
 			class:opacity-0={!isExpanded}
 			class:scale-95={!isExpanded}
 			class:pointer-events-none={!isExpanded}
 		>
+				<div class="expanded-player-surface p-4" style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;">
 			<div class="flex items-center gap-4 mb-4">
 				<div
 					class="cover-container relative w-16 h-16 rounded-full overflow-hidden shrink-0"
@@ -1006,9 +1009,10 @@
 						{/if}
 					</button>
 					<div
-						class="volume-popover rounded-2xl p-3 card-base"
-						style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow);"
+						class="volume-popover rounded-2xl card-base overflow-hidden"
+						style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
 					>
+							<div class="volume-popover-surface p-3" style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;">
 						<div
 							class="volume-bar h-28 w-3 bg-(--btn-regular-bg) rounded-full cursor-pointer touch-none"
 							bind:this={volumeBar}
@@ -1042,6 +1046,7 @@
 								style="height: {volume * 100}%"
 							></div>
 						</div>
+							</div>
 					</div>
 				</div>
 				<button
@@ -1053,13 +1058,15 @@
 					<Icon icon="material-symbols:expand-more" class="text-lg" />
 				</button>
 			</div>
+					</div>
 		</div>
 		{#if showPlaylist}
 			<div
 				bind:this={playlistPanel}
 				class="playlist-panel animate-slide-up float-panel fixed bottom-20 right-4 w-80 max-h-96 overflow-hidden z-50"
-				style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid var(--display-panel-border); box-shadow: var(--display-panel-shadow); border-radius: var(--radius-large);"
+				style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border-radius: var(--radius-large);"
 			>
+					<div class="playlist-panel-surface" style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit; overflow: hidden;">
 				<div
 					class="playlist-header flex items-center justify-between p-4 border-b border-(--line-divider)"
 				>
@@ -1143,6 +1150,7 @@
 						</div>
 					{/each}
 				</div>
+					</div>
 			</div>
 		{/if}
 	</div>
