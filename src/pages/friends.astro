@@ -129,7 +129,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 						</div>
 
 						<div class="steps-grid">
-							<div class="step-card highlight-step">
+							<div class="step-card">
 								<div class="step-icon">
 									<svg
 										viewBox="0 0 24 24"
@@ -140,8 +140,8 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 										<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
 									</svg>
 								</div>
-								<h4>先添本站</h4>
-								<p>请先在你的网站添加本站友链</p>
+								<h4>添加本站</h4>
+								<p>先在你的网站添加本站友链</p>
 							</div>
 							<div class="step-card">
 								<div class="step-icon">
@@ -527,19 +527,6 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 	.step-card:hover {
 		border-color: var(--primary);
 		transform: translateY(-2px);
-	}
-
-	.step-card.highlight-step {
-		background: linear-gradient(
-			135deg,
-			hsl(var(--primary) / 0.08) 0%,
-			hsl(var(--primary) / 0.02) 100%
-		);
-	}
-
-	.step-card.highlight-step .step-icon {
-		background: var(--primary);
-		color: white;
 	}
 
 	.step-icon {
