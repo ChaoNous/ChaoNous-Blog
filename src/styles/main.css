@@ -781,33 +781,13 @@ html.dark {
 }
 
 html.dark body {
-  background:
-    radial-gradient(circle at 14% 16%, var(--page-bg-accent-soft) 0%, transparent 32%),
-    radial-gradient(circle at 82% 10%, var(--page-bg-accent) 0%, transparent 26%),
-    radial-gradient(circle at 50% 86%, var(--page-bg-accent-strong) 0%, transparent 36%),
-    linear-gradient(
-      145deg,
-      color-mix(in oklch, var(--page-bg-paper-grain) 92%, transparent) 0%,
-      transparent 38%,
-      color-mix(in oklch, var(--page-bg-accent-soft) 32%, transparent) 100%
-    ),
-    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 48%, var(--page-bg-bottom) 100%);
+  background: var(--page-bg);
 }
 
 body {
   letter-spacing: 0.008em;
   line-height: 1.7;
-  background:
-    radial-gradient(circle at 10% 14%, var(--page-bg-accent-soft) 0%, transparent 36%),
-    radial-gradient(circle at 86% 12%, var(--page-bg-accent) 0%, transparent 30%),
-    radial-gradient(circle at 52% 88%, var(--page-bg-accent-strong) 0%, transparent 40%),
-    linear-gradient(
-      145deg,
-      color-mix(in oklch, var(--page-bg-paper-grain) 94%, transparent) 0%,
-      transparent 42%,
-      color-mix(in oklch, var(--page-bg-accent-soft) 28%, transparent) 100%
-    ),
-    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 50%, var(--page-bg-bottom) 100%);
+  background: var(--page-bg);
 }
 
 .text-100 {
