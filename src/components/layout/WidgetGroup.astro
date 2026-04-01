@@ -83,7 +83,7 @@ const componentMap = {
 
 			return (
 				<>
-					{showDivider && <div class="sidebar-divider" />}
+					{showDivider && <div class="sidebar-divider" style="height: 1px; background: oklch(0.6 0.12 var(--hue)); margin: 0.75rem 0; width: 100%;"></div>}
 					{(component.type === "toc" || component.type === "card-toc") && headings ? (
 						<ComponentToRender {...sharedProps} headings={headings} />
 					) : (
@@ -94,12 +94,3 @@ const componentMap = {
 		})
 	}
 </div>
-
-<style>
-	.sidebar-divider {
-		height: 1px;
-		background: oklch(0.6 0.12 var(--hue));
-		margin: 0.75rem 0;
-		width: 100%;
-	}
-</style>
