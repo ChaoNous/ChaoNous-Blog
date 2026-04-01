@@ -1463,7 +1463,7 @@
 		.music-player button,
 		.music-player span,
 		.music-player div {
-			font-family: "Crimson Pro", "Zhuque Fangsong UI", sans-serif !important;
+			font-family: var(--font-content) !important;
 		}
 
 		/* Keep the disc rotation smooth and resumable */
