@@ -5,8 +5,8 @@
 	import { getDefaultHue, getHueUI, setHueUI, hueToUi } from "@utils/setting-utils";
 	import { onMount } from "svelte";
 
-	let hueUI = 70; // UI 显示值 0-100
-	let defaultHueUI = 70;
+	let hueUI = 72; // UI 显示值 0-360，直接对应 hue
+	let defaultHueUI = 72;
 	let isMounted = false;
 
 	function resetHue() {
@@ -76,7 +76,7 @@
 			aria-label={i18n(I18nKey.themeColor)}
 			type="range"
 			min="0"
-			max="100"
+			max="360"
 			bind:value={hueUI}
 			class="slider"
 			id="colorSlider"

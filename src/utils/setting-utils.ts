@@ -1,7 +1,7 @@
 import { DARK_MODE } from "@constants/constants";
 import type { LIGHT_DARK_MODE } from "@/types/config";
 
-const UI_TO_HUE_MULTIPLIER = 3.6;
+const UI_TO_HUE_MULTIPLIER = 1;
 
 function uiToHue(uiValue: number): number {
   return Math.round(uiValue * UI_TO_HUE_MULTIPLIER);
