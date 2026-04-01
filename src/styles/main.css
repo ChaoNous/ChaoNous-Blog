@@ -213,14 +213,7 @@ body::-webkit-scrollbar {
     backdrop-filter: none !important;
   }
 
-  .card-base {
-    @apply rounded-(--radius-large) overflow-hidden;
-    background: var(--card-bg) !important;
-    border: 1px solid var(--line-divider) !important;
-    box-shadow: var(--shadow-sm) !important;
-    contain: layout style;
-  }
-
+  .card-base,
   .card-base-transparent {
     @apply rounded-(--radius-large) overflow-hidden;
     background: transparent !important;
@@ -507,7 +500,7 @@ body::-webkit-scrollbar {
 .post-list-container.list-mode {
   display: flex !important;
   flex-direction: column;
-  gap: 2.5rem; /* 增加列表间隔 */
+  gap: 2rem; /* 增加列表间隔 */
 }
 
 .post-list-container.grid-mode .post-card-item {
@@ -859,8 +852,8 @@ body {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--line-divider) 10%,
-    var(--line-divider) 90%,
+    color-mix(in oklch, currentColor 10%, transparent) 14%,
+    color-mix(in oklch, currentColor 10%, transparent) 86%,
     transparent 100%
   );
 }

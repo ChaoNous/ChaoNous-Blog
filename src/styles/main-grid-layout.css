@@ -915,29 +915,7 @@ body.enable-banner.is-home #main-content-shell {
 }
 
 #left-sidebar-column {
-  gap: 1.5rem;
-}
-
-/* 侧边栏组件分隔线 */
-#left-sidebar-column > * + * {
-  position: relative;
-  padding-top: 1.5rem;
-}
-
-#left-sidebar-column > * + *::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--line-divider) 10%,
-    var(--line-divider) 90%,
-    transparent 100%
-  );
+  gap: 1rem;
 }
 
 @media (max-width: 1023px) {
