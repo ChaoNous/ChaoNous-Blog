@@ -66,6 +66,7 @@ if (window.theme) {
     getTheme: () => themeValue,
     setTheme: (value: string) => {
       themeValue = value;
+      window.theme!.themeValue = value;
     },
     setPreference,
     reflectPreference,
@@ -74,9 +75,24 @@ if (window.theme) {
 
 reflectPreference();
 
-document.addEventListener("swup:page:view", reflectPreference);
+document.addEventListener("swup:page:view", () => {
+  // Re-sync theme from localStorage on page navigation
+  const storedTheme = localStorage.getItem(THEME_KEY);
+  if (storedTheme === LIGHT_MODE || storedTheme === DARK_MODE) {
+    themeValue = storedTheme;
+    if (window.theme) {
+      window.theme.themeValue = storedTheme;
+    }
+  }
+  reflectPreference();
+});
 
 mediaQuery.addEventListener("change", ({ matches }) => {
+  // Only auto-switch if user hasn't set a preference
+  const storedTheme = localStorage.getItem(THEME_KEY);
+  if (storedTheme === LIGHT_MODE || storedTheme === DARK_MODE) {
+    return;
+  }
   themeValue = matches ? DARK_MODE : LIGHT_MODE;
   window.theme?.setTheme(themeValue);
   setPreference();
