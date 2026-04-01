@@ -635,11 +635,21 @@ html {
 :root {
   --radius-large: 1rem;
   --primary: oklch(0.7 0.14 var(--hue));
-  --page-bg: oklch(0.95 0.01 var(--hue));
-  --page-bg-top: oklch(0.98 0.02 var(--hue));
-  --page-bg-bottom: oklch(0.93 0.018 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.88 0.055 var(--hue)) 34%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.8 0.085 var(--hue)) 28%, transparent);
+  --page-bg: oklch(0.945 0.018 var(--hue));
+  --page-bg-top: oklch(0.982 0.038 var(--hue));
+  --page-bg-bottom: oklch(0.9 0.03 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.86 0.08 var(--hue)) 48%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.78 0.12 var(--hue)) 40%, transparent);
+  --page-bg-accent-strong: color-mix(
+    in oklch,
+    oklch(0.72 0.16 var(--hue)) 28%,
+    transparent
+  );
+  --page-bg-paper-grain: color-mix(
+    in oklch,
+    oklch(0.99 0.016 var(--hue)) 70%,
+    white 30%
+  );
   --card-bg: white;
   --card-bg-transparent: rgba(255, 255, 255, 0.8);
   --btn-content: oklch(0.55 0.12 var(--hue));
@@ -698,11 +708,21 @@ html {
 
 :root.dark {
   --primary: oklch(0.75 0.14 var(--hue));
-  --page-bg: oklch(0.16 0.014 var(--hue));
-  --page-bg-top: oklch(0.2 0.026 var(--hue));
-  --page-bg-bottom: oklch(0.13 0.02 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.42 0.085 var(--hue)) 24%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.54 0.11 var(--hue)) 22%, transparent);
+  --page-bg: oklch(0.145 0.024 var(--hue));
+  --page-bg-top: oklch(0.22 0.05 var(--hue));
+  --page-bg-bottom: oklch(0.11 0.032 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.46 0.115 var(--hue)) 34%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.58 0.145 var(--hue)) 30%, transparent);
+  --page-bg-accent-strong: color-mix(
+    in oklch,
+    oklch(0.66 0.18 var(--hue)) 20%,
+    transparent
+  );
+  --page-bg-paper-grain: color-mix(
+    in oklch,
+    oklch(0.22 0.028 var(--hue)) 72%,
+    black 28%
+  );
   --card-bg: oklch(0.23 0.015 var(--hue));
   --card-bg-transparent: rgba(23, 23, 23, 0.8);
   --btn-content: oklch(0.75 0.1 var(--hue));
@@ -762,18 +782,32 @@ html.dark {
 
 html.dark body {
   background:
-    radial-gradient(circle at 14% 16%, var(--page-bg-accent-soft) 0%, transparent 30%),
-    radial-gradient(circle at 84% 12%, var(--page-bg-accent) 0%, transparent 24%),
-    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 50%, var(--page-bg-bottom) 100%);
+    radial-gradient(circle at 14% 16%, var(--page-bg-accent-soft) 0%, transparent 32%),
+    radial-gradient(circle at 82% 10%, var(--page-bg-accent) 0%, transparent 26%),
+    radial-gradient(circle at 50% 86%, var(--page-bg-accent-strong) 0%, transparent 36%),
+    linear-gradient(
+      145deg,
+      color-mix(in oklch, var(--page-bg-paper-grain) 92%, transparent) 0%,
+      transparent 38%,
+      color-mix(in oklch, var(--page-bg-accent-soft) 32%, transparent) 100%
+    ),
+    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 48%, var(--page-bg-bottom) 100%);
 }
 
 body {
   letter-spacing: 0.008em;
   line-height: 1.7;
   background:
-    radial-gradient(circle at 10% 14%, var(--page-bg-accent-soft) 0%, transparent 34%),
-    radial-gradient(circle at 86% 12%, var(--page-bg-accent) 0%, transparent 28%),
-    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
+    radial-gradient(circle at 10% 14%, var(--page-bg-accent-soft) 0%, transparent 36%),
+    radial-gradient(circle at 86% 12%, var(--page-bg-accent) 0%, transparent 30%),
+    radial-gradient(circle at 52% 88%, var(--page-bg-accent-strong) 0%, transparent 40%),
+    linear-gradient(
+      145deg,
+      color-mix(in oklch, var(--page-bg-paper-grain) 94%, transparent) 0%,
+      transparent 42%,
+      color-mix(in oklch, var(--page-bg-accent-soft) 28%, transparent) 100%
+    ),
+    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 50%, var(--page-bg-bottom) 100%);
 }
 
 .text-100 {
