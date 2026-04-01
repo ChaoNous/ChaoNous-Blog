@@ -666,7 +666,6 @@ html {
   --title-active: oklch(0.55 0.08 var(--hue));
   --line-divider: rgba(0, 0, 0, 0.06);
   --line-color: rgba(0, 0, 0, 0.08);
-  --theme-divider: oklch(0.6 0.12 var(--hue));
   --meta-divider: rgba(0, 0, 0, 0.15);
   --content-meta: rgba(0, 0, 0, 0.65);
   --selection-bg: oklch(0.88 0.04 var(--hue));
@@ -990,14 +989,14 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > d
 /* Theme-colored dividers */
 .theme-divider {
   height: 0.25rem;
-  background: var(--theme-divider);
+  background: var(--primary);
   border-radius: 0.25rem;
   width: 100%;
 }
 
 .sidebar-divider {
   height: 0.25rem;
-  background: var(--theme-divider);
+  background: var(--primary);
   border-radius: 0.25rem;
   margin: 0.75rem 0;
   width: 100%;
@@ -1005,7 +1004,7 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > d
 
 .post-divider {
   height: 0.25rem;
-  background: var(--theme-divider);
+  background: var(--primary);
   border-radius: 0.25rem;
   margin: 0.5rem 0;
   width: 100%;
