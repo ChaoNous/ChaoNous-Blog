@@ -12,7 +12,7 @@ export function hueToUi(hue: number): number {
 }
 
 export function getDefaultHue(): number {
-  const fallback = "250";
+  const fallback = "150";
   const configCarrier = document.getElementById("config-carrier");
   if (!configCarrier) {
     return Number.parseInt(fallback, 10);
