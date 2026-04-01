@@ -126,10 +126,23 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 							<div class="quote-mark">"</div>
 							<p>好的友链是互相认可，是惺惺相惜。</p>
 							<p>如果你也热爱分享、坚持输出，欢迎交换友链。</p>
-												<p class="highlight-text">请先在你的网站添加本站友链，确认后会尽快添加你的友链。</p>
 						</div>
 
 						<div class="steps-grid">
+							<div class="step-card highlight-step">
+								<div class="step-icon">
+									<svg
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+									>
+										<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+									</svg>
+								</div>
+								<h4>先添本站</h4>
+								<p>请先在你的网站添加本站友链</p>
+							</div>
 							<div class="step-card">
 								<div class="step-icon">
 									<svg
@@ -141,32 +154,12 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 										<path
 											d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
 										></path>
-										<polyline points="14,2 14,8 20,8"
-										></polyline>
-										<line x1="16" y1="13" x2="8" y2="13"
-										></line>
-										<line x1="16" y1="17" x2="8" y2="17"
-										></line>
+										<polyline points="14,2 14,8 20,8"></polyline>
+										<line x1="16" y1="13" x2="8" y2="13"></line>
 									</svg>
 								</div>
-								<h4>准备信息</h4>
-								<p>按下方格式准备友链信息</p>
-							</div>
-							<div class="step-card">
-								<div class="step-icon">
-									<svg
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-									>
-										<path
-											d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-										></path>
-									</svg>
-								</div>
-								<h4>发送申请</h4>
-								<p>在 GitHub Discussions 提交申请</p>
+								<h4>提交申请</h4>
+								<p>按格式准备信息并发送申请</p>
 							</div>
 							<div class="step-card">
 								<div class="step-icon">
@@ -179,12 +172,11 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 										<path
 											d="M22 11.08V12a10 10 0 1 1-5.93-9.14"
 										></path>
-										<polyline points="22,4 12,14.01 9,11.01"
-										></polyline>
+										<polyline points="22,4 12,14.01 9,11.01"></polyline>
 									</svg>
 								</div>
-								<h4>等待添加</h4>
-								<p>确认后会尽快添加</p>
+								<h4>互相添加</h4>
+								<p>确认后双方互挂友链</p>
 							</div>
 						</div>
 
@@ -516,17 +508,10 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 		color: var(--text-90);
 		margin-bottom: 0.25rem;
 	}
-		.quote-card .highlight-text {
-			margin-top: 0.75rem;
-			padding-top: 0.75rem;
-			border-top: 1px dashed hsl(var(--primary) / 0.2);
-			color: var(--primary);
-			font-weight: 500;
-		}
 
 	.steps-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		grid-template-columns: repeat(3, 1fr);
 		gap: 1rem;
 	}
 
@@ -542,6 +527,19 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 	.step-card:hover {
 		border-color: var(--primary);
 		transform: translateY(-2px);
+	}
+
+	.step-card.highlight-step {
+		background: linear-gradient(
+			135deg,
+			hsl(var(--primary) / 0.08) 0%,
+			hsl(var(--primary) / 0.02) 100%
+		);
+	}
+
+	.step-card.highlight-step .step-icon {
+		background: var(--primary);
+		color: white;
 	}
 
 	.step-icon {
@@ -673,6 +671,10 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 	/* ========== 响应式 ========== */
 	@media (max-width: 768px) {
 		.friends-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.steps-grid {
 			grid-template-columns: 1fr;
 		}
 
