@@ -1,4 +1,4 @@
----
+﻿---
 import { siteConfig } from "../config";
 import { UNCATEGORIZED } from "../constants/constants";
 import {
@@ -12,19 +12,12 @@ import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 
-// import { loadIconify } from "../utils/icon-loader";
-
 // 检查项目页面是否启用
 if (!siteConfig.featurePages.projects) {
 	return Astro.redirect("/404/");
 }
 
 // const { lang } = Astro.props;
-
-// 加载Iconify图标库 - 移至客户端执行
-// loadIconify().catch((error) => {
-// 	console.error("Failed to load Iconify:", error);
-// });
 
 // 获取项目统计信息
 const stats = getProjectStats();
@@ -71,12 +64,6 @@ const getCategoryText = (category: string) => {
 	<!-- 引入右侧边栏布局管理器 -->
 	<script>
 		import("../scripts/right-sidebar-layout.js");
-		import { loadIconify } from "../utils/icon-loader";
-
-		// 加载Iconify图标库
-		loadIconify().catch((error) => {
-			console.error("Failed to load Iconify:", error);
-		});
 	</script>
 	<div
 		class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32"
@@ -429,3 +416,5 @@ const getCategoryText = (category: string) => {
 		overflow: hidden;
 	}
 </style>
+
+
