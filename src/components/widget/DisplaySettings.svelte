@@ -93,16 +93,16 @@
       overflow hidden
 
       .display-setting-surface
-        background rgba(255, 255, 255, 0.96)
-        border 1px solid rgba(0, 0, 0, 0.08)
+        background var(--panel-bg)
+        border 1px solid var(--display-panel-border)
         border-radius inherit
-        box-shadow 0 18px 40px rgba(15, 23, 42, 0.14)
+        box-shadow var(--shadow-lg)
         padding 1rem
 
     :global(html.dark) #display-setting .display-setting-surface
-      background rgba(14, 14, 16, 0.92)
-      border 1px solid rgba(255, 255, 255, 0.1)
-      box-shadow 0 18px 40px rgba(0, 0, 0, 0.34)
+      background var(--panel-bg)
+      border 1px solid var(--display-panel-border)
+      box-shadow var(--shadow-lg)
 
     #display-setting
       input[type="range"]
