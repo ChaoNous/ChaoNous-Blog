@@ -4,10 +4,6 @@ import { i18n } from "@i18n/translation";
 import { permalinkConfig } from "../config";
 import { generatePermalinkSlug } from "./permalink-utils";
 
-/**
- * 移除文件扩展名（.md, .mdx, .markdown）
- * 用于将 Astro v5 Content Layer API 的 id 转换为 URL 友好的 slug
- */
 export function removeFileExtension(id: string): string {
   return id.replace(/\.(md|mdx|markdown)$/i, "");
 }
@@ -24,13 +20,11 @@ function joinUrl(...parts: string[]): string {
 }
 
 export function getPostUrlBySlug(slug: string): string {
-  // 移除文件扩展名（如 .md, .mdx 等）
   const slugWithoutExt = removeFileExtension(slug);
   return url(`/posts/${slugWithoutExt}/`);
 }
 
-export function getPostUrlByAlias(alias: string): string {
-  // 移除开头的斜杠并确保固定链接在 /posts/ 路径下
+function getPostUrlByAlias(alias: string): string {
   const cleanAlias = alias.replace(/^\/+/, "");
   return url(`/posts/${cleanAlias}/`);
 }
@@ -41,24 +35,20 @@ export function getPostUrl(post: {
   data: { alias?: string; permalink?: string };
 }): string;
 export function getPostUrl(post: any): string {
-  // 如果文章有自定义 permalink，优先使用（在根目录下）
   if (post.data.permalink) {
     const slug = post.data.permalink.replace(/^\/+/, "").replace(/\/+$/, "");
     return url(`/${slug}/`);
   }
 
-  // 如果全局 permalink 功能启用，使用生成的 slug（在根目录下）
   if (permalinkConfig.enable) {
     const slug = generatePermalinkSlug(post);
     return url(`/${slug}/`);
   }
 
-  // 如果文章有 alias，使用 alias（在 /posts/ 下）
   if (post.data.alias) {
     return getPostUrlByAlias(post.data.alias);
   }
 
-  // 否则使用默认的 slug 路径
   return getPostUrlBySlug(post.id);
 }
 
@@ -67,19 +57,11 @@ export function getCategoryUrl(category: string | null): string {
     !category ||
     category.trim() === "" ||
     category.trim().toLowerCase() === i18n(I18nKey.uncategorized).toLowerCase()
-  )
+  ) {
     return url("/archive/?uncategorized=true");
-  return url(`/archive/?category=${encodeURIComponent(category.trim())}`);
-}
-
-export function getDir(path: string): string {
-  // 移除文件扩展名
-  const pathWithoutExt = removeFileExtension(path);
-  const lastSlashIndex = pathWithoutExt.lastIndexOf("/");
-  if (lastSlashIndex < 0) {
-    return "/";
   }
-  return pathWithoutExt.substring(0, lastSlashIndex + 1);
+
+  return url(`/archive/?category=${encodeURIComponent(category.trim())}`);
 }
 
 export function getFileDirFromPath(filePath: string): string {
