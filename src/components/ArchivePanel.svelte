@@ -4,11 +4,10 @@
 	import I18nKey from "../i18n/i18nKey";
 	import { i18n } from "../i18n/translation";
 
-	export let categories: string[];
 	export let sortedPosts: Post[] = [];
 
 	const params = new URLSearchParams(window.location.search);
-	categories = params.has("category") ? params.getAll("category") : [];
+	const categories = params.has("category") ? params.getAll("category") : [];
 	const uncategorized = params.get("uncategorized");
 
 	interface Post {

@@ -15,13 +15,6 @@ const posts = sortedPostsList.map((post) => ({
 	},
 }));
 
-const categories = [
-	...new Set(
-		posts
-			.map((post) => post.data.category)
-			.filter((c): c is string => typeof c === "string"),
-	),
-];
 ---
 
 <MainGridLayout title={i18n(I18nKey.archive)}>
@@ -29,9 +22,5 @@ const categories = [
 		import("../scripts/right-sidebar-layout.js");
 	</script>
 
-	<ArchivePanel
-		sortedPosts={posts}
-		categories={categories}
-		client:only="svelte"
-	/>
+	<ArchivePanel sortedPosts={posts} client:only="svelte" />
 </MainGridLayout>
