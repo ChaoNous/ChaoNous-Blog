@@ -1,7 +1,7 @@
 <script lang="ts">
 	import I18nKey from "@i18n/i18nKey";
 	import { i18n } from "@i18n/translation";
-	import { getDefaultHue, getHueUI, setHueUI, hueToUi } from "@utils/setting-utils";
+	import { getDefaultHue, getHueUI, setHueUI } from "@utils/setting-utils";
 	import { onMount } from "svelte";
 
 	const colorOptions = [
@@ -27,7 +27,6 @@
 		isMounted = true;
 		defaultHueUI = getDefaultHue();
 		const stored = getHueUI();
-		// 如果存储的值不在选项中，使用默认值
 		if (colorOptions.some(opt => opt.hue === stored)) {
 			hueUI = stored;
 		} else {
@@ -74,21 +73,23 @@
 				</button>
 			</div>
 		</div>
-		<div class="color-options flex gap-2 justify-center">
-			{#each colorOptions as opt}
-				<button
-					class="color-btn w-12 h-12 rounded-lg transition-all duration-200 active:scale-90"
-					class:selected={hueUI === opt.hue}
-					style="background: {opt.color};"
-					on:click={() => selectHue(opt.hue)}
-					aria-label={opt.name}
-					title={opt.name}
-				>
-					{#if hueUI === opt.hue}
-						<span class="check-icon text-white/90 text-[1rem]">✓</span>
-					{/if}
-				</button>
-			{/each}
+		<div class="color-bar-container">
+			<div class="color-bar">
+				{#each colorOptions as opt, i}
+					<button
+						class="color-segment"
+						class:selected={hueUI === opt.hue}
+						style="background: {opt.color};"
+						on:click={() => selectHue(opt.hue)}
+						aria-label={opt.name}
+						title={opt.name}
+					>
+						{#if hueUI === opt.hue}
+							<span class="indicator"></span>
+						{/if}
+					</button>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>
@@ -110,23 +111,46 @@
 		border 1px solid var(--display-panel-border)
 		box-shadow var(--shadow-lg)
 
-	.color-btn
-		border 2px solid transparent
-		box-shadow 0 2px 6px rgba(0, 0, 0, 0.15)
+	.color-bar-container
+		padding 0.25rem
+		border-radius 0.5rem
+		background rgba(0, 0, 0, 0.05)
+
+	:global(html.dark) .color-bar-container
+		background rgba(255, 255, 255, 0.08)
+
+	.color-bar
+		display flex
+		height 2rem
+		border-radius 0.375rem
+		overflow hidden
+		box-shadow inset 0 1px 3px rgba(0, 0, 0, 0.1)
+
+	.color-segment
+		flex 1
+		border none
 		cursor pointer
+		transition all 0.15s ease
+		position relative
 		display flex
 		align-items center
 		justify-content center
 
 		&:hover
-			transform scale(1.08)
-			box-shadow 0 4px 12px rgba(0, 0, 0, 0.2)
+			flex 1.15
 
 		&.selected
-			border 2px solid rgba(255, 255, 255, 0.5)
-			box-shadow 0 0 0 3px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.25)
+			flex 1.2
 
-	.check-icon
-		font-weight bold
-		user-select none
+		.indicator
+			position absolute
+			bottom 0.15rem
+			left 50%
+			transform translateX(-50%)
+			width 0
+			height 0
+			border-left 0.4rem solid transparent
+			border-right 0.4rem solid transparent
+			border-bottom 0.5rem solid rgba(255, 255, 255, 0.85)
+			filter drop-shadow(0 -1px 2px rgba(0, 0, 0, 0.3))
 </style>
