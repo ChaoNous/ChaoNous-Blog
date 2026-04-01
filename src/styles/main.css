@@ -428,7 +428,7 @@ body::-webkit-scrollbar {
         text-(--btn-content) mr-2;
   }
   .with-divider {
-    @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-(--meta-divider) before:text-sm
+    @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-50 before:text-sm
         before:font-medium before:first-of-type:hidden before:transition-colors before:duration-150;
   }
 
@@ -663,10 +663,8 @@ html {
   --btn-card-bg-hover: oklch(0.98 0.004 var(--hue));
   --btn-card-bg-active: oklch(0.9 0.02 var(--hue));
   --deep-text: oklch(0.32 0.015 var(--hue));
-  --title-active: oklch(0.55 0.08 var(--hue));
   --line-divider: rgba(0, 0, 0, 0.06);
   --line-color: rgba(0, 0, 0, 0.08);
-  --meta-divider: rgba(0, 0, 0, 0.15);
   --content-meta: rgba(0, 0, 0, 0.65);
   --selection-bg: oklch(0.88 0.04 var(--hue));
   --codeblock-bg: oklch(0.96 0.004 var(--hue));
@@ -739,10 +737,8 @@ html {
   --btn-card-bg-hover: oklch(0.3 0.025 var(--hue));
   --btn-card-bg-active: oklch(0.34 0.03 var(--hue));
   --deep-text: oklch(0.93 0.01 var(--hue));
-  --title-active: oklch(0.78 0.08 var(--hue));
   --line-divider: rgba(255, 255, 255, 0.06);
   --line-color: rgba(255, 255, 255, 0.08);
-  --meta-divider: rgba(255, 255, 255, 0.15);
   --content-meta: rgba(255, 255, 255, 0.55);
   --selection-bg: oklch(0.35 0.06 var(--hue));
   --codeblock-bg: oklch(0.18 0.012 var(--hue));
@@ -799,27 +795,21 @@ body {
   background: var(--page-bg);
 }
 
-.text-100 {
-  color: color-mix(in oklch, currentColor 94%, transparent);
-}
-
+.text-100,
 .text-90 {
-  color: color-mix(in oklch, currentColor 88%, transparent);
+  color: color-mix(in oklch, currentColor 90%, transparent);
 }
 
 .text-75,
-.text-70 {
-  color: color-mix(in oklch, currentColor 72%, transparent);
+.text-70,
+.text-60 {
+  color: color-mix(in oklch, currentColor 65%, transparent);
 }
 
-.text-60,
-.text-50 {
-  color: color-mix(in oklch, currentColor 58%, transparent);
-}
-
+.text-50,
 .text-30,
 .text-25 {
-  color: color-mix(in oklch, currentColor 38%, transparent);
+  color: color-mix(in oklch, currentColor 40%, transparent);
 }
 
 .meta-icon {
