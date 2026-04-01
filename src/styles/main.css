@@ -713,32 +713,32 @@ html {
 
 :root.dark {
   --primary: oklch(0.75 0.14 var(--hue));
-  --page-bg: oklch(0.25 0.022 var(--hue));
-  --page-bg-top: oklch(0.27 0.032 var(--hue));
-  --page-bg-bottom: oklch(0.22 0.018 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.42 0.06 var(--hue)) 24%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.48 0.08 var(--hue)) 18%, transparent);
+  --page-bg: oklch(0.27 0.03 var(--hue));
+  --page-bg-top: oklch(0.29 0.04 var(--hue));
+  --page-bg-bottom: oklch(0.24 0.025 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.42 0.08 var(--hue)) 28%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.48 0.1 var(--hue)) 22%, transparent);
   --page-bg-accent-strong: color-mix(
     in oklch,
-    oklch(0.55 0.1 var(--hue)) 12%,
+    oklch(0.55 0.12 var(--hue)) 15%,
     transparent
   );
   --page-bg-paper-grain: color-mix(
     in oklch,
-    oklch(0.27 0.022 var(--hue)) 84%,
-    oklch(0.22 0.012 var(--hue)) 16%
+    oklch(0.29 0.03 var(--hue)) 84%,
+    oklch(0.24 0.02 var(--hue)) 16%
   );
-  --card-bg: oklch(0.28 0.022 var(--hue));
-  --card-bg-transparent: oklch(0.28 0.022 var(--hue) / 0.85);
-  --btn-content: oklch(0.72 0.08 var(--hue));
-  --btn-regular-bg: oklch(0.28 0.025 var(--hue));
-  --btn-regular-bg-hover: oklch(0.32 0.03 var(--hue));
-  --btn-regular-bg-active: oklch(0.36 0.035 var(--hue));
-  --btn-plain-bg-hover: oklch(0.26 0.025 var(--hue));
-  --btn-plain-bg-active: oklch(0.23 0.018 var(--hue));
-  --btn-card-bg-hover: oklch(0.26 0.02 var(--hue));
-  --btn-card-bg-active: oklch(0.3 0.025 var(--hue));
-  --deep-text: oklch(0.86 0.01 var(--hue));
+  --card-bg: oklch(0.32 0.03 var(--hue));
+  --card-bg-transparent: oklch(0.32 0.03 var(--hue) / 0.85);
+  --btn-content: oklch(0.75 0.08 var(--hue));
+  --btn-regular-bg: oklch(0.32 0.03 var(--hue));
+  --btn-regular-bg-hover: oklch(0.36 0.035 var(--hue));
+  --btn-regular-bg-active: oklch(0.4 0.04 var(--hue));
+  --btn-plain-bg-hover: oklch(0.3 0.03 var(--hue));
+  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
+  --btn-card-bg-hover: oklch(0.3 0.025 var(--hue));
+  --btn-card-bg-active: oklch(0.34 0.03 var(--hue));
+  --deep-text: oklch(0.93 0.01 var(--hue));
   --title-active: oklch(0.78 0.08 var(--hue));
   --line-divider: rgba(255, 255, 255, 0.06);
   --line-color: rgba(255, 255, 255, 0.08);
