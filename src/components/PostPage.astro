@@ -18,11 +18,14 @@ const { page } = Astro.props;
 >
 	{
 		page.data.map((entry, index) => (
-			<PostCard
-				entry={entry}
-				class:list="onload-animation"
-				style={`--i: ${index}; --interval: 50ms;`}
-			/>
+			<>
+				{index > 0 && <div class="post-divider" />}
+				<PostCard
+					entry={entry}
+					class:list="onload-animation"
+					style={`--i: ${index}; --interval: 50ms;`}
+				/>
+			</>
 		))
 	}
 </div>
@@ -91,6 +94,13 @@ const { page } = Astro.props;
 		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 		animation: fadeInSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 		animation-delay: calc(var(--content-delay) + var(--i) * var(--interval));
+	}
+
+	.post-divider {
+		height: 1px;
+		background: oklch(0.6 0.12 var(--hue));
+		margin: 0.5rem 0;
+		width: 100%;
 	}
 
 	@keyframes fadeInSlide {
