@@ -1,5 +1,5 @@
 import type {
-  AnnouncementConfig,
+  CommentConfig,
   ExpressiveCodeConfig,
   FooterConfig,
   LicenseConfig,
@@ -12,58 +12,48 @@ import type {
 } from "./types/config";
 import { LinkPreset } from "./types/config";
 
-// ========== i18n 国际化配置 ==========
-
-// 网站基础配置
-const SITE_LANG = "zh_CN"; // 网站语言，支持 'en', 'zh_CN', 'ja' 等
-const SITE_TIMEZONE = 8; // 网站时区，范围 -12 to 12，默认 UTC+8
+const SITE_LANG = "zh_CN";
+const SITE_TIMEZONE = 8;
 
 export const siteConfig: SiteConfig = {
   title: "ChaoNous",
-  subtitle: "", // 网站副标题，用于 SEO 和社交分享
-  siteURL: "https://chaonous.com/", // 网站URL，请替换为你自己的URL
-  siteStartDate: "2026-03-03", // 网站创建日期，用于计算运行时间
-  keywords: ["博客", "技术", "编程", "前端", "Astro"], // SEO 关键词
-
+  subtitle: "",
+  siteURL: "https://chaonous.com/",
+  siteStartDate: "2026-03-03",
+  keywords: ["博客", "技术", "编程", "前端", "Astro"],
   timeZone: SITE_TIMEZONE,
   lang: SITE_LANG,
 
   themeColor: {
-    hue: 72, // 主题色调，实际 hue 范围 0-360（UI 显示 0-100）。建议：红色 0，橙色 30，黄色 60，绿色 120，青色 180，蓝色 220，紫色 280
-    fixed: false, // 是否固定色调，不允许用户调整
+    hue: 72,
+    fixed: false,
   },
 
-  // 功能页面配置（关闭后导航栏不显示对应入口）
   featurePages: {
-    projects: true, // 项目页面
-    skills: true, // 技能页面
-    timeline: true, // 时间线页面
-    albums: true, // 相册页面
-    devices: true, // 设备页面
+    projects: true,
+    skills: true,
+    timeline: true,
+    albums: true,
+    devices: true,
   },
 
-  // 导航栏标题配置
   navbarTitle: {
-    mode: "text-icon", // 显示模式："text-icon" 显示文字+图标，"logo" 显示Logo
-    text: "ChaoNous", // 导航栏文字
-    icon: "", // 导航栏图标路径，如 public/assets/home/home.webp
-    logo: "", // Logo 图片路径
+    mode: "text-icon",
+    text: "ChaoNous",
+    icon: "",
+    logo: "",
   },
 
-  // 页面缩放配置
   pageScaling: {
-    enable: true, // 是否启用页面缩放
-    targetWidth: 2000, // 目标宽度，用于计算缩放比例
+    enable: true,
+    targetWidth: 2000,
   },
 
-  // 标签样式配置
   tagStyle: {
-    useNewStyle: false, // 是否使用新版标签样式
+    useNewStyle: false,
   },
-
 
   banner: {
-    // 横幅图片配置，数量大于 1 时自动启用轮播
     src: {
       desktop: [
         "/assets/desktop-banner/banner1.webp",
@@ -76,27 +66,18 @@ export const siteConfig: SiteConfig = {
         "/assets/mobile-banner/banner3.webp",
       ],
     },
-
-    position: "center", // 图片位置，对应 object-position，可选 'top', 'center', 'bottom'，默认 'center'
-
+    position: "center",
     carousel: {
-      enable: true, // 是否启用轮播，数量大于 1 时生效；false 则随机显示一张
-      interval: 4, // 轮播间隔，单位：秒
+      enable: true,
+      interval: 4,
     },
-
-    // PicFlow API 随机图片配置
     imageApi: {
-      enable: false, // 是否启用随机图片API
-      url: "http://domain.com/api_v2.php?format=text&count=4", // API地址，返回每行一个图片URL
+      enable: false,
+      url: "http://domain.com/api_v2.php?format=text&count=4",
     },
-    // 使用 PicFlow API 时，src 配置将被覆盖
-    // 项目地址: https://github.com/matsuzaka-yuki/PicFlow-API
-    // 也可使用其他随机图片API
-
     homeText: {
-      enable: true, // 是否在首页显示文字覆盖层
+      enable: true,
       title: "闲话漫谈",
-
       subtitle: [
         "学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？",
         "即使在他人看来是多么愚蠢和荒谬，然而只有遵循自己的选择，才能找到无怨无悔的人生。",
@@ -104,34 +85,33 @@ export const siteConfig: SiteConfig = {
         "天地之间有许多事情，是你们的哲学里所没有梦想到的。",
       ],
       typewriter: {
-        enable: true, // 是否启用打字机效果
-
-        speed: 100, // 打字速度，单位：毫秒
-        deleteSpeed: 50, // 删除速度，单位：毫秒
-        pauseTime: 2000, // 打完字后停顿时间，单位：毫秒
+        enable: true,
+        speed: 100,
+        deleteSpeed: 50,
+        pauseTime: 2000,
       },
     },
-
     credit: {
-      enable: false, // 是否显示图片版权信息
-
-      text: "Describe", // 版权描述文字
-      url: "", // 点击后跳转的 URL
+      enable: false,
+      text: "Describe",
+      url: "",
     },
-
     navbar: {
-      transparentMode: "semifull", // 导航栏透明模式："semi" 毛玻璃，"full" 完全透明，"semifull" 混合模式
+      transparentMode: "semifull",
     },
   },
+
   toc: {
-    enable: true, // 是否启用目录
-    mode: "float", // 目录显示模式："float" 悬浮，"sidebar" 侧边栏
-    depth: 2, // 目录深度，1-6。例如 h1 则提取 h1，为 2 时从 h1 到 h2，以此类推
-    useJapaneseBadge: false, // 使用日文徽章（未启用显示 "Table of Contents"..）
+    enable: true,
+    mode: "float",
+    depth: 2,
+    useJapaneseBadge: false,
   },
+
   showCoverInContent: true,
   generateOgImages: true,
   favicon: [],
+  showLastModified: false,
 
   font: {
     asciiFont: {
@@ -147,10 +127,7 @@ export const siteConfig: SiteConfig = {
       enableCompress: true,
     },
   },
-  showLastModified: false,
 };
-
-
 
 export const navBarConfig: NavBarConfig = {
   links: [
@@ -166,12 +143,12 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-  avatar: "assets/images/avatar.webp", // 头像路径，不以 '/' 开头表示 src 目录
+  avatar: "assets/images/avatar.webp",
   name: "ChaoNous",
   bio: "行路难！行路难！多歧路，今安在？长风破浪会有时，直挂云帆济沧海。",
   typewriter: {
-    enable: true, // 是否启用打字机效果
-    speed: 80, // 打字速度
+    enable: true,
+    speed: 80,
   },
   links: [
     {
@@ -218,26 +195,14 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
   hideDuringThemeTransition: true,
 };
 
-export const announcementConfig: AnnouncementConfig = {
-  title: "",
-  content: "",
-  closable: false,
-  link: {
-    enable: true,
-    text: "Learn More",
-    url: "/about/",
-    external: false,
-  },
-};
-
 export const musicPlayerConfig: MusicPlayerConfig = {
-  enable: true, // 是否启用音乐播放器
-  mode: "meting", // 播放器模式："local" 本地，"meting" 在线
+  enable: true,
+  mode: "meting",
   meting_api:
-    "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
-  id: "13556055400", // 歌单ID
-  server: "netease", // 音乐平台：netease=网易云音乐，tencent=QQ音乐，kugou=酷狗音乐
-  type: "playlist", // 资源类型
+    "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&auth=:auth&r=:r",
+  id: "13556055400",
+  server: "netease",
+  type: "playlist",
 };
 
 export const footerConfig: FooterConfig = {
@@ -245,7 +210,7 @@ export const footerConfig: FooterConfig = {
   customHtml: "",
 };
 
-export const commentConfig = {
+export const commentConfig: CommentConfig = {
   enable: true,
   envId: "https://twikoo-cloudflare.198665x.workers.dev",
   region: "",
@@ -302,10 +267,3 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
     },
   },
 };
-
-// 组件配置汇总
-export const widgetConfigs = {
-  profile: profileConfig,
-  music: musicPlayerConfig,
-  layout: sidebarLayoutConfig,
-} as const;
