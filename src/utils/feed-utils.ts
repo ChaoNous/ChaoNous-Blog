@@ -7,7 +7,6 @@ import type { CollectionEntry } from "astro:content";
 
 const markdownParser = new MarkdownIt();
 
-// get dynamic import of images as a map collection
 const imagesGlob = import.meta.glob<{ default: ImageMetadata }>(
   "/src/content/**/*.{jpeg,jpg,png,gif,webp}",
 );
