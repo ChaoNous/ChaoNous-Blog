@@ -126,6 +126,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 							<div class="quote-mark">"</div>
 							<p>好的友链是互相认可，是惺惺相惜。</p>
 							<p>如果你也热爱分享、坚持输出，欢迎交换友链。</p>
+												<p class="highlight-text">请先在你的网站添加本站友链，确认后会尽快添加你的友链。</p>
 						</div>
 
 						<div class="steps-grid">
@@ -515,6 +516,13 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 		color: var(--text-90);
 		margin-bottom: 0.25rem;
 	}
+		.quote-card .highlight-text {
+			margin-top: 0.75rem;
+			padding-top: 0.75rem;
+			border-top: 1px dashed hsl(var(--primary) / 0.2);
+			color: var(--primary);
+			font-weight: 500;
+		}
 
 	.steps-grid {
 		display: grid;
