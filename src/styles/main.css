@@ -702,7 +702,9 @@ html {
   --nav-radius: var(--radius-std);
   --panel-bg: var(--card-bg-transparent);
   --panel-blur: blur(20px);
-  --display-panel-bg: rgba(255, 255, 255, 0.88);
+  --display-panel-bg: rgba(255, 255, 255, 0.78);
+  --display-panel-border: rgba(0, 0, 0, 0.08);
+  --display-panel-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
   --navbar-foreground: var(--deep-text);
   --navbar-overlay-foreground: var(--deep-text);
 }
@@ -769,7 +771,9 @@ html {
   --toc-item-active: oklch(0.35 0.07 var(--hue));
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
-  --display-panel-bg: rgba(0, 0, 0, 0.82);
+  --display-panel-bg: rgba(17, 17, 19, 0.78);
+  --display-panel-border: rgba(255, 255, 255, 0.1);
+  --display-panel-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
   --navbar-overlay-foreground: white;
 }
 
@@ -869,8 +873,10 @@ body {
 
 #display-setting {
   background: var(--display-panel-bg) !important;
-  border: 1px solid var(--line-color) !important;
-  box-shadow: var(--shadow-lg) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  border: 1px solid var(--display-panel-border) !important;
+  box-shadow: var(--display-panel-shadow) !important;
 }
 
 #navbar > div,
