@@ -2,7 +2,6 @@
 	import I18nKey from "@i18n/i18nKey";
 	import { i18n } from "@i18n/translation";
 	import Icon from "@iconify/svelte";
-	import { navigateToPage } from "@utils/navigation-utils";
 	import { url } from "@utils/url-utils";
 	import { onDestroy, onMount } from "svelte";
 	import type { SearchResult } from "@/global";
@@ -34,6 +33,48 @@
 				"Try running <mark>npm build && npm preview</mark> instead.",
 		},
 	];
+
+	const navigateToPage = (
+		nextUrl: string,
+		options?: {
+			replace?: boolean;
+		},
+	): void => {
+		if (
+			nextUrl.startsWith("http://") ||
+			nextUrl.startsWith("https://") ||
+			nextUrl.startsWith("//")
+		) {
+			window.open(nextUrl, "_blank");
+			return;
+		}
+
+		if (nextUrl.startsWith("#")) {
+			document.getElementById(nextUrl.slice(1))?.scrollIntoView({
+				behavior: "smooth",
+			});
+			return;
+		}
+
+		if (window.swup) {
+			try {
+				if (options?.replace) {
+					window.swup.navigate(nextUrl, { history: false });
+				} else {
+					window.swup.navigate(nextUrl);
+				}
+				return;
+			} catch (error) {
+				console.error("Swup navigation failed:", error);
+			}
+		}
+
+		if (options?.replace) {
+			window.location.replace(nextUrl);
+		} else {
+			window.location.href = nextUrl;
+		}
+	};
 
 	const focusDesktopInput = () => {
 		setTimeout(() => {
