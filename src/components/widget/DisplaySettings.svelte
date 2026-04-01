@@ -11,8 +11,8 @@
 		{ hue: 350, name: "玫红", color: "oklch(0.75 0.15 350)" },
 	];
 
-	let hueUI = 150;
-	let defaultHueUI = 150;
+	let hueUI = 60;
+	let defaultHueUI = 60;
 	let isMounted = false;
 
 	function selectHue(hue: number) {
@@ -121,17 +121,13 @@
 		overflow hidden
 
 	.color-segment
-		flex 1
+		flex 1 1 0
 		border none
 		cursor pointer
-		transition all 0.15s ease
 		position relative
 		display flex
 		align-items center
 		justify-content center
-
-		&:hover
-			opacity 0.9
 
 		.indicator
 			position absolute

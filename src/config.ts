@@ -25,7 +25,7 @@ export const siteConfig: SiteConfig = {
   lang: SITE_LANG,
 
   themeColor: {
-    hue: 150,
+    hue: 60,
     fixed: false,
   },
 
