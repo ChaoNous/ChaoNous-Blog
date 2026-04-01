@@ -633,21 +633,21 @@ html {
 }
 
 :root {
-  --page-bg: oklch(0.978 0.007 var(--hue));
-  --page-bg-top: oklch(0.985 0.012 var(--hue));
-  --page-bg-bottom: oklch(0.962 0.01 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.86 0.03 var(--hue)) 22%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.8 0.045 var(--hue)) 16%, transparent);
+  --page-bg: oklch(0.975 0.011 var(--hue));
+  --page-bg-top: oklch(0.985 0.02 var(--hue));
+  --page-bg-bottom: oklch(0.955 0.016 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.85 0.05 var(--hue)) 30%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.79 0.072 var(--hue)) 24%, transparent);
   --card-bg: transparent;
   --float-panel-bg: color-mix(in oklch, white 84%, transparent);
 }
 
 :root.dark {
-  --page-bg: oklch(0.17 0.016 var(--hue));
-  --page-bg-top: oklch(0.205 0.024 var(--hue));
-  --page-bg-bottom: oklch(0.14 0.018 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.44 0.06 var(--hue)) 16%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.5 0.08 var(--hue)) 12%, transparent);
+  --page-bg: oklch(0.168 0.022 var(--hue));
+  --page-bg-top: oklch(0.212 0.036 var(--hue));
+  --page-bg-bottom: oklch(0.136 0.028 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.46 0.09 var(--hue)) 22%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.54 0.12 var(--hue)) 18%, transparent);
   --float-panel-bg: color-mix(in oklch, oklch(0.19 0.016 var(--hue)) 82%, transparent);
 }
 
@@ -671,6 +671,10 @@ html.dark body {
 body {
   letter-spacing: 0.008em;
   line-height: 1.7;
+  background:
+    radial-gradient(circle at 10% 14%, var(--page-bg-accent-soft) 0%, transparent 34%),
+    radial-gradient(circle at 86% 12%, var(--page-bg-accent) 0%, transparent 28%),
+    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
 }
 
 .text-100 {
