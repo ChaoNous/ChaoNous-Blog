@@ -17,11 +17,7 @@ const map: { [key: string]: Translation } = {
   zh_cn: zh_CN,
 };
 
-export function getTranslation(lang: string): Translation {
-  return map[lang.toLowerCase()] || defaultTranslation;
-}
-
 export function i18n(key: I18nKey): string {
   const lang = siteConfig.lang || "en";
-  return getTranslation(lang)[key];
+  return (map[lang.toLowerCase()] || defaultTranslation)[key];
 }
