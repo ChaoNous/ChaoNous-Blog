@@ -36,6 +36,7 @@
 		border-radius: var(--radius-large);
 	"
 >
+	<div class="display-setting-surface">
 	<div class="flex flex-row gap-2 mb-3 items-center justify-between">
 		<div
 			class="flex gap-2 font-bold text-lg text-90 transition relative ml-3
@@ -83,9 +84,26 @@
 			style="width: 100%"
 		/>
 	</div>
+	</div>
 </div>
 
 <style lang="stylus">
+    #display-setting
+      padding 0 !important
+      overflow hidden
+
+      .display-setting-surface
+        background rgba(255, 255, 255, 0.96)
+        border 1px solid rgba(0, 0, 0, 0.08)
+        border-radius inherit
+        box-shadow 0 18px 40px rgba(15, 23, 42, 0.14)
+        padding 1rem
+
+    :global(html.dark) #display-setting .display-setting-surface
+      background rgba(14, 14, 16, 0.92)
+      border 1px solid rgba(255, 255, 255, 0.1)
+      box-shadow 0 18px 40px rgba(0, 0, 0, 0.34)
+
     #display-setting
       input[type="range"]
         -webkit-appearance none
