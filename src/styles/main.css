@@ -637,23 +637,23 @@ html {
 :root {
   --radius-large: 1rem;
   --primary: oklch(0.7 0.14 var(--hue));
-  --page-bg: oklch(0.92 0.008 var(--hue));
-  --page-bg-top: oklch(0.94 0.012 var(--hue));
-  --page-bg-bottom: oklch(0.89 0.01 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.82 0.03 var(--hue)) 24%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.74 0.05 var(--hue)) 18%, transparent);
+  --page-bg: oklch(0.92 0.025 var(--hue));
+  --page-bg-top: oklch(0.94 0.04 var(--hue));
+  --page-bg-bottom: oklch(0.89 0.03 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.82 0.08 var(--hue)) 35%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.74 0.12 var(--hue)) 28%, transparent);
   --page-bg-accent-strong: color-mix(
     in oklch,
-    oklch(0.68 0.06 var(--hue)) 10%,
+    oklch(0.68 0.14 var(--hue)) 18%,
     transparent
   );
   --page-bg-paper-grain: color-mix(
     in oklch,
-    oklch(0.95 0.006 var(--hue)) 82%,
-    oklch(0.97 0.003 var(--hue)) 18%
+    oklch(0.95 0.02 var(--hue)) 82%,
+    oklch(0.97 0.012 var(--hue)) 18%
   );
-  --card-bg: oklch(0.96 0.004 var(--hue));
-  --card-bg-transparent: oklch(0.96 0.004 var(--hue) / 0.85);
+  --card-bg: oklch(0.96 0.015 var(--hue));
+  --card-bg-transparent: oklch(0.96 0.015 var(--hue) / 0.85);
   --btn-content: oklch(0.5 0.1 var(--hue));
   --btn-regular-bg: oklch(0.94 0.018 var(--hue));
   --btn-regular-bg-hover: oklch(0.9 0.04 var(--hue));
@@ -713,23 +713,23 @@ html {
 
 :root.dark {
   --primary: oklch(0.75 0.14 var(--hue));
-  --page-bg: oklch(0.19 0.018 var(--hue));
-  --page-bg-top: oklch(0.21 0.025 var(--hue));
-  --page-bg-bottom: oklch(0.165 0.015 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.38 0.05 var(--hue)) 20%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.45 0.07 var(--hue)) 16%, transparent);
+  --page-bg: oklch(0.19 0.05 var(--hue));
+  --page-bg-top: oklch(0.21 0.07 var(--hue));
+  --page-bg-bottom: oklch(0.165 0.04 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.38 0.12 var(--hue)) 35%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.45 0.16 var(--hue)) 28%, transparent);
   --page-bg-accent-strong: color-mix(
     in oklch,
-    oklch(0.52 0.08 var(--hue)) 10%,
+    oklch(0.52 0.18 var(--hue)) 18%,
     transparent
   );
   --page-bg-paper-grain: color-mix(
     in oklch,
-    oklch(0.21 0.018 var(--hue)) 84%,
-    oklch(0.17 0.01 var(--hue)) 16%
+    oklch(0.21 0.05 var(--hue)) 84%,
+    oklch(0.17 0.03 var(--hue)) 16%
   );
-  --card-bg: oklch(0.22 0.018 var(--hue));
-  --card-bg-transparent: oklch(0.22 0.018 var(--hue) / 0.85);
+  --card-bg: oklch(0.22 0.05 var(--hue));
+  --card-bg-transparent: oklch(0.22 0.05 var(--hue) / 0.85);
   --btn-content: oklch(0.72 0.08 var(--hue));
   --btn-regular-bg: oklch(0.28 0.025 var(--hue));
   --btn-regular-bg-hover: oklch(0.32 0.03 var(--hue));
