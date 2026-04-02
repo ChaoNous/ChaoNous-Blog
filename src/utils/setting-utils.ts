@@ -30,6 +30,12 @@ export function setHueUI(uiValue: number): void {
   const actualHue = uiToHue(uiValue);
   localStorage.setItem("hue", String(actualHue));
   document.documentElement.style.setProperty("--hue", String(actualHue));
+
+  // 根据主题色切换背景材质
+  // 朱砂赤 (hue: 10) → 缣帛 (silk)
+  // 提尔紫 (hue: 325) → 羊皮纸 (parchment)
+  const material = actualHue === 10 ? "silk" : "parchment";
+  document.documentElement.setAttribute("data-theme-material", material);
 }
 
 function applyThemeToDocument(theme: LIGHT_DARK_MODE): void {

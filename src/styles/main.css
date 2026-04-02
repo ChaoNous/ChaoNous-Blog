@@ -63,8 +63,8 @@ body {
     color 0.15s ease;
 }
 
-/* 纸张纹理效果 - 细腻的纤维质感 */
-body::before {
+/* 缣帛纹理效果 - 细腻丝绸质感（朱砂赤主题） */
+[data-theme-material="silk"] body::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -72,64 +72,158 @@ body::before {
   z-index: 0;
   opacity: 1;
   background:
-    /* 细微纤维纹理 - 横向 */
+    /* 丝绸光泽渐变 */
+    linear-gradient(
+      135deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.02) 75%,
+      transparent 100%
+    ),
+    /* 细腻斜纹织法 */
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.015) 2px,
+      rgba(0, 0, 0, 0.015) 4px
+    ),
+    /* 纵向丝线 */
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 0, 0, 0.008) 3px,
+      rgba(0, 0, 0, 0.008) 6px
+    ),
+    /* 丝绸底纹 */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='0.8' result='light'%3E%3CfeDistantLight azimuth='225' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 100% 100%, 400px 400px;
+  mix-blend-mode: multiply;
+}
+
+[data-theme-material="silk"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.25;
+  background:
+    /* 丝绸反光层 */
+    linear-gradient(
+      160deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.04) 50%,
+      transparent 70%
+    );
+  mix-blend-mode: overlay;
+}
+
+/* 羊皮纸纹理效果 - 古朴质感（提尔紫主题） */
+[data-theme-material="parchment"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 1;
+  background:
+    /* 纤维纹理 - 横向 */
     repeating-linear-gradient(
       0deg,
       transparent,
       transparent 1px,
-      rgba(0, 0, 0, 0.018) 1px,
-      rgba(0, 0, 0, 0.018) 2px
+      rgba(0, 0, 0, 0.022) 1px,
+      rgba(0, 0, 0, 0.022) 3px
     ),
-    /* 细微纤维纹理 - 纵向 */
+    /* 纤维纹理 - 纵向 */
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 1px,
-      rgba(0, 0, 0, 0.012) 1px,
-      rgba(0, 0, 0, 0.012) 2px
+      rgba(0, 0, 0, 0.015) 1px,
+      rgba(0, 0, 0, 0.015) 3px
     ),
-    /* 纸张颗粒基底 - 适度立体感 */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23ffffff' surfaceScale='1' result='light'%3E%3CfeDistantLight azimuth='45' elevation='50'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 300px 300px;
+    /* 羊皮纸颗粒基底 */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 350 350' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f5f0e6' surfaceScale='1.2' result='light'%3E%3CfeDistantLight azimuth='45' elevation='55'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 350px 350px;
   mix-blend-mode: multiply;
 }
 
-/* 纸张纹理 - 额外的粗糙层 */
-body::after {
+[data-theme-material="parchment"] body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='rough'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.05' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23rough)' opacity='0.25'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='rough'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.06' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23rough)' opacity='0.2'/%3E%3C/svg%3E");
   background-size: 200px 200px;
   mix-blend-mode: overlay;
 }
 
-.dark body::before {
+/* Dark mode - 缣帛 */
+[data-theme-material="silk"].dark body::before {
+  opacity: 1;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.02) 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.015) 75%,
+      transparent 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.02) 2px,
+      rgba(255, 255, 255, 0.02) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.012) 3px,
+      rgba(255, 255, 255, 0.012) 6px
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23302820' surfaceScale='0.6' result='light'%3E%3CfeDistantLight azimuth='225' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 100% 100%, 400px 400px;
+  mix-blend-mode: soft-light;
+}
+
+[data-theme-material="silk"].dark body::after {
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+}
+
+/* Dark mode - 羊皮纸 */
+[data-theme-material="parchment"].dark body::before {
   opacity: 1;
   background:
     repeating-linear-gradient(
       0deg,
       transparent,
       transparent 1px,
-      rgba(255, 255, 255, 0.025) 1px,
-      rgba(255, 255, 255, 0.025) 2px
+      rgba(255, 255, 255, 0.03) 1px,
+      rgba(255, 255, 255, 0.03) 3px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 1px,
-      rgba(255, 255, 255, 0.018) 1px,
-      rgba(255, 255, 255, 0.018) 2px
+      rgba(255, 255, 255, 0.02) 1px,
+      rgba(255, 255, 255, 0.02) 3px
     ),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23ffffff' surfaceScale='1' result='light'%3E%3CfeDistantLight azimuth='45' elevation='50'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 300px 300px;
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 350 350' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23251e18' surfaceScale='1' result='light'%3E%3CfeDistantLight azimuth='45' elevation='55'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 350px 350px;
   mix-blend-mode: soft-light;
 }
 
-.dark body::after {
+[data-theme-material="parchment"].dark body::after {
   opacity: 0.3;
   mix-blend-mode: overlay;
 }
