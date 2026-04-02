@@ -4,6 +4,7 @@ import { render } from "astro:content";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
+import Share from "@components/misc/Share.astro";
 import Twikoo from "@components/comment/Twikoo.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
@@ -104,19 +105,16 @@ const jsonLd = buildBlogPostingJsonLd({
 
 	{
 		licenseConfig.enable && (
-			<div slot="post-actions" id="license-component">
-				<License
+			<div slot="post-actions" id="share-component">
+				<Share
 					title={entry.data.title}
 					id={entry.id}
 					pubDate={entry.data.published}
 					author={entry.data.author}
-					sourceLink={entry.data.sourceLink}
-					licenseName={entry.data.licenseName}
-					licenseUrl={entry.data.licenseUrl}
 					description={entry.data.description}
 					coverImage={posterCoverUrl}
 					avatar={posterAvatarUrl}
-					class="mb-6 rounded-xl license-container onload-animation"
+					class="mb-6 onload-animation"
 				/>
 			</div>
 		)
