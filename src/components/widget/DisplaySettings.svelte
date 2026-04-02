@@ -5,13 +5,12 @@
 	import { onMount } from "svelte";
 
 	const colorOptions = [
-		{ hue: 5, name: "朱赤", color: "oklch(0.75 0.15 5)" },
-		{ hue: 229, name: "波斯蓝", color: "oklch(0.75 0.15 229)" },
-		{ hue: 325, name: "泰尔紫", color: "oklch(0.75 0.15 325)" },
+		{ hue: 10, name: "朱砂赤", color: "oklch(0.75 0.15 10)" },
+		{ hue: 325, name: "提尔紫", color: "oklch(0.75 0.15 325)" },
 	];
 
-	let hueUI = 5;
-	let defaultHueUI = 5;
+	let hueUI = 10;
+	let defaultHueUI = 10;
 	let isMounted = false;
 
 	function selectHue(hue: number) {
