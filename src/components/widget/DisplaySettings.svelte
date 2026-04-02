@@ -89,6 +89,13 @@
 					</button>
 				{/each}
 			</div>
+			<div class="color-labels">
+				{#each colorOptions as opt, i}
+					<span class="color-label" class:active={hueUI === opt.hue}>
+						{opt.name}
+					</span>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>
@@ -138,4 +145,19 @@
 			border-left 0.4rem solid transparent
 			border-right 0.4rem solid transparent
 			border-bottom 0.5rem solid rgba(255, 255, 255, 0.85)
+
+	.color-labels
+		display flex
+		margin-top 0.5rem
+
+	.color-label
+		flex 1 1 0
+		text-align center
+		font-size 0.75rem
+		color var(--text-secondary)
+		transition color 0.2s ease
+
+		&.active
+			color var(--primary)
+			font-weight 600
 </style>
