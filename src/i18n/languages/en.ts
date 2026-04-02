@@ -266,7 +266,7 @@ export const en: Translation = {
   [Key.siteStatsPostCount]: "Posts",
   [Key.siteStatsCategoryCount]: "Categories",
   [Key.siteStatsTagCount]: "Tags",
-  [Key.siteStatsTotalWords]: "Total Words",
+  [Key.siteStatsTotalWords]: "Words",
   [Key.siteStatsRunningDays]: "Running Days",
   [Key.siteStatsDaysAgo]: "{days} days ago",
   [Key.siteStatsDays]: "{days} days",

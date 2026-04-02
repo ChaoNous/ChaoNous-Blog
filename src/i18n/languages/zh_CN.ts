@@ -244,7 +244,7 @@ export const zh_CN: Translation = {
   [Key.siteStatsPostCount]: "文章",
   [Key.siteStatsCategoryCount]: "分类",
   [Key.siteStatsTagCount]: "标签",
-  [Key.siteStatsTotalWords]: "总字数",
+  [Key.siteStatsTotalWords]: "字数",
   [Key.siteStatsRunningDays]: "运行天数",
   [Key.siteStatsDaysAgo]: "{days} 天前",
   [Key.siteStatsDays]: "{days} 天",
