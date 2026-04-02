@@ -1,8 +1,7 @@
 ---
-import { profileConfig, siteConfig } from "../../config";
+import { siteConfig } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
-import { formatDateToYYYYMMDD } from "../../utils/date-utils";
 import ShareButtons from "./ShareButtons.svelte";
 
 interface Props {
@@ -18,103 +17,45 @@ interface Props {
 
 const { title, pubDate, author, description, coverImage, avatar } = Astro.props;
 const className = Astro.props.class || "";
-const profileConf = profileConfig;
 const postUrl = Astro.url.toString();
 ---
 
 <div class={`share-component ${className}`}>
-	<div class="share-header">
-		<div class="share-title">{title}</div>
-		<div class="share-meta">
-			<span class="share-author">
-				<span class="share-label">{i18n(I18nKey.author)}</span>
-				<span class="share-value">{author || profileConf.name}</span>
-			</span>
-			<span class="share-divider">·</span>
-			<span class="share-date">
-				<span class="share-label">{i18n(I18nKey.publishedAt)}</span>
-				<span class="share-value">{formatDateToYYYYMMDD(pubDate)}</span>
-			</span>
-		</div>
-	</div>
-
-	<div class="share-actions">
-		<ShareButtons
-			client:load
-			title={title}
-			url={postUrl}
-			description={description || ""}
-			author={author || profileConf.name}
-			pubDate={formatDateToYYYYMMDD(pubDate)}
-			coverImage={coverImage}
-			avatar={avatar}
-			siteTitle={siteConfig.title}
-		/>
-	</div>
+	<div class="share-label">{i18n(I18nKey.shareArticle)}</div>
+	<ShareButtons
+		client:load
+		title={title}
+		url={postUrl}
+		description={description || ""}
+		author={author || ""}
+		pubDate={pubDate.toISOString()}
+		coverImage={coverImage}
+		avatar={avatar}
+		siteTitle={siteConfig.title}
+	/>
 </div>
 
 <style>
 	.share-component {
-		position: relative;
-		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		padding: 1.5rem;
 		background: var(--card-bg);
 		border: 1px solid var(--line-divider);
 		border-radius: 1rem;
-		padding: 1.5rem;
-	}
-
-	.share-header {
-		margin-bottom: 1.25rem;
-		padding-bottom: 1rem;
-		border-bottom: 1px solid var(--line-divider);
-	}
-
-	.share-title {
-		font-size: 1.125rem;
-		font-weight: 600;
-		color: var(--text-primary);
-		margin-bottom: 0.75rem;
-		line-height: 1.4;
-	}
-
-	.share-meta {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.5rem;
-		font-size: 0.875rem;
-		color: var(--text-secondary);
 	}
 
 	.share-label {
-		color: var(--text-meta);
-		margin-right: 0.25rem;
-	}
-
-	.share-value {
-		color: var(--text-primary);
-	}
-
-	.share-divider {
-		color: var(--line-divider);
-	}
-
-	.share-actions {
-		display: flex;
-		justify-content: center;
+		font-size: 0.9375rem;
+		font-weight: 500;
+		color: var(--text-secondary);
 	}
 
 	@media (max-width: 640px) {
 		.share-component {
 			padding: 1.25rem;
-		}
-
-		.share-title {
-			font-size: 1rem;
-		}
-
-		.share-meta {
-			font-size: 0.8125rem;
 		}
 	}
 </style>

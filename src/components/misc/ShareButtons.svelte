@@ -108,11 +108,7 @@
 	const CONTENT_WIDTH = WIDTH - PADDING * 2;
 	const FONT_FAMILY = "'Crimson Pro', 'Zhuque Fangsong UI', Georgia, serif";
 
-	function getLines(
-		ctx: CanvasRenderingContext2D,
-		text: string,
-		maxWidth: number,
-	): string[] {
+	function getLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
 		const lines: string[] = [];
 		let currentLine = "";
 
@@ -381,7 +377,7 @@
 
 			ctx.fillStyle = "#1f2937";
 			ctx.font = `700 ${20 * SCALE}px ${FONT_FAMILY}`;
-			ctx.fillText(author, textX, footerY + 20 * SCALE);
+			ctx.fillText(author || i18n(I18nKey.author), textX, footerY + 20 * SCALE);
 
 			ctx.fillStyle = "#1f2937";
 			ctx.font = `700 ${18 * SCALE}px ${FONT_FAMILY}`;
@@ -422,6 +418,10 @@
 		showPoster = false;
 	}
 
+	function closeQRCode() {
+		showQRCode = false;
+	}
+
 	function portal(node: HTMLElement) {
 		document.body.appendChild(node);
 		return {
@@ -434,36 +434,32 @@
 	}
 </script>
 
-<div class="share-buttons-wrapper">
+<div class="share-buttons">
 	<!-- 分享平台按钮 -->
-	<div class="share-platforms">
-		{#each sharePlatforms as platform}
-			<button
-				class="share-btn"
-				style="--btn-color: {platform.color}"
-				on:click={platform.action}
-				aria-label="分享到{platform.name}"
-				title="分享到{platform.name}"
-			>
-				<Icon icon={platform.icon} width="20" height="20" />
-			</button>
-		{/each}
-	</div>
+	{#each sharePlatforms as platform}
+		<button
+			class="share-btn"
+			style="--btn-color: {platform.color}"
+			on:click={platform.action}
+			aria-label="分享到{platform.name}"
+			title="分享到{platform.name}"
+		>
+			<Icon icon={platform.icon} width="22" height="22" />
+		</button>
+	{/each}
 
 	<!-- 复制链接按钮 -->
 	<button
 		class="share-btn copy-btn"
+		class:copied
 		on:click={copyLink}
 		aria-label="复制链接"
 		title="复制链接"
 	>
 		{#if copied}
-			<Icon icon="material-symbols:check" width="20" height="20" />
+			<Icon icon="material-symbols:check" width="22" height="22" />
 		{:else}
-			<Icon icon="material-symbols:link" width="20" height="20" />
-		{/if}
-		{#if copied}
-			<span class="btn-text">{i18n(I18nKey.copied)}</span>
+			<Icon icon="material-symbols:link" width="22" height="22" />
 		{/if}
 	</button>
 
@@ -474,36 +470,35 @@
 		aria-label="生成分享海报"
 		title="生成分享海报"
 	>
-		<Icon icon="material-symbols:android-now-wallpaper" width="20" height="20" />
+		<Icon icon="material-symbols:android-now-wallpaper" width="22" height="22" />
 	</button>
-
-	<!-- 微信二维码弹窗 -->
-	{#if showQRCode}
-		<div class="qrcode-popup">
-			<div class="qrcode-content">
-				<div class="qrcode-title">微信扫码分享</div>
-				{#if qrCodeDataUrl}
-					<img src={qrCodeDataUrl} alt="QR Code" class="qrcode-image" />
-				{:else}
-					<div class="qrcode-loading">生成中...</div>
-				{/if}
-				<div class="qrcode-hint">打开微信扫一扫</div>
-			</div>
-		</div>
-	{/if}
 </div>
+
+<!-- 微信二维码弹窗 -->
+{#if showQRCode}
+	<div class="qrcode-overlay" on:click={closeQRCode}>
+		<div class="qrcode-popup" on:click|stopPropagation>
+			<button class="close-btn" on:click={closeQRCode}>
+				<Icon icon="material-symbols:close" width="20" height="20" />
+			</button>
+			<div class="qrcode-title">微信扫码分享</div>
+			{#if qrCodeDataUrl}
+				<img src={qrCodeDataUrl} alt="QR Code" class="qrcode-image" />
+			{:else}
+				<div class="qrcode-loading">生成中...</div>
+			{/if}
+			<div class="qrcode-hint">打开微信扫一扫</div>
+		</div>
+	</div>
+{/if}
 
 <!-- 海报弹窗 -->
 {#if showPoster}
-	<div
-		use:portal
-		class="poster-modal"
-		on:click={closeModal}
-	>
-		<div
-			class="poster-content"
-			on:click|stopPropagation
-		>
+	<div class="poster-modal" on:click={closeModal}>
+		<div class="poster-content" on:click|stopPropagation>
+			<button class="close-btn" on:click={closeModal}>
+				<Icon icon="material-symbols:close" width="20" height="20" />
+			</button>
 			<div class="poster-image-wrapper">
 				{#if posterImage}
 					<img src={posterImage} alt="Share Poster" class="poster-image" />
@@ -535,24 +530,18 @@
 {/if}
 
 <style>
-	.share-buttons-wrapper {
+	.share-buttons {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: center;
-		gap: 0.75rem;
-		position: relative;
-	}
-
-	.share-platforms {
-		display: flex;
-		gap: 0.5rem;
+		gap: 0.625rem;
 	}
 
 	.share-btn {
-		width: 2.5rem;
-		height: 2.5rem;
-		border-radius: 0.625rem;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -560,17 +549,16 @@
 		border: 1px solid var(--line-divider);
 		color: var(--text-secondary);
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: all 0.25s ease;
 	}
 
 	.share-btn:hover {
-		background: var(--btn-regular-bg-hover);
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		transform: translateY(-3px);
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 	}
 
 	.share-btn:active {
-		transform: translateY(0);
+		transform: translateY(-1px);
 	}
 
 	.share-btn[style*="--btn-color"]:hover {
@@ -579,64 +567,80 @@
 		border-color: var(--btn-color);
 	}
 
-	.copy-btn,
-	.poster-btn {
+	.copy-btn:hover,
+	.poster-btn:hover {
 		background: var(--primary);
 		color: white;
 		border-color: var(--primary);
 	}
 
-	.copy-btn:hover,
-	.poster-btn:hover {
-		filter: brightness(1.1);
-	}
-
-	.btn-text {
-		font-size: 0.75rem;
-		position: absolute;
-		bottom: -1.25rem;
-		left: 50%;
-		transform: translateX(-50%);
-		white-space: nowrap;
-		color: var(--primary);
+	.copy-btn.copied {
+		background: #10b981;
+		color: white;
+		border-color: #10b981;
 	}
 
 	/* 二维码弹窗 */
-	.qrcode-popup {
-		position: absolute;
-		bottom: calc(100% + 0.75rem);
-		left: 50%;
-		transform: translateX(-50%);
-		background: var(--card-bg);
-		border: 1px solid var(--line-divider);
-		border-radius: 0.75rem;
-		padding: 1rem;
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-		z-index: 100;
+	.qrcode-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(4px);
 	}
 
-	.qrcode-content {
+	.qrcode-popup {
+		position: relative;
+		background: var(--card-bg);
+		border-radius: 1rem;
+		padding: 1.5rem;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.75rem;
+	}
+
+	.qrcode-popup .close-btn {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		border: none;
+		background: transparent;
+		color: var(--text-secondary);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s;
+	}
+
+	.qrcode-popup .close-btn:hover {
+		background: var(--btn-regular-bg-hover);
+		color: var(--text-primary);
 	}
 
 	.qrcode-title {
-		font-size: 0.875rem;
+		font-size: 1rem;
 		font-weight: 500;
 		color: var(--text-primary);
 	}
 
 	.qrcode-image {
-		width: 150px;
-		height: 150px;
+		width: 180px;
+		height: 180px;
 		border-radius: 0.5rem;
 	}
 
 	.qrcode-loading {
-		width: 150px;
-		height: 150px;
+		width: 180px;
+		height: 180px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -644,7 +648,7 @@
 	}
 
 	.qrcode-hint {
-		font-size: 0.75rem;
+		font-size: 0.8125rem;
 		color: var(--text-secondary);
 	}
 
@@ -662,17 +666,40 @@
 	}
 
 	.poster-content {
+		position: relative;
 		background: var(--card-bg);
 		border-radius: 1rem;
-		max-width: 28rem;
+		max-width: 26rem;
 		width: 100%;
 		max-height: 90vh;
 		overflow: hidden;
 		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 	}
 
+	.poster-content .close-btn {
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		border: none;
+		background: rgba(0, 0, 0, 0.5);
+		color: white;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s;
+		z-index: 10;
+	}
+
+	.poster-content .close-btn:hover {
+		background: rgba(0, 0, 0, 0.7);
+	}
+
 	.poster-image-wrapper {
-		padding: 1.5rem;
+		padding: 1.25rem;
 		display: flex;
 		justify-content: center;
 		min-height: 200px;
@@ -681,7 +708,7 @@
 
 	.poster-image {
 		max-width: 100%;
-		max-height: 60vh;
+		max-height: 55vh;
 		border-radius: 0.5rem;
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 	}
@@ -712,7 +739,7 @@
 	.poster-actions {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 0.75rem;
+		gap: 0.625rem;
 		padding: 1rem;
 		border-top: 1px solid var(--line-divider);
 	}
@@ -756,16 +783,8 @@
 
 	@media (max-width: 640px) {
 		.share-btn {
-			width: 2.25rem;
-			height: 2.25rem;
-		}
-
-		.qrcode-popup {
-			position: fixed;
-			bottom: auto;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
+			width: 2.5rem;
+			height: 2.5rem;
 		}
 	}
 </style>
