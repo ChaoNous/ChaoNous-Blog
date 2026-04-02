@@ -1,5 +1,6 @@
 ---
 import ConfigCarrier from "@components/ConfigCarrier.astro";
+import BackToTop from "@components/control/BackToTop.astro";
 import JsonLd from "@components/seo/JsonLd.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import { musicPlayerConfig, profileConfig, siteConfig } from "@/config";
@@ -350,6 +351,7 @@ const bannerOffset =
 	>
 		<ConfigCarrier />
 		<slot />
+		<BackToTop />
 		<script>
 			import "../scripts/theme.ts";
 		</script>
