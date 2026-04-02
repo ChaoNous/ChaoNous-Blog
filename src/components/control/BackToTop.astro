@@ -26,29 +26,17 @@ import { Icon } from "astro-icon/components";
 		background: var(--card-bg);
 		border: 1px solid var(--line-divider);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		opacity: 0;
-		visibility: hidden;
-		transform: translateY(1rem);
+		opacity: 0.85;
+		cursor: pointer;
 		transition:
 			opacity 0.3s ease,
-			transform 0.3s ease,
-			visibility 0.3s ease;
-		cursor: pointer;
+			transform 0.3s ease;
 	}
 
 	.back-to-top-btn:hover {
 		background: var(--btn-plain-bg-hover);
-		transform: translateY(0);
-	}
-
-	.back-to-top-btn.visible {
-		opacity: 0.85;
-		visibility: visible;
-		transform: translateY(0);
-	}
-
-	.back-to-top-btn.visible:hover {
 		opacity: 1;
+		transform: translateY(-2px);
 	}
 
 	@media (max-width: 768px) {
@@ -73,10 +61,6 @@ import { Icon } from "astro-icon/components";
 
 	class BackToTop {
 		private btn: HTMLElement | null;
-		private threshold = 300;
-		private handleScroll = () => {
-			this.updateVisibility();
-		};
 		private handleClick = () => {
 			window.scrollTo({ top: 0, behavior: "smooth" });
 		};
@@ -87,26 +71,10 @@ import { Icon } from "astro-icon/components";
 		}
 
 		private init() {
-			window.addEventListener("scroll", this.handleScroll, { passive: true });
 			this.btn?.addEventListener("click", this.handleClick);
-			this.updateVisibility();
-		}
-
-		private updateVisibility() {
-			if (!this.btn) return;
-
-			const scrollTop =
-				window.scrollY || document.documentElement.scrollTop;
-
-			if (scrollTop > this.threshold) {
-				this.btn.classList.add("visible");
-			} else {
-				this.btn.classList.remove("visible");
-			}
 		}
 
 		destroy() {
-			window.removeEventListener("scroll", this.handleScroll);
 			this.btn?.removeEventListener("click", this.handleClick);
 		}
 	}
