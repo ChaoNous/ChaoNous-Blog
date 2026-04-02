@@ -83,17 +83,11 @@
 						aria-label={opt.name}
 						title={opt.name}
 					>
+						<span class="color-name">{opt.name}</span>
 						{#if hueUI === opt.hue}
 							<span class="indicator"></span>
 						{/if}
 					</button>
-				{/each}
-			</div>
-			<div class="color-labels">
-				{#each colorOptions as opt, i}
-					<span class="color-label" class:active={hueUI === opt.hue}>
-						{opt.name}
-					</span>
 				{/each}
 			</div>
 		</div>
@@ -122,7 +116,7 @@
 
 	.color-bar
 		display flex
-		height 2rem
+		height 2.5rem
 		border-radius 0.375rem
 		overflow hidden
 
@@ -135,6 +129,13 @@
 		align-items center
 		justify-content center
 
+		.color-name
+			font-size 0.875rem
+			font-weight 500
+			color rgba(255, 255, 255, 0.9)
+			text-shadow 0 1px 2px rgba(0, 0, 0, 0.3)
+			z-index 1
+
 		.indicator
 			position absolute
 			bottom 0.15rem
@@ -145,19 +146,4 @@
 			border-left 0.4rem solid transparent
 			border-right 0.4rem solid transparent
 			border-bottom 0.5rem solid rgba(255, 255, 255, 0.85)
-
-	.color-labels
-		display flex
-		margin-top 0.5rem
-
-	.color-label
-		flex 1 1 0
-		text-align center
-		font-size 0.75rem
-		color var(--text-secondary)
-		transition color 0.2s ease
-
-		&.active
-			color var(--primary)
-			font-weight 600
 </style>
