@@ -108,7 +108,6 @@ export type SiteConfig = {
     enable: boolean;
     mode: "float" | "sidebar";
     depth: 1 | 2 | 3;
-    useJapaneseBadge?: boolean;
   };
   showCoverInContent: boolean;
   generateOgImages: boolean;

@@ -17,7 +17,6 @@ import { expressiveCodeConfig, siteConfig } from "../config";
 	define:vars={{
 		tocEnable: siteConfig.toc.enable,
 		tocDepth: siteConfig.toc.depth,
-		tocUseJapaneseBadge: siteConfig.toc.useJapaneseBadge,
 	}}
 >
 	// 将TOC配置传递到前端
@@ -25,6 +24,5 @@ import { expressiveCodeConfig, siteConfig } from "../config";
 	window.siteConfig.toc = {
 		enable: tocEnable,
 		depth: tocDepth,
-		useJapaneseBadge: tocUseJapaneseBadge,
 	};
 </script>

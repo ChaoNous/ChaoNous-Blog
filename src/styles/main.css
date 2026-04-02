@@ -25,21 +25,17 @@
 }
 
 html {
-  @apply scroll-smooth;
-  @apply text-black;
-  font-size: 110%; /* 适当放大全局字体 */
+  @apply scroll-smooth text-black;
+  font-size: 110%;
   scrollbar-width: none;
   -ms-overflow-style: none;
   background-color: var(--page-bg);
-  /* 增强全屏背景下的文字可读性 */
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
 
   &.dark {
     @apply text-white;
     background-color: var(--page-bg);
-    text-shadow:
-      0 0 1px rgba(0, 0, 0, 0.7),
-      0 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -55,13 +51,10 @@ body {
     radial-gradient(circle at 82% 10%, var(--page-bg-accent) 0%, transparent 26%),
     linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
   background-attachment: fixed;
-  transition:
-    background-color 0.2s ease,
-    background-image 0.2s ease,
-    color 0.15s ease;
+  transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
 }
 
-/* 缣帛纹理效果 - 细腻丝绸质感（朱砂赤主题） */
+/* 缣帛纹理效果（朱砂赤主题） */
 [data-theme-material="silk"] body::before {
   content: "";
   position: fixed;
@@ -70,41 +63,10 @@ body {
   z-index: 0;
   opacity: 1;
   background:
-    /* 丝绸光泽渐变 - 增强 */
-    linear-gradient(
-      135deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.08) 20%,
-      transparent 40%,
-      rgba(255, 255, 255, 0.06) 60%,
-      transparent 80%,
-      rgba(255, 255, 255, 0.04) 100%
-    ),
-    /* 细腻斜纹织法 - 增强 */
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 1px,
-      rgba(180, 140, 100, 0.06) 1px,
-      rgba(180, 140, 100, 0.06) 3px
-    ),
-    /* 纵向丝线 - 增强 */
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(180, 140, 100, 0.04) 2px,
-      rgba(180, 140, 100, 0.04) 5px
-    ),
-    /* 横向丝线 */
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(180, 140, 100, 0.025) 3px,
-      rgba(180, 140, 100, 0.025) 6px
-    ),
-    /* 丝绸底纹 */
+    linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.08) 20%, transparent 40%, rgba(255, 255, 255, 0.06) 60%, transparent 80%, rgba(255, 255, 255, 0.04) 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(180, 140, 100, 0.06) 1px, rgba(180, 140, 100, 0.06) 3px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(180, 140, 100, 0.04) 2px, rgba(180, 140, 100, 0.04) 5px),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(180, 140, 100, 0.025) 3px, rgba(180, 140, 100, 0.025) 6px),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.025' numOctaves='4' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.5' result='light'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 400px 400px;
   mix-blend-mode: multiply;
@@ -118,26 +80,12 @@ body {
   z-index: 0;
   opacity: 0.5;
   background:
-    /* 丝绸反光层 - 增强 */
-    linear-gradient(
-      155deg,
-      transparent 20%,
-      rgba(255, 250, 240, 0.12) 45%,
-      rgba(255, 250, 240, 0.08) 55%,
-      transparent 80%
-    ),
-    /* 织纹光泽 */
-    repeating-linear-gradient(
-      135deg,
-      transparent,
-      transparent 8px,
-      rgba(255, 255, 255, 0.03) 8px,
-      rgba(255, 255, 255, 0.03) 16px
-    );
+    linear-gradient(155deg, transparent 20%, rgba(255, 250, 240, 0.12) 45%, rgba(255, 250, 240, 0.08) 55%, transparent 80%),
+    repeating-linear-gradient(135deg, transparent, transparent 8px, rgba(255, 255, 255, 0.03) 8px, rgba(255, 255, 255, 0.03) 16px);
   mix-blend-mode: overlay;
 }
 
-/* 羊皮纸纹理效果 - 古朴平整（提尔紫主题） */
+/* 羊皮纸纹理效果（提尔紫主题） */
 [data-theme-material="parchment"] body::before {
   content: "";
   position: fixed;
@@ -146,23 +94,8 @@ body {
   z-index: 0;
   opacity: 1;
   background:
-    /* 纤维纹理 - 横向 - 柔和 */
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(140, 110, 70, 0.04) 2px,
-      rgba(140, 110, 70, 0.04) 5px
-    ),
-    /* 纤维纹理 - 纵向 - 柔和 */
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(140, 110, 70, 0.03) 2px,
-      rgba(140, 110, 70, 0.03) 6px
-    ),
-    /* 羊皮纸均匀底纹 - 平滑 */
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(140, 110, 70, 0.04) 2px, rgba(140, 110, 70, 0.04) 5px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(140, 110, 70, 0.03) 2px, rgba(140, 110, 70, 0.03) 6px),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f8f4ec' surfaceScale='0.8' result='light'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
   background-size: 100% 100%, 100% 100%, 400px 400px;
   mix-blend-mode: multiply;
@@ -175,9 +108,7 @@ body {
   pointer-events: none;
   z-index: 0;
   opacity: 0.3;
-  background:
-    /* 轻微斑点 */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.15'/%3E%3C/svg%3E");
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.15'/%3E%3C/svg%3E");
   background-size: 300px 300px;
   mix-blend-mode: overlay;
 }
@@ -186,35 +117,10 @@ body {
 [data-theme-material="silk"].dark body::before {
   opacity: 1;
   background:
-    linear-gradient(
-      135deg,
-      transparent 0%,
-      rgba(255, 230, 200, 0.04) 20%,
-      transparent 40%,
-      rgba(255, 230, 200, 0.03) 60%,
-      transparent 80%
-    ),
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 1px,
-      rgba(200, 160, 100, 0.04) 1px,
-      rgba(200, 160, 100, 0.04) 3px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(200, 160, 100, 0.03) 2px,
-      rgba(200, 160, 100, 0.03) 5px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(200, 160, 100, 0.02) 3px,
-      rgba(200, 160, 100, 0.02) 6px
-    ),
+    linear-gradient(135deg, transparent 0%, rgba(255, 230, 200, 0.04) 20%, transparent 40%, rgba(255, 230, 200, 0.03) 60%, transparent 80%),
+    repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(200, 160, 100, 0.04) 1px, rgba(200, 160, 100, 0.04) 3px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(200, 160, 100, 0.03) 2px, rgba(200, 160, 100, 0.03) 5px),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(200, 160, 100, 0.02) 3px, rgba(200, 160, 100, 0.02) 6px),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.025' numOctaves='4' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23352820' surfaceScale='1.2' result='light'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 400px 400px;
   mix-blend-mode: soft-light;
@@ -222,14 +128,7 @@ body {
 
 [data-theme-material="silk"].dark body::after {
   opacity: 0.4;
-  background:
-    linear-gradient(
-      155deg,
-      transparent 20%,
-      rgba(255, 240, 220, 0.06) 45%,
-      rgba(255, 240, 220, 0.04) 55%,
-      transparent 80%
-    );
+  background: linear-gradient(155deg, transparent 20%, rgba(255, 240, 220, 0.06) 45%, rgba(255, 240, 220, 0.04) 55%, transparent 80%);
   mix-blend-mode: overlay;
 }
 
@@ -237,20 +136,8 @@ body {
 [data-theme-material="parchment"].dark body::before {
   opacity: 1;
   background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(200, 170, 120, 0.035) 2px,
-      rgba(200, 170, 120, 0.035) 5px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(200, 170, 120, 0.025) 2px,
-      rgba(200, 170, 120, 0.025) 6px
-    ),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(200, 170, 120, 0.035) 2px, rgba(200, 170, 120, 0.035) 5px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(200, 170, 120, 0.025) 2px, rgba(200, 170, 120, 0.025) 6px),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23302820' surfaceScale='0.6' result='light'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
   background-size: 100% 100%, 100% 100%, 400px 400px;
   mix-blend-mode: soft-light;
@@ -258,8 +145,7 @@ body {
 
 [data-theme-material="parchment"].dark body::after {
   opacity: 0.25;
-  background:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.12'/%3E%3C/svg%3E");
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.12'/%3E%3C/svg%3E");
   background-size: 300px 300px;
   mix-blend-mode: overlay;
 }
@@ -282,7 +168,6 @@ body::-webkit-scrollbar {
   ::view-transition-new(root) {
     animation-duration: 0.5s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
     mix-blend-mode: normal;
   }
 
@@ -298,33 +183,23 @@ body::-webkit-scrollbar {
 
   ::view-transition-new(root) {
     animation-name: theme-fade-in;
-
     z-index: 1;
   }
 
   @keyframes theme-fade-out {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
+    0% { opacity: 1; }
+    100% { opacity: 0; }
   }
 
   @keyframes theme-fade-in {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+    0% { opacity: 0; }
+    100% { opacity: 1; }
   }
 
   .transition,
   [class*="border"],
   [class*="transition"] {
-    transition-property:
-      color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.15s;
   }
@@ -345,7 +220,6 @@ body::-webkit-scrollbar {
 
   .is-theme-transitioning .expressive-code {
     content-visibility: hidden !important;
-
     opacity: 0.99;
   }
 
@@ -353,6 +227,7 @@ body::-webkit-scrollbar {
     content-visibility: visible !important;
     opacity: 1 !important;
   }
+
   .is-theme-transitioning:not(.use-view-transition) .float-panel,
   .is-theme-transitioning:not(.use-view-transition) .float-panel *,
   .is-theme-transitioning:not(.use-view-transition) .music-player,
@@ -377,30 +252,12 @@ body::-webkit-scrollbar {
   }
 
   .is-theme-transitioning:not(.use-view-transition) #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    #navbar[data-transparent-mode]
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    #navbar[data-transparent-mode].scrolled
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    #banner-wrapper
-    ~ *
-    #navbar
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    #banner-wrapper
-    ~ *
-    #navbar[data-transparent-mode]
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    body:has(#banner-wrapper)
-    #navbar
-    > div,
-  .is-theme-transitioning:not(.use-view-transition)
-    body:has(#banner-wrapper)
-    #navbar[data-transparent-mode]
-    > div {
+  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode] > div,
+  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode].scrolled > div,
+  .is-theme-transitioning:not(.use-view-transition) #banner-wrapper ~ * #navbar > div,
+  .is-theme-transitioning:not(.use-view-transition) #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
+  .is-theme-transitioning:not(.use-view-transition) body:has(#banner-wrapper) #navbar > div,
+  .is-theme-transitioning:not(.use-view-transition) body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
     transition: none !important;
     backdrop-filter: none !important;
   }
@@ -409,14 +266,12 @@ body::-webkit-scrollbar {
   .is-theme-transitioning .float-panel,
   .is-theme-transitioning #display-setting,
   .is-theme-transitioning #nav-menu-panel,
-  .is-theme-transitioning #translate-panel,
   .is-theme-transitioning #search-panel {
     transition: none !important;
     backdrop-filter: none !important;
   }
 
-  .card-base,
-  .card-base-transparent {
+  .card-base {
     @apply rounded-(--radius-large) overflow-hidden;
     background: transparent !important;
     border: none !important;
@@ -424,42 +279,30 @@ body::-webkit-scrollbar {
     contain: layout style;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  a,
-  span,
-  li,
-  ul,
-  ol,
-  blockquote,
-  code,
-  pre,
-  table,
-  th,
-  td,
-  strong {
+  h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
     @apply transition-colors duration-150;
   }
+
   .card-shadow {
     filter: none !important;
   }
+
   .is-theme-transitioning .expand-animation::before {
     transition: transform 75ms ease-out !important;
   }
+
   .is-theme-transitioning .btn-plain {
     transition: color 75ms ease-out !important;
   }
+
   .link {
     @apply transition-colors duration-150 rounded-md p-1 -m-1 expand-animation;
   }
+
   .link-lg {
     @apply transition-colors duration-150 rounded-md p-1.5 -m-1.5 expand-animation;
   }
+
   .float-panel {
     @apply top-21 rounded-(--radius-large) overflow-hidden transition-colors duration-150;
     background: transparent !important;
@@ -467,23 +310,25 @@ body::-webkit-scrollbar {
     box-shadow: none !important;
     backdrop-filter: none !important;
   }
+
   .float-panel-closed {
     @apply -translate-y-1 opacity-0 pointer-events-none;
   }
+
   .search-panel mark {
     @apply bg-transparent text-(--primary);
   }
 
   .btn-card {
-    @apply transition-colors duration-150 flex items-center justify-center bg-(--card-bg) hover:bg-(--btn-card-bg-hover)
-        active:bg-(--btn-card-bg-active);
+    @apply transition-colors duration-150 flex items-center justify-center bg-(--card-bg) hover:bg-(--btn-card-bg-hover) active:bg-(--btn-card-bg-active);
   }
+
   .btn-card.disabled {
     @apply pointer-events-none text-black dark:text-white;
   }
+
   .btn-plain {
-    @apply transition-colors duration-150 relative flex items-center justify-center bg-none
-        text-black hover:text-(--primary) dark:text-white dark:hover:text-(--primary);
+    @apply transition-colors duration-150 relative flex items-center justify-center bg-none text-black hover:text-(--primary) dark:text-white dark:hover:text-(--primary);
     &:not(.scale-animation) {
       @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active);
     }
@@ -491,14 +336,13 @@ body::-webkit-scrollbar {
       @apply expand-animation;
     }
   }
+
   .btn-regular {
-    @apply transition-colors duration-150 flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active)
-        text-black dark:text-white;
+    @apply transition-colors duration-150 flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) text-black dark:text-white;
   }
 
   .link-underline {
-    @apply transition-colors duration-150 underline decoration-2 decoration-dashed decoration-(--link-underline)
-        hover:decoration-(--link-hover) active:decoration-(--link-active) underline-offset-[0.25rem];
+    @apply transition-colors duration-150 underline decoration-2 decoration-dashed decoration-(--link-underline) hover:decoration-(--link-hover) active:decoration-(--link-active) underline-offset-[0.25rem];
   }
 
   .toc-hide,
@@ -510,6 +354,7 @@ body::-webkit-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -525,10 +370,7 @@ body::-webkit-scrollbar {
   }
 
   .floating-toc-item {
-    @apply flex items-center gap-2 py-2 px-2 rounded-lg leading-relaxed;
-    @apply text-black/88 dark:text-white/88;
-    @apply hover:bg-(--btn-plain-bg-hover) hover:text-(--primary);
-    @apply transition-all duration-150;
+    @apply flex items-center gap-2 py-2 px-2 rounded-lg leading-relaxed text-black/88 dark:text-white/88 hover:bg-(--btn-plain-bg-hover) hover:text-(--primary) transition-all duration-150;
     text-decoration: none;
   }
 
@@ -537,21 +379,15 @@ body::-webkit-scrollbar {
   }
 
   .floating-toc-badge {
-    @apply inline-flex items-center justify-center shrink-0;
-    @apply min-w-5 h-5 px-1 rounded-md;
-    @apply bg-(--toc-badge-bg) text-(--btn-content);
-    @apply text-base font-semibold;
+    @apply inline-flex items-center justify-center shrink-0 min-w-5 h-5 px-1 rounded-md bg-(--toc-badge-bg) text-(--btn-content) text-base font-semibold;
   }
 
   .floating-toc-dot {
-    @apply inline-block shrink-0 ml-1.5;
-    @apply w-2 h-2 rounded-sm bg-(--toc-badge-bg);
+    @apply inline-block shrink-0 ml-1.5 w-2 h-2 rounded-sm bg-(--toc-badge-bg);
   }
 
   .floating-toc-dot-small {
-    @apply inline-block shrink-0 ml-1.5;
-    @apply w-1.5 h-1.5 rounded-sm;
-    @apply bg-black/10 dark:bg-white/15;
+    @apply inline-block shrink-0 ml-1.5 w-1.5 h-1.5 rounded-sm bg-black/10 dark:bg-white/15;
   }
 
   .floating-toc-text {
@@ -626,21 +462,11 @@ body::-webkit-scrollbar {
   }
 
   .meta-icon {
-    @apply w-8 h-8 transition-colors duration-150 rounded-md flex items-center justify-center bg-(--btn-regular-bg)
-        text-(--btn-content) mr-2;
-  }
-  .with-divider {
-    @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-(--content-meta) before:text-base
-        before:font-medium before:first-of-type:hidden before:transition-colors before:duration-150;
+    @apply w-8 h-8 transition-colors duration-150 rounded-md flex items-center justify-center bg-(--btn-regular-bg) text-(--btn-content) mr-2;
   }
 
-  .btn-regular-dark {
-    @apply flex items-center justify-center
-        bg-[oklch(0.45_0.01_var(--hue))] hover:bg-[oklch(0.50_0.01_var(--hue))] active:bg-[oklch(0.55_0.01_var(--hue))]
-        dark:bg-[oklch(0.30_0.02_var(--hue))] dark:hover:bg-[oklch(0.35_0.03_var(--hue))] dark:active:bg-[oklch(0.40_0.03_var(--hue))];
-  }
-  .btn-regular-dark.success {
-    @apply bg-[oklch(0.75_0.14_var(--hue))] dark:bg-[oklch(0.75_0.14_var(--hue))];
+  .with-divider {
+    @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-(--content-meta) before:text-base before:font-medium before:first-of-type:hidden before:transition-colors before:duration-150;
   }
 }
 
@@ -662,22 +488,6 @@ body::-webkit-scrollbar {
   color: #ffffff;
 }
 
-.dash-line {
-  position: relative;
-}
-
-.dash-line::before {
-  content: "";
-  position: absolute;
-  width: 10%;
-  height: 100%;
-  left: calc(50% - 1px);
-  border-left: none;
-  pointer-events: none;
-  transition: all 0.3s;
-  transform: translateY(-50%);
-}
-
 .collapsed {
   height: var(--collapsedHeight);
 }
@@ -695,6 +505,10 @@ body::-webkit-scrollbar {
   }
 }
 
+:root:not(.dark) .custom-md spoiler {
+  --_spoiler-mask: color-mix(in oklch, var(--primary) 55%, white 45%);
+}
+
 .post-list-container {
   transition: all 0.3s ease-in-out;
 }
@@ -702,7 +516,7 @@ body::-webkit-scrollbar {
 .post-list-container.list-mode {
   display: flex !important;
   flex-direction: column;
-  gap: 2rem; /* 增加列表间隔 */
+  gap: 2rem;
 }
 
 .post-list-container.grid-mode .post-card-item {
@@ -769,9 +583,6 @@ body::-webkit-scrollbar {
     gap: 1rem;
   }
 }
-:root:not(.dark) .custom-md spoiler {
-  --_spoiler-mask: color-mix(in oklch, var(--primary) 55%, white 45%);
-}
 
 .post-card-item {
   content-visibility: auto;
@@ -836,6 +647,7 @@ html {
   }
 }
 
+/* CSS 变量 */
 :root {
   --radius-large: 1rem;
   --primary: oklch(0.7 0.14 var(--hue));
@@ -844,16 +656,8 @@ html {
   --page-bg-bottom: oklch(0.85 0.03 var(--hue));
   --page-bg-accent-soft: color-mix(in oklch, oklch(0.78 0.08 var(--hue)) 35%, transparent);
   --page-bg-accent: color-mix(in oklch, oklch(0.70 0.12 var(--hue)) 28%, transparent);
-  --page-bg-accent-strong: color-mix(
-    in oklch,
-    oklch(0.62 0.14 var(--hue)) 18%,
-    transparent
-  );
-  --page-bg-paper-grain: color-mix(
-    in oklch,
-    oklch(0.92 0.025 var(--hue)) 82%,
-    oklch(0.94 0.02 var(--hue)) 18%
-  );
+  --page-bg-accent-strong: color-mix(in oklch, oklch(0.62 0.14 var(--hue)) 18%, transparent);
+  --page-bg-paper-grain: color-mix(in oklch, oklch(0.92 0.025 var(--hue)) 82%, oklch(0.94 0.02 var(--hue)) 18%);
   --card-bg: oklch(0.93 0.025 var(--hue));
   --card-bg-transparent: oklch(0.93 0.025 var(--hue) / 0.88);
   --btn-content: oklch(0.5 0.1 var(--hue));
@@ -902,16 +706,8 @@ html {
   --page-bg-bottom: oklch(0.32 0.05 var(--hue));
   --page-bg-accent-soft: color-mix(in oklch, oklch(0.48 0.12 var(--hue)) 40%, transparent);
   --page-bg-accent: color-mix(in oklch, oklch(0.55 0.16 var(--hue)) 32%, transparent);
-  --page-bg-accent-strong: color-mix(
-    in oklch,
-    oklch(0.60 0.18 var(--hue)) 22%,
-    transparent
-  );
-  --page-bg-paper-grain: color-mix(
-    in oklch,
-    oklch(0.38 0.06 var(--hue)) 84%,
-    oklch(0.32 0.05 var(--hue)) 16%
-  );
+  --page-bg-accent-strong: color-mix(in oklch, oklch(0.60 0.18 var(--hue)) 22%, transparent);
+  --page-bg-paper-grain: color-mix(in oklch, oklch(0.38 0.06 var(--hue)) 84%, oklch(0.32 0.05 var(--hue)) 16%);
   --card-bg: oklch(0.40 0.055 var(--hue));
   --card-bg-transparent: oklch(0.40 0.055 var(--hue) / 0.88);
   --btn-content: oklch(0.75 0.08 var(--hue));
@@ -933,22 +729,6 @@ html {
   --link-hover: oklch(0.46 0.08 var(--hue));
   --link-active: oklch(0.38 0.05 var(--hue));
   --float-panel-bg: oklch(0.30 0.02 var(--hue));
-  --color-selection-bar: linear-gradient(
-    to right,
-    oklch(0.7 0.1 0) 0%,
-    oklch(0.7 0.1 30) 8.33%,
-    oklch(0.7 0.1 60) 16.67%,
-    oklch(0.7 0.1 90) 25%,
-    oklch(0.7 0.1 120) 33.33%,
-    oklch(0.7 0.1 150) 41.67%,
-    oklch(0.7 0.1 180) 50%,
-    oklch(0.7 0.1 210) 58.33%,
-    oklch(0.7 0.1 240) 66.67%,
-    oklch(0.7 0.1 270) 75%,
-    oklch(0.7 0.1 300) 83.33%,
-    oklch(0.7 0.1 330) 91.67%,
-    oklch(0.7 0.1 360) 100%
-  );
   --toc-badge-bg: var(--btn-regular-bg);
   --toc-btn-hover: oklch(0.36 0.025 var(--hue));
   --toc-btn-active: oklch(0.38 0.025 var(--hue));
@@ -967,10 +747,7 @@ html {
   text-shadow: none;
 }
 
-html.dark {
-  background: var(--page-bg);
-}
-
+html.dark,
 html.dark body {
   background: var(--page-bg);
 }
@@ -1025,13 +802,7 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in oklch, currentColor 10%, transparent) 14%,
-    color-mix(in oklch, currentColor 10%, transparent) 86%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, color-mix(in oklch, currentColor 10%, transparent) 14%, color-mix(in oklch, currentColor 10%, transparent) 86%, transparent 100%);
 }
 
 .float-panel,
@@ -1043,10 +814,7 @@ body {
   backdrop-filter: var(--panel-blur) !important;
   box-shadow: var(--shadow-lg) !important;
   border: none !important;
-  transition:
-    background 0.3s ease,
-    backdrop-filter 0.3s ease,
-    box-shadow 0.3s ease !important;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease !important;
 }
 
 #display-setting {
@@ -1082,9 +850,7 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
 
 #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div,
 #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div,
-body:has(#banner-wrapper)
-  #navbar[data-transparent-mode="semifull"]:not(.scrolled)
-  > div {
+body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div {
   --nav-bg: transparent;
   --nav-blur: none;
   --nav-shadow: none;
@@ -1106,15 +872,8 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > d
 :root.dark #navbar[data-transparent-mode="semifull"].scrolled > div,
 :root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
 :root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div,
-:root.dark
-  #banner-wrapper
-  ~ *
-  #navbar[data-transparent-mode="semifull"].scrolled
-  > div,
-:root.dark
-  body:has(#banner-wrapper)
-  #navbar[data-transparent-mode="semifull"].scrolled
-  > div {
+:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"].scrolled > div,
+:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > div {
   --nav-bg: rgba(0, 0, 0, 0.55);
   --nav-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }

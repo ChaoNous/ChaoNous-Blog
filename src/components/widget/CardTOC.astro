@@ -13,7 +13,6 @@ const { headings = [] } = Astro.props;
 const className = Astro.props.class;
 const style = Astro.props.style;
 const tocDepth = siteConfig.toc.depth;
-const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 const headingsJson = JSON.stringify(headings);
 ---
 
@@ -26,7 +25,6 @@ const headingsJson = JSON.stringify(headings);
 	<div
 		class="card-toc-wrapper"
 		data-depth={tocDepth}
-		data-japanese-badge={useJapaneseBadge}
 		data-headings={headingsJson}
 	>
 		<div class="toc-scroll-container overflow-y-auto overflow-x-hidden">
@@ -158,12 +156,11 @@ const headingsJson = JSON.stringify(headings);
 		word-break: break-word;
 		overflow-wrap: anywhere;
 	}
-
-
 </style>
 
 <script>
 	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+	import { getMinLevel, updateActiveHeading } from "../../utils/toc-utils.js";
 
 	interface HeadingData {
 		depth: number;
@@ -178,11 +175,8 @@ const headingsJson = JSON.stringify(headings);
 		private tocItems: HTMLElement[] = [];
 		private activeIndex = -1;
 		private observer: MutationObserver | null = null;
-		private readonly handleScroll = () => this.updateActiveHeading();
-		private readonly handleResize = () => {
-			this.syncMaxHeight();
-			this.updateActiveHeading();
-		};
+		private readonly handleScroll = () => this.updateActive();
+		private readonly handleResize = () => this.updateActive();
 		private readonly handleClick = (event: Event) => {
 			const item = (event.target as HTMLElement).closest(".card-toc-item");
 			if (!item) return;
@@ -201,41 +195,6 @@ const headingsJson = JSON.stringify(headings);
 			this.wrapper = wrapper;
 			this.content = wrapper.querySelector("[data-card-toc-content]");
 			this.init();
-		}
-
-		private getJapaneseKatakana() {
-			return [
-				"\u30a2",
-				"\u30a4",
-				"\u30a6",
-				"\u30a8",
-				"\u30aa",
-				"\u30ab",
-				"\u30ad",
-				"\u30af",
-				"\u30b1",
-				"\u30b3",
-				"\u30b5",
-				"\u30b7",
-				"\u30b9",
-				"\u30bb",
-				"\u30bd",
-				"\u30bf",
-				"\u30c1",
-				"\u30c4",
-				"\u30c6",
-				"\u30c8",
-				"\u30ca",
-				"\u30cb",
-				"\u30cc",
-				"\u30cd",
-				"\u30ce",
-				"\u30cf",
-				"\u30d2",
-				"\u30d5",
-				"\u30d8",
-				"\u30db",
-			];
 		}
 
 		private init() {
@@ -262,17 +221,7 @@ const headingsJson = JSON.stringify(headings);
 			if (!this.content) return;
 
 			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
-			const useJapaneseBadge = this.wrapper.dataset.japaneseBadge === "true";
-			const japaneseKatakana = this.getJapaneseKatakana();
-
-			// 计算最小深度用于确定顶级标题
-			let minLevel = 6;
-			headingsData.forEach((heading) => {
-				if (heading.depth < minLevel) minLevel = heading.depth;
-			});
-
-			// 使用相对深度：显示从 minLevel 开始的 depthLevels 级标题
-			// 例如：depth=2，minLevel=2 时，显示 h2 和 h3 (depth < 4)
+			const minLevel = getMinLevel(headingsData);
 			const maxVisibleDepth = minLevel + depthLevels;
 
 			this.headings = [];
@@ -280,26 +229,20 @@ const headingsJson = JSON.stringify(headings);
 			let h1Count = 0;
 
 			headingsData.forEach((heading) => {
-				const level = heading.depth;
-				// 显示 depth < maxVisibleDepth 的标题
-				if (level >= maxVisibleDepth) return;
+				if (heading.depth >= maxVisibleDepth) return;
 
 				const domElement = document.getElementById(heading.slug);
 				if (domElement) {
 					this.headings.push(domElement);
 				}
 
-				const indent = level - minLevel;
+				const indent = heading.depth - minLevel;
 				let badge = "";
 
-				if (level === minLevel) {
+				if (heading.depth === minLevel) {
 					h1Count++;
-					const badgeText =
-						useJapaneseBadge && h1Count - 1 < japaneseKatakana.length
-							? japaneseKatakana[h1Count - 1]
-							: h1Count.toString();
-					badge = `<span class="card-toc-badge">${badgeText}</span>`;
-				} else if (level === minLevel + 1) {
+					badge = `<span class="card-toc-badge">${h1Count}</span>`;
+				} else if (heading.depth === minLevel + 1) {
 					badge = '<span class="card-toc-dot"></span>';
 				} else {
 					badge = '<span class="card-toc-dot-small"></span>';
@@ -311,8 +254,7 @@ const headingsJson = JSON.stringify(headings);
 
 			this.render(html);
 			this.wrapper.classList.remove("hidden");
-			this.syncMaxHeight();
-			this.updateActiveHeading();
+			this.updateActive();
 		}
 
 		private observeContent() {
@@ -344,44 +286,30 @@ const headingsJson = JSON.stringify(headings);
 				this.wrapper.classList.add("hidden");
 				this.headings = [];
 				this.render("");
-				this.syncMaxHeight();
 				return;
 			}
 
 			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
-			const useJapaneseBadge = this.wrapper.dataset.japaneseBadge === "true";
-			const japaneseKatakana = this.getJapaneseKatakana();
-
-			let minLevel = 6;
-			allHeadings.forEach((heading) => {
-				const level = parseInt(heading.tagName[1], 10);
-				if (level < minLevel) minLevel = level;
-			});
-
-			// 使用相对深度：显示从 minLevel 开始的 depthLevels 级标题
+			const headingArray = Array.from(allHeadings) as HTMLElement[];
+			const minLevel = getMinLevel(headingArray);
 			const maxVisibleDepth = minLevel + depthLevels;
 
 			this.headings = [];
 			let html = "";
 			let h1Count = 0;
 
-			allHeadings.forEach((heading) => {
+			headingArray.forEach((heading) => {
 				const level = parseInt(heading.tagName[1], 10);
-				// 显示 depth < maxVisibleDepth 的标题
 				if (level >= maxVisibleDepth) return;
 
-				this.headings.push(heading as HTMLElement);
+				this.headings.push(heading);
 
 				const indent = level - minLevel;
 				let badge = "";
 
 				if (level === minLevel) {
 					h1Count++;
-					const badgeText =
-						useJapaneseBadge && h1Count - 1 < japaneseKatakana.length
-							? japaneseKatakana[h1Count - 1]
-							: h1Count.toString();
-					badge = `<span class="card-toc-badge">${badgeText}</span>`;
+					badge = `<span class="card-toc-badge">${h1Count}</span>`;
 				} else if (level === minLevel + 1) {
 					badge = '<span class="card-toc-dot"></span>';
 				} else {
@@ -394,46 +322,20 @@ const headingsJson = JSON.stringify(headings);
 
 			this.render(html);
 			this.wrapper.classList.remove("hidden");
-			this.syncMaxHeight();
-			this.updateActiveHeading();
+			this.updateActive();
 		}
 
 		private render(html: string) {
 			if (!this.content) return;
 
 			this.content.innerHTML = html;
-			this.tocItems = Array.from(
-				this.content.querySelectorAll(".card-toc-item"),
-			);
+			this.tocItems = Array.from(this.content.querySelectorAll(".card-toc-item"));
 		}
 
-		private syncMaxHeight() {
-			// 目录组件现在使用弹性高度，自动适应内容
-			// 保留方法以避免报错，但不再动态设置 max-height
-		}
-
-		private updateActiveHeading() {
+		private updateActive() {
 			if (!this.content || this.headings.length === 0) return;
-
 			const scrollY = window.scrollY;
-			const offsetTop = 150;
-			let newActiveIndex = -1;
-
-			for (let i = 0; i < this.headings.length; i++) {
-				const heading = this.headings[i];
-				if (heading.getBoundingClientRect().top + scrollY < scrollY + offsetTop) {
-					newActiveIndex = i;
-				} else {
-					break;
-				}
-			}
-
-			if (newActiveIndex === this.activeIndex) return;
-
-			this.activeIndex = newActiveIndex;
-			this.tocItems.forEach((item, index) => {
-				item.classList.toggle("active", index === this.activeIndex);
-			});
+			this.activeIndex = updateActiveHeading(this.headings, this.tocItems, scrollY, 150);
 		}
 
 		private bindEvents() {
@@ -470,9 +372,7 @@ const headingsJson = JSON.stringify(headings);
 			initCardTOC();
 			return () => {
 				const cardTocWindow = window as CardTOCWindow;
-				cardTocWindow.__cardTocInstances?.forEach((instance) =>
-					instance.destroy(),
-				);
+				cardTocWindow.__cardTocInstances?.forEach((instance) => instance.destroy());
 				cardTocWindow.__cardTocInstances = [];
 			};
 		},

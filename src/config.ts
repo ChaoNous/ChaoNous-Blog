@@ -86,7 +86,6 @@ export const siteConfig: SiteConfig = {
     enable: true,
     mode: "float",
     depth: 2,
-    useJapaneseBadge: false,
   },
 
   showCoverInContent: true,

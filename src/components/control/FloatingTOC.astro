@@ -3,13 +3,11 @@ import { Icon } from "astro-icon/components";
 import { siteConfig } from "../../config";
 
 const tocDepth = siteConfig.toc.depth;
-const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 ---
 
 <div
 	class="floating-toc-wrapper"
 	data-depth={tocDepth}
-	data-japanese-badge={useJapaneseBadge}
 >
 	<button
 		id="floating-toc-btn"
@@ -244,6 +242,7 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 
 <script>
 	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+	import { getHeadingsFromContainer, getMinLevel, headingsToData, updateActiveHeading } from "../../utils/toc-utils.js";
 
 	class FloatingTOC {
 		private btn: HTMLElement | null;
@@ -253,12 +252,14 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 		private isOpen = false;
 		private observer: MutationObserver | null = null;
 		private headings: HTMLElement[] = [];
+		private tocItems: HTMLElement[] = [];
+		private activeIndex = -1;
 		private handleScroll = () => {
 			this.updateProgress();
-			this.updateActiveHeading();
+			this.updateActive();
 		};
 		private handleResize = () => {
-			this.updateActiveHeading();
+			this.updateActive();
 			this.updateProgress();
 		};
 		private handleDocumentClick = (e: MouseEvent) => {
@@ -296,12 +297,8 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 		}
 
 		private init() {
-			window.addEventListener("scroll", this.handleScroll, {
-				passive: true,
-			});
-			window.addEventListener("resize", this.handleResize, {
-				passive: true,
-			});
+			window.addEventListener("scroll", this.handleScroll, { passive: true });
+			window.addEventListener("resize", this.handleResize, { passive: true });
 
 			this.bindEvents();
 			this.generateTOC();
@@ -326,181 +323,82 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 		private updateProgress() {
 			if (!this.btn) return;
 
-			const scrollTop =
-				window.scrollY || document.documentElement.scrollTop;
-			const docHeight =
-				document.documentElement.scrollHeight -
-				document.documentElement.clientHeight;
+			const scrollTop = window.scrollY || document.documentElement.scrollTop;
+			const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 			const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
 
-			const circle = this.btn.querySelector(
-				".progress-ring-circle",
-			) as SVGCircleElement;
+			const circle = this.btn.querySelector(".progress-ring-circle") as SVGCircleElement;
 			if (circle) {
 				const radius = circle.r.baseVal.value;
 				const circumference = radius * 2 * Math.PI;
-				const offset = Math.max(
-					0,
-					Math.min(
-						circumference,
-						circumference - scrollPercent * circumference,
-					),
-				);
+				const offset = Math.max(0, Math.min(circumference, circumference - scrollPercent * circumference));
 				circle.style.strokeDashoffset = offset.toString();
 			}
 		}
 
-		private updateActiveHeading() {
+		private updateActive() {
 			if (!this.content || this.headings.length === 0) return;
 			const scrollY = window.scrollY;
-			const offsetTop = 150;
+			this.activeIndex = updateActiveHeading(this.headings, this.tocItems, scrollY, 150);
 
-			let activeIndex = -1;
-			for (let i = 0; i < this.headings.length; i++) {
-				const heading = this.headings[i];
-				if (
-					heading.getBoundingClientRect().top + scrollY <
-					scrollY + offsetTop
-				) {
-					activeIndex = i;
-				} else {
-					break;
+			// Scroll active item into view if panel is open
+			if (this.isOpen && this.activeIndex >= 0) {
+				const activeItem = this.tocItems[this.activeIndex];
+				if (activeItem && this.content) {
+					const panelRect = this.content.getBoundingClientRect();
+					const itemRect = activeItem.getBoundingClientRect();
+					if (itemRect.top < panelRect.top || itemRect.bottom > panelRect.bottom) {
+						activeItem.scrollIntoView({ block: "nearest" });
+					}
 				}
 			}
-
-			const links = Array.from(
-				this.content.querySelectorAll(".floating-toc-item"),
-			);
-			links.forEach((link, index) => {
-				if (index === activeIndex) {
-					link.classList.add("active");
-					if (this.isOpen) {
-						const panelContent = this.content;
-						if (panelContent) {
-							const linkEl = link as HTMLElement;
-							const panelRect =
-								panelContent.getBoundingClientRect();
-							const linkRect = linkEl.getBoundingClientRect();
-							if (
-								linkRect.top < panelRect.top ||
-								linkRect.bottom > panelRect.bottom
-							) {
-								linkEl.scrollIntoView({ block: "nearest" });
-							}
-						}
-					}
-				} else {
-					link.classList.remove("active");
-				}
-			});
 		}
 
 		private generateTOC() {
-			const container = document.getElementById("post-container");
+			this.headings = getHeadingsFromContainer("post-container");
 
-			if (!container) {
+			if (this.headings.length === 0) {
 				this.wrapper?.classList.remove("active-toc");
 				this.wrapper?.classList.add("no-toc");
-				return;
-			}
-
-			const allHeadings = container.querySelectorAll(
-				"h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]",
-			);
-
-			if (allHeadings.length === 0) {
-				this.wrapper?.classList.remove("active-toc");
-				this.wrapper?.classList.add("no-toc");
-				this.headings = [];
 				return;
 			}
 
 			this.wrapper?.classList.remove("no-toc");
 			this.wrapper?.classList.add("active-toc");
-			this.headings = [];
 
-			const useJapaneseBadge =
-				this.wrapper?.dataset.japaneseBadge === "true";
-
-			const japaneseKatakana = [
-				"ア",
-				"イ",
-				"ウ",
-				"エ",
-				"オ",
-				"カ",
-				"キ",
-				"ク",
-				"ケ",
-				"コ",
-				"サ",
-				"シ",
-				"ス",
-				"セ",
-				"ソ",
-				"タ",
-				"チ",
-				"ツ",
-				"テ",
-				"ト",
-				"ナ",
-				"ニ",
-				"ヌ",
-				"ネ",
-				"ノ",
-				"ハ",
-				"ヒ",
-				"フ",
-				"ヘ",
-				"ホ",
-			];
-
-			let minLevel = 6;
-			allHeadings.forEach((h) => {
-				const level = parseInt(h.tagName[1]);
-				if (level < minLevel) minLevel = level;
-			});
-
-			// 使用相对深度：显示从 minLevel 开始的 depthLevels 级标题
+			const minLevel = getMinLevel(this.headings);
 			const depthLevels = parseInt(this.wrapper?.dataset.depth || "3");
 			const maxVisibleDepth = minLevel + depthLevels;
 
+			const headingsData = headingsToData(this.headings);
 			let html = "";
 			let h1Count = 0;
-			allHeadings.forEach((heading) => {
-				const level = parseInt(heading.tagName[1]);
 
-				// 显示 depth < maxVisibleDepth 的标题
-				if (level >= maxVisibleDepth) return;
+			headingsData.forEach((heading) => {
+				if (heading.depth >= maxVisibleDepth) return;
 
-				this.headings.push(heading as HTMLElement);
-
-				const indent = (level - minLevel) * 1;
+				const indent = heading.depth - minLevel;
+				const text = heading.text;
 				let badge = "";
 
-				if (level === minLevel) {
+				if (heading.depth === minLevel) {
 					h1Count++;
-					const badgeText =
-						useJapaneseBadge &&
-						h1Count - 1 < japaneseKatakana.length
-							? japaneseKatakana[h1Count - 1]
-							: h1Count.toString();
-					badge = `<span class="floating-toc-badge">${badgeText}</span>`;
-				} else if (level === minLevel + 1) {
+					badge = `<span class="floating-toc-badge">${h1Count}</span>`;
+				} else if (heading.depth === minLevel + 1) {
 					badge = '<span class="floating-toc-dot"></span>';
 				} else {
 					badge = '<span class="floating-toc-dot-small"></span>';
 				}
 
-				const text = (heading.textContent || "").replace(/#+\s*$/, "");
-				html += `<a href="#${heading.id}" class="floating-toc-item" style="padding-left: ${0.5 + indent}rem" data-level="${level - minLevel}">${badge}<span class="floating-toc-text">${text}</span></a>`;
+				html += `<a href="#${heading.slug}" class="floating-toc-item" style="padding-left: ${0.5 + indent}rem" data-level="${heading.depth - minLevel}">${badge}<span class="floating-toc-text">${text}</span></a>`;
 			});
 
 			if (this.content) {
 				this.content.innerHTML = html;
+				this.tocItems = Array.from(this.content.querySelectorAll(".floating-toc-item"));
 			}
 
-			this.updateActiveHeading();
+			this.updateActive();
 		}
 
 		private bindEvents() {
@@ -538,6 +436,7 @@ const useJapaneseBadge = siteConfig.toc.useJapaneseBadge;
 			this.content?.removeEventListener("click", this.handleContentClick);
 			document.removeEventListener("keydown", this.handleKeydown);
 			this.headings = [];
+			this.tocItems = [];
 		}
 	}
 

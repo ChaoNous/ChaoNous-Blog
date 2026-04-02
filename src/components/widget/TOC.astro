@@ -14,6 +14,8 @@ const className = Astro.props.class;
 </table-of-contents>
 
 <script>
+	import { getMinLevel } from "../../utils/toc-utils.js";
+
 	class TableOfContents extends HTMLElement {
 		tocEl: HTMLElement | null = null;
 		visibleClass = "visible";
@@ -41,10 +43,7 @@ const className = Astro.props.class;
 
 		markVisibleSection = (entries: IntersectionObserverEntry[]) => {
 			entries.forEach((entry) => {
-				if (
-					entry.isIntersecting &&
-					this.anchorNavTarget == entry.target
-				)
+				if (entry.isIntersecting && this.anchorNavTarget == entry.target)
 					this.anchorNavTarget = null;
 			});
 			this.syncActiveHeadingsFromScroll();
@@ -82,14 +81,8 @@ const className = Astro.props.class;
 				const minEntry = this.tocEntries[min];
 				const maxEntry = this.tocEntries[max];
 				if (minEntry && maxEntry) {
-					let top =
-						minEntry.getBoundingClientRect().top -
-						parentOffset +
-						scrollOffset;
-					let bottom =
-						maxEntry.getBoundingClientRect().bottom -
-						parentOffset +
-						scrollOffset;
+					let top = minEntry.getBoundingClientRect().top - parentOffset + scrollOffset;
+					let bottom = maxEntry.getBoundingClientRect().bottom - parentOffset + scrollOffset;
 					this.activeIndicator?.setAttribute(
 						"style",
 						`top: ${top}px; height: ${bottom - top}px`,
@@ -101,9 +94,7 @@ const className = Astro.props.class;
 		scrollToActiveHeading = () => {
 			if (this.anchorNavTarget || !this.tocEl) return;
 			const activeHeading = Array.from(
-				this.querySelectorAll<HTMLAnchorElement>(
-					`.${this.visibleClass}`,
-				),
+				this.querySelectorAll<HTMLAnchorElement>(`.${this.visibleClass}`),
 			);
 			if (!activeHeading.length) return;
 
@@ -126,10 +117,7 @@ const className = Astro.props.class;
 				return;
 			}
 
-			if (
-				targetBottom > lowerBound ||
-				targetBottom > currentBottom - this.scrollPadding
-			) {
+			if (targetBottom > lowerBound || targetBottom > currentBottom - this.scrollPadding) {
 				this.tocEl.scrollTo({
 					top: preferredTop,
 					left: 0,
@@ -158,10 +146,7 @@ const className = Astro.props.class;
 
 			let currentIdx = 0;
 			for (let i = 0; i < this.headings.length; i++) {
-				if (
-					this.headings[i].getBoundingClientRect().top <=
-					this.headingOffset
-				) {
+				if (this.headings[i].getBoundingClientRect().top <= this.headingOffset) {
 					currentIdx = i;
 				} else {
 					break;
@@ -203,10 +188,7 @@ const className = Astro.props.class;
 				if (targetElement) {
 					const navbarHeight = 80;
 					const targetTop =
-						targetElement.getBoundingClientRect().top +
-						window.scrollY -
-						navbarHeight;
-
+						targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
 
 					window.scrollTo({
 						top: targetTop,
@@ -224,7 +206,6 @@ const className = Astro.props.class;
 		};
 
 		connectedCallback() {
-
 			const element =
 				document.querySelector(".custom-md") ||
 				document.querySelector(".prose") ||
@@ -237,20 +218,15 @@ const className = Astro.props.class;
 				}
 			};
 			if (element) {
-				element.addEventListener("animationend", tryInit, {
-					once: true,
-				});
-
+				element.addEventListener("animationend", tryInit, { once: true });
 				setTimeout(tryInit, 300);
 			} else {
-
 				tryInit();
 				setTimeout(tryInit, 300);
 			}
 		}
 
 		init() {
-
 			this.regenerateTOC();
 
 			this.tocEl = this;
@@ -274,9 +250,7 @@ const className = Astro.props.class;
 			this.sections = new Array(this.tocEntries.length);
 			this.headings = new Array(this.tocEntries.length);
 			for (let i = 0; i < this.tocEntries.length; i++) {
-				const id = decodeURIComponent(
-					this.tocEntries[i].hash?.substring(1),
-				);
+				const id = decodeURIComponent(this.tocEntries[i].hash?.substring(1));
 				const heading = document.getElementById(id);
 				if (heading instanceof HTMLElement) {
 					this.headings[i] = heading;
@@ -292,13 +266,10 @@ const className = Astro.props.class;
 		}
 
 		regenerateTOC(retryCount = 0) {
-
 			const isPostPage =
 				window.location.pathname.includes("/posts/") ||
-				document.querySelector(".custom-md, .markdown-content") !==
-					null;
+				document.querySelector(".custom-md, .markdown-content") !== null;
 			if (!isPostPage) {
-
 				this.innerHTML = "";
 				delete this.dataset.loaded;
 				return;
@@ -324,64 +295,12 @@ const className = Astro.props.class;
 				return;
 			}
 
-			const minDepth = Math.min(...headings.map((h) => h.depth));
+			const minDepth = getMinLevel(headings);
 
 			const siteConfig = (window as any).siteConfig || {};
 			const maxLevel = siteConfig.toc?.depth || 3;
-			const useJapaneseBadge = siteConfig.toc?.useJapaneseBadge || false;
-
-
-			const japaneseKatakana = [
-				"ア",
-				"イ",
-				"ウ",
-				"エ",
-				"オ",
-				"カ",
-				"キ",
-				"ク",
-				"ケ",
-				"コ",
-				"サ",
-				"シ",
-				"ス",
-				"セ",
-				"ソ",
-				"タ",
-				"チ",
-				"ツ",
-				"テ",
-				"ト",
-				"ナ",
-				"ニ",
-				"ヌ",
-				"ネ",
-				"ノ",
-				"ハ",
-				"ヒ",
-				"フ",
-				"ヘ",
-				"ホ",
-				"マ",
-				"ミ",
-				"ム",
-				"メ",
-				"モ",
-				"ヤ",
-				"ユ",
-				"ヨ",
-				"ラ",
-				"リ",
-				"ル",
-				"レ",
-				"ロ",
-				"ワ",
-				"ヲ",
-				"ン",
-			];
 
 			let heading1Count = 1;
-			// 使用相对深度：显示从 minDepth 开始的 maxLevel 级标题
 			const maxVisibleDepth = minDepth + maxLevel;
 			const tocHTML = headings
 				.filter((heading) => heading.depth < maxVisibleDepth)
@@ -395,14 +314,7 @@ const className = Astro.props.class;
 
 					let badgeContent = "";
 					if (heading.depth === minDepth) {
-						if (
-							useJapaneseBadge &&
-							heading1Count - 1 < japaneseKatakana.length
-						) {
-							badgeContent = japaneseKatakana[heading1Count - 1];
-						} else {
-							badgeContent = heading1Count.toString();
-						}
+						badgeContent = heading1Count.toString();
 						heading1Count++;
 					} else if (heading.depth === minDepth + 1) {
 						badgeContent =
@@ -427,9 +339,7 @@ const className = Astro.props.class;
 		}
 
 		disconnectedCallback() {
-			this.sections.forEach((section) =>
-				this.observer.unobserve(section),
-			);
+			this.sections.forEach((section) => this.observer.unobserve(section));
 			this.observer.disconnect();
 			this.tocEl?.removeEventListener("click", this.handleAnchorClick);
 			window.removeEventListener("scroll", this.handleScroll);
