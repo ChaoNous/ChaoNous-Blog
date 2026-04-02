@@ -2,7 +2,6 @@ import type { APIContext } from "astro";
 import { profileConfig, siteConfig } from "@/config";
 import { getSortedPosts } from "@/utils/content-utils";
 import { getPostUrl } from "@/utils/url-utils";
-import { initPostIdMap } from "@/utils/permalink-utils";
 import { parseMarkdown, processImagesInContent } from "@/utils/feed-utils";
 
 export async function GET(context: APIContext) {
@@ -13,8 +12,6 @@ export async function GET(context: APIContext) {
   const posts = (await getSortedPosts()).filter(
     (post) => !post.data.encrypted && post.data.draft !== true,
   );
-
-  initPostIdMap(posts);
 
   let atomFeed = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">

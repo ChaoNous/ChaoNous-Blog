@@ -89,10 +89,6 @@ export type SiteConfig = {
       enable: boolean;
       interval: number;
     };
-    imageApi?: {
-      enable: boolean;
-      url: string;
-    };
     homeText?: {
       enable: boolean;
       title?: string;
@@ -103,11 +99,6 @@ export type SiteConfig = {
         deleteSpeed: number;
         pauseTime: number;
       };
-    };
-    credit: {
-      enable: boolean;
-      text: string;
-      url?: string;
     };
     navbar?: {
       transparentMode?: "semi" | "full" | "semifull";
@@ -122,7 +113,6 @@ export type SiteConfig = {
   showCoverInContent: boolean;
   generateOgImages: boolean;
   favicon: Favicon[];
-  showLastModified: boolean;
 };
 
 export type Favicon = {
@@ -170,12 +160,6 @@ export type LicenseConfig = {
   url: string;
 };
 
-export type PermalinkConfig = {
-  enable: boolean;
-
-  format: string;
-};
-
 export type LIGHT_DARK_MODE = typeof LIGHT_MODE | typeof DARK_MODE;
 
 
@@ -200,20 +184,6 @@ export type ExpressiveCodeConfig = {
   hideDuringThemeTransition?: boolean;
 };
 
-export type AnnouncementConfig = {
-  title?: string;
-  content: string;
-  icon?: string;
-  type?: "info" | "warning" | "success" | "error";
-  closable?: boolean;
-  link?: {
-    enable: boolean;
-    text: string;
-    url: string;
-    external?: boolean;
-  };
-};
-
 export type MusicPlayerConfig = {
   enable: boolean;
   mode: "meting" | "local";
@@ -221,11 +191,6 @@ export type MusicPlayerConfig = {
   id: string;
   server: string;
   type: string;
-};
-
-export type FooterConfig = {
-  enable: boolean;
-  customHtml?: string;
 };
 
 export type WidgetComponentType =

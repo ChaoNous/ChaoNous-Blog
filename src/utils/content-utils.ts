@@ -2,7 +2,6 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { getCategoryUrl, getPostUrl } from "@utils/url-utils";
-import { initPostIdMap } from "@utils/permalink-utils";
 
 // // Retrieve posts and sort them by publication date
 async function getRawSortedPosts() {
@@ -57,9 +56,6 @@ export type PostForList = {
 };
 export async function getSortedPostsList(): Promise<PostForList[]> {
   const sortedFullPosts = await getRawSortedPosts();
-
-  // 初始化文章 ID 映射（用于 permalink 功能）
-  initPostIdMap(sortedFullPosts);
 
   // delete post.body，并预计算 URL
   const sortedPostsList = sortedFullPosts.map((post) => ({

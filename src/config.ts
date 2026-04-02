@@ -1,11 +1,9 @@
 import type {
   CommentConfig,
   ExpressiveCodeConfig,
-  FooterConfig,
   LicenseConfig,
   MusicPlayerConfig,
   NavBarConfig,
-  PermalinkConfig,
   ProfileConfig,
   SidebarLayoutConfig,
   SiteConfig,
@@ -63,10 +61,6 @@ export const siteConfig: SiteConfig = {
       enable: true,
       interval: 4,
     },
-    imageApi: {
-      enable: false,
-      url: "http://domain.com/api_v2.php?format=text&count=4",
-    },
     homeText: {
       enable: true,
       title: "闲话漫谈",
@@ -83,11 +77,6 @@ export const siteConfig: SiteConfig = {
         pauseTime: 2000,
       },
     },
-    credit: {
-      enable: false,
-      text: "Describe",
-      url: "",
-    },
     navbar: {
       transparentMode: "semi",
     },
@@ -103,7 +92,6 @@ export const siteConfig: SiteConfig = {
   showCoverInContent: true,
   generateOgImages: true,
   favicon: [],
-  showLastModified: false,
 
   font: {
     asciiFont: {
@@ -177,11 +165,6 @@ export const licenseConfig: LicenseConfig = {
   url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
 
-export const permalinkConfig: PermalinkConfig = {
-  enable: false,
-  format: "%postname%",
-};
-
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
   theme: "github-dark",
   hideDuringThemeTransition: true,
@@ -195,11 +178,6 @@ export const musicPlayerConfig: MusicPlayerConfig = {
   id: "13556055400",
   server: "netease",
   type: "playlist",
-};
-
-export const footerConfig: FooterConfig = {
-  enable: false,
-  customHtml: "",
 };
 
 export const commentConfig: CommentConfig = {

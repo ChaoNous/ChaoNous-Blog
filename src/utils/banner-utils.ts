@@ -7,11 +7,6 @@ export type BannerSourceConfig =
       mobile?: BannerSource;
     };
 
-export type BannerImageApiConfig = {
-  enable?: boolean;
-  url?: string;
-};
-
 export type ResolvedBannerImages = {
   desktop: BannerSource;
   mobile: BannerSource;
@@ -26,23 +21,8 @@ export function normalizeBannerSources(
 
 export async function resolveBannerImages(
   source: BannerSourceConfig,
-  imageApi?: BannerImageApiConfig,
 ): Promise<ResolvedBannerImages> {
-  let bannerSrc = source;
-
-  if (imageApi?.enable && imageApi.url) {
-    try {
-      const response = await fetch(imageApi.url);
-      const text = await response.text();
-      const apiImages = text.split("\n").filter((line) => line.trim());
-
-      if (apiImages.length > 0) {
-        bannerSrc = apiImages;
-      }
-    } catch (error) {
-      console.warn("Failed to fetch images from API:", error);
-    }
-  }
+  const bannerSrc = source;
 
   if (
     typeof bannerSrc === "object" &&

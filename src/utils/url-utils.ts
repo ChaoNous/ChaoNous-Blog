@@ -1,8 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { permalinkConfig } from "../config";
-import { generatePermalinkSlug } from "./permalink-utils";
 
 export function removeFileExtension(id: string): string {
   return id.replace(/\.(md|mdx|markdown)$/i, "");
@@ -37,11 +35,6 @@ export function getPostUrl(post: {
 export function getPostUrl(post: any): string {
   if (post.data.permalink) {
     const slug = post.data.permalink.replace(/^\/+/, "").replace(/\/+$/, "");
-    return url(`/${slug}/`);
-  }
-
-  if (permalinkConfig.enable) {
-    const slug = generatePermalinkSlug(post);
     return url(`/${slug}/`);
   }
 

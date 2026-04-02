@@ -4,7 +4,6 @@ import type { APIContext } from "astro";
 import { siteConfig } from "@/config";
 import { getSortedPosts } from "@/utils/content-utils";
 import { getPostUrl } from "@/utils/url-utils";
-import { initPostIdMap } from "@/utils/permalink-utils";
 import { parseMarkdown, processImagesInContent } from "@/utils/feed-utils";
 
 export async function GET(context: APIContext) {
@@ -13,8 +12,6 @@ export async function GET(context: APIContext) {
   }
 
   const posts = (await getSortedPosts()).filter((post) => !post.data.encrypted);
-
-  initPostIdMap(posts);
 
   const feed: RSSFeedItem[] = [];
 

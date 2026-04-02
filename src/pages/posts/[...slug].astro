@@ -7,13 +7,9 @@ import PostDetailLayout from "@components/post/PostDetailLayout.astro";
 import Twikoo from "@components/comment/Twikoo.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
-import { hasCustomPermalink, initPostIdMap } from "@utils/permalink-utils";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import {
 	commentConfig,
 	licenseConfig,
-	permalinkConfig,
 } from "src/config";
 import { profileConfig, siteConfig } from "../../config";
 import { buildBlogPostingJsonLd } from "../../utils/blog-schema";
@@ -21,8 +17,6 @@ import { resolveSharePosterImage } from "../../utils/share-poster-assets";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
-
-	initPostIdMap(blogEntries);
 
 	const paths: {
 		params: { slug: string };
@@ -32,22 +26,14 @@ export async function getStaticPaths() {
 	for (const entry of blogEntries) {
 		const defaultSlug = removeFileExtension(entry.id);
 
-		if (hasCustomPermalink(entry)) {
-			paths.push({
-				params: { slug: defaultSlug },
-				props: { entry },
-			});
-			continue;
-		}
-
 		// 添加默认 slug 路径
 		paths.push({
 			params: { slug: defaultSlug },
 			props: { entry },
 		});
 
-		// 仅当 permalink 未启用时，处理 alias 路径
-		if (!permalinkConfig.enable && entry.data.alias) {
+		// 处理 alias 路径
+		if (entry.data.alias) {
 			let alias = entry.data.alias
 				.replace(/^\/+/, "")
 				.replace(/\/+$/, "");
@@ -77,11 +63,6 @@ const posterAvatarUrl = await resolveSharePosterImage({
 });
 
 const normalizedCategory = entry.data.category || undefined;
-
-dayjs.extend(utc);
-const lastModified = dayjs(entry.data.updated || entry.data.published)
-	.utc()
-	.format("YYYY-MM-DDTHH:mm:ss");
 
 // 构建封面图的绝对 URL（用于 JSON-LD image 字段）
 const coverImage = entry.data.image;
@@ -116,7 +97,6 @@ const jsonLd = buildBlogPostingJsonLd({
 	headings={headings}
 	jsonLd={jsonLd}
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
-	lastModified={lastModified}
 >
 	<Markdown class="mb-6 markdown-content onload-animation">
 		<Content />
