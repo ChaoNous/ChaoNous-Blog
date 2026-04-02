@@ -636,7 +636,7 @@
   }
 
   .banner-subtitle {
-    font-size: 0.8rem;
+    font-size: 1rem;
     margin-top: 0.25rem;
   }
 }
@@ -688,7 +688,7 @@
   }
 
   .banner-subtitle {
-    font-size: 0.9rem !important;
+    font-size: 1rem !important;
     line-height: 1.2 !important;
   }
 }
@@ -839,7 +839,7 @@ body.enable-banner.is-home #main-content-shell {
   }
 
   .banner-subtitle {
-    font-size: 0.98rem;
+    font-size: 1rem;
     line-height: 1.5;
     max-width: 18rem;
     margin-inline: auto;

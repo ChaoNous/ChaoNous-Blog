@@ -38,13 +38,13 @@ const postUrl = sourceLink || decodeURIComponent(Astro.url.toString());
 	</a>
 	<div class="flex gap-6 mt-2">
 		<div>
-			<div class="transition text-30 text-sm">{i18n(I18nKey.author)}</div>
+			<div class="transition text-30 text-base">{i18n(I18nKey.author)}</div>
 			<div class="transition text-75 line-clamp-2">
 				{author || profileConf.name}
 			</div>
 		</div>
 		<div>
-			<div class="transition text-30 text-sm">
+			<div class="transition text-30 text-base">
 				{i18n(I18nKey.publishedAt)}
 			</div>
 			<div class="transition text-75 line-clamp-2">
@@ -52,7 +52,7 @@ const postUrl = sourceLink || decodeURIComponent(Astro.url.toString());
 			</div>
 		</div>
 		<div>
-			<div class="transition text-30 text-sm">
+			<div class="transition text-30 text-base">
 				{i18n(I18nKey.license)}
 			</div>
 			<a

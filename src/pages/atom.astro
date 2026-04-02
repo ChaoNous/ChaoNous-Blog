@@ -53,20 +53,20 @@ const recentPosts = posts.slice(0, 6);
 						<h3 class="font-semibold text-90 mb-1">
 							{i18n(I18nKey.atomLink)}
 						</h3>
-						<p class="text-sm text-75">
+						<p class="text-base text-75">
 							{i18n(I18nKey.atomCopyToReader)}
 						</p>
 					</div>
 				</div>
 				<div class="flex flex-col sm:flex-row gap-3">
 					<code
-						class="bg-(--card-bg) px-3 py-2 rounded-lg text-sm font-mono text-75 border border-(--line-divider) break-all"
+						class="bg-(--card-bg) px-3 py-2 rounded-lg text-base font-mono text-75 border border-(--line-divider) break-all"
 					>
 						{Astro.site}atom.xml
 					</code>
 					<button
 						id="copy-atom-btn"
-						class="px-4 py-2 bg-(--primary) text-white rounded-lg hover:opacity-80 transition-all duration-200 font-medium text-sm whitespace-nowrap"
+						class="px-4 py-2 bg-(--primary) text-white rounded-lg hover:opacity-80 transition-all duration-200 font-medium text-base whitespace-nowrap"
 						data-url={`${Astro.site}atom.xml`}
 					>
 						{i18n(I18nKey.atomCopyLink) || "Copy Link"}
@@ -101,7 +101,7 @@ const recentPosts = posts.slice(0, 6);
 									{post.data.description}
 								</p>
 							)}
-							<div class="flex items-center gap-4 text-sm text-60">
+							<div class="flex items-center gap-4 text-base text-60">
 								<time
 									datetime={post.data.published.toISOString()}
 									class="text-75"

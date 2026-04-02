@@ -52,7 +52,7 @@ const hasChildren = children.length > 0;
 							class="text-[1.1rem] lg:mr-2 shrink-0"
 						/>
 					)}
-					<span class="truncate hidden lg:inline text-[0.975rem]">
+					<span class="truncate hidden lg:inline text-[1rem]">
 						{getLocalizedName(link.name)}
 					</span>
 					<Icon
@@ -74,7 +74,7 @@ const hasChildren = children.length > 0;
 										? "noopener noreferrer"
 										: null
 								}
-								class="dropdown-item flex items-center justify-between px-4 py-2.5 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium rounded-lg text-[0.975rem]"
+								class="dropdown-item flex items-center justify-between px-4 py-2.5 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium rounded-lg text-[1rem]"
 								aria-label={child.name}
 							>
 								<div class="flex items-center">
@@ -89,7 +89,7 @@ const hasChildren = children.length > 0;
 								{child.external && (
 									<Icon
 										name="fa7-solid:arrow-up-right-from-square"
-										class="text-[0.75rem] text-50 ml-2"
+										class="text-[1rem] text-50 ml-2"
 									/>
 								)}
 							</a>
@@ -111,13 +111,13 @@ const hasChildren = children.length > 0;
 						class="text-[1.1rem] lg:mr-2 shrink-0"
 					/>
 				)}
-				<span class="truncate hidden lg:inline text-[0.975rem]">
+				<span class="truncate hidden lg:inline text-[1rem]">
 					{getLocalizedName(link.name)}
 				</span>
 				{link.external && (
 					<Icon
 						name="fa7-solid:arrow-up-right-from-square"
-						class="text-[0.875rem] transition -translate-y-px ml-1 text-black/20 dark:text-white/20 shrink-0 hidden lg:inline"
+						class="text-[1rem] transition -translate-y-px ml-1 text-black/20 dark:text-white/20 shrink-0 hidden lg:inline"
 					/>
 				)}
 			</a>

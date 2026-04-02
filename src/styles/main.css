@@ -323,7 +323,7 @@ body::-webkit-scrollbar {
   }
 
   .floating-toc-item {
-    @apply flex items-center gap-2 py-2 px-2 rounded-lg text-sm leading-relaxed;
+    @apply flex items-center gap-2 py-2 px-2 rounded-lg leading-relaxed;
     @apply text-black/88 dark:text-white/88;
     @apply hover:bg-(--btn-plain-bg-hover) hover:text-(--primary);
     @apply transition-all duration-150;
@@ -338,7 +338,7 @@ body::-webkit-scrollbar {
     @apply inline-flex items-center justify-center shrink-0;
     @apply min-w-5 h-5 px-1 rounded-md;
     @apply bg-(--toc-badge-bg) text-(--btn-content);
-    @apply text-xs font-semibold;
+    @apply text-base font-semibold;
   }
 
   .floating-toc-dot {
@@ -428,7 +428,7 @@ body::-webkit-scrollbar {
         text-(--btn-content) mr-2;
   }
   .with-divider {
-    @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-(--content-meta) before:text-sm
+    @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-(--content-meta) before:text-base
         before:font-medium before:first-of-type:hidden before:transition-colors before:duration-150;
   }
 
@@ -518,7 +518,7 @@ body::-webkit-scrollbar {
 }
 
 .post-list-container.grid-mode .post-card-item .description {
-  font-size: 0.875rem;
+  font-size: 1rem;
   margin-bottom: 0.5rem;
   line-height: 1.25rem;
   display: -webkit-box;
@@ -528,7 +528,7 @@ body::-webkit-scrollbar {
 }
 
 .post-list-container.grid-mode .post-card-item .stats {
-  font-size: 0.75rem;
+  font-size: 1rem;
 }
 
 .post-list-container.grid-mode .post-card-item .post-meta {

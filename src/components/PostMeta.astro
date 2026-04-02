@@ -30,13 +30,13 @@ const {
 } = Astro.props;
 ---
 
-<div class:list={["post-meta-group flex flex-wrap text-50 text-sm leading-6 items-center gap-4 gap-x-4 gap-y-2", className]}>
+<div class:list={["post-meta-group flex flex-wrap text-50 leading-6 items-center gap-4 gap-x-4 gap-y-2", className]}>
     <!-- publish date -->
     <div class="flex items-center">
         <div class="meta-icon">
             <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl"></Icon>
         </div>
-        <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(published)}</span>
+        <span class="text-50 font-medium">{formatDateToYYYYMMDD(published)}</span>
     </div>
 
     <!-- update date -->
@@ -45,7 +45,7 @@ const {
             <div class="meta-icon">
                 <Icon name="material-symbols:edit-calendar-outline-rounded" class="text-xl"></Icon>
             </div>
-            <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</span>
+            <span class="text-50 font-medium">{formatDateToYYYYMMDD(updated)}</span>
         </div>
     )}
 
@@ -56,7 +56,7 @@ const {
         </div>
         <div class="flex flex-row flex-nowrap items-center">
             <a href={getCategoryUrl(category || "")} aria-label={`View all posts in the ${category} category`}
-               class="link-lg transition text-50 text-sm font-medium
+               class="link-lg transition text-50 font-medium
                             hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap">
                 {category || i18n(I18nKey.uncategorized)}
             </a>
@@ -81,7 +81,7 @@ const {
             <div class="meta-icon">
                 <Icon name="material-symbols:visibility-outline-rounded" class="text-xl"></Icon>
             </div>
-            <span class="text-50 text-sm font-medium page-views-display">{i18n(I18nKey.pageViewsLoading)}</span>
+            <span class="text-50 font-medium page-views-display">{i18n(I18nKey.pageViewsLoading)}</span>
         </div>
     )}
 </div>
@@ -100,7 +100,7 @@ const {
 
 	@media (max-width: 767px) {
 		.post-meta-group {
-			font-size: 0.92rem;
+			font-size: 1rem;
 			gap: 0.65rem 0.9rem;
 		}
 	}
