@@ -115,7 +115,7 @@
     @apply not-italic border-transparent relative;
     font-weight: inherit;
     padding-left: 1.2rem;
-    color: color-mix(in oklch, currentColor 78%, transparent);
+    color: color-mix(in oklch, currentColor 85%, transparent);
 
     &:before {
       @apply content-[''] absolute left-0 block transition bg-(--btn-regular-bg) h-full w-1 rounded-full;

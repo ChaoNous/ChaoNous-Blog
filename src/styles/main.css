@@ -324,7 +324,7 @@ body::-webkit-scrollbar {
 
   .floating-toc-item {
     @apply flex items-center gap-2 py-2 px-2 rounded-lg text-sm leading-relaxed;
-    @apply text-black/70 dark:text-white/70;
+    @apply text-black/80 dark:text-white/80;
     @apply hover:bg-(--btn-plain-bg-hover) hover:text-(--primary);
     @apply transition-all duration-150;
     text-decoration: none;
@@ -382,7 +382,7 @@ body::-webkit-scrollbar {
   }
 
   .dropdown-item {
-    @apply flex items-center justify-between px-4 py-2.5 text-black/75 dark:text-white/75 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium;
+    @apply flex items-center justify-between px-4 py-2.5 text-black/85 dark:text-white/85 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium;
   }
 
   .dropdown-item:first-child {
@@ -662,10 +662,10 @@ html {
   --btn-plain-bg-active: oklch(0.97 0.008 var(--hue));
   --btn-card-bg-hover: oklch(0.98 0.004 var(--hue));
   --btn-card-bg-active: oklch(0.9 0.02 var(--hue));
-  --deep-text: oklch(0.32 0.015 var(--hue));
+  --deep-text: oklch(0.28 0.015 var(--hue));
   --line-divider: rgba(0, 0, 0, 0.06);
   --line-color: rgba(0, 0, 0, 0.08);
-  --content-meta: rgba(0, 0, 0, 0.65);
+  --content-meta: rgba(0, 0, 0, 0.78);
   --selection-bg: oklch(0.88 0.04 var(--hue));
   --codeblock-bg: oklch(0.96 0.004 var(--hue));
   --codeblock-topbar-bg: oklch(0.93 0.008 var(--hue));
@@ -736,10 +736,10 @@ html {
   --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
   --btn-card-bg-hover: oklch(0.3 0.025 var(--hue));
   --btn-card-bg-active: oklch(0.34 0.03 var(--hue));
-  --deep-text: oklch(0.93 0.01 var(--hue));
+  --deep-text: oklch(0.95 0.01 var(--hue));
   --line-divider: rgba(255, 255, 255, 0.06);
   --line-color: rgba(255, 255, 255, 0.08);
-  --content-meta: rgba(255, 255, 255, 0.55);
+  --content-meta: rgba(255, 255, 255, 0.72);
   --selection-bg: oklch(0.35 0.06 var(--hue));
   --codeblock-bg: oklch(0.18 0.012 var(--hue));
   --codeblock-topbar-bg: oklch(0.14 0.012 var(--hue));
@@ -803,13 +803,13 @@ body {
 .text-75,
 .text-70,
 .text-60 {
-  color: color-mix(in oklch, currentColor 65%, transparent);
+  color: color-mix(in oklch, currentColor 78%, transparent);
 }
 
 .text-50,
 .text-30,
 .text-25 {
-  color: color-mix(in oklch, currentColor 40%, transparent);
+  color: color-mix(in oklch, currentColor 58%, transparent);
 }
 
 .meta-icon {
@@ -945,7 +945,7 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > d
 
 .floating-toc-item,
 .card-toc-item {
-  color: color-mix(in oklch, currentColor 64%, transparent);
+  color: color-mix(in oklch, currentColor 75%, transparent);
 }
 
 .floating-toc-item.active,
