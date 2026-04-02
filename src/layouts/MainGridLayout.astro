@@ -308,11 +308,11 @@ const mainContentClass = `
 				<main
 					id="swup-container"
 					data-is-post-page={isPostPage ? "true" : "false"}
-					class={`${mainContentClass} transition-main`}
+					data-swup-transition class={`${mainContentClass}`}
 				>
 					<div
 						id="content-wrapper"
-						class="onload-animation transition-leaving"
+						class="onload-animation"
 					>
 						<!-- the overflow-hidden here prevent long text break the layout-->
 						<!-- make id different from windows.swup global property -->

@@ -50,6 +50,7 @@ export default defineConfig({
 			theme: false,
 			animationClass: "transition-swup-",
 			containers: ["#main-grid"],
+			animationSelector: "[data-swup-transition]",
 			smoothScrolling: false,
 			cache: true,
 			preload: true,
