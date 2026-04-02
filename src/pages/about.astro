@@ -1,6 +1,7 @@
 ---
 import { profileConfig, siteConfig } from "../config";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
+import ImageWrapper from "../components/misc/ImageWrapper.astro";
 ---
 
 <MainGridLayout title="关于" description="关于本站和作者">
@@ -25,10 +26,12 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 			<!-- 作者信息 -->
 			<section class="about-section">
 				<div class="about-avatar-wrapper">
-					<img
+					<ImageWrapper
 						src={profileConfig.avatar}
 						alt={profileConfig.name}
 						class="about-avatar"
+						width={128}
+						height={128}
 					/>
 				</div>
 				<h2 class="about-name">{profileConfig.name}</h2>
