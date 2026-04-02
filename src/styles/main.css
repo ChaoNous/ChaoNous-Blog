@@ -139,7 +139,7 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* 羊皮纸纹理效果 - 古朴质感（提尔紫主题） */
+/* 羊皮纸纹理效果 - 古朴平整（提尔紫主题） */
 [data-theme-material="parchment"] body::before {
   content: "";
   position: fixed;
@@ -148,33 +148,25 @@ body {
   z-index: 0;
   opacity: 1;
   background:
-    /* 纤维纹理 - 横向 - 增强 */
+    /* 纤维纹理 - 横向 - 柔和 */
     repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 1px,
-      rgba(120, 90, 50, 0.05) 1px,
-      rgba(120, 90, 50, 0.05) 4px
+      transparent 2px,
+      rgba(140, 110, 70, 0.04) 2px,
+      rgba(140, 110, 70, 0.04) 5px
     ),
-    /* 纤维纹理 - 纵向 - 增强 */
+    /* 纤维纹理 - 纵向 - 柔和 */
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 1px,
-      rgba(120, 90, 50, 0.035) 1px,
-      rgba(120, 90, 50, 0.035) 4px
+      transparent 2px,
+      rgba(140, 110, 70, 0.03) 2px,
+      rgba(140, 110, 70, 0.03) 6px
     ),
-    /* 不规则斑点 */
-    repeating-linear-gradient(
-      37deg,
-      transparent,
-      transparent 20px,
-      rgba(100, 70, 40, 0.02) 20px,
-      rgba(100, 70, 40, 0.02) 40px
-    ),
-    /* 羊皮纸颗粒基底 - 增强 */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 350 350' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='6' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f5f0e6' surfaceScale='2' result='light'%3E%3CfeDistantLight azimuth='45' elevation='50'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 100% 100%, 350px 350px;
+    /* 羊皮纸均匀底纹 - 平滑 */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f8f4ec' surfaceScale='0.8' result='light'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 400px 400px;
   mix-blend-mode: multiply;
 }
 
@@ -184,13 +176,11 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.5;
+  opacity: 0.3;
   background:
-    /* 粗糙层 */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='rough'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.07' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23rough)' opacity='0.3'/%3E%3C/svg%3E"),
-    /* 边缘暗化 */
-    radial-gradient(ellipse at center, transparent 40%, rgba(80, 60, 30, 0.08) 100%);
-  background-size: 200px 200px, 100% 100%;
+    /* 轻微斑点 */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.15'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
   mix-blend-mode: overlay;
 }
 
@@ -252,35 +242,27 @@ body {
     repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 1px,
-      rgba(200, 160, 100, 0.04) 1px,
-      rgba(200, 160, 100, 0.04) 4px
+      transparent 2px,
+      rgba(200, 170, 120, 0.035) 2px,
+      rgba(200, 170, 120, 0.035) 5px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 1px,
-      rgba(200, 160, 100, 0.03) 1px,
-      rgba(200, 160, 100, 0.03) 4px
+      transparent 2px,
+      rgba(200, 170, 120, 0.025) 2px,
+      rgba(200, 170, 120, 0.025) 6px
     ),
-    repeating-linear-gradient(
-      37deg,
-      transparent,
-      transparent 20px,
-      rgba(180, 140, 80, 0.025) 20px,
-      rgba(180, 140, 80, 0.025) 40px
-    ),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 350 350' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='6' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%232a2018' surfaceScale='1.8' result='light'%3E%3CfeDistantLight azimuth='45' elevation='50'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 100% 100%, 350px 350px;
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23302820' surfaceScale='0.6' result='light'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 400px 400px;
   mix-blend-mode: soft-light;
 }
 
 [data-theme-material="parchment"].dark body::after {
-  opacity: 0.45;
+  opacity: 0.25;
   background:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='rough'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.07' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23rough)' opacity='0.25'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse at center, transparent 40%, rgba(60, 45, 25, 0.1) 100%);
-  background-size: 200px 200px, 100% 100%;
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
   mix-blend-mode: overlay;
 }
 
