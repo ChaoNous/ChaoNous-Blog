@@ -91,7 +91,7 @@ import ImageWrapper from "../components/misc/ImageWrapper.astro";
 		margin-bottom: 1rem;
 	}
 
-	.about-avatar {
+	.about-avatar-wrapper :global(.about-avatar) {
 		width: 8rem;
 		height: 8rem;
 		border-radius: 0.75rem;
@@ -100,10 +100,8 @@ import ImageWrapper from "../components/misc/ImageWrapper.astro";
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 	}
 
-	.about-avatar :global(img) {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+	.about-avatar-wrapper :global(.about-avatar *) {
+		border-radius: inherit;
 	}
 
 	.about-name {
@@ -167,7 +165,7 @@ import ImageWrapper from "../components/misc/ImageWrapper.astro";
 	}
 
 	@media (max-width: 768px) {
-		.about-avatar {
+		.about-avatar-wrapper :global(.about-avatar) {
 			width: 6rem;
 			height: 6rem;
 		}
