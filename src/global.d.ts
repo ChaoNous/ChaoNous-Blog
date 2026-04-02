@@ -35,8 +35,6 @@ declare global {
       isLoaded: boolean;
     };
     siteConfig: any;
-    mermaidInitialized?: boolean;
-    renderMermaidDiagrams?: () => Promise<void>;
     __wallpaper_cleanup?: (() => void) | null;
     registerPageScript?: (
       name: string,
