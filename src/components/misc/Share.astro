@@ -2,7 +2,7 @@
 import { siteConfig } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
-import ShareButtons from "./ShareButtons.svelte";
+import SharePoster from "./SharePoster.svelte";
 
 interface Props {
 	title: string;
@@ -21,18 +21,30 @@ const postUrl = Astro.url.toString();
 ---
 
 <div class={`share-component ${className}`}>
-	<div class="share-label">{i18n(I18nKey.shareArticle)}</div>
-	<ShareButtons
-		client:load
-		title={title}
-		url={postUrl}
-		description={description || ""}
-		author={author || ""}
-		pubDate={pubDate.toISOString()}
-		coverImage={coverImage}
-		avatar={avatar}
-		siteTitle={siteConfig.title}
-	/>
+	<div class="share-left">
+		<div class="share-icon">
+			<svg width="1.5em" height="1.5em" viewBox="0 0 24 24">
+				<path fill="currentColor" d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22"/>
+			</svg>
+		</div>
+		<div class="share-text">
+			<div class="share-title">{i18n(I18nKey.shareArticle)}</div>
+			<p class="share-desc">{i18n(I18nKey.shareOnSocialDescription)}</p>
+		</div>
+	</div>
+	<div class="share-right">
+		<SharePoster
+			client:visible
+			title={title}
+			url={postUrl}
+			description={description || ""}
+			author={author || ""}
+			pubDate={pubDate.toISOString()}
+			coverImage={coverImage}
+			avatar={avatar}
+			siteTitle={siteConfig.title}
+		/>
+	</div>
 </div>
 
 <style>
@@ -40,22 +52,61 @@ const postUrl = Astro.url.toString();
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: space-between;
 		gap: 1rem;
 		padding: 1.5rem;
-		background: var(--card-bg);
-		border: 1px solid var(--line-divider);
-		border-radius: 1rem;
+		background: var(--license-block-bg);
+		border-radius: 0.75rem;
 	}
 
-	.share-label {
-		font-size: 0.9375rem;
-		font-weight: 500;
+	@media (min-width: 640px) {
+		.share-component {
+			flex-direction: row;
+		}
+	}
+
+	.share-left {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		flex: 1;
+	}
+
+	.share-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 0.5rem;
+		background: var(--enter-btn-bg);
+		color: var(--primary);
+		flex-shrink: 0;
+	}
+
+	.share-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.share-title {
+		font-size: 1rem;
+		line-height: 1.4;
 		color: var(--text-secondary);
 	}
 
-	@media (max-width: 640px) {
-		.share-component {
-			padding: 1.25rem;
-		}
+	.share-desc {
+		font-size: 0.8rem;
+		line-height: 1.4;
+		color: var(--text-secondary);
+		margin: 0;
+	}
+
+	.share-right {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		flex-shrink: 0;
 	}
 </style>
