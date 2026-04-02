@@ -11,6 +11,3 @@ export const BANNER_HEIGHT_HOME = BANNER_HEIGHT + BANNER_HEIGHT_EXTEND;
 
 // Page width: rem
 export const PAGE_WIDTH = 90;
-
-// Category constants
-export const UNCATEGORIZED = "uncategorized";

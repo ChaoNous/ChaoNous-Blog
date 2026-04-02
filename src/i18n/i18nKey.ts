@@ -81,25 +81,6 @@ enum I18nKey {
   albumsPhotoCount = "albumsPhotoCount",
   albumsPhotosCount = "albumsPhotosCount",
 
-  // 密码保护
-  passwordProtected = "passwordProtected",
-  passwordProtectedTitle = "passwordProtectedTitle",
-  passwordProtectedDescription = "passwordProtectedDescription",
-  passwordPlaceholder = "passwordPlaceholder",
-  passwordUnlock = "passwordUnlock",
-  passwordUnlocking = "passwordUnlocking",
-  passwordIncorrect = "passwordIncorrect",
-  passwordDecryptError = "passwordDecryptError",
-  passwordRequired = "passwordRequired",
-  passwordVerifying = "passwordVerifying",
-  passwordDecryptFailed = "passwordDecryptFailed",
-  passwordDecryptRetry = "passwordDecryptRetry",
-  passwordUnlockButton = "passwordUnlockButton",
-  copyFailed = "copyFailed",
-  syntaxHighlightFailed = "syntaxHighlightFailed",
-  autoSyntaxHighlightFailed = "autoSyntaxHighlightFailed",
-  decryptionError = "decryptionError",
-
   // 站点统计
   siteStats = "siteStats",
   siteStatsPostCount = "siteStatsPostCount",

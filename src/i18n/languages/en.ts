@@ -86,27 +86,6 @@ export const en: Translation = {
   [Key.albumsPhotoCount]: "photo",
   [Key.albumsPhotosCount]: "photos",
 
-  // Password Protection
-  [Key.passwordProtected]: "Password Protected",
-  [Key.passwordProtectedTitle]: "This content is password protected",
-  [Key.passwordProtectedDescription]:
-    "Please enter the password to view the protected content",
-  [Key.passwordPlaceholder]: "Enter password",
-  [Key.passwordUnlock]: "Unlock",
-  [Key.passwordUnlocking]: "Unlocking...",
-  [Key.passwordIncorrect]: "Incorrect password, please try again",
-  [Key.passwordDecryptError]:
-    "Decryption failed, please check if the password is correct",
-  [Key.passwordRequired]: "Please enter the password",
-  [Key.passwordVerifying]: "Verifying...",
-  [Key.passwordDecryptFailed]: "Decryption failed, please check the password",
-  [Key.passwordDecryptRetry]: "Decryption failed, please try again",
-  [Key.passwordUnlockButton]: "Unlock",
-  [Key.copyFailed]: "Copy failed:",
-  [Key.syntaxHighlightFailed]: "Syntax highlighting failed:",
-  [Key.autoSyntaxHighlightFailed]: "Automatic syntax highlighting also failed:",
-  [Key.decryptionError]: "An error occurred during decryption:",
-
   // Site Stats
   [Key.siteStats]: "Site Statistics",
   [Key.siteStatsPostCount]: "Posts",
