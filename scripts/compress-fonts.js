@@ -267,14 +267,14 @@ async function generateSubsetFont(sourceFontPath, outputPath, text) {
 }
 
 function writeGeneratedCss(unicodeRanges) {
+	const compactRanges = unicodeRanges.replace(/\n\s+/g, " ");
 	const css = `@font-face {
   font-family: "Zhuque Fangsong UI";
   src: url("/assets/fonts/${UI_FONT_FILE}") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  unicode-range:
-    ${unicodeRanges};
+  unicode-range: ${compactRanges};
 }
 `;
 

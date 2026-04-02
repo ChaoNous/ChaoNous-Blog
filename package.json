@@ -7,7 +7,7 @@
 	"type": "module",
 	"homepage": "https://chaonous.com",
 	"engines": {
-		"node": ">=22 <23"
+		"node": ">=22"
 	},
 	"repository": {
 		"type": "git",
