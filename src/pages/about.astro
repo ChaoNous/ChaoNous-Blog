@@ -95,9 +95,15 @@ import ImageWrapper from "../components/misc/ImageWrapper.astro";
 		width: 8rem;
 		height: 8rem;
 		border-radius: 0.75rem;
-		object-fit: cover;
+		overflow: hidden;
 		border: 3px solid var(--primary);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.about-avatar :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 
 	.about-name {
