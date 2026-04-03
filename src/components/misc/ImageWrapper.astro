@@ -1,5 +1,7 @@
 ---
+import fs from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
 
 interface Props {
 	id?: string;
@@ -15,6 +17,7 @@ interface Props {
 	fetchpriority?: "high" | "low" | "auto";
 	decoding?: "async" | "sync" | "auto";
 	aspectRatio?: string;
+	blur?: boolean;
 }
 
 import { Image } from "astro:assets";
@@ -33,6 +36,7 @@ const {
 	fetchpriority = "auto",
 	decoding = "async",
 	aspectRatio,
+	blur = false,
 } = Astro.props;
 const className = Astro.props.class;
 
@@ -46,6 +50,8 @@ const isPublic = src.startsWith("/");
 
 // Astro dynamic import workaround - issue #3373
 let img: ImageMetadata | undefined;
+let blurDataURL: string | undefined;
+
 if (isLocal) {
 	const files = import.meta.glob<ImageMetadata>("../../**", {
 		import: "default",
@@ -60,6 +66,24 @@ if (isLocal) {
 		);
 	} else {
 		img = await file();
+
+		// Generate LQIP: resize to 8px wide, output as tiny base64 WebP
+		if (blur) {
+			try {
+				// normalizedPath is relative to this file (e.g., "../../content/posts/guide/cover.webp")
+				// Resolve from project root using the src/ directory
+				const srcRelative = normalizedPath.replace(/^\.\/+/, "").replace(/^\.\.\//, "");
+				const imgPath = path.join(process.cwd(), "src", srcRelative.replace(/^src\//, "").replace(/^\.\.\//, ""));
+				const buffer = await sharp(imgPath)
+					.resize(8, undefined, { fit: "inside" })
+					.webp({ quality: 15 })
+					.toBuffer();
+				blurDataURL = `data:image/webp;base64,${buffer.toString("base64")}`;
+			} catch (e) {
+				// Fallback: skip blur placeholder on error
+				console.warn(`[ImageWrapper] Blur generation failed for ${src}:`, e);
+			}
+		}
 	}
 }
 
@@ -72,7 +96,20 @@ const isBilibiliImage = !isLocal && src.includes("hdslb.com");
 const referrerPolicy = !isLocal && isBilibiliImage ? "no-referrer" : undefined;
 ---
 
-<div id={id} class:list={[className, "overflow-hidden relative"]} style={aspectRatio ? `aspect-ratio: ${aspectRatio}` : undefined}>
+<div
+	id={id}
+	class:list={[className, "overflow-hidden relative"]}
+	style={aspectRatio ? `aspect-ratio: ${aspectRatio}` : undefined}
+>
+	<!-- Blur placeholder (local images only) -->
+	{
+		blurDataURL && (
+			<div
+				class="absolute inset-0 z-0 bg-cover bg-center blur-placeholder transition-opacity duration-500"
+				style={`background-image: url(${blurDataURL})`}
+			/>
+		)
+	}
 	<div
 		class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"
 	>
@@ -95,6 +132,7 @@ const referrerPolicy = !isLocal && isBilibiliImage ? "no-referrer" : undefined;
 				}
 				fetchpriority={fetchpriority}
 				decoding={decoding}
+				class:list={[{ "relative z-10": blurDataURL }]}
 			/>
 		)
 	}
@@ -116,3 +154,10 @@ const referrerPolicy = !isLocal && isBilibiliImage ? "no-referrer" : undefined;
 		)
 	}
 </div>
+
+<style>
+	.blur-placeholder {
+		filter: blur(8px) saturate(1.2);
+		transform: scale(1.1);
+	}
+</style>
