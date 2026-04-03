@@ -25,7 +25,7 @@
 <div class="relative z-50">
 	<button
 		aria-label="Light/Dark Mode"
-		class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 theme-switch-btn"
+		class="relative btn-plain scale-animation rounded-lg h-full w-full active:scale-90 theme-switch-btn"
 		id="scheme-switch"
 		on:click={toggleScheme}
 	>
