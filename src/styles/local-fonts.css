@@ -1,5 +1,14 @@
 @import "./generated-zhuque-ui-font.css";
 
+/* 朱雀仿宋完整版 — 包含所有 CJK 字符 */
+@font-face {
+  font-family: "Zhuque Fangsong";
+  src: url("/assets/fonts/ZhuqueFangsong-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Crimson Pro 字体配置 - 英文和数字默认字体 */
 @font-face {
   font-family: "Crimson Pro";

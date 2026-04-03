@@ -89,8 +89,8 @@
 		if (musicFontLoaded || typeof document === "undefined") return;
 		musicFontLoaded = true;
 		const fontFace = new FontFace(
-			"Zhuque Fangsong Music",
-			"url(/assets/fonts/ZhuqueFangsong-Regular-Full.woff2)",
+			"Zhuque Fangsong",
+			"url(/assets/fonts/ZhuqueFangsong-Regular.ttf)",
 			{ weight: "400", style: "normal", display: "swap" }
 		);
 		fontFace.load().then((loaded) => {
