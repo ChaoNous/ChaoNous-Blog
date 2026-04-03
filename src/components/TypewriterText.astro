@@ -74,10 +74,11 @@ const initialText = Array.isArray(text)
 			const currentText = texts[textIndex] || "";
 
 			if (hasPaintedInitialText) {
+				// Skip clearing SSR text to avoid CLS — type it out naturally
 				hasPaintedInitialText = false;
-				charIndex = 0;
-				el.textContent = "";
-				schedule(speed);
+				charIndex = currentText.length;
+				isDeleting = true;
+				schedule(pauseTime);
 				return;
 			}
 
@@ -115,7 +116,7 @@ const initialText = Array.isArray(text)
 			schedule(speed);
 		};
 
-		el.textContent = "";
+		// Don't clear SSR text — let CSS min-height reserve space
 		tick();
 
 		return () => {
