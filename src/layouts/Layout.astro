@@ -348,6 +348,23 @@ const bannerOffset =
 		class="min-h-screen"
 		class:list={[{ "is-home": isHomePage, "enable-banner": enableBanner }]}
 	>
+			<!-- SVG filter definitions for silk texture -->
+			<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+				<defs>
+					<filter id="silk-weave" color-interpolation-filters="sRGB">
+						<!-- 经线: 高频水平 × 低频垂直 → 垂直丝线 -->
+						<feTurbulence type="fractalNoise" baseFrequency="0.5 0.02" numOctaves="3" seed="1" result="warp" />
+						<!-- 纬线: 低频水平 × 高频垂直 → 水平丝线 -->
+						<feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="3" seed="2" result="weft" />
+						<!-- 叠加: 经纬线混合形成织物纹理 -->
+						<feBlend mode="screen" in="warp" in2="weft" result="fabric" />
+						<!-- 柔化: 降低透明度，使纹理柔和不刺眼 -->
+						<feColorMatrix type="matrix"
+							values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.08 0"
+							in="fabric" />
+					</filter>
+				</defs>
+			</svg>
 		<ConfigCarrier />
 		<slot />
 		<BackToTop />
