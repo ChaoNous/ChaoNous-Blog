@@ -1,4 +1,4 @@
-import { registerPageScript } from "./page-lifecycle.js";
+import { registerPageScript } from "./page-lifecycle.ts";
 
 function initPropertyCalculator() {
   const calculators = Array.from(

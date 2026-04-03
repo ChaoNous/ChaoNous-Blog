@@ -4,15 +4,47 @@
  * Uses navigator.sendBeacon for reliable delivery on page exit.
  */
 
-(function () {
+interface WebVitalsMetric {
+  name: string;
+  value: number;
+  rating: "good" | "needs-improvement" | "poor" | "unknown";
+  delta: number;
+  id?: string;
+  navigationType?: string;
+}
+
+interface VitalPayload {
+  name: string;
+  value: number;
+  rating: string;
+  delta: number;
+  id: string;
+  navigationType: string;
+  url: string;
+  ts: number;
+}
+
+declare global {
+  interface Window {
+    webVitals?: {
+      onCLS: (cb: (m: WebVitalsMetric) => void) => void;
+      onLCP: (cb: (m: WebVitalsMetric) => void) => void;
+      onINP: (cb: (m: WebVitalsMetric) => void) => void;
+      onFCP: (cb: (m: WebVitalsMetric) => void) => void;
+      onTTFB: (cb: (m: WebVitalsMetric) => void) => void;
+    };
+  }
+}
+
+(function initWebVitalsMonitor() {
   // Only run in production
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1") return;
 
   // ── Report function: sends metrics to the console + optional endpoint ──
-  function report(metric) {
+  function report(metric: WebVitalsMetric): void {
     if (!("sendBeacon" in navigator)) return;
 
-    const payload = {
+    const payload: VitalPayload = {
       name: metric.name,
       value: Math.round(metric.value * 1000) / 1000,
       rating: metric.rating || "unknown",
@@ -37,20 +69,20 @@
   const WEB_VITALS_CDN =
     "https://unpkg.com/web-vitals@4/dist/web-vitals.attribution.iife.js";
 
-  function loadWebVitals() {
+  function loadWebVitals(): void {
     const script = document.createElement("script");
     script.src = WEB_VITALS_CDN;
     script.crossOrigin = "anonymous";
     script.onload = function () {
       if (!window.webVitals) return;
-      var wv = window.webVitals;
+      const wv = window.webVitals;
 
       // Measure each metric and report
-      if (wv.onCLS) wv.onCLS(report);
-      if (wv.onLCP) wv.onLCP(report);
-      if (wv.onINP) wv.onINP(report);
-      if (wv.onFCP) wv.onFCP(report);
-      if (wv.onTTFB) wv.onTTFB(report);
+      wv.onCLS?.(report);
+      wv.onLCP?.(report);
+      wv.onINP?.(report);
+      wv.onFCP?.(report);
+      wv.onTTFB?.(report);
     };
     script.onerror = function () {
       // Fallback: use native PerformanceObserver for LCP
@@ -60,22 +92,18 @@
   }
 
   // ── Fallback LCP observer (no external library) ──
-  function observeLCPFallback() {
+  function observeLCPFallback(): void {
     if (!("PerformanceObserver" in window)) return;
 
     try {
-      var lcpObserver = new PerformanceObserver(function (list) {
-        var entries = list.getEntries();
+      const lcpObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
         if (entries.length === 0) return;
-        var lastEntry = entries[entries.length - 1];
-        console.log(
-          "[vitals] LCP (fallback): " +
-            Math.round(lastEntry.startTime) +
-            "ms"
-        );
+        const lastEntry = entries[entries.length - 1];
+        console.log(`[vitals] LCP (fallback): ${Math.round(lastEntry.startTime)}ms`);
       });
       lcpObserver.observe({ type: "largest-contentful-paint", buffered: true });
-    } catch (e) {
+    } catch {
       // Observer not supported
     }
   }

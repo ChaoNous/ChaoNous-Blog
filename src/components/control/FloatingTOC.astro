@@ -241,7 +241,7 @@ const tocDepth = siteConfig.toc.depth;
 </style>
 
 <script>
-	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
 	import { getHeadingsFromContainer, getMinLevel, headingsToData, updateActiveHeading } from "../../utils/toc-utils.js";
 
 	class FloatingTOC {

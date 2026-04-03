@@ -1,12 +1,39 @@
-const lifecycleState = window.__pageLifecycleState || {
-  records: new Map(),
+// Type definitions for page lifecycle system
+export interface PageLifecycleRecord {
+  name: string;
+  shouldRun?: () => boolean;
+  init: () => (() => void) | void;
+  cleanup: (() => void) | null;
+}
+
+export interface PageLifecycleState {
+  records: Map<string, PageLifecycleRecord>;
+  isSetup: boolean;
+  hasSwupHooks: boolean;
+}
+
+declare global {
+  interface Window {
+    __pageLifecycleState?: PageLifecycleState;
+    swup?: {
+      hooks?: {
+        on: (event: string, fn: () => void) => void;
+      };
+    };
+    registerPageScript?: typeof registerPageScript;
+    cleanupPageScripts?: typeof cleanupPageScripts;
+  }
+}
+
+const lifecycleState: PageLifecycleState = window.__pageLifecycleState || {
+  records: new Map<string, PageLifecycleRecord>(),
   isSetup: false,
   hasSwupHooks: false,
 };
 
 window.__pageLifecycleState = lifecycleState;
 
-function safeCall(fn, label) {
+function safeCall<T>(fn: () => T, label: string): T | undefined {
   try {
     return fn();
   } catch (error) {
@@ -15,7 +42,7 @@ function safeCall(fn, label) {
   }
 }
 
-function runRecord(record) {
+function runRecord(record: PageLifecycleRecord): void {
   const shouldRun = record.shouldRun
     ? safeCall(record.shouldRun, `${record.name}:shouldRun`)
     : true;
@@ -37,13 +64,13 @@ function runRecord(record) {
   record.cleanup = typeof cleanup === "function" ? cleanup : null;
 }
 
-function runAll() {
+function runAll(): void {
   lifecycleState.records.forEach((record) => {
     runRecord(record);
   });
 }
 
-function cleanupAll() {
+function cleanupAll(): void {
   lifecycleState.records.forEach((record) => {
     if (record.cleanup) {
       safeCall(record.cleanup, `${record.name}:cleanup`);
@@ -52,7 +79,7 @@ function cleanupAll() {
   });
 }
 
-function attachSwupHooks() {
+function attachSwupHooks(): boolean {
   if (!window.swup?.hooks || lifecycleState.hasSwupHooks) {
     return false;
   }
@@ -63,7 +90,7 @@ function attachSwupHooks() {
   return true;
 }
 
-function setupPageLifecycle() {
+function setupPageLifecycle(): void {
   if (lifecycleState.isSetup) {
     return;
   }
@@ -86,10 +113,13 @@ function setupPageLifecycle() {
   );
 }
 
-export function registerPageScript(name, options) {
+export function registerPageScript(
+  name: string,
+  options: { shouldRun?: () => boolean; init: () => (() => void) | void },
+): () => void {
   setupPageLifecycle();
 
-  const record = {
+  const record: PageLifecycleRecord = {
     name,
     shouldRun: options?.shouldRun,
     init: options.init,
@@ -117,7 +147,7 @@ export function registerPageScript(name, options) {
   };
 }
 
-export function cleanupPageScripts() {
+export function cleanupPageScripts(): void {
   cleanupAll();
 }
 

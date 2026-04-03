@@ -1,4 +1,4 @@
-import { registerPageScript } from "./page-lifecycle.js";
+import { registerPageScript } from "./page-lifecycle.ts";
 
 function extractCodeText(codeElement) {
   const lineElements = codeElement.querySelectorAll("span.line");

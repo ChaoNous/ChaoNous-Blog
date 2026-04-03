@@ -1,4 +1,4 @@
-import { registerPageScript } from "./page-lifecycle.js";
+import { registerPageScript } from "./page-lifecycle.ts";
 
 function showRightSidebar() {
   const rightSidebar = document.querySelector(".right-sidebar-container");

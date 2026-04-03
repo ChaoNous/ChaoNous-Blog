@@ -1,4 +1,4 @@
-import { registerPageScript } from "./page-lifecycle.js";
+import { registerPageScript } from "./page-lifecycle.ts";
 
 const BTC_MAIN_SELECTOR = "#btc-main-chart";
 const BTC_MINI_SELECTOR = "#btc-mini-chart";

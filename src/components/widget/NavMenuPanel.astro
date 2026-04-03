@@ -271,7 +271,7 @@ const { showDisplaySettings = false } = Astro.props;
 </style>
 
 <script>
-	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
 
 	registerPageScript("mobile-nav-menu-panel", {
 		shouldRun() {

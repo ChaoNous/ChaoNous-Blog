@@ -145,7 +145,7 @@ const {
     }
 
     (async () => {
-        const { registerPageScript } = await import("../scripts/page-lifecycle.js");
+        const { registerPageScript } = await import("../scripts/page-lifecycle.ts");
         registerPageScript("post-meta-page-views", {
             shouldRun() {
                 return document.querySelector(".umami-page-views") !== null;

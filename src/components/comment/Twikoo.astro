@@ -255,7 +255,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 </style>
 
 <script>
-	import { registerPageScript } from "../../scripts/page-lifecycle.js";
+	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
 
 	type TwikooGlobal = {
 		init: (options: Record<string, unknown>) => void;

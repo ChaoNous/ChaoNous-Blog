@@ -1,6 +1,4 @@
 ---
-import fs from "node:fs/promises";
-import path from "node:path";
 import sharp from "sharp";
 
 interface Props {
@@ -56,25 +54,27 @@ if (isLocal) {
 	const files = import.meta.glob<ImageMetadata>("../../**", {
 		import: "default",
 	});
-	let normalizedPath = path
-		.normalize(path.join("../../", basePath, src))
-		.replace(/\\/g, "/");
+	const normalizedPath = (() => {
+		const raw = `../../${basePath.replace(/^\/+/, "").replace(/\/+$/, "")}/${src.replace(/^\.\/+/, "")}`.replace(/\\/g, "/");
+		return raw.split("/").reduce((acc: string[], seg) => {
+			if (seg === "." || seg === "") return acc;
+			acc.push(seg);
+			return acc;
+		}, []).join("/");
+	})();
 	const file = files[normalizedPath];
 	if (!file) {
 		console.error(
-			`\n[ERROR] Image file not found: ${normalizedPath.replace("../../", "src/")}`,
+			`\n[ERROR] Image file not found: src/${normalizedPath}`,
 		);
 	} else {
 		img = await file();
 
 		// Generate LQIP: resize to 8px wide, output as tiny base64 WebP
-		if (blur) {
+		if (blur && img) {
 			try {
-				// normalizedPath is relative to this file (e.g., "../../content/posts/guide/cover.webp")
-				// Resolve from project root using the src/ directory
-				const srcRelative = normalizedPath.replace(/^\.\/+/, "").replace(/^\.\.\//, "");
-				const imgPath = path.join(process.cwd(), "src", srcRelative.replace(/^src\//, "").replace(/^\.\.\//, ""));
-				const buffer = await sharp(imgPath)
+				// Use img.sourcePath for direct file access - more reliable than manual path reconstruction
+				const buffer = await sharp(img.sourcePath)
 					.resize(8, undefined, { fit: "inside" })
 					.webp({ quality: 15 })
 					.toBuffer();
