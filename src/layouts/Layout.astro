@@ -266,11 +266,7 @@ const bannerOffset =
 			const hue = localStorage.getItem("hue") || configHue;
 			document.documentElement.style.setProperty("--hue", hue);
 
-			// 根据主题色设置背景材质
-			// 朱砂赤 (hue: 10) → 缣帛 (silk)
-			// 提尔紫 (hue: 325) → 羊皮纸 (parchment)
-			const material = hue === "10" ? "silk" : "parchment";
-			document.documentElement.setAttribute("data-theme-material", material);
+			document.documentElement.setAttribute("data-theme-material", "silk");
 
 			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
 			let offset = Math.floor(

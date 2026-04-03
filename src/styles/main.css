@@ -85,36 +85,8 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* 羊皮纸纹理效果（提尔紫主题） */
-[data-theme-material="parchment"] body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 1;
-  background:
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(140, 110, 70, 0.04) 2px, rgba(140, 110, 70, 0.04) 5px),
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(140, 110, 70, 0.03) 2px, rgba(140, 110, 70, 0.03) 6px),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f8f4ec' surfaceScale='0.8' result='light'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 400px 400px;
-  mix-blend-mode: multiply;
-}
-
-[data-theme-material="parchment"] body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.3;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.15'/%3E%3C/svg%3E");
-  background-size: 300px 300px;
-  mix-blend-mode: overlay;
-}
-
-/* Dark mode - 缣帛 */
-[data-theme-material="silk"].dark body::before {
+/* Dark mode */
+.dark body::before {
   opacity: 1;
   background:
     linear-gradient(135deg, transparent 0%, rgba(255, 230, 200, 0.04) 20%, transparent 40%, rgba(255, 230, 200, 0.03) 60%, transparent 80%),
@@ -126,27 +98,9 @@ body {
   mix-blend-mode: soft-light;
 }
 
-[data-theme-material="silk"].dark body::after {
+.dark body::after {
   opacity: 0.4;
   background: linear-gradient(155deg, transparent 20%, rgba(255, 240, 220, 0.06) 45%, rgba(255, 240, 220, 0.04) 55%, transparent 80%);
-  mix-blend-mode: overlay;
-}
-
-/* Dark mode - 羊皮纸 */
-[data-theme-material="parchment"].dark body::before {
-  opacity: 1;
-  background:
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(200, 170, 120, 0.035) 2px, rgba(200, 170, 120, 0.035) 5px),
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(200, 170, 120, 0.025) 2px, rgba(200, 170, 120, 0.025) 6px),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23302820' surfaceScale='0.6' result='light'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 400px 400px;
-  mix-blend-mode: soft-light;
-}
-
-[data-theme-material="parchment"].dark body::after {
-  opacity: 0.25;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spots'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08' numOctaves='2' result='noise'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23spots)' opacity='0.12'/%3E%3C/svg%3E");
-  background-size: 300px 300px;
   mix-blend-mode: overlay;
 }
 
