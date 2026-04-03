@@ -7,10 +7,12 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
 
-// Stylesheets to inline as critical CSS (only small ones under ~10KB)
-// Large CSS should remain as regular stylesheets - inlining increases HTML size
-const criticalCssPatterns = [
-  // No critical CSS inlining for this project
+// Core layout CSS to keep as regular render-blocking (prevents CLS)
+const coreCssPatterns = [
+  /^main\./,                          // Base layout structure (24KB)
+  /^MainGridLayout\./,                // Grid layout (6KB)
+  /^transition\./,                    // Transition animations (1KB)
+  /^generated-zhuque-ui-font\./,      // Font face definitions (3KB)
 ];
 
 // Stylesheets to load asynchronously (not needed for first paint)
@@ -22,9 +24,7 @@ const asyncCssPatterns = [
   /^Search\./,
   /^Icon\./,
   /^DisplaySettings\./,
-  /^generated-zhuque-ui-font\./,
   /^local-fonts\./,
-  /^transition\./,
   /^animation-enhancements\./,
   /^gradient-buttons\./,
   /^markdown\./,
@@ -39,9 +39,6 @@ const asyncCssPatterns = [
   /^Twikoo\./,
   /^AlbumCard\./,
   /^AlbumDetail\./,
-  // Homepage-critical but not first-paint: load async
-  /^MainGridLayout\./,
-  /^main\./,
 ];
 
 // Stylesheets to remove entirely (duplicate or unnecessary)
@@ -49,11 +46,6 @@ const removableCssPatterns = [
   /^vendor-katex\.D-/,     // Duplicate with non-dash version
   /^vendor-fancybox\.D-/,   // Duplicate with non-dash version
 ];
-
-function getDistFilePath(href) {
-  const relativePath = href.replace(/^\//, "").replace(/\//g, path.sep);
-  return path.join(distDir, relativePath);
-}
 
 async function optimizeHtmlFile(htmlPath) {
   let html;
@@ -63,8 +55,6 @@ async function optimizeHtmlFile(htmlPath) {
     if (error?.code === "ENOENT") return;
     throw error;
   }
-
-  const criticalStyleHrefs = [];
 
   // Replace stylesheet links with appropriate loading strategy
   html = html.replace(
@@ -78,37 +68,20 @@ async function optimizeHtmlFile(htmlPath) {
         return "";
       }
 
-      // Check if critical - inline it
-      if (criticalCssPatterns.some(p => p.test(fileName))) {
-        criticalStyleHrefs.push(href);
-        return "";
+      // Core CSS: keep as regular render-blocking stylesheet
+      if (coreCssPatterns.some(p => p.test(fileName))) {
+        return fullMatch; // Keep unchanged
       }
 
-      // Check if async - preload and defer
+      // Async CSS: preload and defer
       if (asyncCssPatterns.some(p => p.test(fileName))) {
         return `<link rel="preload" as="style" href="${fullUrl}" onload="this.onload=null;this.rel='stylesheet'">`;
       }
 
-      // Default: remove and let critical CSS handle it (or leave as-is if unknown)
-      return "";
+      // Unknown CSS: keep as regular stylesheet (safe default)
+      return fullMatch;
     }
   );
-
-  // Inline critical CSS
-  const criticalStyleBlocks = await Promise.all(
-    criticalStyleHrefs.map(async (href) => {
-      try {
-        const css = await fs.readFile(getDistFilePath(href), "utf-8");
-        return `<style data-critical-css="${path.posix.basename(href)}">${css}</style>`;
-      } catch {
-        return "";
-      }
-    })
-  );
-
-  if (criticalStyleBlocks.length > 0) {
-    html = html.replace("</head>", `${criticalStyleBlocks.join("")}</head>`);
-  }
 
   await fs.writeFile(htmlPath, html, "utf-8");
   console.log(`Optimized: ${path.relative(rootDir, htmlPath)}`);
