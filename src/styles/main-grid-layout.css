@@ -243,6 +243,7 @@
     max-width: 18rem;
     height: 5em; /* Fixed height prevents CLS from typewriter text changes */
     overflow: hidden;
+    width: 18rem; /* Fixed width prevents centering shift */
   }
 
   .banner-copy-inner {
@@ -323,6 +324,7 @@
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
     height: 4.5em;
     overflow: hidden;
+    width: 20rem;
   }
 }
 
