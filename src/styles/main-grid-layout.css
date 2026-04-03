@@ -241,6 +241,8 @@
     font-size: 1rem;
     line-height: 1.58;
     max-width: 18rem;
+    height: 5em; /* Fixed height prevents CLS from typewriter text changes */
+    overflow: hidden;
   }
 
   .banner-copy-inner {
@@ -319,6 +321,8 @@
     font-size: 1.25rem;
     line-height: 1.4;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    height: 4.5em;
+    overflow: hidden;
   }
 }
 
