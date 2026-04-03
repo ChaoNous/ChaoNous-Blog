@@ -55,11 +55,11 @@ body {
 }
 
 /* 缣帛纹理 — 亮色模式
- * 缣帛 = 平纹素色丝织物：整体光滑温润、对角方向柔和光泽
- * 不用任何噪点，纯 CSS 渐变叠加模拟丝织品质感
+ * 缣帛 = 平纹素色丝织物
+ * 特征：细密经纬交织可见、对角方向温润光泽、整体光滑
  *
- * ::before — 微光泽底色：多层极淡对角渐变叠加，营造丝绸温润感
- * ::after  — 丝光高光：一道极淡对角光泽
+ * ::before — 经纬线交织 + 暖色温润底色（织物主体）
+ * ::after  — 对角丝光光泽（丝绸标志性光泽）
  */
 body::before {
   content: "";
@@ -67,25 +67,38 @@ body::before {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.5;
   background:
-    /* 温润底色 — 多层极淡暖色渐变叠加 */
+    /* 暖色温润底色 */
     linear-gradient(180deg,
-      rgba(255, 252, 245, 0.4) 0%,
-      rgba(253, 248, 235, 0.2) 50%,
-      rgba(255, 250, 240, 0.3) 100%
+      rgba(255, 252, 245, 0.5) 0%,
+      rgba(253, 248, 235, 0.3) 50%,
+      rgba(255, 250, 240, 0.4) 100%
     ),
-    /* 对角微光 — 丝绸的柔和光泽 */
+    /* 纬线 — 横向丝纱，2px 细密间隔 */
+    repeating-linear-gradient(180deg,
+      transparent 0px,
+      rgba(180, 150, 100, 0.07) 0.4px,
+      transparent 0.8px,
+      transparent 2.5px
+    ),
+    /* 经线 — 纵向经纱，8px 稀疏间隔 */
+    repeating-linear-gradient(90deg,
+      transparent 0px,
+      rgba(180, 150, 100, 0.05) 0.3px,
+      transparent 0.6px,
+      transparent 8px
+    ),
+    /* 对角光泽层 — 丝绸漫反射 */
     linear-gradient(130deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.12) 35%,
-      rgba(255, 255, 255, 0.06) 50%,
-      transparent 65%
+      rgba(255, 255, 255, 0.10) 30%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 70%
     ),
-    /* 反向微光 — 增加层次 */
+    /* 反向光泽层 — 增加层次 */
     linear-gradient(310deg,
       transparent 0%,
-      rgba(255, 250, 240, 0.08) 40%,
+      rgba(255, 252, 245, 0.06) 35%,
       transparent 60%
     );
 }
@@ -96,46 +109,57 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.2;
-  /* 丝质光泽 — 宽幅对角光带 */
+  opacity: 0.35;
+  /* 丝光主光泽 — 宽幅对角光带 */
   background: linear-gradient(135deg,
     transparent 0%,
-    rgba(255, 255, 253, 0.15) 40%,
-    rgba(255, 255, 253, 0.08) 50%,
-    transparent 60%,
+    rgba(255, 255, 253, 0.18) 38%,
+    rgba(255, 255, 253, 0.10) 50%,
+    transparent 62%,
     transparent 100%
   );
 }
 
 /* 暗色模式 — 缣帛纹理 */
 .dark body::before {
-  opacity: 0.3;
   background:
     linear-gradient(180deg,
-      rgba(40, 35, 30, 0.3) 0%,
-      rgba(35, 30, 25, 0.15) 50%,
-      rgba(38, 33, 28, 0.2) 100%
+      rgba(40, 35, 30, 0.35) 0%,
+      rgba(35, 30, 25, 0.2) 50%,
+      rgba(38, 33, 28, 0.25) 100%
+    ),
+    repeating-linear-gradient(180deg,
+      transparent 0px,
+      rgba(210, 175, 120, 0.06) 0.4px,
+      transparent 0.8px,
+      transparent 2.5px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent 0px,
+      rgba(210, 175, 120, 0.04) 0.3px,
+      transparent 0.6px,
+      transparent 8px
     ),
     linear-gradient(130deg,
       transparent 0%,
-      rgba(255, 240, 210, 0.06) 35%,
-      rgba(255, 240, 210, 0.03) 50%,
-      transparent 65%
+      rgba(255, 240, 210, 0.05) 30%,
+      rgba(255, 240, 210, 0.025) 50%,
+      transparent 70%
     ),
     linear-gradient(310deg,
       transparent 0%,
-      rgba(255, 238, 200, 0.04) 40%,
+      rgba(255, 238, 200, 0.035) 35%,
       transparent 60%
     );
 }
 
 .dark body::after {
-  opacity: 0.12;
+  opacity: 0.2;
   background: linear-gradient(135deg,
     transparent 0%,
-    rgba(255, 242, 215, 0.08) 40%,
-    rgba(255, 242, 215, 0.04) 50%,
-    transparent 60%,
+    rgba(255, 242, 215, 0.10) 38%,
+    rgba(255, 242, 215, 0.05) 50%,
+    transparent 62%,
     transparent 100%
   );
 }
