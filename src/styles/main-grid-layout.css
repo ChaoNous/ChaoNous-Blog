@@ -95,14 +95,28 @@
   gap: 1rem;
 }
 
+/* Banner 和主内容默认 top 值（桌面端），通过 class 设置而非内联样式 */
+.banner-wrapper-desktop {
+  top: -20vh; /* 与 BANNER_HEIGHT_EXTEND (30vh) 偏移一致 */
+}
+
+.main-content-desktop {
+  top: calc(var(--banner-height-home) + 2rem); /* 首页默认值 */
+}
+
+/* 非首页主内容 top */
+body.enable-banner:not(.is-home) .main-content-desktop {
+  top: var(--banner-height, 40vh);
+}
+
 /* 桌面端（>= 1280px）banner 模式下主内容区 top 值 */
 @media (min-width: 1280px) {
   body.enable-banner:not(.is-home) #main-content-shell {
-    top: 40vh !important;
+    top: 40vh;
   }
 
   body.enable-banner.is-home #main-content-shell {
-    top: calc(var(--banner-height-home) + 2rem) !important;
+    top: calc(var(--banner-height-home) + 2rem);
   }
 
   .banner-title {
@@ -207,14 +221,14 @@
 
   /* Banner 样式 */
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: var(--home-hero-height-mobile) !important;
-    min-height: var(--home-hero-min-mobile) !important;
-    max-height: var(--home-hero-max-mobile) !important;
+    height: var(--home-hero-height-mobile);
+    min-height: var(--home-hero-min-mobile);
+    max-height: var(--home-hero-max-mobile);
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: var(--home-hero-height-mobile) !important;
-    min-height: calc(100vh - var(--home-hero-height-mobile)) !important;
+    top: var(--home-hero-height-mobile);
+    min-height: calc(100vh - var(--home-hero-height-mobile));
   }
 
   .banner-text-overlay {
@@ -262,13 +276,13 @@
 /* 小屏手机（320px - 479px）竖屏模式 */
 @media (max-width: 479px) and (orientation: portrait) {
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 220px !important;
-    top: 0 !important;
+    height: 220px;
+    top: 0;
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 220px !important;
-    min-height: calc(100vh - 220px) !important;
+    top: 220px;
+    min-height: calc(100vh - 220px);
   }
 
   .banner-text-overlay {
@@ -297,13 +311,13 @@
 /* 中小屏手机（480px - 767px）竖屏模式 */
 @media (min-width: 480px) and (max-width: 767px) and (orientation: portrait) {
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 260px !important;
-    top: 0 !important;
+    height: 260px;
+    top: 0;
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 260px !important;
-    min-height: calc(100vh - 260px) !important;
+    top: 260px;
+    min-height: calc(100vh - 260px);
   }
 
   .banner-text-overlay {
@@ -340,15 +354,15 @@
   }
 
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 45vh !important;
-    min-height: 350px !important;
-    max-height: 500px !important;
-    top: 0 !important;
+    height: 45vh;
+    min-height: 350px;
+    max-height: 500px;
+    top: 0;
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 45vh !important;
-    min-height: calc(100vh - 45vh) !important;
+    top: 45vh;
+    min-height: calc(100vh - 45vh);
   }
 
   .banner-container img,

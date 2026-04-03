@@ -1,68 +1,91 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse } from "node-html-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
 
-// Core layout CSS to keep as regular render-blocking (prevents CLS)
-const coreCssPatterns = [
-  /^main\./,                          // Base layout structure (24KB)
-  /^MainGridLayout\./,                // Grid layout (6KB)
-  /^transition\./,                    // Transition animations (1KB)
-  /^generated-zhuque-ui-font\./,      // Font face definitions (3KB)
-];
+// Core CSS: must load render-blocking to prevent CLS
+const CORE_CSS = new Set([
+  "main",
+  "MainGridLayout",
+  "transition",
+  "generated-zhuque-ui-font",
+]);
 
-// Stylesheets to load asynchronously (not needed for first paint)
-const asyncCssPatterns = [
-  /^PostPage\./,
-  /^PostCard\./,
-  /^PostMeta\./,
-  /^LightDarkSwitch\./,
-  /^Search\./,
-  /^Icon\./,
-  /^DisplaySettings\./,
-  /^local-fonts\./,
-  /^animation-enhancements\./,
-  /^gradient-buttons\./,
-  /^markdown\./,
-  /^markdown-extend\./,
-  /^expressive-code\./,
-  /^vendor-katex\./,
-  /^vendor-fancybox\./,
-  /^fancybox-custom\./,
-  /^Share\./,
-  /^SharePoster\./,
-  /^PostDetailLayout\./,
-  /^Twikoo\./,
-  /^AlbumCard\./,
-  /^AlbumDetail\./,
-];
+// CSS to remove entirely (duplicates or unnecessary)
+const REMOVABLE_CSS = new Set([
+  "vendor-katex",
+  "vendor-fancybox",
+  "fancybox-custom",
+]);
 
-// Stylesheets to remove entirely (duplicate or unnecessary)
-const removableCssPatterns = [
-  /^vendor-katex\.D-/,     // Duplicate with non-dash version
-  /^vendor-fancybox\.D-/,   // Duplicate with non-dash version
-];
+/**
+ * Extract the CSS prefix (name before hash) from a filename.
+ */
+function cssPrefix(filename) {
+  return filename.replace(/\.css$/, "").replace(/\.[A-Za-z0-9_-]+$/, "");
+}
 
-// Track which CSS basenames exist in /assets/ (canonical location)
-let assetsCssBasenames = new Set();
-
-async function buildAssetsCssIndex() {
+/**
+ * Build a manifest of all CSS files in dist/assets/.
+ * Returns Map<prefix, filename> for canonical /assets/ CSS.
+ */
+async function buildCssManifest() {
   const assetsDir = path.join(distDir, "assets");
+  const byPrefix = new Map();
+
   try {
     const files = await fs.readdir(assetsDir);
     for (const file of files) {
       if (file.endsWith(".css")) {
-        assetsCssBasenames.add(file);
+        byPrefix.set(cssPrefix(file), file);
       }
     }
-  } catch { /* ignore */ }
+  } catch {
+    // dist/assets may not exist yet
+  }
+
+  return byPrefix;
 }
 
-async function optimizeHtmlFile(htmlPath) {
+/**
+ * Classify a CSS file by its loading strategy.
+ */
+function classifyCss(filename) {
+  const prefix = cssPrefix(filename);
+  if (REMOVABLE_CSS.has(prefix)) return "remove";
+  if (CORE_CSS.has(prefix)) return "core";
+  return "async";
+}
+
+/**
+ * Get the canonical /assets/ href for a CSS file.
+ * Returns null if the CSS prefix is not found in /assets/.
+ */
+function canonicalHref(href, cssManifest) {
+  const filename = path.posix.basename(href);
+  const prefix = cssPrefix(filename);
+  const canonicalFile = cssManifest.get(prefix);
+  if (!canonicalFile) return null;
+  return `/assets/${canonicalFile}`;
+}
+
+/**
+ * Check if a link element is a CSS reference.
+ */
+function isCssLink(link) {
+  const rel = link.getAttribute("rel");
+  return (
+    (rel === "stylesheet" && link.getAttribute("href")?.endsWith(".css")) ||
+    (rel === "preload" && link.getAttribute("as") === "style")
+  );
+}
+
+async function optimizeHtmlFile(htmlPath, cssManifest) {
   let html;
   try {
     html = await fs.readFile(htmlPath, "utf-8");
@@ -71,56 +94,105 @@ async function optimizeHtmlFile(htmlPath) {
     throw error;
   }
 
-  // Replace stylesheet links with appropriate loading strategy
-  html = html.replace(
-    /<link\s+rel="stylesheet"\s+href="([^"]+)">/g,
-    (fullMatch, href) => {
-      const fullUrl = href;
-      const fileName = path.posix.basename(href);
+  const root = parse(html);
+  const head = root.querySelector("head");
+  if (!head) return;
 
-      // Remove /_astro/ CSS if same file exists in /assets/ (canonical location)
-      if (href.startsWith("/_astro/") && assetsCssBasenames.has(fileName)) {
-        return "";
-      }
+  let modified = false;
+  const toRemove = [];
+  const toModify = []; // { link, rel, href, onload? }
 
-      // Check if removable (duplicates)
-      if (removableCssPatterns.some(p => p.test(fileName))) {
-        return "";
-      }
+  // Collect all CSS link elements
+  const allLinks = head.querySelectorAll("link");
+  const cssLinks = allLinks.filter(isCssLink);
 
-      // Core CSS: keep as regular render-blocking stylesheet
-      if (coreCssPatterns.some(p => p.test(fileName))) {
-        return fullMatch; // Keep unchanged
-      }
+  for (const link of cssLinks) {
+    const href = link.getAttribute("href");
+    if (!href) continue;
 
-      // Async CSS: preload and defer
-      if (asyncCssPatterns.some(p => p.test(fileName))) {
-        return `<link rel="preload" as="style" href="${fullUrl}" onload="this.onload=null;this.rel='stylesheet'">`;
-      }
+    const filename = path.posix.basename(href);
+    const classification = classifyCss(filename);
 
-      // Unknown CSS: keep as regular stylesheet (safe default)
-      return fullMatch;
+    // Remove entirely
+    if (classification === "remove") {
+      toRemove.push(link);
+      modified = true;
+      continue;
     }
-  );
 
-  await fs.writeFile(htmlPath, html, "utf-8");
-  console.log(`Optimized: ${path.relative(rootDir, htmlPath)}`);
-}
+    // Get canonical /assets/ href
+    const canHref = canonicalHref(href, cssManifest);
+    if (!canHref) continue; // unknown CSS, leave as-is
 
-async function optimizeAll() {
-  const htmlFiles = await findHtmlFiles(distDir);
-  console.log(`Found ${htmlFiles.length} HTML files to optimize`);
-
-  // Build index of CSS files in /assets/ to identify duplicates
-  await buildAssetsCssIndex();
-  console.log(`Indexed ${assetsCssBasenames.size} CSS files in /assets/`);
-
-  for (const file of htmlFiles) {
-    await optimizeHtmlFile(file);
+    // Build desired attributes
+    if (classification === "core") {
+      // Render-blocking stylesheet
+      if (link.getAttribute("rel") !== "stylesheet" || link.getAttribute("href") !== canHref) {
+        toModify.push({ link, rel: "stylesheet", href: canHref });
+        modified = true;
+      }
+    } else {
+      // Async: preload + onload swap
+      if (
+        link.getAttribute("rel") !== "preload" ||
+        link.getAttribute("href") !== canHref ||
+        !link.getAttribute("onload")
+      ) {
+        toModify.push({
+          link,
+          rel: "preload",
+          href: canHref,
+          as: "style",
+          onload: "this.onload=null;this.rel='stylesheet'",
+        });
+        modified = true;
+      }
+    }
   }
 
-  // Delete duplicate CSS files from /_astro/ that also exist in /assets/
-  await removeDuplicateCss();
+  // Apply removals
+  for (const link of toRemove) {
+    link.remove();
+  }
+
+  // Apply modifications
+  for (const { link, rel, href, as, onload } of toModify) {
+    link.setAttribute("rel", rel);
+    link.setAttribute("href", href);
+    if (as) link.setAttribute("as", as);
+    else link.removeAttribute("as");
+    if (onload) link.setAttribute("onload", onload);
+    else link.removeAttribute("onload");
+  }
+
+  if (modified) {
+    await fs.writeFile(htmlPath, root.toString(), "utf-8");
+    console.log(`Optimized: ${path.relative(rootDir, htmlPath)}`);
+  }
+}
+
+async function removeDuplicateCss(cssManifest) {
+  const astroDir = path.join(distDir, "_astro");
+  let removed = 0;
+
+  try {
+    const files = await fs.readdir(astroDir);
+    for (const file of files) {
+      if (!file.endsWith(".css")) continue;
+      const canonicalFile = cssManifest.get(cssPrefix(file));
+      if (canonicalFile && canonicalFile !== file) {
+        await fs.unlink(path.join(astroDir, file));
+        removed++;
+        console.log(`Removed duplicate: _astro/${file}`);
+      }
+    }
+  } catch {
+    // _astro directory may not exist
+  }
+
+  if (removed > 0) {
+    console.log(`Removed ${removed} duplicate CSS file(s) from /_astro/`);
+  }
 }
 
 async function findHtmlFiles(dir) {
@@ -137,23 +209,20 @@ async function findHtmlFiles(dir) {
   return files;
 }
 
-async function removeDuplicateCss() {
-  const astroDir = path.join(distDir, "_astro");
-  try {
-    const files = await fs.readdir(astroDir);
-    let removed = 0;
-    for (const file of files) {
-      if (file.endsWith(".css") && assetsCssBasenames.has(file)) {
-        const filePath = path.join(astroDir, file);
-        await fs.unlink(filePath);
-        removed++;
-        console.log(`Removed duplicate: _astro/${file}`);
-      }
-    }
-    if (removed > 0) {
-      console.log(`Removed ${removed} duplicate CSS files from /_astro/`);
-    }
-  } catch { /* ignore */ }
+async function optimizeAll() {
+  // Step 1: Build CSS manifest
+  const cssManifest = await buildCssManifest();
+  console.log(`Found ${cssManifest.size} CSS files in /assets/`);
+
+  // Step 2: Optimize HTML
+  const htmlFiles = await findHtmlFiles(distDir);
+  console.log(`Processing ${htmlFiles.length} HTML files...`);
+  for (const file of htmlFiles) {
+    await optimizeHtmlFile(file, cssManifest);
+  }
+
+  // Step 3: Remove duplicate CSS files
+  await removeDuplicateCss(cssManifest);
 }
 
 await optimizeAll();

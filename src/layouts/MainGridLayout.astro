@@ -159,8 +159,7 @@ const mainContentClass = `
 	<!-- Banner - 仅在 banner 模式下显示，由 JS 控制高度和过渡动画 -->
 	<div
 		id="banner-wrapper"
-		class="absolute z-10 w-full transition duration-700 overflow-hidden h-[var(--banner-height-home)]"
-		style={`top: -${BANNER_HEIGHT_EXTEND}vh`}
+		class="absolute z-10 w-full transition duration-700 overflow-hidden h-[var(--banner-height-home)] banner-wrapper-desktop"
 	>
 		<div class="banner-inner-wrapper h-full w-full transition-all duration-700">
 			<BannerCarousel
@@ -238,8 +237,7 @@ const mainContentClass = `
 	<!-- Main content -->
 	<div
 		id="main-content-shell"
-		class="absolute w-full z-30 pointer-events-none"
-		style={`top: ${finalMainPanelTop}`}
+		class="absolute w-full z-30 pointer-events-none main-content-desktop"
 	>
 		<!-- The pointer-events-none here prevent blocking the click event of the TOC -->
 		<div class="relative max-w-(--page-width) mx-auto pointer-events-auto">
@@ -250,7 +248,6 @@ const mainContentClass = `
 			>
 
 				{
-					/* 濠电偞鎸婚惃婊堝			{
 				/* 左侧边栏 - 根据配置条件渲染 */
 				}
 				{
