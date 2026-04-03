@@ -47,6 +47,21 @@ const removableCssPatterns = [
   /^vendor-fancybox\.D-/,   // Duplicate with non-dash version
 ];
 
+// Track which CSS basenames exist in /assets/ (canonical location)
+let assetsCssBasenames = new Set();
+
+async function buildAssetsCssIndex() {
+  const assetsDir = path.join(distDir, "assets");
+  try {
+    const files = await fs.readdir(assetsDir);
+    for (const file of files) {
+      if (file.endsWith(".css")) {
+        assetsCssBasenames.add(file);
+      }
+    }
+  } catch { /* ignore */ }
+}
+
 async function optimizeHtmlFile(htmlPath) {
   let html;
   try {
@@ -62,6 +77,11 @@ async function optimizeHtmlFile(htmlPath) {
     (fullMatch, href) => {
       const fullUrl = href;
       const fileName = path.posix.basename(href);
+
+      // Remove /_astro/ CSS if same file exists in /assets/ (canonical location)
+      if (href.startsWith("/_astro/") && assetsCssBasenames.has(fileName)) {
+        return "";
+      }
 
       // Check if removable (duplicates)
       if (removableCssPatterns.some(p => p.test(fileName))) {
@@ -91,9 +111,16 @@ async function optimizeAll() {
   const htmlFiles = await findHtmlFiles(distDir);
   console.log(`Found ${htmlFiles.length} HTML files to optimize`);
 
+  // Build index of CSS files in /assets/ to identify duplicates
+  await buildAssetsCssIndex();
+  console.log(`Indexed ${assetsCssBasenames.size} CSS files in /assets/`);
+
   for (const file of htmlFiles) {
     await optimizeHtmlFile(file);
   }
+
+  // Delete duplicate CSS files from /_astro/ that also exist in /assets/
+  await removeDuplicateCss();
 }
 
 async function findHtmlFiles(dir) {
@@ -108,6 +135,25 @@ async function findHtmlFiles(dir) {
     }
   }
   return files;
+}
+
+async function removeDuplicateCss() {
+  const astroDir = path.join(distDir, "_astro");
+  try {
+    const files = await fs.readdir(astroDir);
+    let removed = 0;
+    for (const file of files) {
+      if (file.endsWith(".css") && assetsCssBasenames.has(file)) {
+        const filePath = path.join(astroDir, file);
+        await fs.unlink(filePath);
+        removed++;
+        console.log(`Removed duplicate: _astro/${file}`);
+      }
+    }
+    if (removed > 0) {
+      console.log(`Removed ${removed} duplicate CSS files from /_astro/`);
+    }
+  } catch { /* ignore */ }
 }
 
 await optimizeAll();
