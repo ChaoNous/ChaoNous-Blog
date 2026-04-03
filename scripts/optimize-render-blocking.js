@@ -7,8 +7,13 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
 
-// All non-critical CSS: loaded asynchronously via preload + onload swap
-// This prevents large CSS bundles from blocking first paint
+// Stylesheets to inline as critical CSS (only small ones under ~10KB)
+// Large CSS should remain as regular stylesheets - inlining increases HTML size
+const criticalCssPatterns = [
+  // No critical CSS inlining for this project
+];
+
+// Stylesheets to load asynchronously (not needed for first paint)
 const asyncCssPatterns = [
   /^PostPage\./,
   /^PostCard\./,
@@ -34,15 +39,15 @@ const asyncCssPatterns = [
   /^Twikoo\./,
   /^AlbumCard\./,
   /^AlbumDetail\./,
-  // These were previously critical but blocking first paint - load async
+  // Homepage-critical but not first-paint: load async
   /^MainGridLayout\./,
   /^main\./,
 ];
 
-// Remove these entirely (duplicates or unnecessary)
+// Stylesheets to remove entirely (duplicate or unnecessary)
 const removableCssPatterns = [
-  /^vendor-katex\.D-/,
-  /^vendor-fancybox\.D-/,
+  /^vendor-katex\.D-/,     // Duplicate with non-dash version
+  /^vendor-fancybox\.D-/,   // Duplicate with non-dash version
 ];
 
 function getDistFilePath(href) {
@@ -59,42 +64,51 @@ async function optimizeHtmlFile(htmlPath) {
     throw error;
   }
 
-  // Step 1: Replace render-blocking stylesheet links with async preload+onload
+  const criticalStyleHrefs = [];
+
+  // Replace stylesheet links with appropriate loading strategy
   html = html.replace(
     /<link\s+rel="stylesheet"\s+href="([^"]+)">/g,
     (fullMatch, href) => {
+      const fullUrl = href;
       const fileName = path.posix.basename(href);
 
-      // Remove duplicates
+      // Check if removable (duplicates)
       if (removableCssPatterns.some(p => p.test(fileName))) {
         return "";
       }
 
-      // All remaining CSS: load asynchronously
-      if (asyncCssPatterns.some(p => p.test(fileName))) {
-        return `<link rel="preload" as="style" href="${href}" onload="this.onload=null;this.rel='stylesheet'">`;
+      // Check if critical - inline it
+      if (criticalCssPatterns.some(p => p.test(fileName))) {
+        criticalStyleHrefs.push(href);
+        return "";
       }
 
-      // Unknown CSS: remove
+      // Check if async - preload and defer
+      if (asyncCssPatterns.some(p => p.test(fileName))) {
+        return `<link rel="preload" as="style" href="${fullUrl}" onload="this.onload=null;this.rel='stylesheet'">`;
+      }
+
+      // Default: remove and let critical CSS handle it (or leave as-is if unknown)
       return "";
     }
   );
 
-  // Step 2: Remove duplicate preload-as-style links
-  const preloadCssRegex = /<link\s+rel="preload"\s+as="style"\s+href="([^"]+)"[^>]*>/g;
-  html = html.replace(preloadCssRegex, (fullMatch, href) => {
-    const fileName = path.posix.basename(href);
-    if (asyncCssPatterns.some(p => p.test(fileName))) {
-      return fullMatch; // Keep the preload we just created
-    }
-    return ""; // Remove unknown preloads
-  });
-
-  // Step 3: Remove font preload (font-display: swap handles fallback)
-  html = html.replace(
-    /<link\s+rel="preload"\s+as="font"[^>]+>/g,
-    ""
+  // Inline critical CSS
+  const criticalStyleBlocks = await Promise.all(
+    criticalStyleHrefs.map(async (href) => {
+      try {
+        const css = await fs.readFile(getDistFilePath(href), "utf-8");
+        return `<style data-critical-css="${path.posix.basename(href)}">${css}</style>`;
+      } catch {
+        return "";
+      }
+    })
   );
+
+  if (criticalStyleBlocks.length > 0) {
+    html = html.replace("</head>", `${criticalStyleBlocks.join("")}</head>`);
+  }
 
   await fs.writeFile(htmlPath, html, "utf-8");
   console.log(`Optimized: ${path.relative(rootDir, htmlPath)}`);
