@@ -55,15 +55,15 @@ body {
 }
 
 /* 缣帛纹理 — 亮色模式
- * 缣帛 = 平纹素色丝织物
+ * 缣帛 = 平纹素色丝织物（千年古帛质感）
  *
- * 六层结构：
+ * 结构：
  *   1. SVG 滤镜 — 各向异性 feTurbulence 经纬线交织
- *   2. 云纹 — 大尺度柔和起伏（天然蚕丝厚薄不均）
- *   3. 暖色渐变底色 — 深浅变化的底色，模拟丝绸褶皱起伏
- *   4. 多角度光泽 — 三条不同方向的光泽带叠加
- *   5. ::after — 多波段主光泽（3 条不同角度、不同宽度的光带）
- *   6. 径向光晕 — 局部高光点，模拟光线聚焦
+ *   2. 云纹 — 天然蚕丝厚薄不均
+ *   3. 径向打底光 — 整体明暗层次（非折痕）
+ *   4. 不规则软折痕 — 多条不同角度、宽度的窄幅线性渐变
+ *      每条折痕 = 暗线（折缝处略深）+ 亮线（隆起处微亮）
+ *   5. ::after — 多波段丝光主光泽
  */
 body::before {
   content: "";
@@ -73,49 +73,74 @@ body::before {
   z-index: 0;
   filter: url(#silk-weave);
   background:
-    /* 暖色渐变底色 — 中间浅、边缘略深，模拟丝绸自然褶皱 */
-    radial-gradient(ellipse 70% 60% at 50% 45%,
-      rgba(245, 235, 218, 1) 0%,
-      rgba(240, 228, 208, 0.95) 60%,
-      rgba(232, 215, 190, 0.9) 100%
+    /* 径向打底光 — 整体明暗层次，不塑造折痕 */
+    radial-gradient(ellipse 80% 70% at 45% 40%,
+      rgba(248, 240, 225, 1) 0%,
+      rgba(238, 225, 200, 0.9) 70%,
+      rgba(228, 210, 182, 0.85) 100%
     ),
     /* 云纹 */
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='cloud'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004' numOctaves='2' seed='3'/%3E%3CfeGaussianBlur stdDeviation='3'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0.96 0 0 0 0  0.88 0 0 0 0  0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cloud)'/%3E%3C/svg%3E"),
-    /* 130° 主光泽 */
-    linear-gradient(130deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.08) 25%,
-      rgba(255, 255, 255, 0.12) 45%,
-      rgba(255, 255, 255, 0.06) 55%,
-      transparent 70%,
-      transparent 100%
+    /* ===== 不规则软折痕 — 折叠后展开留下的痕迹 ===== */
+    /* 折痕 1: 35° 方向（右上↙左下），折缝暗线 */
+    linear-gradient(35deg,
+      transparent 38%,
+      rgba(210, 190, 155, 0.10) 45%,
+      rgba(210, 190, 155, 0.15) 50%,
+      rgba(210, 190, 155, 0.10) 55%,
+      transparent 62%
     ),
-    /* 310° 副光泽 */
-    linear-gradient(310deg,
-      transparent 0%,
-      rgba(255, 252, 245, 0.06) 30%,
+    /* 折痕 1: 隆起亮线 */
+    linear-gradient(35deg,
+      transparent 48%,
+      rgba(255, 255, 252, 0.06) 50%,
+      transparent 52%
+    ),
+    /* 折痕 2: 78° 方向（几乎水平，微倾斜） */
+    linear-gradient(78deg,
+      transparent 32%,
+      rgba(200, 180, 145, 0.08) 40%,
+      rgba(200, 180, 145, 0.12) 50%,
+      rgba(200, 180, 145, 0.08) 60%,
+      transparent 68%
+    ),
+    /* 折痕 3: 105° 方向（左上↘右下） */
+    linear-gradient(105deg,
+      transparent 25%,
+      rgba(210, 190, 155, 0.07) 35%,
+      rgba(210, 190, 155, 0.10) 42%,
+      rgba(210, 190, 155, 0.07) 49%,
+      transparent 59%
+    ),
+    /* 折痕 4: 142° 方向 */
+    linear-gradient(142deg,
+      transparent 40%,
+      rgba(205, 185, 150, 0.08) 48%,
+      rgba(205, 185, 150, 0.12) 50%,
+      rgba(205, 185, 150, 0.08) 52%,
+      transparent 60%
+    ),
+    /* 折痕 5: 168° 方向（接近垂直） */
+    linear-gradient(168deg,
+      transparent 45%,
+      rgba(215, 195, 165, 0.06) 50%,
       transparent 55%
     ),
-    /* 横向微光 — 纬纱反光效果 */
-    linear-gradient(180deg,
+    /* 折痕 6: 200° 方向（左下↗右上） */
+    linear-gradient(200deg,
+      transparent 35%,
+      rgba(210, 190, 155, 0.07) 42%,
+      rgba(210, 190, 155, 0.09) 50%,
+      transparent 58%
+    ),
+    /* 对角光泽 — 丝绸漫反射 */
+    linear-gradient(130deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.03) 20%,
-      transparent 40%,
-      transparent 60%,
-      rgba(255, 255, 255, 0.02) 80%,
-      transparent 100%
-    ),
-    /* 左上角光晕 — 局部高光 */
-    radial-gradient(ellipse 50% 40% at 25% 20%,
-      rgba(255, 255, 255, 0.08) 0%,
-      transparent 100%
-    ),
-    /* 右下角光晕 — 对角呼应 */
-    radial-gradient(ellipse 40% 35% at 78% 75%,
-      rgba(255, 252, 245, 0.05) 0%,
-      transparent 100%
+      rgba(255, 255, 255, 0.06) 30%,
+      rgba(255, 255, 255, 0.03) 50%,
+      transparent 70%
     );
-  background-size: 100% 100%, 2000px 2000px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-size: 100% 100%, 2000px 2000px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
 body::after {
@@ -124,28 +149,28 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.4;
+  opacity: 0.35;
   /* 多波段丝光：3 条不同角度、宽度的光带 */
   background:
     /* 135° 宽幅主光带 */
     linear-gradient(135deg,
       transparent 0%,
       rgba(255, 255, 255, 0.10) 30%,
-      rgba(255, 255, 255, 0.15) 45%,
+      rgba(255, 255, 255, 0.14) 45%,
       rgba(255, 255, 255, 0.10) 55%,
       transparent 70%
     ),
     /* 145° 窄幅副光带 */
     linear-gradient(145deg,
       transparent 0%,
-      rgba(255, 253, 248, 0.08) 35%,
-      rgba(255, 253, 248, 0.05) 50%,
+      rgba(255, 253, 248, 0.07) 35%,
+      rgba(255, 253, 248, 0.04) 50%,
       transparent 65%
     ),
-    /* 120° 极淡交叉光带 — 增加丝绸特有的交叉光泽 */
+    /* 120° 极淡交叉光带 */
     linear-gradient(120deg,
       transparent 0%,
-      rgba(255, 255, 253, 0.06) 40%,
+      rgba(255, 255, 253, 0.05) 40%,
       transparent 55%
     );
 }
@@ -154,69 +179,92 @@ body::after {
 .dark body::before {
   filter: url(#silk-weave);
   background:
-    radial-gradient(ellipse 70% 60% at 50% 45%,
-      rgba(42, 36, 30, 0.6) 0%,
-      rgba(38, 32, 26, 0.5) 60%,
-      rgba(32, 26, 22, 0.4) 100%
+    radial-gradient(ellipse 80% 70% at 45% 40%,
+      rgba(45, 38, 32, 0.7) 0%,
+      rgba(38, 32, 26, 0.55) 70%,
+      rgba(30, 24, 20, 0.45) 100%
     ),
     /* 云纹 — 暗色版 */
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='cloud'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004' numOctaves='2' seed='3'/%3E%3CfeGaussianBlur stdDeviation='3'/%3E%3CfeColorMatrix type='matrix' values='0.85 0 0 0 0  0.78 0 0 0 0  0.68 0 0 0 0  0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cloud)'/%3E%3C/svg%3E"),
-    /* 130° 主光泽 */
-    linear-gradient(130deg,
-      transparent 0%,
-      rgba(255, 240, 210, 0.04) 25%,
-      rgba(255, 240, 210, 0.06) 45%,
-      rgba(255, 240, 210, 0.03) 55%,
-      transparent 70%,
-      transparent 100%
+    /* 折痕 1: 35° */
+    linear-gradient(35deg,
+      transparent 38%,
+      rgba(180, 155, 115, 0.06) 45%,
+      rgba(180, 155, 115, 0.09) 50%,
+      rgba(180, 155, 115, 0.06) 55%,
+      transparent 62%
     ),
-    /* 310° 副光泽 */
-    linear-gradient(310deg,
-      transparent 0%,
-      rgba(255, 238, 200, 0.04) 30%,
+    linear-gradient(35deg,
+      transparent 48%,
+      rgba(255, 240, 210, 0.03) 50%,
+      transparent 52%
+    ),
+    /* 折痕 2: 78° */
+    linear-gradient(78deg,
+      transparent 32%,
+      rgba(175, 150, 110, 0.05) 40%,
+      rgba(175, 150, 110, 0.07) 50%,
+      rgba(175, 150, 110, 0.05) 60%,
+      transparent 68%
+    ),
+    /* 折痕 3: 105° */
+    linear-gradient(105deg,
+      transparent 25%,
+      rgba(180, 155, 115, 0.04) 35%,
+      rgba(180, 155, 115, 0.06) 42%,
+      rgba(180, 155, 115, 0.04) 49%,
+      transparent 59%
+    ),
+    /* 折痕 4: 142° */
+    linear-gradient(142deg,
+      transparent 40%,
+      rgba(178, 152, 112, 0.05) 48%,
+      rgba(178, 152, 112, 0.07) 50%,
+      rgba(178, 152, 112, 0.05) 52%,
+      transparent 60%
+    ),
+    /* 折痕 5: 168° */
+    linear-gradient(168deg,
+      transparent 45%,
+      rgba(185, 160, 125, 0.04) 50%,
       transparent 55%
     ),
-    /* 横向微光 */
-    linear-gradient(180deg,
+    /* 折痕 6: 200° */
+    linear-gradient(200deg,
+      transparent 35%,
+      rgba(180, 155, 115, 0.04) 42%,
+      rgba(180, 155, 115, 0.06) 50%,
+      transparent 58%
+    ),
+    /* 对角光泽 */
+    linear-gradient(130deg,
       transparent 0%,
-      rgba(255, 245, 225, 0.02) 20%,
-      transparent 40%,
-      transparent 60%,
-      rgba(255, 245, 225, 0.015) 80%,
-      transparent 100%
-    ),
-    /* 左上角光晕 */
-    radial-gradient(ellipse 50% 40% at 25% 20%,
-      rgba(255, 240, 210, 0.04) 0%,
-      transparent 100%
-    ),
-    /* 右下角光晕 */
-    radial-gradient(ellipse 40% 35% at 78% 75%,
-      rgba(255, 235, 200, 0.03) 0%,
-      transparent 100%
+      rgba(255, 240, 210, 0.03) 30%,
+      rgba(255, 240, 210, 0.02) 50%,
+      transparent 70%
     );
-  background-size: 100% 100%, 2000px 2000px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-size: 100% 100%, 2000px 2000px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
 .dark body::after {
-  opacity: 0.25;
+  opacity: 0.2;
   background:
     linear-gradient(135deg,
       transparent 0%,
-      rgba(255, 242, 215, 0.06) 30%,
-      rgba(255, 242, 215, 0.10) 45%,
-      rgba(255, 242, 215, 0.06) 55%,
+      rgba(255, 242, 215, 0.05) 30%,
+      rgba(255, 242, 215, 0.08) 45%,
+      rgba(255, 242, 215, 0.05) 55%,
       transparent 70%
     ),
     linear-gradient(145deg,
       transparent 0%,
-      rgba(255, 240, 210, 0.05) 35%,
-      rgba(255, 240, 210, 0.03) 50%,
+      rgba(255, 240, 210, 0.04) 35%,
+      rgba(255, 240, 210, 0.02) 50%,
       transparent 65%
     ),
     linear-gradient(120deg,
       transparent 0%,
-      rgba(255, 245, 220, 0.04) 40%,
+      rgba(255, 245, 220, 0.03) 40%,
       transparent 55%
     );
 }
