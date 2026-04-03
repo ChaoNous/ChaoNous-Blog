@@ -49,19 +49,11 @@ const initialText = Array.isArray(text)
 			return () => {};
 		}
 
-		const speed = parseInt(el.getAttribute("data-speed") || "100", 10);
-		const deleteSpeed = parseInt(
-			el.getAttribute("data-delete-speed") || "50",
-			10,
-		);
 		const pauseTime = parseInt(el.getAttribute("data-pause-time") || "2000", 10);
 
 		let timerId = null;
 		let textIndex = 0;
-		let charIndex = 0;
-		let isDeleting = false;
 		let destroyed = false;
-		let hasPaintedInitialText = Boolean(el.textContent?.trim());
 
 		const schedule = (delay) => {
 			if (destroyed) return;
@@ -71,53 +63,11 @@ const initialText = Array.isArray(text)
 		const tick = () => {
 			if (destroyed) return;
 
-			const currentText = texts[textIndex] || "";
-
-			if (hasPaintedInitialText) {
-				// Skip clearing SSR text to avoid CLS — type it out naturally
-				hasPaintedInitialText = false;
-				charIndex = currentText.length;
-				isDeleting = true;
-				schedule(pauseTime);
-				return;
-			}
-
-			if (!isDeleting) {
-				charIndex += 1;
-				el.textContent = currentText.substring(0, charIndex);
-
-				if (charIndex < currentText.length) {
-					schedule(speed);
-					return;
-				}
-
-				if (texts.length === 1) {
-					if (texts[0] === "") {
-						el.innerHTML = "&nbsp;";
-					}
-					return;
-				}
-
-				isDeleting = true;
-				schedule(pauseTime);
-				return;
-			}
-
-			charIndex -= 1;
-			el.textContent = currentText.substring(0, Math.max(charIndex, 0));
-
-			if (charIndex > 0) {
-				schedule(deleteSpeed);
-				return;
-			}
-
-			isDeleting = false;
 			textIndex = (textIndex + 1) % texts.length;
-			schedule(speed);
+			// Instant text swap — no typing animation, no CLS
+			el.textContent = texts[textIndex];
+			schedule(pauseTime);
 		};
-
-		// Don't clear SSR text — let CSS min-height reserve space
-		tick();
 
 		return () => {
 			destroyed = true;
