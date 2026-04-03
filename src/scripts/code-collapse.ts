@@ -1,6 +1,21 @@
 import { registerPageScript } from "./page-lifecycle.ts";
 
+declare global {
+  interface Window {
+    themeOptimizer?: {
+      hideCodeBlocksDuringTransition?: boolean;
+    };
+    CodeBlockCollapser?: typeof CodeBlockCollapser;
+    codeBlockCollapser?: CodeBlockCollapser;
+  }
+}
+
 class CodeBlockCollapser {
+  private processedBlocks: WeakSet<Element>;
+  private observer: MutationObserver | null;
+  private isThemeChanging: boolean;
+  private debug: boolean;
+
   constructor() {
     this.processedBlocks = new WeakSet();
     this.observer = null;
@@ -9,13 +24,13 @@ class CodeBlockCollapser {
     this.init();
   }
 
-  log(...args) {
+  private log(...args: unknown[]): void {
     if (this.debug) {
       console.log("[CodeBlockCollapser]", ...args);
     }
   }
 
-  init() {
+  init(): void {
     this.log("Initializing...");
     this.log("Setting up code blocks");
     this.setupCodeBlocks();
@@ -24,7 +39,7 @@ class CodeBlockCollapser {
     this.setupThemeOptimizerSync();
   }
 
-  setupThemeOptimizerSync() {
+  private setupThemeOptimizerSync(): void {
     this.syncWithThemeOptimizer();
 
     document.addEventListener("themeOptimizerReady", () => {
@@ -33,7 +48,7 @@ class CodeBlockCollapser {
     });
   }
 
-  syncWithThemeOptimizer() {
+  private syncWithThemeOptimizer(): void {
     const codeBlocks = document.querySelectorAll(".expressive-code");
 
     if (window.themeOptimizer) {
@@ -60,7 +75,7 @@ class CodeBlockCollapser {
     this.log("Theme optimizer not available, applied default behavior");
   }
 
-  setupThemeChangeListener() {
+  private setupThemeChangeListener(): void {
     const themeObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (
@@ -109,7 +124,7 @@ class CodeBlockCollapser {
     });
   }
 
-  setupCodeBlocks() {
+  private setupCodeBlocks(): void {
     requestAnimationFrame(() => {
       const codeBlocks = document.querySelectorAll(".expressive-code");
       this.log(`Found ${codeBlocks.length} code blocks to process`);
@@ -126,7 +141,7 @@ class CodeBlockCollapser {
     });
   }
 
-  enhanceCodeBlock(codeBlock) {
+  private enhanceCodeBlock(codeBlock: Element): void {
     const frame = codeBlock.querySelector(".frame");
     if (!frame) {
       this.log("No frame found in code block, skipping");
@@ -147,7 +162,7 @@ class CodeBlockCollapser {
     this.bindToggleEvents(codeBlock, toggleBtn);
   }
 
-  createToggleButton() {
+  private createToggleButton(): HTMLButtonElement {
     const button = document.createElement("button");
     button.className = "collapse-toggle-btn";
     button.type = "button";
@@ -165,7 +180,10 @@ class CodeBlockCollapser {
     return button;
   }
 
-  bindToggleEvents(codeBlock, button) {
+  private bindToggleEvents(
+    codeBlock: Element,
+    button: HTMLButtonElement,
+  ): void {
     button.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -180,7 +198,7 @@ class CodeBlockCollapser {
     });
   }
 
-  toggleCollapse(codeBlock) {
+  private toggleCollapse(codeBlock: Element): void {
     const isCollapsed = codeBlock.classList.contains("collapsed");
 
     requestAnimationFrame(() => {
@@ -199,7 +217,7 @@ class CodeBlockCollapser {
     document.dispatchEvent(event);
   }
 
-  observePageChanges() {
+  private observePageChanges(): void {
     if (this.isThemeChanging) {
       return;
     }
@@ -208,7 +226,7 @@ class CodeBlockCollapser {
       this.observer.disconnect();
     }
 
-    let debounceTimer = null;
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
     this.observer = new MutationObserver((mutations) => {
       if (this.isThemeChanging) {
@@ -227,10 +245,10 @@ class CodeBlockCollapser {
             continue;
           }
 
+          const el = node as Element;
           if (
-            node.classList.contains("expressive-code") ||
-            (node.getElementsByClassName &&
-              node.getElementsByClassName("expressive-code").length > 0)
+            el.classList.contains("expressive-code") ||
+            el.getElementsByClassName("expressive-code").length > 0
           ) {
             shouldReinit = true;
             break;
@@ -254,7 +272,7 @@ class CodeBlockCollapser {
     });
   }
 
-  destroy() {
+  destroy(): void {
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
@@ -263,14 +281,14 @@ class CodeBlockCollapser {
     this.processedBlocks = new WeakSet();
   }
 
-  collapseAll() {
+  collapseAll(): void {
     const allBlocks = document.querySelectorAll(".expressive-code.expanded");
     allBlocks.forEach((block) => {
       this.toggleCollapse(block);
     });
   }
 
-  expandAll() {
+  expandAll(): void {
     const allBlocks = document.querySelectorAll(".expressive-code.collapsed");
     allBlocks.forEach((block) => {
       this.toggleCollapse(block);

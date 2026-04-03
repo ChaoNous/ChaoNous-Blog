@@ -437,18 +437,18 @@ const bannerOffset =
 		if (document.readyState === "loading") {
 			document.addEventListener("DOMContentLoaded", () => {
 				scheduleIdleTask(() => {
-					import("../scripts/asset-demystification-calculator.js");
-					import("../scripts/btc-analysis-chart.js");
-					import("../scripts/code-collapse.js");
-					import("../scripts/copy-code-buttons.js");
+					import("../scripts/asset-demystification-calculator.ts");
+					import("../scripts/btc-analysis-chart.ts");
+					import("../scripts/code-collapse.ts");
+					import("../scripts/copy-code-buttons.ts");
 				});
 			});
 		} else {
 			scheduleIdleTask(() => {
-				import("../scripts/asset-demystification-calculator.js");
-				import("../scripts/btc-analysis-chart.js");
-				import("../scripts/code-collapse.js");
-				import("../scripts/copy-code-buttons.js");
+				import("../scripts/asset-demystification-calculator.ts");
+				import("../scripts/btc-analysis-chart.ts");
+				import("../scripts/code-collapse.ts");
+				import("../scripts/copy-code-buttons.ts");
 				import("../scripts/web-vitals-monitor.ts");
 			});
 		}

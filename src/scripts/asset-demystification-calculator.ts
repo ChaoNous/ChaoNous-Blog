@@ -1,8 +1,8 @@
 import { registerPageScript } from "./page-lifecycle.ts";
 
-function initPropertyCalculator() {
+function initPropertyCalculator(): (() => void) | undefined {
   const calculators = Array.from(
-    document.querySelectorAll(".property-calculator"),
+    document.querySelectorAll<HTMLElement>(".property-calculator"),
   );
 
   if (calculators.length === 0) {
@@ -10,24 +10,25 @@ function initPropertyCalculator() {
   }
 
   const cleanups = calculators.map((root) => {
-    const read = (id) => Number(root.querySelector(`#${id}`)?.value ?? 0);
-    const write = (id, text) => {
-      const el = root.querySelector(`#${id}`);
+    const read = (id: string): number =>
+      Number(root.querySelector<HTMLInputElement>(`#${id}`)?.value ?? 0);
+    const write = (id: string, text: string): void => {
+      const el = root.querySelector<HTMLElement>(`#${id}`);
       if (el) el.textContent = text;
     };
 
-    const formatWan = (value) =>
+    const formatWan = (value: number): string =>
       `${value.toLocaleString("zh-CN", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })} 万元`;
 
-    const formatYuan = (value) =>
+    const formatYuan = (value: number): string =>
       `${value.toLocaleString("zh-CN", {
         maximumFractionDigits: 0,
       })} 元/年`;
 
-    const update = () => {
+    const update = (): void => {
       const monthlyRent = read("pc-rent");
       const annualCost = read("pc-cost");
       const vacancyRate = read("pc-vacancy") / 100;
@@ -71,7 +72,7 @@ function initPropertyCalculator() {
       );
     };
 
-    const inputs = Array.from(root.querySelectorAll("input"));
+    const inputs = Array.from(root.querySelectorAll<HTMLInputElement>("input"));
     inputs.forEach((input) => {
       input.addEventListener("input", update);
     });

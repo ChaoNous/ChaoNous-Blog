@@ -19,7 +19,7 @@ const posts = sortedPostsList.map((post) => ({
 
 <MainGridLayout title={i18n(I18nKey.archive)}>
 	<script>
-		import("../scripts/right-sidebar-layout.js");
+		import("../scripts/right-sidebar-layout.ts");
 	</script>
 
 	<ArchivePanel sortedPosts={posts} client:only="svelte" />

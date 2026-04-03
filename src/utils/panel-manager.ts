@@ -3,7 +3,7 @@
  * 确保同一时间只有一个浮窗处于打开状态，并提供统一的动画效果
  */
 
-type PanelId =
+export type PanelId =
   | "display-setting"
   | "nav-menu-panel"
   | "search-panel";
@@ -147,8 +147,14 @@ class PanelManager {
 export const panelManager = new PanelManager();
 
 // 将浮窗管理器暴露到全局，方便在其他地方使用
+declare global {
+  interface Window {
+    panelManager?: PanelManager;
+  }
+}
+
 if (typeof window !== "undefined") {
-  (window as any).panelManager = panelManager;
+  window.panelManager = panelManager;
 }
 
 export default panelManager;

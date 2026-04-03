@@ -1,6 +1,6 @@
 import { registerPageScript } from "./page-lifecycle.ts";
 
-function extractCodeText(codeElement) {
+function extractCodeText(codeElement: HTMLElement): string {
   const lineElements = codeElement.querySelectorAll("span.line");
   if (lineElements.length > 0) {
     return Array.from(lineElements)
@@ -18,7 +18,7 @@ function extractCodeText(codeElement) {
   return codeElement.textContent || "";
 }
 
-function normalizeCodeText(code) {
+function normalizeCodeText(code: string): string {
   return code.replace(/\n{3,}/g, (match) => {
     const emptyLineCount = match.length - 1;
     const resultEmptyLines = Math.ceil(emptyLineCount / 2);
@@ -26,7 +26,7 @@ function normalizeCodeText(code) {
   });
 }
 
-async function writeClipboardText(text) {
+async function writeClipboardText(text: string): Promise<void> {
   try {
     await navigator.clipboard.writeText(text);
     return;
@@ -53,49 +53,49 @@ async function writeClipboardText(text) {
   }
 }
 
+function handleCopyButtonClick(event: MouseEvent): void {
+  const target = event.target;
+  if (!(target instanceof Element)) {
+    return;
+  }
+
+  const button = target.closest(".copy-btn");
+  if (!(button instanceof HTMLElement)) {
+    return;
+  }
+
+  const codeElement = button.parentElement?.querySelector<HTMLElement>("code");
+  if (!codeElement) {
+    return;
+  }
+
+  const code = normalizeCodeText(extractCodeText(codeElement));
+
+  void writeClipboardText(code)
+    .then(() => {
+      const timeoutId = button.getAttribute("data-timeout-id");
+      if (timeoutId) {
+        clearTimeout(Number.parseInt(timeoutId, 10));
+      }
+
+      button.classList.add("success");
+
+      const newTimeoutId = window.setTimeout(() => {
+        button.classList.remove("success");
+      }, 1000);
+
+      button.setAttribute("data-timeout-id", String(newTimeoutId));
+    })
+    .catch((error) => {
+      console.error("[copy-code-buttons] Copy failed:", error);
+    });
+}
+
 registerPageScript("copy-code-buttons", {
   shouldRun() {
     return document.querySelector(".copy-btn") !== null;
   },
   init() {
-    const handleCopyButtonClick = (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) {
-        return;
-      }
-
-      const button = target.closest(".copy-btn");
-      if (!(button instanceof HTMLElement)) {
-        return;
-      }
-
-      const codeElement = button.parentElement?.querySelector("code");
-      if (!(codeElement instanceof HTMLElement)) {
-        return;
-      }
-
-      const code = normalizeCodeText(extractCodeText(codeElement));
-
-      void writeClipboardText(code)
-        .then(() => {
-          const timeoutId = button.getAttribute("data-timeout-id");
-          if (timeoutId) {
-            clearTimeout(Number.parseInt(timeoutId, 10));
-          }
-
-          button.classList.add("success");
-
-          const newTimeoutId = window.setTimeout(() => {
-            button.classList.remove("success");
-          }, 1000);
-
-          button.setAttribute("data-timeout-id", String(newTimeoutId));
-        })
-        .catch((error) => {
-          console.error("[copy-code-buttons] Copy failed:", error);
-        });
-    };
-
     document.addEventListener("click", handleCopyButtonClick);
 
     return () => {

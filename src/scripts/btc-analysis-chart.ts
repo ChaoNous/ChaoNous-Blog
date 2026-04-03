@@ -1,4 +1,44 @@
+import type { EChartsType } from "echarts";
 import { registerPageScript } from "./page-lifecycle.ts";
+
+interface BtcHistoryEntry {
+  date: string;
+  price: number;
+}
+
+interface BtcForecastEntry {
+  date: string;
+  forecast: number;
+  upper_68: number;
+  lower_68: number;
+  upper_95: number;
+  lower_95: number;
+}
+
+interface BtcData {
+  history: BtcHistoryEntry[];
+  forecast: BtcForecastEntry[];
+}
+
+interface BtcChartState {
+  mainChart: EChartsType | null;
+  miniChart: EChartsType | null;
+  resizeHandler: (() => void) | null;
+  intersectionObserver: IntersectionObserver | null;
+  idleTimer: ReturnType<typeof setTimeout> | null;
+  initPromise: Promise<void | (() => void)> | null;
+}
+
+declare global {
+  interface Window {
+    echarts?: {
+      init: (el: HTMLElement, theme?: unknown, opts?: unknown) => EChartsType;
+    };
+    __btcAnalysisChartState?: BtcChartState;
+    __btcAnalysisEchartsPromise?: Promise<typeof window.echarts>;
+    __btcAnalysisDataPromise?: Promise<BtcData>;
+  }
+}
 
 const BTC_MAIN_SELECTOR = "#btc-main-chart";
 const BTC_MINI_SELECTOR = "#btc-mini-chart";
@@ -8,22 +48,22 @@ const ECHARTS_CDN_URL =
   "https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js";
 
 function getChartElements() {
-  const mainEl = document.querySelector(BTC_MAIN_SELECTOR);
-  const miniEl = document.querySelector(BTC_MINI_SELECTOR);
-  const tableEl = document.querySelector(BTC_TABLE_SELECTOR);
+  const mainEl = document.querySelector<HTMLElement>(BTC_MAIN_SELECTOR);
+  const miniEl = document.querySelector<HTMLElement>(BTC_MINI_SELECTOR);
+  const tableEl = document.querySelector<HTMLElement>(BTC_TABLE_SELECTOR);
   return { mainEl, miniEl, tableEl };
 }
 
 function getChartMountElement() {
-  return document.querySelector(BTC_MAIN_SELECTOR);
+  return document.querySelector<HTMLElement>(BTC_MAIN_SELECTOR);
 }
 
-function hasBtcChartElements() {
+function hasBtcChartElements(): boolean {
   const { mainEl, miniEl, tableEl } = getChartElements();
   return Boolean(mainEl && miniEl && tableEl);
 }
 
-function getBtcChartState() {
+function getBtcChartState(): BtcChartState {
   if (!window.__btcAnalysisChartState) {
     window.__btcAnalysisChartState = {
       mainChart: null,
@@ -37,7 +77,7 @@ function getBtcChartState() {
   return window.__btcAnalysisChartState;
 }
 
-function cleanupBtcCharts() {
+function cleanupBtcCharts(): void {
   const state = getBtcChartState();
 
   if (state.intersectionObserver) {
@@ -66,7 +106,7 @@ function cleanupBtcCharts() {
   state.initPromise = null;
 }
 
-function loadEcharts() {
+function loadEcharts(): Promise<typeof window.echarts> {
   if (window.echarts) {
     return Promise.resolve(window.echarts);
   }
@@ -75,46 +115,53 @@ function loadEcharts() {
     return window.__btcAnalysisEchartsPromise;
   }
 
-  window.__btcAnalysisEchartsPromise = new Promise((resolve, reject) => {
-    const existingScript = document.querySelector(
-      `script[src="${ECHARTS_CDN_URL}"]`,
-    );
-    if (existingScript) {
-      existingScript.addEventListener("load", () => resolve(window.echarts), {
-        once: true,
-      });
-      existingScript.addEventListener(
-        "error",
-        () => reject(new Error("Failed to load ECharts")),
-        { once: true },
+  window.__btcAnalysisEchartsPromise = new Promise(
+    (resolve, reject) => {
+      const existingScript = document.querySelector<HTMLScriptElement>(
+        `script[src="${ECHARTS_CDN_URL}"]`,
       );
-      return;
-    }
+      if (existingScript) {
+        existingScript.addEventListener(
+          "load",
+          () => resolve(window.echarts),
+          { once: true },
+        );
+        existingScript.addEventListener(
+          "error",
+          () => reject(new Error("Failed to load ECharts")),
+          { once: true },
+        );
+        return;
+      }
 
-    const script = document.createElement("script");
-    script.src = ECHARTS_CDN_URL;
-    script.async = true;
-    script.onload = () => resolve(window.echarts);
-    script.onerror = () => reject(new Error("Failed to load ECharts"));
-    document.head.appendChild(script);
-  });
+      const script = document.createElement("script");
+      script.src = ECHARTS_CDN_URL;
+      script.async = true;
+      script.onload = () => resolve(window.echarts);
+      script.onerror = () => reject(new Error("Failed to load ECharts"));
+      document.head.appendChild(script);
+    },
+  );
 
   return window.__btcAnalysisEchartsPromise;
 }
 
-function loadBtcData() {
+function loadBtcData(): Promise<BtcData> {
   if (!window.__btcAnalysisDataPromise) {
     window.__btcAnalysisDataPromise = fetch(BTC_DATA_URL).then((response) => {
       if (!response.ok) {
         throw new Error(`BTC analysis data request failed: ${response.status}`);
       }
-      return response.json();
+      return response.json() as Promise<BtcData>;
     });
   }
   return window.__btcAnalysisDataPromise;
 }
 
-function calcMovingAverage(data, period) {
+function calcMovingAverage(
+  data: number[],
+  period: number,
+): (number | null)[] {
   return data.map((_, index) => {
     if (index < period - 1) return null;
     let sum = 0;
@@ -125,8 +172,12 @@ function calcMovingAverage(data, period) {
   });
 }
 
-function renderForecastTable(forecast, tableEl) {
-  const fmt = (value) => `$${Math.round(value).toLocaleString()}`;
+function renderForecastTable(
+  forecast: BtcForecastEntry[],
+  tableEl: HTMLElement,
+): void {
+  const fmt = (value: number): string =>
+    `$${Math.round(value).toLocaleString()}`;
   let html =
     '<table style="width:100%;border-collapse:collapse;font-size:0.82rem"><thead><tr style="border-bottom:1px solid rgba(128,128,128,0.15)"><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#5a7a9a;text-transform:uppercase;letter-spacing:0.04em">日期</th><th style="padding:8px 12px;text-align:right;font-size:0.72rem;color:#5a7a9a">预测价格</th><th style="padding:8px 12px;text-align:right;font-size:0.72rem;color:#5a7a9a">68% 区间</th><th style="padding:8px 12px;text-align:right;font-size:0.72rem;color:#5a7a9a">95% 区间</th></tr></thead><tbody>';
 
@@ -149,7 +200,7 @@ function renderForecastTable(forecast, tableEl) {
   tableEl.innerHTML = html;
 }
 
-function buildMainChartOption(history, forecast) {
+function buildMainChartOption(history: BtcHistoryEntry[], forecast: BtcForecastEntry[]) {
   const histDates = history.map((item) => item.date);
   const histPrices = history.map((item) => item.price);
   const fcDates = forecast.map((item) => item.date);
@@ -167,17 +218,21 @@ function buildMainChartOption(history, forecast) {
     backgroundColor: "transparent",
     animation: true,
     tooltip: {
-      trigger: "axis",
+      trigger: "axis" as const,
       backgroundColor: "#1a2744",
       borderColor: "#1e3a5f",
       textStyle: { color: "#c0d0e8", fontSize: 12 },
-      formatter(points) {
-        let html = `<div style="font-weight:600;margin-bottom:4px;color:#7090b0">${points[0].axisValue}</div>`;
-        points.forEach((point) => {
+      formatter(points: unknown[]) {
+        const pts = points as Array<{
+          axisValue: string;
+          marker: string;
+          seriesName: string;
+          value: number | [string, number] | null;
+        }>;
+        let html = `<div style="font-weight:600;margin-bottom:4px;color:#7090b0">${pts[0].axisValue}</div>`;
+        pts.forEach((point) => {
           if (point.value == null) return;
-          const value = Array.isArray(point.value)
-            ? point.value[1]
-            : point.value;
+          const value = Array.isArray(point.value) ? point.value[1] : point.value;
           if (value == null) return;
           html += `<div style="display:flex;justify-content:space-between;gap:16px;margin:1px 0"><span>${point.marker}${point.seriesName}</span><span style="font-weight:600">$${Math.round(value).toLocaleString()}</span></div>`;
         });
@@ -186,7 +241,7 @@ function buildMainChartOption(history, forecast) {
     },
     grid: { top: 20, right: 70, bottom: 80, left: 80 },
     xAxis: {
-      type: "category",
+      type: "category" as const,
       data: allDates,
       boundaryGap: false,
       axisLine: { lineStyle: { color: "#1e3a5f" } },
@@ -194,11 +249,11 @@ function buildMainChartOption(history, forecast) {
       splitLine: { show: false },
     },
     yAxis: {
-      type: "value",
+      type: "value" as const,
       axisLabel: {
         color: "#4a6a8a",
         fontSize: 11,
-        formatter(value) {
+        formatter(value: number) {
           return value >= 1000 ? `$${(value / 1000).toFixed(0)}K` : `$${value}`;
         },
       },
@@ -206,9 +261,9 @@ function buildMainChartOption(history, forecast) {
       axisLine: { lineStyle: { color: "#1e3a5f" } },
     },
     dataZoom: [
-      { type: "inside", start: 0, end: 100 },
+      { type: "inside" as const, start: 0, end: 100 },
       {
-        type: "slider",
+        type: "slider" as const,
         bottom: 10,
         height: 28,
         backgroundColor: "#0a1020",
@@ -221,10 +276,10 @@ function buildMainChartOption(history, forecast) {
     series: [
       {
         name: "95% 上沿",
-        type: "line",
+        type: "line" as const,
         data: nullHist.concat(fc95Up),
         lineStyle: { opacity: 0 },
-        areaStyle: { color: "rgba(0,200,150,0.06)", origin: "auto" },
+        areaStyle: { color: "rgba(0,200,150,0.06)", origin: "auto" as const },
         symbol: "none",
         showInLegend: false,
         smooth: true,
@@ -232,10 +287,10 @@ function buildMainChartOption(history, forecast) {
       },
       {
         name: "95% 下沿",
-        type: "line",
+        type: "line" as const,
         data: nullHist.concat(fc95Dn),
         lineStyle: { opacity: 0 },
-        areaStyle: { color: "#0d1520", origin: "auto" },
+        areaStyle: { color: "#0d1520", origin: "auto" as const },
         symbol: "none",
         showInLegend: false,
         smooth: true,
@@ -243,10 +298,10 @@ function buildMainChartOption(history, forecast) {
       },
       {
         name: "68% 上沿",
-        type: "line",
+        type: "line" as const,
         data: nullHist.concat(fc68Up),
         lineStyle: { opacity: 0 },
-        areaStyle: { color: "rgba(0,200,150,0.14)", origin: "auto" },
+        areaStyle: { color: "rgba(0,200,150,0.14)", origin: "auto" as const },
         symbol: "none",
         showInLegend: false,
         smooth: true,
@@ -254,10 +309,10 @@ function buildMainChartOption(history, forecast) {
       },
       {
         name: "68% 下沿",
-        type: "line",
+        type: "line" as const,
         data: nullHist.concat(fc68Dn),
         lineStyle: { opacity: 0 },
-        areaStyle: { color: "#0d1520", origin: "auto" },
+        areaStyle: { color: "#0d1520", origin: "auto" as const },
         symbol: "none",
         showInLegend: false,
         smooth: true,
@@ -265,7 +320,7 @@ function buildMainChartOption(history, forecast) {
       },
       {
         name: "MA200",
-        type: "line",
+        type: "line" as const,
         data: ma200.concat(nullFc),
         smooth: true,
         symbol: "none",
@@ -279,14 +334,14 @@ function buildMainChartOption(history, forecast) {
       },
       {
         name: "历史价格",
-        type: "line",
+        type: "line" as const,
         data: histPrices.concat(nullFc),
         smooth: false,
         symbol: "none",
         lineStyle: { color: "#f7931a", width: 2 },
         areaStyle: {
           color: {
-            type: "linear",
+            type: "linear" as const,
             x: 0,
             y: 0,
             x2: 0,
@@ -301,7 +356,7 @@ function buildMainChartOption(history, forecast) {
       },
       {
         name: "预测中值",
-        type: "line",
+        type: "line" as const,
         data: nullHist.concat(fcPrices),
         smooth: true,
         symbol: "none",
@@ -310,7 +365,7 @@ function buildMainChartOption(history, forecast) {
       },
       {
         name: "连接",
-        type: "line",
+        type: "line" as const,
         data: nullHist
           .slice(0, -1)
           .concat([histPrices[histPrices.length - 1], fcPrices[0]])
@@ -330,7 +385,7 @@ function buildMainChartOption(history, forecast) {
   };
 }
 
-function buildMiniChartOption(forecast) {
+function buildMiniChartOption(forecast: BtcForecastEntry[]) {
   const fcDates = forecast.map((item) => item.date);
   const fcPrices = forecast.map((item) => item.forecast);
   const fc95Up = forecast.map((item) => item.upper_95);
@@ -342,18 +397,21 @@ function buildMiniChartOption(forecast) {
     backgroundColor: "transparent",
     animation: true,
     tooltip: {
-      trigger: "axis",
+      trigger: "axis" as const,
       backgroundColor: "#1a2744",
       borderColor: "#1e3a5f",
       textStyle: { color: "#c0d0e8", fontSize: 11 },
-      formatter(points) {
-        const row = forecast[points[0].dataIndex];
+      formatter(points: unknown[]) {
+        const pts = points as Array<{
+          dataIndex: number;
+        }>;
+        const row = forecast[pts[0].dataIndex];
         return `<b>${row.date}</b><br/>预测: <b style="color:#00c896">$${Math.round(row.forecast).toLocaleString()}</b><br/>68%: $${Math.round(row.lower_68).toLocaleString()} ~ $${Math.round(row.upper_68).toLocaleString()}`;
       },
     },
     grid: { top: 10, right: 20, bottom: 30, left: 70 },
     xAxis: {
-      type: "category",
+      type: "category" as const,
       data: fcDates,
       boundaryGap: false,
       axisLabel: { color: "#3a5a7a", fontSize: 10, interval: 29 },
@@ -361,11 +419,11 @@ function buildMiniChartOption(forecast) {
       splitLine: { show: false },
     },
     yAxis: {
-      type: "value",
+      type: "value" as const,
       axisLabel: {
         color: "#3a5a7a",
         fontSize: 10,
-        formatter(value) {
+        formatter(value: number) {
           return `$${(value / 1000).toFixed(0)}K`;
         },
       },
@@ -375,7 +433,7 @@ function buildMiniChartOption(forecast) {
     series: [
       {
         name: "95%",
-        type: "line",
+        type: "line" as const,
         data: fc95Up,
         lineStyle: { opacity: 0 },
         areaStyle: { color: "rgba(0,200,150,0.07)" },
@@ -384,7 +442,7 @@ function buildMiniChartOption(forecast) {
       },
       {
         name: "95%",
-        type: "line",
+        type: "line" as const,
         data: fc95Dn,
         lineStyle: { opacity: 0 },
         areaStyle: { color: "#0d1520" },
@@ -393,7 +451,7 @@ function buildMiniChartOption(forecast) {
       },
       {
         name: "68%",
-        type: "line",
+        type: "line" as const,
         data: fc68Up,
         lineStyle: { opacity: 0 },
         areaStyle: { color: "rgba(0,200,150,0.16)" },
@@ -402,7 +460,7 @@ function buildMiniChartOption(forecast) {
       },
       {
         name: "68%",
-        type: "line",
+        type: "line" as const,
         data: fc68Dn,
         lineStyle: { opacity: 0 },
         areaStyle: { color: "#0d1520" },
@@ -411,7 +469,7 @@ function buildMiniChartOption(forecast) {
       },
       {
         name: "预测价格",
-        type: "line",
+        type: "line" as const,
         data: fcPrices,
         smooth: true,
         symbol: "none",
@@ -421,7 +479,7 @@ function buildMiniChartOption(forecast) {
   };
 }
 
-async function initBtcAnalysisCharts() {
+async function initBtcAnalysisCharts(): Promise<void | (() => void)> {
   const state = getBtcChartState();
   if (state.initPromise) {
     return state.initPromise;
@@ -435,7 +493,15 @@ async function initBtcAnalysisCharts() {
     }
 
     try {
-      const [echarts, data] = await Promise.all([loadEcharts(), loadBtcData()]);
+      const [echarts, data] = await Promise.all([
+        loadEcharts(),
+        loadBtcData(),
+      ]);
+
+      if (!echarts) {
+        throw new Error("ECharts failed to load");
+      }
+
       if (!hasBtcChartElements()) {
         return;
       }
@@ -478,7 +544,7 @@ async function initBtcAnalysisCharts() {
   });
 }
 
-function scheduleChartInitialization() {
+function scheduleChartInitialization(): void {
   const state = getBtcChartState();
   const mountEl = getChartMountElement();
   if (!mountEl) {

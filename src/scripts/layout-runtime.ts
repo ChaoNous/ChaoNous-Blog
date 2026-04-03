@@ -1,4 +1,5 @@
 import { pathsEqual, url } from "../utils/url-utils";
+import type { PanelId } from "../utils/panel-manager";
 import {
   DARK_MODE,
   DEFAULT_THEME,
@@ -100,7 +101,7 @@ async function initializePanelManager() {
               }
             }
 
-            await panelManager.closePanel(panel as any);
+            await panelManager.closePanel(panel as PanelId);
           });
         }
 
@@ -181,8 +182,10 @@ function initCustomScrollbar() {
   });
 }
 
+import type { Fancybox as FancyboxType } from "@fancyapps/ui";
+
 let fancyboxSelectors: string[] = [];
-let Fancybox: any;
+let Fancybox: typeof FancyboxType | null = null;
 let fancyboxStylesLoaded = false;
 
 function checkKatex() {
@@ -268,7 +271,7 @@ async function initFancybox() {
 
   Fancybox.bind(albumLinksSelector, {
     ...commonConfig,
-    source: (el: any) => {
+    source: (el: HTMLElement) => {
       return el.getAttribute("data-src") || el.getAttribute("href");
     },
   });
@@ -413,9 +416,9 @@ function refreshDesktopRuntimeState() {
   refreshNavbarTransparency();
 }
 
-function throttle(func: Function, limit: number) {
+function throttle(func: (...args: unknown[]) => void, limit: number): (...args: unknown[]) => void {
   let inThrottle: boolean;
-  return function (this: any) {
+  return function (this: unknown) {
     const args = arguments;
     const context = this;
     if (!inThrottle) {

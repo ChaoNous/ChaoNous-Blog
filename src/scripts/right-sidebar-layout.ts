@@ -1,7 +1,9 @@
 import { registerPageScript } from "./page-lifecycle.ts";
 
-function showRightSidebar() {
-  const rightSidebar = document.querySelector(".right-sidebar-container");
+function showRightSidebar(): void {
+  const rightSidebar = document.querySelector<HTMLElement>(
+    ".right-sidebar-container",
+  );
   if (rightSidebar) {
     rightSidebar.classList.remove("hidden-in-grid-mode");
     rightSidebar.style.display = "";
@@ -14,20 +16,8 @@ function showRightSidebar() {
   }
 }
 
-function initialize() {
-  showRightSidebar();
-}
-
 registerPageScript("right-sidebar-layout", {
   init() {
-    initialize();
+    showRightSidebar();
   },
 });
-
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = { showRightSidebar };
-}
-
-if (typeof window !== "undefined") {
-  window.rightSidebarLayout = { showRightSidebar };
-}
