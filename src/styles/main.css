@@ -16,7 +16,7 @@
   --font-mono: "Crimson Pro", "Zhuque Fangsong UI";
   --font-latin: "Crimson Pro";
   --font-cjk: "Zhuque Fangsong UI";
-  --font-content: "Zhuque Fangsong UI", "Zhuque Fangsong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", "Crimson Pro";
+  --font-content: "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro";
 }
 
 @utility expand-animation {
@@ -272,7 +272,7 @@ body::after {
 body.is-home {
   --font-sans: "Crimson Pro", "Zhuque Fangsong UI";
   --font-cjk: "Zhuque Fangsong UI";
-  --font-content: "Zhuque Fangsong UI", "Zhuque Fangsong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", "Crimson Pro";
+  --font-content: "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro";
 }
 
 html::-webkit-scrollbar,
