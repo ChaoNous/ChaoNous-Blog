@@ -54,46 +54,24 @@ body {
   transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
 }
 
-/* 缣帛纹理 — 亮色模式 */
+/* 缣帛纹理 — 亮色模式
+ * 缣帛 = 平纹素色丝织物：整体光滑、对角温润光泽、极细微天然纤维纹理
+ * 丝绸的质感关键不在于"看见纹理"，而在于"感觉到质感"
+ *
+ * ::before — SVG 有机纤维纹理（低频大尺度噪点，非高频砂纸）
+ * ::after  — 对角丝光光泽（丝绸特征性对角漫反射）
+ */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.35;
+  opacity: 0.3;
+  /* 低频有机噪点 — baseFrequency 0.015 = 大尺度柔软起伏，非砂纸颗粒 */
   background:
-    /* 斜纹交织线（45°） */
-    repeating-linear-gradient(45deg,
-      transparent,
-      transparent 0.5px,
-      rgba(180, 140, 100, 0.06) 0.5px,
-      rgba(180, 140, 100, 0.06) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-    /* 纬线（横向细密纹理） */
-    repeating-linear-gradient(0deg,
-      transparent,
-      transparent 0.5px,
-      rgba(180, 140, 100, 0.03) 0.5px,
-      rgba(180, 140, 100, 0.03) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    /* 经线（纵向稀疏骨架） */
-    repeating-linear-gradient(90deg,
-      transparent,
-      transparent 1px,
-      rgba(180, 140, 100, 0.02) 1px,
-      rgba(180, 140, 100, 0.02) 2px,
-      transparent 2px,
-      transparent 8px
-    ),
-    /* 纤维噪点 */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' seed='2' result='noise'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0.95 0 0 0  0.9 0 0 0  0 0 0 0.2 0' in='noise' result='coloredNoise'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 100% 100%, 600px 600px;
-  mix-blend-mode: normal;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.015' numOctaves='3' seed='7'/%3E%3CfeColorMatrix type='matrix' values='0.92 0 0 0 0.04  0.85 0 0 0 0.03  0.75 0 0 0 0.03  0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
+  background-size: 1000px 1000px;
 }
 
 body::after {
@@ -103,84 +81,33 @@ body::after {
   pointer-events: none;
   z-index: 0;
   opacity: 0.25;
-  background:
-    /* 丝质光泽带（对角斜向） */
-    linear-gradient(155deg,
-      transparent 0%,
-      rgba(255, 250, 240, 0.12) 35%,
-      rgba(255, 250, 240, 0.06) 50%,
-      transparent 65%
-    ),
-    /* 细微的缎纹网格 */
-    repeating-linear-gradient(135deg,
-      transparent,
-      transparent 6px,
-      rgba(255, 255, 255, 0.02) 6px,
-      rgba(255, 255, 255, 0.02) 12px
-    ),
-    /* 反向光泽带 */
-    linear-gradient(335deg,
-      transparent 0%,
-      rgba(255, 248, 235, 0.05) 40%,
-      transparent 60%
-    );
-  mix-blend-mode: normal;
+  /* 对角丝光 — 丝绸的标志性特征，宽幅极淡渐变 */
+  background: linear-gradient(130deg,
+    transparent 0%,
+    rgba(255, 255, 250, 0.03) 20%,
+    rgba(255, 255, 250, 0.05) 40%,
+    rgba(255, 255, 250, 0.03) 60%,
+    transparent 80%
+  );
 }
 
-/* 暗色模式 */
+/* 暗色模式 — 缣帛纹理 */
 .dark body::before {
-  opacity: 0.25;
+  opacity: 0.15;
   background:
-    repeating-linear-gradient(45deg,
-      transparent,
-      transparent 0.5px,
-      rgba(200, 160, 100, 0.04) 0.5px,
-      rgba(200, 160, 100, 0.04) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-    repeating-linear-gradient(0deg,
-      transparent,
-      transparent 0.5px,
-      rgba(200, 160, 100, 0.02) 0.5px,
-      rgba(200, 160, 100, 0.02) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(90deg,
-      transparent,
-      transparent 1px,
-      rgba(200, 160, 100, 0.015) 1px,
-      rgba(200, 160, 100, 0.015) 2px,
-      transparent 2px,
-      transparent 8px
-    ),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk-dark'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' seed='2' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.9 0 0 0 0  0.85 0 0 0  0.8 0 0 0  0 0 0 0.15 0' in='noise' result='coloredNoise'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk-dark)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 100% 100%, 600px 600px;
-  mix-blend-mode: normal;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.015' numOctaves='3' seed='7'/%3E%3CfeColorMatrix type='matrix' values='0.85 0 0 0 0.04  0.78 0 0 0 0.03  0.68 0 0 0 0.03  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
+  background-size: 1000px 1000px;
 }
 
 .dark body::after {
-  opacity: 0.2;
-  background:
-    linear-gradient(155deg,
-      transparent 0%,
-      rgba(255, 240, 220, 0.06) 35%,
-      rgba(255, 240, 220, 0.03) 50%,
-      transparent 65%
-    ),
-    repeating-linear-gradient(135deg,
-      transparent,
-      transparent 6px,
-      rgba(255, 255, 255, 0.01) 6px,
-      rgba(255, 255, 255, 0.01) 12px
-    ),
-    linear-gradient(335deg,
-      transparent 0%,
-      rgba(255, 248, 235, 0.02) 40%,
-      transparent 60%
-    );
-  mix-blend-mode: normal;
+  opacity: 0.12;
+  background: linear-gradient(130deg,
+    transparent 0%,
+    rgba(255, 245, 220, 0.02) 20%,
+    rgba(255, 245, 220, 0.04) 40%,
+    rgba(255, 245, 220, 0.02) 60%,
+    transparent 80%
+  );
 }
 
 body.is-home {
