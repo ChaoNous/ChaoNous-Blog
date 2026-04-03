@@ -157,20 +157,27 @@ const initialText = Array.isArray(text)
 
 <style>
 	.typewriter-container {
-		display: block;
+		display: inline-block;
 		position: relative;
-		height: 5em;
+		min-height: 2.5em;
 		overflow: hidden;
+	}
+
+	@media (min-width: 1024px) {
+		.typewriter-container {
+			min-height: 3.5em;
+		}
 	}
 
 	.typewriter {
 		position: absolute;
 		inset: 0;
 		display: block;
+		white-space: nowrap;
 	}
 
 	.typewriter:empty::before {
-		content: "00A0";
+		content: "\00A0";
 		visibility: hidden;
 	}
 </style>
