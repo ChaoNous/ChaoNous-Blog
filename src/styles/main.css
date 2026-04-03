@@ -54,8 +54,8 @@ body {
   transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
 }
 
-/* 缣帛纹理效果（朱砂赤主题） */
-[data-theme-material="silk"] body::before {
+/* 缣帛纹理 — 亮色模式 */
+body::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -63,44 +63,140 @@ body {
   z-index: 0;
   opacity: 1;
   background:
-    linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.08) 20%, transparent 40%, rgba(255, 255, 255, 0.06) 60%, transparent 80%, rgba(255, 255, 255, 0.04) 100%),
-    repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(180, 140, 100, 0.06) 1px, rgba(180, 140, 100, 0.06) 3px),
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(180, 140, 100, 0.04) 2px, rgba(180, 140, 100, 0.04) 5px),
-    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(180, 140, 100, 0.025) 3px, rgba(180, 140, 100, 0.025) 6px),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.025' numOctaves='4' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.5' result='light'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 400px 400px;
+    /* 丝绸光泽（对角高光带） */
+    linear-gradient(135deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.10) 15%,
+      transparent 30%,
+      rgba(255, 255, 255, 0.06) 55%,
+      transparent 70%,
+      rgba(255, 255, 255, 0.03) 100%
+    ),
+    /* 斜纹交织线（45°） */
+    repeating-linear-gradient(45deg,
+      transparent,
+      transparent 0.5px,
+      rgba(180, 140, 100, 0.04) 0.5px,
+      rgba(180, 140, 100, 0.04) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    /* 纬线（横向细密纹理） */
+    repeating-linear-gradient(0deg,
+      transparent,
+      transparent 0.5px,
+      rgba(180, 140, 100, 0.02) 0.5px,
+      rgba(180, 140, 100, 0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    /* 经线（纵向稀疏骨架） */
+    repeating-linear-gradient(90deg,
+      transparent,
+      transparent 1px,
+      rgba(180, 140, 100, 0.015) 1px,
+      rgba(180, 140, 100, 0.015) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    /* 纤维噪点 */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' seed='2' result='noise'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 0.95 0 0 0  0 0.9 0 0 0  0 0 0 0.15 0' in='noise' result='coloredNoise'/%3E%3CfeDiffuseLighting in='coloredNoise' lighting-color='%23fff8f0' surfaceScale='1.8' result='light'%3E%3CfeDistantLight azimuth='225' elevation='50'/%3E%3C/feDiffuseLighting%3E%3CfeBlend mode='multiply' in='SourceGraphic' in2='light'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 600px 600px;
   mix-blend-mode: multiply;
 }
 
-[data-theme-material="silk"] body::after {
+body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.5;
+  opacity: 0.6;
   background:
-    linear-gradient(155deg, transparent 20%, rgba(255, 250, 240, 0.12) 45%, rgba(255, 250, 240, 0.08) 55%, transparent 80%),
-    repeating-linear-gradient(135deg, transparent, transparent 8px, rgba(255, 255, 255, 0.03) 8px, rgba(255, 255, 255, 0.03) 16px);
+    /* 丝质光泽带（对角斜向） */
+    linear-gradient(155deg,
+      transparent 0%,
+      rgba(255, 250, 240, 0.15) 35%,
+      rgba(255, 250, 240, 0.08) 50%,
+      transparent 65%
+    ),
+    /* 细微的缎纹网格 */
+    repeating-linear-gradient(135deg,
+      transparent,
+      transparent 6px,
+      rgba(255, 255, 255, 0.025) 6px,
+      rgba(255, 255, 255, 0.025) 12px
+    ),
+    /* 反向光泽带 */
+    linear-gradient(335deg,
+      transparent 0%,
+      rgba(255, 248, 235, 0.06) 40%,
+      transparent 60%
+    );
   mix-blend-mode: overlay;
 }
 
-/* Dark mode */
+/* 暗色模式 */
 .dark body::before {
   opacity: 1;
   background:
-    linear-gradient(135deg, transparent 0%, rgba(255, 230, 200, 0.04) 20%, transparent 40%, rgba(255, 230, 200, 0.03) 60%, transparent 80%),
-    repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(200, 160, 100, 0.04) 1px, rgba(200, 160, 100, 0.04) 3px),
-    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(200, 160, 100, 0.03) 2px, rgba(200, 160, 100, 0.03) 5px),
-    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(200, 160, 100, 0.02) 3px, rgba(200, 160, 100, 0.02) 6px),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.025' numOctaves='4' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23352820' surfaceScale='1.2' result='light'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 400px 400px;
+    linear-gradient(135deg,
+      transparent 0%,
+      rgba(255, 230, 200, 0.06) 15%,
+      transparent 30%,
+      rgba(255, 230, 200, 0.03) 55%,
+      transparent 70%,
+      rgba(255, 230, 200, 0.02) 100%
+    ),
+    repeating-linear-gradient(45deg,
+      transparent,
+      transparent 0.5px,
+      rgba(200, 160, 100, 0.035) 0.5px,
+      rgba(200, 160, 100, 0.035) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(0deg,
+      transparent,
+      transparent 0.5px,
+      rgba(200, 160, 100, 0.015) 0.5px,
+      rgba(200, 160, 100, 0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent,
+      transparent 1px,
+      rgba(200, 160, 100, 0.01) 1px,
+      rgba(200, 160, 100, 0.01) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='silk'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' seed='2' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.9 0 0 0 0  0.85 0 0 0 0  0.8 0 0 0 0  0 0 0 0.12 0' in='noise' result='coloredNoise'/%3E%3CfeDiffuseLighting in='coloredNoise' lighting-color='%23352820' surfaceScale='1.5' result='light'%3E%3CfeDistantLight azimuth='225' elevation='50'/%3E%3C/feDiffuseLighting%3E%3CfeBlend mode='soft-light' in='SourceGraphic' in2='light'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23silk)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 600px 600px;
   mix-blend-mode: soft-light;
 }
 
 .dark body::after {
-  opacity: 0.4;
-  background: linear-gradient(155deg, transparent 20%, rgba(255, 240, 220, 0.06) 45%, rgba(255, 240, 220, 0.04) 55%, transparent 80%);
+  opacity: 0.5;
+  background:
+    linear-gradient(155deg,
+      transparent 0%,
+      rgba(255, 240, 220, 0.08) 35%,
+      rgba(255, 240, 220, 0.04) 50%,
+      transparent 65%
+    ),
+    repeating-linear-gradient(135deg,
+      transparent,
+      transparent 6px,
+      rgba(255, 255, 255, 0.015) 6px,
+      rgba(255, 255, 255, 0.015) 12px
+    ),
+    linear-gradient(335deg,
+      transparent 0%,
+      rgba(255, 248, 235, 0.03) 40%,
+      transparent 60%
+    );
   mix-blend-mode: overlay;
 }
 
