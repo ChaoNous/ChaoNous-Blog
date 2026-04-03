@@ -158,7 +158,6 @@ const initialText = Array.isArray(text)
 <style>
 	.typewriter-container {
 		display: block;
-		position: relative;
 		min-height: 2.5em;
 		overflow: hidden;
 		text-align: center;
@@ -171,11 +170,7 @@ const initialText = Array.isArray(text)
 	}
 
 	.typewriter {
-		position: absolute;
-		inset: 0;
-		display: block;
-		white-space: nowrap;
-		text-align: center;
+		display: inline-block;
 	}
 
 	.typewriter:empty::before {
