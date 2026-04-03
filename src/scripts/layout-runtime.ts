@@ -1,6 +1,12 @@
 import { pathsEqual, url } from "../utils/url-utils";
-import { DARK_MODE, DEFAULT_THEME } from "../constants/constants";
-import { BANNER_HEIGHT } from "../constants/constants";
+import {
+  DARK_MODE,
+  DEFAULT_THEME,
+  BANNER_HEIGHT,
+  IDLE_FALLBACK_MS,
+  SCROLL_THROTTLE_MS,
+  TOC_CLEAR_DELAY_MS,
+} from "../constants/constants";
 import {
   cleanupBannerRuntime,
   revealBanner,
@@ -18,8 +24,12 @@ import {
   markTocNotReady,
   syncDesktopTocVisibility,
 } from "./layout-runtime/toc-runtime";
+import {
+  applyBannerLayout,
+  syncDesktopLayoutState,
+} from "./main-grid-runtime";
+
 const bannerEnabled = !!document.getElementById("banner-wrapper");
-const IDLE_FALLBACK_DELAY = 100;
 
 let panelManagerInitialization: Promise<unknown> | null = null;
 
@@ -45,7 +55,7 @@ function removePostPageActionButtons() {
   floatingTocWindow.__floatingTocInstance = null;
 }
 
-function scheduleIdleTask(task: () => void, timeout = IDLE_FALLBACK_DELAY) {
+function scheduleIdleTask(task: () => void, timeout = IDLE_FALLBACK_MS) {
   if ("requestIdleCallback" in window) {
     window.requestIdleCallback(task);
     return;
@@ -291,6 +301,7 @@ const setup = () => {
     initializeArticleToc();
     removePostPageActionButtons();
 
+    syncDesktopLayoutState();
     refreshDesktopRuntimeState();
     syncDesktopViewportState();
   });
@@ -363,7 +374,9 @@ const setup = () => {
     }
 
     revealBanner();
+    applyBannerLayout();
     removePostPageActionButtons();
+    syncDesktopLayoutState();
     refreshDesktopRuntimeState();
     syncDesktopViewportState();
   });
@@ -376,7 +389,7 @@ const setup = () => {
       }
 
       clearTocNotReady();
-    }, 200);
+    }, TOC_CLEAR_DELAY_MS);
   });
 };
 
@@ -423,13 +436,15 @@ function syncDesktopViewportState() {
   });
 }
 
-const throttledScrollFunction = throttle(syncDesktopViewportState, 16);
+const throttledScrollFunction = throttle(syncDesktopViewportState, SCROLL_THROTTLE_MS);
 window.addEventListener("scroll", throttledScrollFunction, {
   passive: true,
 });
 
 function handleResize() {
   syncBannerHeightExtend();
+  applyBannerLayout();
+  syncDesktopLayoutState();
   syncDesktopViewportState();
 }
 
@@ -439,7 +454,9 @@ syncDesktopViewportState();
 
 runOnDocumentReady(async () => {
   revealBanner();
+  applyBannerLayout();
   removePostPageActionButtons();
+  syncDesktopLayoutState();
   refreshDesktopRuntimeState();
   await initializePanelManager();
 });

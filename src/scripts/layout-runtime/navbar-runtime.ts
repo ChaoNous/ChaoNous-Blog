@@ -1,4 +1,8 @@
-import { BANNER_HEIGHT, BANNER_HEIGHT_HOME } from "../../constants/constants";
+import {
+  BANNER_HEIGHT,
+  BANNER_HEIGHT_HOME,
+  BP_DESKTOP,
+} from "../../constants/constants";
 
 export function syncNavbarHomeState(isHomePage: boolean) {
   const navbar = document.getElementById("navbar");
@@ -30,7 +34,7 @@ export function syncNavbarVisibility(
   if (!navbarWrapper) return;
 
   const isHome =
-    document.body.classList.contains("is-home") && window.innerWidth >= 1280;
+    document.body.classList.contains("is-home") && window.innerWidth >= BP_DESKTOP;
   const currentBannerHeight = isHome ? BANNER_HEIGHT_HOME : BANNER_HEIGHT;
   const threshold = window.innerHeight * (currentBannerHeight / 100) - 88;
 

@@ -1,29 +1,33 @@
+/**
+ * Banner and grid layout runtime.
+ * Pure module — no self-initialization, no Swup hooks.
+ * Called by layout-runtime.ts as the single orchestration entry point.
+ */
+
 const runtimeConfig = window.__mainGridRuntimeConfig || {};
 const navbarTransparentMode = runtimeConfig.navbarTransparentMode || "semi";
-const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 35;
-const BANNER_HEIGHT_EXTEND = runtimeConfig.BANNER_HEIGHT_EXTEND || 30;
+const BANNER_HEIGHT = runtimeConfig.BANNER_HEIGHT || 40;
+const BANNER_HEIGHT_EXTEND = runtimeConfig.BANNER_HEIGHT_EXTEND || 20;
+
+// Responsive breakpoints (match constants.ts)
+const BP_PHONE_XS = 479;
+const BP_TABLET = 768;
+const BP_MOBILE = 1279;
 
 function getResponsiveBannerHeightVh() {
   const width = window.innerWidth;
   const isLandscape = window.matchMedia("(orientation: landscape)").matches;
 
-  // 横屏模式：20vh（与CSS一致）
-  if (width <= 1279 && isLandscape) {
+  if (width <= BP_MOBILE && isLandscape) {
     return { value: 20, unit: "vh" };
   }
-
-  // 小屏手机竖屏：固定 220px
-  if (width <= 479) {
+  if (width <= BP_PHONE_XS) {
     return { value: 220, unit: "px" };
   }
-
-  // 中小屏手机竖屏：固定 260px
-  if (width <= 767) {
+  if (width <= BP_TABLET - 1) {
     return { value: 260, unit: "px" };
   }
-
-  // 平板竖屏：45vh
-  if (width <= 1279) {
+  if (width <= BP_MOBILE) {
     return { value: 45, unit: "vh" };
   }
 
@@ -32,14 +36,12 @@ function getResponsiveBannerHeightVh() {
 
 function syncBannerPosition() {
   const bannerWrapper = document.getElementById("banner-wrapper");
-  if (!bannerWrapper) {
-    return;
-  }
+  if (!bannerWrapper) return;
 
   const width = window.innerWidth;
   const banner = getResponsiveBannerHeightVh();
 
-  if (width <= 1279) {
+  if (width <= BP_MOBILE) {
     bannerWrapper.style.height = `${banner.value}${banner.unit}`;
     bannerWrapper.style.top = "0px";
     return;
@@ -51,7 +53,7 @@ function syncBannerPosition() {
 
 function getMainContentTop() {
   const banner = getResponsiveBannerHeightVh();
-  if (window.innerWidth <= 1279) {
+  if (window.innerWidth <= BP_MOBILE) {
     return `${banner.value}${banner.unit}`;
   }
 
@@ -60,7 +62,7 @@ function getMainContentTop() {
     : `${BANNER_HEIGHT}vh`;
 }
 
-function syncDesktopLayoutState() {
+export function syncDesktopLayoutState() {
   const mainGrid = document.getElementById("main-grid");
   if (mainGrid) {
     mainGrid.setAttribute("data-layout-mode", "list");
@@ -84,41 +86,11 @@ function syncDesktopLayoutState() {
   }
 }
 
-(function applyInitialLayout() {
-  // On mobile (width <= 1279), CSS media queries already handle
-  // banner height and content top. Skip JS layout changes to avoid CLS.
-  const isMobile = window.innerWidth <= 1279;
-  if (isMobile) {
-    document.body.classList.add("enable-banner");
-    syncDesktopLayoutState();
-    return;
-  }
-
-  const body = document.body;
-  body.classList.add("enable-banner");
-
-  requestAnimationFrame(() => {
-    syncBannerPosition();
-
-    const mainContent = document.getElementById("main-content-shell");
-    if (mainContent) {
-      mainContent.style.top = getMainContentTop();
-    }
-
-    syncDesktopLayoutState();
-  });
-})();
-
-function applyBannerLayout() {
+export function applyBannerLayout() {
   const bannerWrapper = document.getElementById("banner-wrapper");
   const navbar = document.getElementById("navbar");
-  const body = document.body;
   const mainContent = document.getElementById("main-content-shell");
   const tocWrapper = document.getElementById("toc-wrapper");
-
-  const forceReflow = () => {
-    void document.body.offsetHeight;
-  };
 
   if (bannerWrapper) {
     bannerWrapper.style.display = "block";
@@ -132,19 +104,18 @@ function applyBannerLayout() {
     }
   }
 
-  forceReflow();
+  void document.body.offsetHeight; // force reflow
 
   // On mobile, CSS media queries handle banner sizing.
-  // Only apply JS layout changes on desktop to avoid CLS.
-  const isMobile = window.innerWidth <= 1279;
-  if (!isMobile) {
+  // Only apply JS layout on desktop to avoid CLS.
+  if (window.innerWidth > BP_MOBILE) {
     syncBannerPosition();
     if (mainContent) {
       mainContent.style.top = getMainContentTop();
     }
   }
 
-  body.classList.add("enable-banner");
+  document.body.classList.add("enable-banner");
 
   if (navbar) {
     navbar.removeAttribute("data-dynamic-transparent");
@@ -156,53 +127,4 @@ function applyBannerLayout() {
       window.initSemifullScrollDetection();
     }
   }
-  forceReflow();
-}
-
-function setupSwupLayoutSync() {
-  if (typeof window === "undefined" || !window.swup?.hooks) {
-    return false;
-  }
-
-  if (window.__mainGridRuntimeHooksRegistered) {
-    return true;
-  }
-
-  window.__mainGridRuntimeHooksRegistered = true;
-
-  window.swup.hooks.on("content:replace", function () {
-    if (document.getElementById("main-grid")) {
-      syncDesktopLayoutState();
-      delete window.__pendingLayoutMode;
-    }
-  });
-
-  window.swup.hooks.on("page:view", function () {
-    applyBannerLayout();
-    requestAnimationFrame(() => {
-      syncDesktopLayoutState();
-    });
-  });
-
-  return true;
-}
-
-window.addEventListener("resize", function () {
-  applyBannerLayout();
-});
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    applyBannerLayout();
-    syncDesktopLayoutState();
-  });
-} else {
-  applyBannerLayout();
-  syncDesktopLayoutState();
-}
-
-if (!setupSwupLayoutSync()) {
-  document.addEventListener("swup:enable", setupSwupLayoutSync, {
-    once: true,
-  });
 }

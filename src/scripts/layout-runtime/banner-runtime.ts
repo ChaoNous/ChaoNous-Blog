@@ -1,4 +1,4 @@
-import { BANNER_HEIGHT_EXTEND } from "../../constants/constants";
+import { BANNER_HEIGHT_EXTEND, BP_TABLET } from "../../constants/constants";
 import { siteConfig } from "../../config";
 
 let activeCarouselCleanup: (() => void) | null = null;
@@ -18,7 +18,7 @@ function initCarousel() {
   cleanupBannerRuntime();
 
   const carouselItems = Array.from(document.querySelectorAll(".carousel-item"));
-  const isMobile = window.innerWidth < 768;
+  const isMobile = window.innerWidth < BP_TABLET;
   const validItems = carouselItems.filter((item) => {
     if (isMobile) {
       return item.querySelector(".block.md\\:hidden");
