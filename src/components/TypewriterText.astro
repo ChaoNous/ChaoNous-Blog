@@ -156,14 +156,21 @@ const initialText = Array.isArray(text)
 </script>
 
 <style>
-	.typewriter {
+	.typewriter-container {
+		display: block;
 		position: relative;
-		height: 5em; overflow: hidden; /* Fixed height prevents CLS from typing animation */ /* Reserve space for longest multi-line text to prevent CLS */
+		height: 5em;
+		overflow: hidden;
+	}
+
+	.typewriter {
+		position: absolute;
+		inset: 0;
 		display: block;
 	}
 
 	.typewriter:empty::before {
-		content: "\00A0";
+		content: "00A0";
 		visibility: hidden;
 	}
 </style>

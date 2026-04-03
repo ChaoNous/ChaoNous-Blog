@@ -246,6 +246,10 @@
     width: 18rem; /* Fixed width prevents centering shift */
   }
 
+  .typewriter-container {
+    width: 18rem;
+  }
+
   .banner-copy-inner {
     width: min(22rem, calc(100vw - 1.8rem));
   }
