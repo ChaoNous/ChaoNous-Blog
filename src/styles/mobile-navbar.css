@@ -50,4 +50,15 @@
     gap: 0.25rem !important;
     justify-items: end !important;
   }
+
+  /* 移动端菜单面板位于导航栏下方 */
+  #nav-menu-panel {
+    top: 72px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+    max-height: calc(100vh - 72px) !important;
+  }
 }
