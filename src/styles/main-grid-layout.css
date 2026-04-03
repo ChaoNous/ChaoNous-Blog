@@ -207,14 +207,14 @@
 
   /* Banner 样式 */
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: var(--home-hero-height-mobile);
-    min-height: var(--home-hero-min-mobile);
-    max-height: var(--home-hero-max-mobile);
+    height: var(--home-hero-height-mobile) !important;
+    min-height: var(--home-hero-min-mobile) !important;
+    max-height: var(--home-hero-max-mobile) !important;
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: var(--home-hero-height-mobile);
-    min-height: calc(100vh - var(--home-hero-height-mobile));
+    top: var(--home-hero-height-mobile) !important;
+    min-height: calc(100vh - var(--home-hero-height-mobile)) !important;
   }
 
   .banner-text-overlay {
@@ -255,13 +255,13 @@
 /* 小屏手机（320px - 479px）竖屏模式 */
 @media (max-width: 479px) and (orientation: portrait) {
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 220px;
-    top: 0;
+    height: 220px !important;
+    top: 0 !important;
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 220px;
-    min-height: calc(100vh - 220px);
+    top: 220px !important;
+    min-height: calc(100vh - 220px) !important;
   }
 
   .banner-text-overlay {
@@ -290,13 +290,13 @@
 /* 中小屏手机（480px - 767px）竖屏模式 */
 @media (min-width: 480px) and (max-width: 767px) and (orientation: portrait) {
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 260px;
-    top: 0;
+    height: 260px !important;
+    top: 0 !important;
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 260px;
-    min-height: calc(100vh - 260px);
+    top: 260px !important;
+    min-height: calc(100vh - 260px) !important;
   }
 
   .banner-text-overlay {
@@ -330,15 +330,15 @@
   }
 
   body.enable-banner #banner-wrapper:not(.mobile-hide-banner) {
-    height: 45vh;
-    min-height: 350px;
-    max-height: 500px;
-    top: 0;
+    height: 45vh !important;
+    min-height: 350px !important;
+    max-height: 500px !important;
+    top: 0 !important;
   }
 
   body.enable-banner .absolute.w-full.z-30:not(.mobile-main-no-banner) {
-    top: 45vh;
-    min-height: calc(100vh - 45vh);
+    top: 45vh !important;
+    min-height: calc(100vh - 45vh) !important;
   }
 
   .banner-container img,

@@ -85,6 +85,15 @@ function syncDesktopLayoutState() {
 }
 
 (function applyInitialLayout() {
+  // On mobile (width <= 1279), CSS media queries already handle
+  // banner height and content top. Skip JS layout changes to avoid CLS.
+  const isMobile = window.innerWidth <= 1279;
+  if (isMobile) {
+    document.body.classList.add("enable-banner");
+    syncDesktopLayoutState();
+    return;
+  }
+
   const body = document.body;
   body.classList.add("enable-banner");
 
@@ -124,10 +133,17 @@ function applyBannerLayout() {
   }
 
   forceReflow();
-  syncBannerPosition();
-  if (mainContent) {
-    mainContent.style.top = getMainContentTop();
+
+  // On mobile, CSS media queries handle banner sizing.
+  // Only apply JS layout changes on desktop to avoid CLS.
+  const isMobile = window.innerWidth <= 1279;
+  if (!isMobile) {
+    syncBannerPosition();
+    if (mainContent) {
+      mainContent.style.top = getMainContentTop();
+    }
   }
+
   body.classList.add("enable-banner");
 
   if (navbar) {
