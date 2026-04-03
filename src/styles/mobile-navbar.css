@@ -72,4 +72,17 @@
   body.enable-banner.is-home #main-content-shell {
     top: var(--home-hero-height-mobile) !important;
   }
+
+  /* 消除第一篇文章的圆角和容器间距，使其紧贴 banner */
+  #post-list-container {
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .post-card-shell:first-child {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    margin-top: 0 !important;
+  }
 }
