@@ -8,7 +8,6 @@ import { url } from "../../utils/url-utils";
 
 interface Props {
 	links: NavBarLink[];
-	showDisplaySettings?: boolean;
 }
 
 const navTitleMap: Record<string, string> = {
@@ -47,75 +46,14 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 	}),
 );
 
-const { showDisplaySettings = false } = Astro.props;
 ---
 
 <div
 	id="nav-menu-panel"
 	class:list={[
-		"float-panel mobile-command-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto",
+		"mobile-menu-panel absolute transition-all fixed right-0 left-0 px-2 py-2 max-h-[80vh] overflow-y-auto",
 	]}
 >
-	<div class="mobile-command-header px-3 pt-2 pb-3">
-		<div class="mobile-command-kicker">Navigate</div>
-		<div class="mobile-command-title">{i18n(I18nKey.navLinks)}</div>
-	</div>
-	<div class="mobile-command-actions mb-2 border-b border-black/5 pb-2 dark:border-white/10">
-						<button
-							type="button"
-							class="group mobile-command-primary flex justify-between items-center py-3 pl-3 pr-2 rounded-xl gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-							data-nav-action="search"
-						>
-							<div class="flex items-center transition nav-item-text font-bold">
-								<Icon
-									name="material-symbols:search"
-									class="text-[1.1rem] mr-2"
-								/>
-								{i18n(I18nKey.search)}
-							</div>
-							<Icon
-								name="material-symbols:chevron-right-rounded"
-								class="transition text-[1.25rem] text-(--primary)"
-							/>
-						</button>
-						<button
-							type="button"
-							class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-							data-nav-action="theme-toggle"
-						>
-							<div class="flex items-center transition nav-item-text font-bold">
-								<Icon
-									name="material-symbols:dark-mode-outline-rounded"
-									class="text-[1.1rem] mr-2"
-								/>
-								{i18n(I18nKey.darkMode)}
-							</div>
-							<Icon
-								name="material-symbols:chevron-right-rounded"
-								class="transition text-[1.25rem] text-(--primary)"
-							/>
-						</button>
-				{
-		showDisplaySettings && (
-				<button
-					type="button"
-					class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4 w-full text-left hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
-					data-nav-action="display-settings"
-				>
-					<div class="flex items-center transition nav-item-text font-bold">
-						<Icon
-							name="material-symbols:palette-outline"
-							class="text-[1.1rem] mr-2"
-						/>
-						{i18n(I18nKey.themeColor)}
-					</div>
-					<Icon
-						name="material-symbols:chevron-right-rounded"
-						class="transition text-[1.25rem] text-(--primary)"
-					/>
-				</button>
-				)}
-	</div>
 	{
 		processedLinks.map((link) => (
 			<div class="mobile-menu-item">
@@ -215,40 +153,6 @@ const { showDisplaySettings = false } = Astro.props;
 		@apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
 	}
 
-	.mobile-command-panel {
-		width: min(24rem, calc(100vw - 1.5rem));
-	}
-
-	.mobile-command-header {
-		border-bottom: 1px solid color-mix(in oklch, currentColor 8%, transparent);
-		margin-bottom: 0.5rem;
-	}
-
-	.mobile-command-kicker {
-		font-size: 1rem;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
-		opacity: 0.55;
-		margin-bottom: 0.35rem;
-	}
-
-	.mobile-command-title {
-		font-size: 1.15rem;
-		line-height: 1.2;
-		font-weight: 700;
-		letter-spacing: -0.02em;
-	}
-
-	.mobile-command-actions {
-		display: flex;
-		flex-direction: column;
-		gap: 0.3rem;
-	}
-
-	.mobile-command-primary {
-		margin-bottom: 0.2rem;
-	}
-
 	.mobile-dropdown[data-expanded="true"] .mobile-submenu {
 		@apply max-h-96;
 	}
@@ -297,48 +201,6 @@ const { showDisplaySettings = false } = Astro.props;
 			const handleClick = (event: MouseEvent) => {
 				const target = event.target;
 				if (!(target instanceof Element)) return;
-
-				const actionButton = target.closest("[data-nav-action]");
-				if (actionButton instanceof HTMLElement) {
-					event.preventDefault();
-
-					(async () => {
-						const { panelManager } = await import(
-							"../../utils/panel-manager"
-						);
-						const action = actionButton.dataset.navAction;
-
-						await panelManager.closePanel("nav-menu-panel");
-
-						if (action === "search") {
-							await panelManager.togglePanel("search-panel", true);
-							return;
-						}
-
-						if (action === "theme-toggle") {
-							const schemeSwitch =
-								document.getElementById("scheme-switch");
-							if (schemeSwitch instanceof HTMLElement) {
-								schemeSwitch.click();
-							}
-							return;
-						}
-
-						if (action === "display-settings") {
-							await panelManager.togglePanel(
-								"display-setting",
-								true,
-							);
-						}
-					})().catch((error) => {
-						console.error(
-							"Failed to handle nav menu action:",
-							error,
-						);
-					});
-
-					return;
-				}
 
 				const trigger = target.closest("[data-mobile-dropdown-trigger]");
 				if (!(trigger instanceof HTMLElement)) return;
