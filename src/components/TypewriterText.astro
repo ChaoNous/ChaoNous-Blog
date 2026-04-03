@@ -159,7 +159,7 @@ const initialText = Array.isArray(text)
 <style>
 	.typewriter {
 		position: relative;
-		min-height: 4.5em; /* Reserve space for longest multi-line text to prevent CLS */
+		height: 5em; overflow: hidden; /* Fixed height prevents CLS from typing animation */ /* Reserve space for longest multi-line text to prevent CLS */
 		display: block;
 	}
 
