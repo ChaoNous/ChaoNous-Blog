@@ -140,15 +140,7 @@ const bannerOffset =
 			</>
 		)}
 
-		<!-- 预加载关键字体（首屏渲染必需） -->
-		<link
-			rel="preload"
-			as="font"
-			type="font/woff2"
-			href="/assets/fonts/CrimsonPro-Regular.woff2"
-			crossorigin
-		/>
-		<!-- CJK 字体延迟加载，使用 font-display: swap 避免 LCP 延迟 -->
+		<!-- 字体使用 font-display: swap 延迟加载，不阻塞首屏渲染 -->
 
 		<!-- Preload banner images to protect LCP. -->
 		{
