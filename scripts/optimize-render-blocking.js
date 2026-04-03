@@ -7,14 +7,8 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
 
-// Critical CSS: loaded synchronously via regular stylesheet (needed for first paint)
-// These are the styles required to render the initial homepage view
-const criticalCssPatterns = [
-  /^MainGridLayout\./,
-  /^main\./,
-];
-
-// Async CSS: preload + onload swap (not needed for first paint)
+// All non-critical CSS: loaded asynchronously via preload + onload swap
+// This prevents large CSS bundles from blocking first paint
 const asyncCssPatterns = [
   /^PostPage\./,
   /^PostCard\./,
@@ -40,9 +34,12 @@ const asyncCssPatterns = [
   /^Twikoo\./,
   /^AlbumCard\./,
   /^AlbumDetail\./,
+  // These were previously critical but blocking first paint - load async
+  /^MainGridLayout\./,
+  /^main\./,
 ];
 
-// Remove these entirely (duplicates)
+// Remove these entirely (duplicates or unnecessary)
 const removableCssPatterns = [
   /^vendor-katex\.D-/,
   /^vendor-fancybox\.D-/,
@@ -62,9 +59,7 @@ async function optimizeHtmlFile(htmlPath) {
     throw error;
   }
 
-  const criticalStyleHrefs = [];
-
-  // Step 1: Replace render-blocking stylesheet links
+  // Step 1: Replace render-blocking stylesheet links with async preload+onload
   html = html.replace(
     /<link\s+rel="stylesheet"\s+href="([^"]+)">/g,
     (fullMatch, href) => {
@@ -75,39 +70,27 @@ async function optimizeHtmlFile(htmlPath) {
         return "";
       }
 
-      // Keep critical CSS as regular stylesheet (synchronous, fast)
-      if (criticalCssPatterns.some(p => p.test(fileName))) {
-        criticalStyleHrefs.push(href);
-        return fullMatch;
-      }
-
-      // Defer non-critical CSS
+      // All remaining CSS: load asynchronously
       if (asyncCssPatterns.some(p => p.test(fileName))) {
         return `<link rel="preload" as="style" href="${href}" onload="this.onload=null;this.rel='stylesheet'">`;
       }
 
-      // Unknown CSS: remove (shouldn't happen)
+      // Unknown CSS: remove
       return "";
     }
   );
 
-  // Step 2: Remove duplicate preload-as-style links (from Astro's own preload system)
-  // These are extra preload links that duplicate what we already handle
+  // Step 2: Remove duplicate preload-as-style links
   const preloadCssRegex = /<link\s+rel="preload"\s+as="style"\s+href="([^"]+)"[^>]*>/g;
   html = html.replace(preloadCssRegex, (fullMatch, href) => {
-    // Don't remove if it's not already handled above
     const fileName = path.posix.basename(href);
     if (asyncCssPatterns.some(p => p.test(fileName))) {
       return fullMatch; // Keep the preload we just created
     }
-    if (criticalCssPatterns.some(p => p.test(fileName))) {
-      return ""; // Remove duplicate preload for critical CSS
-    }
     return ""; // Remove unknown preloads
   });
 
-  // Step 3: Remove font preload (delays FCP due to 373KB Zhuque font)
-  // Fonts use font-display: swap, so no need to preload
+  // Step 3: Remove font preload (font-display: swap handles fallback)
   html = html.replace(
     /<link\s+rel="preload"\s+as="font"[^>]+>/g,
     ""
