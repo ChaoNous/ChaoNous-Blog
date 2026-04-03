@@ -56,10 +56,16 @@ body {
 
 /* 缣帛纹理 — 亮色模式
  * 缣帛 = 平纹素色丝织物
- * 特征：细密经纬交织可见、对角方向温润光泽、整体光滑
+ * 特征：细密经纬交织 + 天然云纹（厚薄不均的起伏） + 温润漫反射光泽
  *
- * ::before — 经纬线交织 + 暖色温润底色（织物主体）
- * ::after  — 对角丝光光泽（丝绸标志性光泽）
+ * 四层结构：
+ *   1. 经纬线交织 — 织物骨架
+ *   2. 云纹 — 天然蚕丝厚薄不均的大尺度有机纹理（非颗粒噪点）
+ *   3. 对角漫反射光泽 — 丝绸标志性的丝光
+ *   4. 暖色温润底色 — 蚕丝天然微黄色泽
+ *
+ * ::before — 经纬线 + 云纹 + 对角光泽 + 底色
+ * ::after  — 主光泽层叠加（丝光强化）
  */
 body::before {
   content: "";
@@ -74,7 +80,11 @@ body::before {
       rgba(253, 248, 235, 0.3) 50%,
       rgba(255, 250, 240, 0.4) 100%
     ),
-    /* 纬线 — 横向丝纱，2px 细密间隔 */
+    /* 云纹 — 天然蚕丝厚薄不均的大尺度纹理
+     * baseFrequency 0.004 = 约250px波长的柔和起伏，像水波纹/云纹
+     * 4倍放大后纹理非常柔和，没有颗粒感 */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='cloud'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004' numOctaves='2' seed='3'/%3E%3CfeGaussianBlur stdDeviation='3'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0.96 0 0 0 0  0.88 0 0 0 0  0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cloud)'/%3E%3C/svg%3E"),
+    /* 纬线 — 横向丝纱，2.5px 细密间隔 */
     repeating-linear-gradient(180deg,
       transparent 0px,
       rgba(180, 150, 100, 0.07) 0.4px,
@@ -101,6 +111,7 @@ body::before {
       rgba(255, 252, 245, 0.06) 35%,
       transparent 60%
     );
+  background-size: 100% 100%, 2000px 2000px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
 body::after {
@@ -123,34 +134,42 @@ body::after {
 /* 暗色模式 — 缣帛纹理 */
 .dark body::before {
   background:
+    /* 暗色底色 */
     linear-gradient(180deg,
       rgba(40, 35, 30, 0.35) 0%,
       rgba(35, 30, 25, 0.2) 50%,
       rgba(38, 33, 28, 0.25) 100%
     ),
+    /* 云纹 — 暗色版的天然蚕丝纹理 */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='cloud'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004' numOctaves='2' seed='3'/%3E%3CfeGaussianBlur stdDeviation='3'/%3E%3CfeColorMatrix type='matrix' values='0.85 0 0 0 0  0.78 0 0 0 0  0.68 0 0 0 0  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cloud)'/%3E%3C/svg%3E"),
+    /* 纬线 */
     repeating-linear-gradient(180deg,
       transparent 0px,
       rgba(210, 175, 120, 0.06) 0.4px,
       transparent 0.8px,
       transparent 2.5px
     ),
+    /* 经线 */
     repeating-linear-gradient(90deg,
       transparent 0px,
       rgba(210, 175, 120, 0.04) 0.3px,
       transparent 0.6px,
       transparent 8px
     ),
+    /* 对角光泽 */
     linear-gradient(130deg,
       transparent 0%,
       rgba(255, 240, 210, 0.05) 30%,
       rgba(255, 240, 210, 0.025) 50%,
       transparent 70%
     ),
+    /* 反向光泽 */
     linear-gradient(310deg,
       transparent 0%,
       rgba(255, 238, 200, 0.035) 35%,
       transparent 60%
     );
+  background-size: 100% 100%, 2000px 2000px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
 .dark body::after {
