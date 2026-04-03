@@ -4,6 +4,7 @@ import BackToTop from "@components/control/BackToTop.astro";
 import JsonLd from "@components/seo/JsonLd.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import { musicPlayerConfig, profileConfig, siteConfig } from "@/config";
+import { commentConfig } from "@/config";
 
 const BANNER_HEIGHT = 40;
 const BANNER_HEIGHT_EXTEND = 20;
@@ -125,6 +126,10 @@ const bannerOffset =
 		<!-- DNS 预解析和预连接优化 -->
 		<link rel="dns-prefetch" href="https://code.iconify.design" />
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
+		<link rel="preconnect" href="https://api.i-meto.com" crossorigin />
+		{commentConfig.enable && (
+			<link rel="preconnect" href={commentConfig.envId} crossorigin />
+		)}
 
 		<!-- 关键页面 prefetch（仅首页加载时启用） -->
 		{isHomePage && (
@@ -427,8 +432,8 @@ const bannerOffset =
 
 <!-- 非首屏关键脚本延迟加载 -->
 <script>
-	// 使用 requestIdleCallback 延迟加载非关键脚本
-	function scheduleIdleTask(callback: () => void, timeout = 2000) {
+	// 使用 requestIdleCallback 延迟加载非关键脚本，进一步减少主线程阻塞
+	function scheduleIdleTask(callback: () => void, timeout = 3000) {
 		if ("requestIdleCallback" in window) {
 			window.requestIdleCallback(callback, { timeout });
 		} else {

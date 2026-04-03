@@ -65,7 +65,9 @@ const firstImageIndex = 0;
 								alt={`Banner image ${index + 1}`}
 								class="w-full h-full object-cover"
 								style={imageStyle}
-								sizes="100vw"
+								sizes={isFirstImage
+									? "(max-width: 767px) 100vw, 100vw"
+									: "(max-width: 767px) 768px, 1920px"}
 								loading={imageLoading}
 								fetchpriority={imagePriority}
 								decoding={isFirstImage ? "sync" : "async"}

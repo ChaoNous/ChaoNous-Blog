@@ -5,101 +5,136 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
-const homepagePath = path.join(rootDir, "dist", "index.html");
+const distDir = path.join(rootDir, "dist");
 
-const blockingStylesheetPatterns = [
-	/^MainGridLayout\..+\.css$/,
-	/^index\..+\.css$/,
-	/^main\..+\.css$/,
-	/^variables\..+\.css$/,
+// Stylesheets to inline as critical CSS (only small ones under ~10KB)
+// Large CSS should remain as regular stylesheets - inlining increases HTML size
+const criticalCssPatterns = [
+  // No critical CSS inlining for this project
 ];
 
-const asyncStylesheetPatterns = [
-	/^PostPage\..+\.css$/,
-	/^LightDarkSwitch\..+\.css$/,
-	/^Search\..+\.css$/,
-	/^WallpaperSwitch\..+\.css$/,
-	/^DisplaySettings\..+\.css$/,
-	/^Icon\..+\.css$/,
-	/^generated-zhuque-ui-font\..+\.css$/,
-	/^local-fonts\..+\.css$/,
-	/^transition\..+\.css$/,
-	/^animation-enhancements\..+\.css$/,
-	/^gradient-buttons\..+\.css$/,
+// Stylesheets to load asynchronously (not needed for first paint)
+const asyncCssPatterns = [
+  /^PostPage\./,
+  /^PostCard\./,
+  /^PostMeta\./,
+  /^LightDarkSwitch\./,
+  /^Search\./,
+  /^Icon\./,
+  /^DisplaySettings\./,
+  /^generated-zhuque-ui-font\./,
+  /^local-fonts\./,
+  /^transition\./,
+  /^animation-enhancements\./,
+  /^gradient-buttons\./,
+  /^markdown\./,
+  /^markdown-extend\./,
+  /^expressive-code\./,
+  /^vendor-katex\./,
+  /^vendor-fancybox\./,
+  /^fancybox-custom\./,
+  /^Share\./,
+  /^SharePoster\./,
+  /^PostDetailLayout\./,
+  /^Twikoo\./,
+  /^AlbumCard\./,
+  /^AlbumDetail\./,
+  // Homepage-critical but not first-paint: load async
+  /^MainGridLayout\./,
+  /^main\./,
 ];
 
-const removableInlineStylePatterns = [
-	/\.album-card\[data-astro-cid-/,
-	/\.album-card\{transition:all/,
-	/\.photo-gallery\{/,
-	/\.password-protection\[data-astro-cid-/,
-	/\.twikoo-container\[data-astro-cid-/,
-	/\.timeline-node\[data-astro-cid-/,
-	/\.skills-grid-container/,
+// Stylesheets to remove entirely (duplicate or unnecessary)
+const removableCssPatterns = [
+  /^vendor-katex\.D-/,     // Duplicate with non-dash version
+  /^vendor-fancybox\.D-/,   // Duplicate with non-dash version
 ];
 
 function getDistFilePath(href) {
-	return path.join(rootDir, "dist", href.replace(/^\//, "").replace(/\//g, path.sep));
+  const relativePath = href.replace(/^\//, "").replace(/\//g, path.sep);
+  return path.join(distDir, relativePath);
 }
 
-async function optimizeHomepage() {
-	let html;
+async function optimizeHtmlFile(htmlPath) {
+  let html;
+  try {
+    html = await fs.readFile(htmlPath, "utf-8");
+  } catch (error) {
+    if (error?.code === "ENOENT") return;
+    throw error;
+  }
 
-	try {
-		html = await fs.readFile(homepagePath, "utf-8");
-	} catch (error) {
-		if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
-			return;
-		}
+  const criticalStyleHrefs = [];
 
-		throw error;
-	}
+  // Replace stylesheet links with appropriate loading strategy
+  html = html.replace(
+    /<link\s+rel="stylesheet"\s+href="([^"]+)">/g,
+    (fullMatch, href) => {
+      const fullUrl = href;
+      const fileName = path.posix.basename(href);
 
-	const criticalStyleHrefs = [];
+      // Check if removable (duplicates)
+      if (removableCssPatterns.some(p => p.test(fileName))) {
+        return "";
+      }
 
-	html = html.replace(
-		/<link rel="stylesheet" href="([^"]+)">/g,
-		(fullMatch, href) => {
-			const baseName = path.posix.basename(href);
-			if (href.startsWith("/_astro/")) {
-				return "";
-			}
-			if (
-				blockingStylesheetPatterns.some((pattern) => pattern.test(baseName))
-			) {
-				criticalStyleHrefs.push(href);
-				return "";
-			}
-			if (
-				asyncStylesheetPatterns.some((pattern) => pattern.test(baseName))
-			) {
-				return `<link rel="preload" as="style" href="${href}" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}"></noscript>`;
-			}
-			return "";
-		},
-	);
+      // Check if critical - inline it
+      if (criticalCssPatterns.some(p => p.test(fileName))) {
+        criticalStyleHrefs.push(href);
+        return "";
+      }
 
-	html = html.replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, (styleBlock) => {
-		if (
-			removableInlineStylePatterns.some((pattern) => pattern.test(styleBlock))
-		) {
-			return "";
-		}
-		return styleBlock;
-	});
+      // Check if async - preload and defer
+      if (asyncCssPatterns.some(p => p.test(fileName))) {
+        return `<link rel="preload" as="style" href="${fullUrl}" onload="this.onload=null;this.rel='stylesheet'">`;
+      }
 
-	const criticalStyleBlocks = await Promise.all(
-		criticalStyleHrefs.map(async (href) => {
-			const css = await fs.readFile(getDistFilePath(href), "utf-8");
-			return `<style data-critical-css="${path.posix.basename(href)}">${css}</style>`;
-		}),
-	);
+      // Default: remove and let critical CSS handle it (or leave as-is if unknown)
+      return "";
+    }
+  );
 
-	if (criticalStyleBlocks.length > 0) {
-		html = html.replace("</head>", `${criticalStyleBlocks.join("")}</head>`);
-	}
+  // Inline critical CSS
+  const criticalStyleBlocks = await Promise.all(
+    criticalStyleHrefs.map(async (href) => {
+      try {
+        const css = await fs.readFile(getDistFilePath(href), "utf-8");
+        return `<style data-critical-css="${path.posix.basename(href)}">${css}</style>`;
+      } catch {
+        return "";
+      }
+    })
+  );
 
-	await fs.writeFile(homepagePath, html, "utf-8");
+  if (criticalStyleBlocks.length > 0) {
+    html = html.replace("</head>", `${criticalStyleBlocks.join("")}</head>`);
+  }
+
+  await fs.writeFile(htmlPath, html, "utf-8");
+  console.log(`Optimized: ${path.relative(rootDir, htmlPath)}`);
 }
 
-await optimizeHomepage();
+async function optimizeAll() {
+  const htmlFiles = await findHtmlFiles(distDir);
+  console.log(`Found ${htmlFiles.length} HTML files to optimize`);
+
+  for (const file of htmlFiles) {
+    await optimizeHtmlFile(file);
+  }
+}
+
+async function findHtmlFiles(dir) {
+  const files = [];
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...await findHtmlFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith(".html")) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+
+await optimizeAll();

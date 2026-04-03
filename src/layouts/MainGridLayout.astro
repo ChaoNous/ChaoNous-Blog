@@ -5,14 +5,12 @@ import BannerCarousel from "@components/layout/BannerCarousel.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
-import { Icon } from "astro-icon/components";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
 import TypewriterText from "../components/TypewriterText.astro";
 import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
 import { BANNER_HEIGHT, BANNER_HEIGHT_EXTEND } from "../constants/constants";
 import {
-	normalizeBannerSources,
 	resolveBannerImages,
 } from "../utils/banner-utils";
 import { widgetManager } from "../utils/widget-manager";
@@ -35,10 +33,6 @@ interface Props {
 }
 
 const bannerImages = await resolveBannerImages(siteConfig.banner.src);
-const desktopBannerSources = normalizeBannerSources(bannerImages.desktop);
-const mobileBannerSources = normalizeBannerSources(bannerImages.mobile);
-const firstDesktopBanner = desktopBannerSources[0];
-const firstMobileBanner = mobileBannerSources[0] || firstDesktopBanner;
 
 const {
 	title,
@@ -122,30 +116,6 @@ const mainContentClass = `
 	setOGTypeArticle={setOGTypeArticle}
 	postSlug={postSlug}
 >
-	<Fragment slot="head">
-		{
-			firstDesktopBanner && (
-				<link
-					rel="preload"
-					as="image"
-					href={firstDesktopBanner}
-					media="(min-width: 768px)"
-					fetchpriority="high"
-				/>
-			)
-		}
-		{
-			firstMobileBanner && (
-				<link
-					rel="preload"
-					as="image"
-					href={firstMobileBanner}
-					media="(max-width: 767px)"
-					fetchpriority="high"
-				/>
-			)
-		}
-	</Fragment>
 	<script
 		is:inline
 		define:vars={{
