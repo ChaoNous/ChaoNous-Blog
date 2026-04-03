@@ -61,4 +61,10 @@
     border-radius: 0 !important;
     max-height: calc(100vh - 72px) !important;
   }
+
+  /* 手机端标题和副标题移到导航栏下方 */
+  .banner-text-overlay {
+    align-items: flex-start !important;
+    padding-top: 5rem !important;
+  }
 }

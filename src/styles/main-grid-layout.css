@@ -234,7 +234,7 @@ body.enable-banner:not(.is-home) .main-content-desktop {
   .banner-text-overlay {
     align-items: center !important;
     justify-content: center !important;
-    padding: 1.25rem 1.1rem 2rem !important;
+    padding: 5rem 1.1rem 2rem !important;
     text-align: center !important;
   }
 
