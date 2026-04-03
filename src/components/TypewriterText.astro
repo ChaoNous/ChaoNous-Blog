@@ -167,4 +167,17 @@ const initialText = Array.isArray(text)
 		content: "\00A0";
 		visibility: hidden;
 	}
+
+	/* Reserve space for multi-line text to prevent CLS */
+	@media (max-width: 767px) {
+		.typewriter {
+			min-height: 4.5em; /* 3 lines x 1.5em line-height */
+		}
+	}
+
+	@media (min-width: 768px) {
+		.typewriter {
+			min-height: 3em; /* 2 lines x 1.5em line-height */
+		}
+	}
 </style>
