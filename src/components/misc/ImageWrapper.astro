@@ -58,11 +58,17 @@ if (isLocal) {
 	});
 	const normalizedPath = (() => {
 		const raw = `../../${basePath.replace(/^\/+/, "").replace(/\/+$/, "")}/${src.replace(/^\.\/+/, "")}`.replace(/\\/g, "/");
-		return raw.split("/").reduce((acc: string[], seg) => {
-			if (seg === "." || seg === "") return acc;
-			acc.push(seg);
-			return acc;
-		}, []).join("/");
+		const parts = raw.split("/");
+		const stack: string[] = [];
+		for (const seg of parts) {
+			if (seg === "." || seg === "") continue;
+			if (seg === "..") {
+				if (stack.length > 0) stack.pop();
+				continue;
+			}
+			stack.push(seg);
+		}
+		return `../../${stack.join("/")}`;
 	})();
 	const file = files[normalizedPath];
 	if (!file) {
