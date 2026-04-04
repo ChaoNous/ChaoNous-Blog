@@ -76,173 +76,202 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		init: (options: Record<string, unknown>) => void;
 	};
 
-	/** inject a <style> that lives outside any Vue scope */
+	/** inject a <style> that lives outside any Vue scope — HIGH specificity selectors */
 	function injectGlobalStyles() {
 		const id = "tk-custom-global";
 		if (document.getElementById(id)) return;
 
 		const s = document.createElement("style");
-		s.id = id;
-		s.textContent = `
-			/* == hide unwanted Twikoo elements == */
-			.tk-header { display: none!important; }
-			.tk-time { display: none!important; }
-			.tk-comments-title { display: none!important; }
-			.tk-divider { display: none!important; }
-			.tk-extras { display: none!important; }
-			.tk-extra { display: none!important; }
-			.tk-comment .tk-icon,
-			.tk-comment .tk-action,
-			.tk-comment .tk-action-link,
-			.tk-comment .tk-action-btn,
-			.tk-comment .tk-like,
-			.tk-comment .tk-revert-comment,
-			.tk-comment .tk-submit-action-icon { display: none!important; }
-			.tk-preview, .tk-preview-btn { display: none!important; }
-
-			/* == footer branding == */
-			.tk-footer { display: none!important; visibility: hidden!important; height: 0!important; overflow: hidden!important; }
-
-			/* == textarea == */
-			.tk-input {
-				background: rgba(128,128,128,0.03)!important;
-				border: 1px solid var(--line-divider)!important;
-				color: inherit!important;
-				font-family: inherit!important;
-				padding: 0.875rem 1rem!important;
-				border-radius: 0.375rem!important;
-			}
-			.tk-input:focus {
-				border-color: var(--primary)!important;
-				box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 15%, transparent)!important;
-			}
-			.tk-input::placeholder { color: rgba(128,128,128,0.4)!important; font-style: italic; }
-
-			/* == send button == */
-			button.tk-send, .tk-send, .tk-submit .el-button {
-				background: linear-gradient(135deg, rgba(128,128,128,0.08), rgba(128,128,128,0.12))!important;
-				border: 1px solid transparent!important;
-				color: inherit!important;
-				border-radius: 0.375rem!important;
-				letter-spacing: 0.05em!important;
-				font-weight: 500!important;
-			}
-			button.tk-send:hover, .tk-send:hover, .tk-submit .el-button:hover {
-				color: var(--primary)!important;
-			}
-
-			/* == comment cards == */
-			.tk-comment {
-				background: transparent!important;
-				border: none!important;
-				padding: 1rem 0!important;
-				margin-bottom: 1.5rem!important;
-			}
-			.tk-comment:hover { background: rgba(128,128,128,0.02)!important; }
-			.tk-comment::before {
-				content: "";
-				position: absolute;
-				left: 0; top: 0; bottom: 0;
-				width: 2px;
-				background: linear-gradient(180deg, var(--primary) 0%, transparent 100%);
-				opacity: 0;
-				transition: opacity 0.35s;
-			}
-			.tk-comment:hover::before { opacity: 1; }
-
-			.tk-avatar {
-				border-radius: 50%!important;
-				box-shadow: 0 2px 6px rgba(0,0,0,0.08), inset 0 1px 2px rgba(255,255,255,0.3)!important;
-				border: 1px solid rgba(128,128,128,0.1)!important;
-			}
-			.tk-nick { font-weight: 600!important; font-family: var(--font-serif)!important; }
-			.tk-nick:hover { color: var(--primary)!important; }
-			.tk-content {
-				color: inherit!important;
-				margin-top: 0.625rem!important;
-				line-height: 1.7;
-			}
-			.tk-content a {
-				color: var(--primary)!important;
-				text-decoration: underline;
-				text-decoration-style: dashed;
-				text-underline-offset: 4px;
-			}
-			.tk-content blockquote {
-				border-left: 2px solid var(--primary)!important;
-				padding-left: 1rem!important;
-				opacity: 0.75;
-				font-style: italic;
-			}
-			.tk-replies {
-				border-top: none!important;
-				margin-top: 1rem!important;
-				margin-left: 2.5rem!important;
-			}
-			.tk-reply {
-				border: none!important;
-				border-left: 1px solid rgba(128,128,128,0.15)!important;
-				background: transparent!important;
-				padding-left: 1rem!important;
-			}
-			.tk-expand {
-				background: rgba(128,128,128,0.03)!important;
-				border: none!important;
-				color: inherit!important;
-				padding: 0.75rem 2rem!important;
-				font-size: 0.875rem;
-				letter-spacing: 0.05em;
-			}
-			.tk-expand:hover { color: var(--primary)!important; }
-			.tk-no-comment { color: inherit!important; opacity: 0.4!important; font-style: italic!important; }
-		`;
+		// Push to the very end of <head> so our rules cascade over Vue scoped styles
 		document.head.appendChild(s);
+		s.id = id;
+		const cssVars = getPrimaryColor(); // "var(--primary)" → fallback color
+		s.textContent = `
+		/* == hide unwanted elements — high-specificity selectors to beat scoped Vue styles == */
+		body .tk-header { display: none!important; }
+		body .tk-time { display: none!important; }
+		body .tk-comments-title { display: none!important; }
+		body .tk-divider { display: none!important; }
+		body .tk-extras { display: none!important; }
+		body .tk-extra { display: none!important; }
+		body .tk-comment .tk-icon,
+		body .tk-comment .tk-action,
+		body .tk-comment .tk-action-link,
+		body .tk-comment .tk-action-btn,
+		body .tk-comment .tk-like,
+		body .tk-comment .tk-revert-comment,
+		body .tk-comment .tk-submit-action-icon { display: none!important; }
+		body .tk-preview, body .tk-preview-btn { display: none!important; }
+
+		/* footer — must beat Vue scoped styles */
+		#twikoo-comment .tk-comments .tk-footer,
+		.twikoo-container .tk-footer,
+		body .tk-footer {
+			display: none!important;
+			visibility: hidden!important;
+			height: 0!important;
+			font-size: 0!important;
+			overflow: hidden!important;
+		}
+
+		/* textarea */
+		body .tk-input {
+			background: rgba(128,128,128,0.03)!important;
+			border: 1px solid var(--line-divider)!important;
+			color: inherit!important;
+			font-family: inherit!important;
+			padding: 0.875rem 1rem!important;
+			border-radius: 0.375rem!important;
+		}
+		body .tk-input:focus {
+			border-color: var(--primary)!important;
+			box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 15%, transparent)!important;
+		}
+		body .tk-input::placeholder { color: rgba(128,128,128,0.4)!important; font-style: italic; }
+
+		/* send button — override Element-UI blue */
+		body .tk-comments .tk-submit .tk-send.el-button--primary,
+		body .tk-comments .tk-submit .tk-send,
+		body .tk-comments .tk-submit .el-button {
+			background: linear-gradient(135deg, rgba(128,128,128,0.08), rgba(128,128,128,0.12))!important;
+			background-color: rgba(128,128,128,0.1)!important;
+			border: none!important;
+			border-color: transparent!important;
+			color: inherit!important;
+			border-radius: 0.375rem!important;
+			letter-spacing: 0.05em!important;
+			font-weight: 500!important;
+		}
+		body .tk-comments .tk-submit .tk-send:hover,
+		body .tk-comments .tk-submit .el-button:hover {
+			color: var(--primary)!important;
+		}
+
+		/* comment cards */
+		body .tk-comment {
+			background: transparent!important;
+			border: none!important;
+			padding: 1rem 0!important;
+			margin-bottom: 1.5rem!important;
+		}
+		body .tk-comment:hover { background: rgba(128,128,128,0.02)!important; }
+		body .tk-comment::before {
+			content: "";
+			position: absolute;
+			left: 0; top: 0; bottom: 0;
+			width: 2px;
+			background: linear-gradient(180deg, var(--primary) 0%, transparent 100%);
+			opacity: 0;
+			transition: opacity 0.35s;
+		}
+		body .tk-comment:hover::before { opacity: 1; }
+
+		body .tk-avatar {
+			border-radius: 50%!important;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.08), inset 0 1px 2px rgba(255,255,255,0.3)!important;
+			border: 1px solid rgba(128,128,128,0.1)!important;
+		}
+		body .tk-nick { font-weight: 600!important; font-family: var(--font-serif)!important; }
+		body .tk-nick:hover { color: var(--primary)!important; }
+		body .tk-content {
+			color: inherit!important;
+			margin-top: 0.625rem!important;
+			line-height: 1.7;
+		}
+		body .tk-content a {
+			color: var(--primary)!important;
+			text-decoration: underline;
+			text-decoration-style: dashed;
+			text-underline-offset: 4px;
+		}
+		body .tk-content blockquote {
+			border-left: 2px solid var(--primary)!important;
+			padding-left: 1rem!important;
+			opacity: 0.75;
+			font-style: italic;
+		}
+		body .tk-replies {
+			border-top: none!important;
+			margin-top: 1rem!important;
+			margin-left: 2.5rem!important;
+		}
+		body .tk-reply {
+			border: none!important;
+			border-left: 1px solid rgba(128,128,128,0.15)!important;
+			background: transparent!important;
+			padding-left: 1rem!important;
+		}
+		body .tk-expand {
+			background: rgba(128,128,128,0.03)!important;
+			border: none!important;
+			color: inherit!important;
+			padding: 0.75rem 2rem!important;
+			font-size: 0.875rem;
+			letter-spacing: 0.05em;
+		}
+		body .tk-expand:hover { color: var(--primary)!important; }
+		body .tk-no-comment { color: inherit!important; opacity: 0.4!important; font-style: italic!important; }
+	`;
 	}
 
-	/** force-hide elements & restyle buttons via inline styles (bypasses Vue scoped styles) */
+	/** read the computed --primary color for inline-style fallback */
+	function getPrimaryColor() {
+		return getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || "#b36147";
+	}
+
+	/** force-hide elements & restyle buttons via setProperty() (bypasses all CSS conflicts) */
 	function enforceInlineStyles(container: HTMLElement) {
-		// remove unwanted DOM
+		// remove unwanted DOM nodes
 		container.querySelectorAll(
-			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-footer, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-comment .tk-icon, .tk-comment .tk-action, .tk-comment .tk-action-link, .tk-comment .tk-like, .tk-comment .tk-submit-action-icon, .tk-comment .tk-action-btn"
+			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-comment .tk-icon, .tk-comment .tk-action, .tk-comment .tk-action-link, .tk-comment .tk-like, .tk-comment .tk-submit-action-icon, .tk-comment .tk-action-btn"
 		).forEach(el => el.remove());
 
-		// double-ensure footer is hidden (in case scoped CSS prevented CSS removal)
+		// footer: remove + force inline style (Vue re-renders, so use setProperty with important)
 		container.querySelectorAll(".tk-footer").forEach(el => {
-			(el as HTMLElement).style.display = "none";
+			const h = el as HTMLElement;
+			h.style.setProperty("display", "none", "important");
+			h.style.setProperty("visibility", "hidden", "important");
+			h.style.setProperty("height", "0", "important");
+			h.style.setProperty("font-size", "0", "important");
+			h.style.setProperty("overflow", "hidden", "important");
 		});
 
-		// restyle send button inline
+		// send button: override Element-UI blue via setProperty
 		container.querySelectorAll(".tk-submit .el-button").forEach(btn => {
 			const b = btn as HTMLElement;
-			b.style.cssText += "background:linear-gradient(135deg,rgba(128,128,128,0.08),rgba(128,128,128,0.12))!important;border:1px solid transparent!important;color:inherit!important;border-radius:0.375rem!important;letter-spacing:0.05em!important;";
+			b.style.setProperty("background", "transparent", "important");
+			b.style.setProperty("background-color", "rgba(128,128,128,0.10)", "important");
+			b.style.setProperty("border", "none", "important");
+			b.style.setProperty("color", "inherit", "important");
+			b.style.setProperty("border-radius", "0.375rem", "important");
+			b.style.setProperty("letter-spacing", "0.05em", "important");
 		});
 	}
 
-	/** listen for both DOM changes AND new <style> tags added to <head> */
+	/** observe container DOM + <head> + attribute changes */
 	function startObservers(container: HTMLElement) {
-		// 1. container DOM changes
-		const domObs = new MutationObserver(() => {
-			enforceInlineStyles(container);
+		// 1. container DOM & attribute changes (Vue sets styles/attributes)
+		const domObs = new MutationObserver((mutations) => {
+			// Only react to child additions/removals or attribute changes on known elements
+			let needsFix = false;
+			for (const m of mutations) {
+				if (m.type === "childList") { needsFix = true; break; }
+				if (m.type === "attributes") {
+					const t = m.target as Element;
+					if (t.matches?.(".tk-footer, .el-button--primary, .tk-send")) {
+						needsFix = true; break;
+					}
+				}
+			}
+			if (needsFix) enforceInlineStyles(container);
 		});
-		domObs.observe(container, { childList: true, subtree: true });
+		domObs.observe(container, { childList: true, subtree: true, attributes: true, attributeFilter: ["style", "class"] });
 
-		// 2. new <style> tags in <head> (Vue scoped styles added after ours)
+		// 2. new <style> tags in <head>
 		const headObs = new MutationObserver(() => {
-			// if a new style tag was added, re-inject ours at the very end
 			injectGlobalStyles();
 		});
 		headObs.observe(document.head, { childList: true });
-
-		// periodically re-enforce (Vue may re-render at any time)
-		const heartbeat = setInterval(() => {
-			if (!document.getElementById("twikoo-comment")) {
-				clearInterval(heartbeat);
-				domObs.disconnect();
-				headObs.disconnect();
-				return;
-			}
-			enforceInlineStyles(container);
-		}, 500);
 	}
 
 	function initTwikoo() {
