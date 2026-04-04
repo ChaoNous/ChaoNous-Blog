@@ -55,13 +55,8 @@ const {
             <Icon name="material-symbols:book-2-outline-rounded" class="text-xl"></Icon>
         </div>
         <a href={getCategoryUrl(category || "")}
-           class="category-link group flex items-center gap-1 transition text-50 font-medium
-                        hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap">
-            <span class="flex-shrink min-w-0">{category || i18n(I18nKey.uncategorized)}</span>
-            <Icon
-                name="material-symbols:chevron-right-rounded"
-                class="category-arrow text-lg text-(--primary) opacity-0 translate-x-[-2px] group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0"
-            />
+           class="category-pill transition text-50 font-medium whitespace-nowrap">
+            {category || i18n(I18nKey.uncategorized)}
         </a>
     </div>
 
@@ -100,23 +95,16 @@ const {
 		opacity: 0.9;
 	}
 
-	.category-link {
-		transition: color 300ms ease-in-out;
+	.category-pill {
+		padding: 0.15em 0.6em;
+		border-radius: 0.375rem;
+		transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
 	}
 
-	.category-arrow {
-		opacity: 0;
-		transform: translateX(-2px);
-		transition: opacity 300ms ease-out, transform 300ms ease-out;
-	}
-
-	.category-link:hover .category-arrow {
-		opacity: 1;
-		transform: translateX(0);
-	}
-
-	.category-link * {
-		transition-duration: 0s;
+	.category-pill:hover {
+		color: var(--primary);
+		background-color: var(--primary);
+		color: white;
 	}
 
 	@media (max-width: 767px) {
