@@ -81,21 +81,45 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		background: transparent !important;
 	}
 
+	/* ===== 隐藏 Twikoo 自带 header ===== */
 	:global(.tk-comments .tk-header) {
 		display: none !important;
 	}
 
-	:global(.tk-submit) {
-		margin-bottom: 2.5rem !important;
+	/* ===== 隐藏时间戳 ===== */
+	:global(.tk-comments .tk-time) {
+		display: none !important;
 	}
 
-	:global(.tk-main-header) {
-		margin-top: 2.5rem !important;
+	/* ===== 隐藏评论计数标题和分割线 ===== */
+	:global(.tk-comments-title),
+	:global(.tk-comments .tk-divider) {
+		display: none !important;
 	}
 
-	/* ===== 输入框区域 — 缣帛风格 ===== */
-	:global(.tk-comments .tk-input),
-	:global(.tk-comments .tk-preview) {
+	/* ===== 隐藏评论内操作按钮(点赞、回复图标等) ===== */
+	:global(.tk-comments .tk-action),
+	:global(.tk-comments .tk-action-link),
+	:global(.tk-comments .tk-action-btn),
+	:global(.tk-comments .tk-icon),
+	:global(.tk-comments .tk-like),
+	:global(.tk-comments .tk-revert-comment) {
+		display: none !important;
+	}
+
+	/* ===== 隐藏预览按钮 ===== */
+	:global(.tk-comments .tk-preview),
+	:global(.tk-comments .tk-preview-btn) {
+		display: none !important;
+	}
+
+	/* ===== 隐藏回复区域的回复按钮 ===== */
+	:global(.tk-comments .tk-replies .tk-submit-action-icon) {
+		display: none !important;
+	}
+
+	/* ===== 输入框 — 缣帛风格 ===== */
+	:global(.tk-comments .tk-input) {
 		background: rgba(128, 128, 128, 0.03) !important;
 		border: 1px solid var(--line-divider) !important;
 		color: inherit !important;
@@ -116,24 +140,21 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 15%, transparent) !important;
 	}
 
+	/* ===== 提交区域 ===== */
+	:global(.tk-submit) {
+		margin-bottom: 2.5rem !important;
+	}
+
+	:global(.tk-main-header) {
+		margin-top: 2.5rem !important;
+	}
+
 	:global(.tk-comments .tk-actions) {
 		background: transparent !important;
 		padding-top: 0.5rem !important;
 	}
 
-	:global(.tk-comments .tk-action-btn) {
-		color: inherit !important;
-		opacity: 0.5;
-		transition: all 0.2s;
-		font-size: 0.875rem;
-	}
-
-	:global(.tk-comments .tk-action-btn:hover) {
-		color: var(--primary) !important;
-		opacity: 1;
-	}
-
-	/* ===== 提交按钮 — 古风样式 ===== */
+	/* ===== 发送按钮 — 古风样式 ===== */
 	:global(.tk-comments .tk-submit) {
 		background: linear-gradient(135deg, rgba(128, 128, 128, 0.08) 0%, rgba(128, 128, 128, 0.12) 100%) !important;
 		color: inherit !important;
@@ -146,23 +167,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	}
 
 	:global(.tk-comments .tk-submit:hover) {
-		background: linear-gradient(135deg, rgba(128, 128, 128, 0.12) 0%, rgba(128, 128, 128, 0.18) 100%) !important;
-		border-color: var(--primary) !important;
 		color: var(--primary) !important;
-	}
-
-	:global(.tk-comments .tk-preview-btn) {
-		background: rgba(128, 128, 128, 0.05) !important;
-		color: inherit !important;
-		border: none !important;
-		border-radius: 0.375rem !important;
-		transition: all 0.3s;
-		padding: 0.5rem 1rem !important;
-	}
-
-	:global(.tk-comments .tk-preview-btn:hover) {
-		background: rgba(128, 128, 128, 0.12) !important;
-		border-color: rgba(128, 128, 128, 0.2) !important;
 	}
 
 	/* ===== 评论卡片 — 缣帛质感 ===== */
@@ -196,18 +201,17 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		opacity: 1;
 	}
 
-	/* ===== 头像 — 圆形带光泽 ===== */
+	/* ===== 头像 —— 圆形带光泽 ===== */
 	:global(.tk-comments .tk-avatar) {
 		border-radius: 50% !important;
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.3);
 		border: 1px solid rgba(128, 128, 128, 0.1) !important;
 	}
 
-	/* ===== 用户名 — 加粗带过渡 ===== */
+	/* ===== 用户名 —— 加粗 ===== */
 	:global(.tk-comments .tk-nick) {
 		color: inherit !important;
 		font-weight: 600 !important;
-		transition: color 0.25s ease;
 		font-family: var(--font-serif);
 	}
 
@@ -215,20 +219,22 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		color: var(--primary) !important;
 	}
 
-	/* ===== 时间戳 — 淡化处理 ===== */
-	:global(.tk-comments .tk-time) {
-		color: inherit !important;
-		opacity: 0.4;
-		font-size: 0.8125rem;
-		font-style: italic;
-	}
-
+	/* ===== 元信息(昵称/网址行) ===== */
 	:global(.tk-comments .tk-meta) {
 		color: inherit !important;
-		opacity: 0.5;
 	}
 
-	/* ===== 评论内容 — 正文样式 ===== */
+	:global(.tk-comments .tk-meta a) {
+		color: var(--primary) !important;
+		text-decoration: none !important;
+		font-size: 0.8125rem;
+	}
+
+	:global(.tk-comments .tk-meta a:hover) {
+		text-decoration: underline !important;
+	}
+
+	/* ===== 评论内容 —— 正文 ===== */
 	:global(.tk-comments .tk-content) {
 		color: inherit !important;
 		margin-top: 0.625rem !important;
@@ -247,7 +253,31 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		text-decoration-style: solid;
 	}
 
-	/* ===== 回复区域 — 无边框层次 ===== */
+	:global(.tk-comments .tk-content blockquote) {
+		border-left: 2px solid var(--primary) !important;
+		padding-left: 1rem !important;
+		color: inherit !important;
+		opacity: 0.75;
+		background: transparent !important;
+		margin: 0.75rem 0 !important;
+		font-style: italic;
+	}
+
+	:global(.tk-comments .tk-content code) {
+		background: rgba(128, 128, 128, 0.08) !important;
+		padding: 0.15em 0.4em !important;
+		border-radius: 0 !important;
+		font-family: inherit !important;
+	}
+
+	:global(.tk-comments .tk-content pre) {
+		background: rgba(128, 128, 128, 0.04) !important;
+		padding: 1rem !important;
+		border-radius: 0 !important;
+		border: none !important;
+	}
+
+	/* ===== 回复区域 —— 缩进 ===== */
 	:global(.tk-comments .tk-replies) {
 		border-top: none !important;
 		background: transparent !important;
@@ -258,24 +288,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-reply) {
 		border: none !important;
 		border-left: 1px solid rgba(128, 128, 128, 0.15) !important;
-		border-radius: 0 !important;
 		background: transparent !important;
 		padding-left: 1rem !important;
 		margin-bottom: 0.75rem !important;
-	}
-
-	/* ===== 点赞等动作按钮 ===== */
-	:global(.tk-comments .tk-action),
-	:global(.tk-comments .tk-icon) {
-		color: inherit !important;
-		opacity: 0.5;
-		transition: all 0.25s;
-	}
-
-	:global(.tk-comments .tk-action:hover),
-	:global(.tk-comments .tk-icon:hover) {
-		color: var(--primary) !important;
-		opacity: 1;
 	}
 
 	/* ===== 加载更多按钮 ===== */
@@ -292,74 +307,36 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	:global(.tk-comments .tk-expand:hover) {
 		background: rgba(128, 128, 128, 0.08) !important;
-		border-color: var(--primary) !important;
 		color: var(--primary) !important;
 	}
 
-	/* ===== 表情弹窗 — 与主题一致 ===== */
+	/* ===== 表情弹窗 ===== */
 	:global(.tk-comments .tk-owo-popup) {
 		background: var(--card-bg) !important;
 		border: none !important;
 		border-radius: var(--radius-large) !important;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-		backdrop-filter: none;
 	}
 
-	/* ===== 代码块样式 ===== */
-	:global(.tk-comments .tk-content code) {
-		background: rgba(128, 128, 128, 0.08) !important;
-		padding: 0.15em 0.4em !important;
-		border-radius: 0 !important;
-		font-family: inherit !important;
-	}
-
-	:global(.tk-comments .tk-content pre) {
-		background: rgba(128, 128, 128, 0.04) !important;
-		padding: 1rem !important;
-		border-radius: 0 !important;
-		border: none !important;
-	}
-
-	:global(.tk-comments .tk-content blockquote) {
-		border-left: 2px solid var(--primary) !important;
-		padding-left: 1rem !important;
-		color: inherit !important;
-		opacity: 0.75;
-		background: transparent !important;
-		margin: 0.75rem 0 !important;
-		font-style: italic;
-	}
-
-	/* ===== 评论计数标题 ===== */
-	:global(.tk-comments-title) {
-		color: inherit !important;
-	}
-
-	/* ===== 评论数量为 0 时的提示 ===== */
+	/* ===== 无评论提示 ===== */
 	:global(.tk-comments .tk-no-comment) {
 		color: inherit !important;
 		opacity: 0.4;
 		font-style: italic;
 	}
 
-	/* ===== 输入框的轮廓光 ===== */
+	/* ===== 加载状态 ===== */
+	:global(.tk-loading) {
+		color: inherit !important;
+		opacity: 0.4;
+	}
+
+	/* ===== 输入框轮廓 ===== */
 	:global(.tk-comments textarea:focus, .tk-comments input:focus) {
 		outline: none !important;
 	}
 
-	/* ===== 分割线 — 主题化 ===== */
-	:global(.tk-comments .tk-divider) {
-		background: linear-gradient(90deg,
-			transparent 0%,
-			var(--line-divider) 20%,
-			var(--line-divider) 80%,
-			transparent 100%
-		) !important;
-		border: none !important;
-		height: 1px !important;
-	}
-
-	/* ===== 暗色模式微调 ===== */
+	/* ===== 暗色模式 ===== */
 	:global(.dark .twikoo-container) {
 		background:
 			radial-gradient(ellipse 75% 65% at 50% 45%,
@@ -426,10 +403,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			const target = e.target;
 			if (!(target instanceof HTMLElement)) return;
 			if (
-				target.closest(".tk-like") ||
 				target.closest(".tk-submit") ||
-				target.closest(".tk-action") ||
-				target.closest("button")
+				target.closest(".tk-submit-action-icon") ||
+				target.closest(".tk-expand")
 			) {
 				savedScrollPos = window.scrollY;
 
