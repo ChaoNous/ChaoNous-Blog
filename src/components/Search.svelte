@@ -219,7 +219,7 @@
 <div class="hidden lg:block relative w-11 h-11 shrink-0">
 	<div
 		id="search-bar"
-		class="flex transition-all items-center h-11 rounded-lg absolute right-0 top-0 shrink-0
+		class="flex items-center h-11 rounded-lg absolute right-0 top-0 shrink-0
 			{isDesktopSearchExpanded
 				? 'search-bar-bg'
 				: 'btn-plain active:scale-90'}
