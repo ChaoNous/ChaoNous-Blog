@@ -256,6 +256,14 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		.tk-comments .tk-no-comment { color: inherit !important; opacity: 0.4; font-style: italic; }
 		.tk-comments .tk-container { background: transparent !important; }
 		.tk-main-header { margin-top: 2.5rem !important; }
+
+		/* ===== 隐藏 Powered by Twikoo ===== */
+		.tk-comments .tk-footer,
+		.tk-comments .tk-footer a,
+		.tk-comments [class*="powered"],
+		.tk-comments [class*="footer"] {
+			display: none !important;
+		}
 	`;
 
 	/** 将 CSS 追加到 <head> 末尾，确保在 Twikoo 自身样式之后 */
