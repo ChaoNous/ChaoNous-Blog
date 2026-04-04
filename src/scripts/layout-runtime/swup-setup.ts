@@ -11,25 +11,21 @@ import {
 } from "./banner-runtime";
 import {
   syncDesktopLayoutState,
-  applyBannerLayout,
+  applyLayout,
 } from "../main-grid-runtime";
 import {
   handleNavbarLinkClick,
   refreshNavbarTransparency,
   syncNavbarHomeState,
-  syncNavbarVisibility,
 } from "./navbar-runtime";
 import {
   clearTocNotReady,
   initializeArticleToc,
   markTocNotReady,
-  syncDesktopTocVisibility,
 } from "./toc-runtime";
 import { initFancybox, cleanupFancybox, checkKatex } from "./fancybox-runtime";
 import { initCustomScrollbar } from "./katex-scrollbar";
 import { removePostPageActionButtons } from "./post-page-cleanup";
-
-const bannerEnabled = !!document.getElementById("banner-wrapper");
 
 function scheduleIdleTask(task: () => void, timeout = 3000) {
   if ("requestIdleCallback" in window) {
@@ -41,11 +37,9 @@ function scheduleIdleTask(task: () => void, timeout = 3000) {
 
 function syncDesktopViewportState() {
   const scrollTop = document.documentElement.scrollTop;
-  const bannerHeight = window.innerHeight * (40 / 100);
 
   requestAnimationFrame(() => {
-    syncDesktopTocVisibility(scrollTop, bannerHeight, bannerEnabled);
-    syncNavbarVisibility(scrollTop, bannerEnabled);
+    // Banner removed — no longer sync TOC/navbar visibility
   });
 }
 
@@ -56,7 +50,7 @@ function refreshDesktopRuntimeState() {
 export function setup(): void {
   window.swup.hooks.on("link:click", () => {
     document.documentElement.style.setProperty("--content-delay", "0ms");
-    handleNavbarLinkClick(document.documentElement.scrollTop, bannerEnabled);
+    handleNavbarLinkClick(document.documentElement.scrollTop);
   });
 
   window.swup.hooks.on("content:replace", () => {
@@ -84,15 +78,6 @@ export function setup(): void {
         bodyElement.classList.add("is-home");
       } else {
         bodyElement.classList.remove("is-home");
-      }
-    }
-
-    const bannerTextOverlay = document.querySelector(".banner-text-overlay");
-    if (bannerTextOverlay) {
-      if (isHomePage) {
-        bannerTextOverlay.classList.remove("hidden");
-      } else {
-        bannerTextOverlay.classList.add("hidden");
       }
     }
 
@@ -141,7 +126,7 @@ export function setup(): void {
     }
 
     revealBanner();
-    applyBannerLayout();
+    applyLayout();
     removePostPageActionButtons();
     syncDesktopLayoutState();
     refreshDesktopRuntimeState();
@@ -161,9 +146,8 @@ export function setup(): void {
 }
 
 export {
-  bannerEnabled,
   revealBanner,
-  applyBannerLayout,
+  applyLayout,
   syncDesktopLayoutState,
   removePostPageActionButtons,
   scheduleIdleTask,

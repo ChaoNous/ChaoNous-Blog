@@ -45,37 +45,13 @@ export const siteConfig: SiteConfig = {
 
   banner: {
     src: {
-      desktop: [
-        "/assets/desktop-banner/banner1.webp",
-        "/assets/desktop-banner/banner2.webp",
-        "/assets/desktop-banner/banner3.webp",
-      ],
-      mobile: [
-        "/assets/mobile-banner/banner1.webp",
-        "/assets/mobile-banner/banner2.webp",
-        "/assets/mobile-banner/banner3.webp",
-      ],
+      desktop: [],
+      mobile: [],
     },
     position: "center",
     carousel: {
-      enable: true,
+      enable: false,
       interval: 4,
-    },
-    homeText: {
-      enable: true,
-      title: "闲话漫谈",
-      subtitle: [
-        "学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？",
-        "即使在他人看来是多么愚蠢和荒谬，然而只有遵循自己的选择，才能找到无怨无悔的人生。",
-        "日月若驰，老将至矣，而功业不建，是以悲耳。",
-        "天地之间有许多事情，是你们的哲学里所没有梦想到的。",
-      ],
-      typewriter: {
-        enable: true,
-        speed: 100,
-        deleteSpeed: 50,
-        pauseTime: 2000,
-      },
     },
     navbar: {
       transparentMode: "semi",

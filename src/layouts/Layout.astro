@@ -6,10 +6,6 @@ import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import { musicPlayerConfig, profileConfig, siteConfig } from "@/config";
 import { commentConfig } from "@/config";
 
-const BANNER_HEIGHT = 40;
-const BANNER_HEIGHT_EXTEND = 20;
-const BANNER_HEIGHT_HOME = BANNER_HEIGHT + BANNER_HEIGHT_EXTEND;
-
 import {
 	DARK_MODE,
 	DEFAULT_THEME,
@@ -24,58 +20,18 @@ import "../styles/panel-animations.css";
 
 interface Props {
 	title?: string;
-	banner?: string;
 	description?: string;
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	postSlug?: string;
 }
 
-let { title, banner, description, lang, setOGTypeArticle, postSlug } =
+let { title, description, lang, setOGTypeArticle, postSlug } =
 	Astro.props;
 
-// apply a class to the body element to decide the height of the banner, only used for initial page load
-// Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
-// so use Swup hooks instead to change the height immediately when a link is clicked
 const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
 
-// defines global css variables
-// why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
 const configHue = siteConfig.themeColor.hue;
-
-// Resolve the banner source for desktop and mobile variants.
-const getBannerSrc = (
-	src: typeof siteConfig.banner.src,
-	type: "desktop" | "mobile",
-): string => {
-	if (!src) return `/assets/${type}-banner/banner1.webp`;
-	if (typeof src === "string") return src;
-	if (Array.isArray(src)) return src[0] || `/assets/${type}-banner/banner1.webp`;
-	if (typeof src === "object" && src[type]) {
-		const typeSrc = src[type];
-		if (typeof typeSrc === "string") return typeSrc;
-		if (Array.isArray(typeSrc) && typeSrc.length > 0) return typeSrc[0];
-	}
-	// Fall back to the other variant if the preferred one is not available.
-	const fallbackType = type === "desktop" ? "mobile" : "desktop";
-	if (typeof src === "object" && src[fallbackType]) {
-		const fallbackSrc = src[fallbackType];
-		if (typeof fallbackSrc === "string") return fallbackSrc;
-		if (Array.isArray(fallbackSrc) && fallbackSrc.length > 0)
-			return fallbackSrc[0];
-	}
-	return `/assets/${type}-banner/banner1.webp`;
-};
-
-const getDesktopBanner = () => getBannerSrc(siteConfig.banner.src, "desktop");
-const getMobileBanner = () => getBannerSrc(siteConfig.banner.src, "mobile");
-const getDefaultBanner = () => getDesktopBanner();
-
-if (!banner || typeof banner !== "string" || banner.trim() === "") {
-	banner = getDefaultBanner();
-}
-
-const enableBanner = !!siteConfig.banner.src;
 
 let pageTitle: string;
 if (title) {
@@ -98,14 +54,6 @@ if (!lang) {
 	lang = `${siteConfig.lang}`;
 }
 const siteLang = lang.replace("_", "-");
-
-const bannerOffsetByPosition = {
-	top: `${BANNER_HEIGHT_EXTEND}vh`,
-	center: `${BANNER_HEIGHT_EXTEND / 2}vh`,
-	bottom: "0",
-};
-const bannerOffset =
-	bannerOffsetByPosition[siteConfig.banner.position || "center"];
 
 ---
 
@@ -139,32 +87,6 @@ const bannerOffset =
 				<link rel="prefetch" href={url("/friends/")} />
 			</>
 		)}
-
-		<!-- 字体使用 font-display: swap 延迟加载，不阻塞首屏渲染 -->
-
-		<!-- Preload banner images to protect LCP. -->
-		{
-			siteConfig.banner.src && (
-				<>
-					<link
-						rel="preload"
-						as="image"
-						href={url(getDesktopBanner())}
-						media="(min-width: 768px)"
-						fetchpriority="high"
-						crossorigin="anonymous"
-					/>
-					<link
-						rel="preload"
-						as="image"
-						href={url(getMobileBanner())}
-						media="(max-width: 767px)"
-						fetchpriority="high"
-						crossorigin="anonymous"
-					/>
-				</>
-			)
-		}
 
 		{
 			siteConfig.keywords && siteConfig.keywords.length > 0 && (
@@ -222,7 +144,6 @@ const bannerOffset =
 				DEFAULT_THEME,
 				LIGHT_MODE,
 				DARK_MODE,
-				BANNER_HEIGHT_EXTEND,
 				PAGE_WIDTH,
 				configHue,
 				pageScaling: siteConfig.pageScaling,
@@ -268,16 +189,6 @@ const bannerOffset =
 
 			document.documentElement.setAttribute("data-theme-material", "silk");
 
-			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-			let offset = Math.floor(
-				window.innerHeight * (BANNER_HEIGHT_EXTEND / 100),
-			);
-			offset = offset - (offset % 4);
-			document.documentElement.style.setProperty(
-				"--banner-height-extend",
-				`${offset}px`,
-			);
-
 			// Apply desktop page scaling early to avoid a visible relayout flash.
 			(function () {
 				if (pageScaling && pageScaling.enable) {
@@ -286,8 +197,8 @@ const bannerOffset =
 							(window.matchMedia &&
 								(window.matchMedia("(pointer:coarse)")
 									.matches ||
-									window.matchMedia("(hover: none)")
-										.matches)) ||
+								window.matchMedia("(hover: none)")
+									.matches)) ||
 							"ontouchstart" in window;
 						const isPortrait =
 							window.matchMedia &&
@@ -331,7 +242,7 @@ const bannerOffset =
 			}}
 		></style>
 
-		<!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
+		<!-- defines global css variables -->
 		<slot name="head" />
 
 		<link
@@ -346,25 +257,24 @@ const bannerOffset =
 	</head>
 	<body
 		class="min-h-screen"
-		class:list={[{ "is-home": isHomePage, "enable-banner": enableBanner }]}
 	>
-			<!-- SVG filter definitions for silk texture -->
-			<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
-				<defs>
-					<filter id="silk-weave" color-interpolation-filters="sRGB">
-						<!-- 经线: 高频水平 × 低频垂直 → 垂直丝线 -->
-						<feTurbulence type="fractalNoise" baseFrequency="0.5 0.02" numOctaves="3" seed="1" result="warp" />
-						<!-- 纬线: 低频水平 × 高频垂直 → 水平丝线 -->
-						<feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="3" seed="2" result="weft" />
-						<!-- 叠加: 经纬线混合形成织物纹理 -->
-						<feBlend mode="screen" in="warp" in2="weft" result="fabric" />
-						<!-- 柔化: 降低透明度，使纹理柔和不刺眼 -->
-						<feColorMatrix type="matrix"
-							values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
-							in="fabric" />
-					</filter>
-				</defs>
-			</svg>
+		<!-- SVG filter definitions for silk texture -->
+		<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+			<defs>
+				<filter id="silk-weave" color-interpolation-filters="sRGB">
+					<!-- 经线: 高频水平 × 低频垂直 → 垂直丝线 -->
+					<feTurbulence type="fractalNoise" baseFrequency="0.5 0.02" numOctaves="3" seed="1" result="warp" />
+					<!-- 纬线: 低频水平 × 高频垂直 → 水平丝线 -->
+					<feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="3" seed="2" result="weft" />
+					<!-- 叠加: 经纬线混合形成织物纹理 -->
+					<feBlend mode="screen" in="warp" in2="weft" result="fabric" />
+					<!-- 柔化: 降低透明度，使纹理柔和不刺眼 -->
+					<feColorMatrix type="matrix"
+						values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
+						in="fabric" />
+				</filter>
+			</defs>
+		</svg>
 		<ConfigCarrier />
 		<slot />
 		<BackToTop />
@@ -383,9 +293,6 @@ const bannerOffset =
 <style
 	is:global
 	define:vars={{
-		bannerOffset,
-		"banner-height-home": `${BANNER_HEIGHT_HOME}vh`,
-		"banner-height": `${BANNER_HEIGHT}vh`,
 		hue: configHue,
 	}}
 >
@@ -410,21 +317,6 @@ const bannerOffset =
 	}
 
 	@layer components {
-		.enable-banner #banner-wrapper {
-			@apply lg:h-[var(--banner-height)];
-		}
-		.enable-banner.is-home #banner-wrapper {
-			@apply lg:h-(--banner-height-home) lg:translate-y-[var(--banner-height-extend)];
-		}
-		.enable-banner.is-home #banner-container {
-			@apply lg:h-(--banner-height-home) lg:translate-y-0;
-		}
-		.enable-banner #banner-container {
-			@apply lg:h-(--banner-height-home) lg:translate-y-[var(--bannerOffset)];
-		}
-		.enable-banner #top-row {
-			@apply lg:h-[calc(var(--banner-height-home)-4.5rem)] transition-all duration-300;
-		}
 		.navbar-hidden {
 			@apply opacity-0 -translate-y-16;
 		}

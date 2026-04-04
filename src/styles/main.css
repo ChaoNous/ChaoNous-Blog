@@ -373,10 +373,8 @@ body::-webkit-scrollbar {
   .is-theme-transitioning:not(.use-view-transition) #navbar > div,
   .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode] > div,
   .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode].scrolled > div,
-  .is-theme-transitioning:not(.use-view-transition) #banner-wrapper ~ * #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) #banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-  .is-theme-transitioning:not(.use-view-transition) body:has(#banner-wrapper) #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
+  .is-theme-transitioning:not(.use-view-transition) #navbar > div,
+  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode] > div {
     transition: none !important;
     backdrop-filter: none !important;
   }
@@ -734,9 +732,7 @@ canvas {
   max-width: 100%;
 }
 
-#banner-wrapper,
-#banner-container,
-#banner-carousel {
+.carousel-item {
   contain: layout style;
 }
 
@@ -944,9 +940,7 @@ body {
   box-shadow: var(--display-panel-shadow) !important;
 }
 
-#navbar > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode] > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
+#navbar > div {
   background: var(--nav-bg) !important;
   border-radius: var(--nav-radius) !important;
   will-change: background, backdrop-filter, box-shadow;
@@ -958,18 +952,14 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode] > div {
   color: var(--navbar-foreground) !important;
 }
 
-#navbar[data-transparent-mode="full"] > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode="full"] > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode="full"] > div {
+#navbar[data-transparent-mode="full"] > div {
   --nav-bg: transparent;
   --nav-blur: none;
   --nav-shadow: none;
   --navbar-foreground: var(--navbar-overlay-foreground);
 }
 
-#navbar[data-transparent-mode="semifull"]:not(.scrolled) > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scrolled) > div {
+#navbar[data-transparent-mode="semifull"]:not(.scrolled) > div {
   --nav-bg: transparent;
   --nav-blur: none;
   --nav-shadow: none;
@@ -977,22 +967,14 @@ body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scrolle
 }
 
 #navbar[data-transparent-mode="semi"] > div,
-#navbar[data-transparent-mode="semifull"].scrolled > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div,
-#banner-wrapper ~ * #navbar[data-transparent-mode="semifull"].scrolled > div,
-body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > div {
+#navbar[data-transparent-mode="semifull"].scrolled > div {
   --nav-bg: rgba(255, 255, 255, 0.55);
   --nav-blur: blur(20px);
   --nav-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 :root.dark #navbar[data-transparent-mode="semi"] > div,
-:root.dark #navbar[data-transparent-mode="semifull"].scrolled > div,
-:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semi"] > div,
-:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semi"] > div,
-:root.dark #banner-wrapper ~ * #navbar[data-transparent-mode="semifull"].scrolled > div,
-:root.dark body:has(#banner-wrapper) #navbar[data-transparent-mode="semifull"].scrolled > div {
+:root.dark #navbar[data-transparent-mode="semifull"].scrolled > div {
   --nav-bg: rgba(0, 0, 0, 0.55);
   --nav-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }

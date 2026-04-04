@@ -1,18 +1,11 @@
 ---
 import FloatingTOC from "@components/control/FloatingTOC.astro";
 import Footer from "@components/Footer.astro";
-import BannerCarousel from "@components/layout/BannerCarousel.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
-import TypewriterText from "../components/TypewriterText.astro";
-import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
-import { BANNER_HEIGHT, BANNER_HEIGHT_EXTEND } from "../constants/constants";
-import {
-	resolveBannerImages,
-} from "../utils/banner-utils";
 import { widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
 import "../styles/main-grid-layout.css";
@@ -32,8 +25,6 @@ interface Props {
 	isPostPage?: boolean;
 }
 
-const bannerImages = await resolveBannerImages(siteConfig.banner.src);
-
 const {
 	title,
 	banner,
@@ -45,21 +36,11 @@ const {
 	isPostPage = false,
 } = Astro.props;
 
-const isHomePage = Astro.url.pathname === "/" || Astro.url.pathname === "";
-const showHomeText = siteConfig.banner.homeText?.enable && isHomePage;
-
-const mainPanelTop = `${BANNER_HEIGHT}vh`;
-
-const finalMainPanelTop = isHomePage
-	? `calc(${BANNER_HEIGHT + BANNER_HEIGHT_EXTEND}vh + 2rem)`
-	: mainPanelTop;
-
 const hasLeftSidebarComponents =
 	widgetManager.getComponentsByPosition("top", "left", "desktop").length >
 		0 ||
 	widgetManager.getComponentsByPosition("sticky", "left", "desktop").length >
 		0;
-
 
 
 const hasMobileDrawerComponents =
@@ -121,16 +102,10 @@ const mainContentClass = `
 		define:vars={{
 			navbarTransparentMode:
 				siteConfig.banner?.navbar?.transparentMode || "semi",
-			BANNER_HEIGHT: BANNER_HEIGHT,
-			BANNER_HEIGHT_EXTEND: BANNER_HEIGHT_EXTEND,
-			pageScaling: siteConfig.pageScaling,
 		}}
 	>
 		window.__mainGridRuntimeConfig = {
 			navbarTransparentMode,
-			BANNER_HEIGHT,
-			BANNER_HEIGHT_EXTEND,
-			pageScaling,
 		};
 	</script>
 
@@ -152,94 +127,15 @@ const mainContentClass = `
 		</div>
 	</div>
 
-	<!-- Banner - 仅在 banner 模式下显示，由 JS 控制高度和过渡动画 -->
-	<div
-		id="banner-wrapper"
-		class="absolute z-10 w-full transition duration-700 overflow-hidden h-[var(--banner-height-home)] banner-wrapper-desktop"
-	>
-		<div class="banner-inner-wrapper h-full w-full transition-all duration-700">
-			<BannerCarousel
-				bannerImages={bannerImages}
-				position={siteConfig.banner.position}
-				carouselEnabled={siteConfig.banner.carousel?.enable}
-				carouselInterval={siteConfig.banner.carousel?.interval || 3}
-			/>
-		</div>
-
-		<!-- Home page text overlay -->
-		{
-			siteConfig.banner.homeText?.enable && (
-				<div
-					class:list={[
-						"banner-text-overlay absolute inset-0 z-20 flex items-center justify-center",
-						{ hidden: !showHomeText },
-					]}
-				>
-					<div class="banner-copy-shell max-w-(--page-width) w-full px-0 md:px-4 mx-auto flex items-center justify-center h-full">
-						<div class="banner-copy-inner w-4/5 lg:w-3/4 text-center mb-0">
-							<div class="banner-copy-stack flex flex-col">
-								{siteConfig.banner.homeText?.title && (
-									<h1 class="banner-title text-6xl lg:text-8xl text-white drop-shadow-lg mb-2 lg:mb-4">
-										{siteConfig.banner.homeText.title}
-									</h1>
-								)}
-								{siteConfig.banner.homeText?.subtitle && (
-									<h2 class="banner-subtitle text-xl lg:text-3xl text-white drop-shadow-md">
-										<span class="typewriter-container">
-											{siteConfig.banner.homeText
-												.typewriter?.enable ? (
-												<TypewriterText
-													text={
-														siteConfig.banner
-															.homeText.subtitle
-													}
-													speed={
-														siteConfig.banner
-															.homeText.typewriter
-															.speed
-													}
-													deleteSpeed={
-														siteConfig.banner
-															.homeText.typewriter
-															.deleteSpeed
-													}
-													pauseTime={
-														siteConfig.banner
-															.homeText.typewriter
-															.pauseTime
-													}
-												/>
-											) : Array.isArray(
-													siteConfig.banner.homeText
-														.subtitle,
-											  ) ? (
-												siteConfig.banner.homeText
-													.subtitle[0]
-											) : (
-												siteConfig.banner.homeText
-													.subtitle
-											)}
-										</span>
-									</h2>
-								)}
-							</div>
-						</div>
-					</div>
-				</div>
-			)
-		}
-	</div>
-
 	<!-- Main content -->
 	<div
 		id="main-content-shell"
-		class="absolute w-full z-30 pointer-events-none main-content-desktop"
+		class="relative w-full z-30 pointer-events-none"
 	>
-		<!-- The pointer-events-none here prevent blocking the click event of the TOC -->
 		<div class="relative max-w-(--page-width) mx-auto pointer-events-auto">
 			<div
 				id="main-grid"
-				class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-none md:grid-rows-[auto] md:items-start mx-auto gap-8 px-2 md:px-4 ${!mobileShowSidebar || !hasMobileDrawerComponents ? "mobile-no-sidebar" : ""}`}
+				class={`w-full left-0 right-0 grid ${gridCols} grid-rows-none md:grid-rows-[auto] md:items-start mx-auto gap-8 px-2 md:px-4 ${!mobileShowSidebar || !hasMobileDrawerComponents ? "mobile-no-sidebar" : ""}`}
 				data-layout-mode="list"
 			>
 

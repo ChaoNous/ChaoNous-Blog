@@ -29,20 +29,9 @@ export function syncDesktopTocVisibility(
   bannerHeight: number,
   bannerEnabled: boolean,
 ) {
-  if (!bannerEnabled) return;
-
+  // Banner removed — no longer gate TOC visibility on banner scroll
   const toc = document.getElementById("toc-wrapper");
-  if (!toc) return;
-
-  const isBannerMode = document.body.classList.contains("enable-banner");
-  if (isBannerMode) {
-    if (scrollTop > bannerHeight) {
-      toc.classList.remove("toc-hide");
-    } else {
-      toc.classList.add("toc-hide");
-    }
-    return;
+  if (toc) {
+    toc.classList.remove("toc-hide");
   }
-
-  toc.classList.remove("toc-hide");
 }

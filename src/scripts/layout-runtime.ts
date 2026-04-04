@@ -4,10 +4,10 @@
  * wires up global scroll/resize handlers.
  */
 
-import { BANNER_HEIGHT, SCROLL_THROTTLE_MS } from "../constants/constants";
+import { SCROLL_THROTTLE_MS } from "../constants/constants";
 import {
   revealBanner,
-  applyBannerLayout,
+  applyLayout,
   syncDesktopLayoutState,
   syncBannerHeightExtend,
   removePostPageActionButtons,
@@ -83,7 +83,7 @@ window.addEventListener("scroll", throttledScrollFunction, {
 
 function handleResize() {
   syncBannerHeightExtend();
-  applyBannerLayout();
+  applyLayout();
   syncDesktopLayoutState();
   syncDesktopViewportState();
 }
@@ -95,7 +95,7 @@ syncDesktopViewportState();
 // ── Initial page load ──
 runOnDocumentReady(async () => {
   revealBanner();
-  applyBannerLayout();
+  applyLayout();
   removePostPageActionButtons();
   syncDesktopLayoutState();
   refreshDesktopRuntimeState();

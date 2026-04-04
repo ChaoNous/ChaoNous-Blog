@@ -62,17 +62,6 @@
     max-height: calc(100vh - 72px) !important;
   }
 
-  /* 手机端标题和副标题移到导航栏下方 */
-  .banner-text-overlay {
-    align-items: flex-start !important;
-    padding-top: 5rem !important;
-  }
-
-  /* 首页第一篇文章位置上移到贴近 banner */
-  body.enable-banner.is-home #main-content-shell {
-    top: 220px !important;
-  }
-
   /* 消除所有来源的间距 */
   #main-grid {
     gap: 0 !important;
@@ -93,12 +82,5 @@
 
   .post-card-cover {
     margin-top: 0 !important;
-  }
-}
-
-/* 中小屏手机 banner 实际高度 260px */
-@media (min-width: 480px) and (max-width: 768px) {
-  body.enable-banner.is-home #main-content-shell {
-    top: 260px !important;
   }
 }
