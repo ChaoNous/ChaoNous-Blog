@@ -103,8 +103,7 @@ const {
 
 	.category-pill:hover {
 		color: var(--primary);
-		background-color: var(--primary);
-		color: white;
+		background-color: color-mix(in oklch, var(--primary) 6%, transparent);
 	}
 
 	@media (max-width: 767px) {
@@ -126,7 +125,7 @@ const {
 
     async function fetchPageViews() {
         const container = document.querySelector('.umami-page-views');
-        
+
         if (!window.oddmisc) {
             container?.classList.add('hidden');
             return;
