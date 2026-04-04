@@ -140,9 +140,18 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 	.post-card-title {
 		font-size: clamp(2rem, 2.3vw, 3rem);
-		line-height: 1.04;
-		letter-spacing: -0.03em;
+		line-height: 1.4;
+		letter-spacing: 6px;
 		text-wrap: balance;
+		font-weight: 900;
+		color: #0f172a;
+		transition: background-size 500ms ease-out;
+		background: linear-gradient(#0f172a, #0f172a) no-repeat left bottom / 0 2px;
+	}
+
+	.post-card-title:hover {
+		background-size: 100% 2px;
+		transition: background-size 500ms ease-out;
 	}
 
 	.post-card-excerpt {
