@@ -93,8 +93,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		.tk-comments .tk-divider { display: none !important; }
 		.tk-comments .tk-extras { display: none !important; }
 		.tk-comments .tk-extra { display: none !important; }
-		.tk-comments .tk-comment .tk-footer { display: none !important; }
-		.tk-comments .tk-comment .tk-submit-action-icon { display: none !important; }
 		.tk-comments .tk-icon { display: none !important; }
 		.tk-comments .tk-action { display: none !important; }
 		.tk-comments .tk-action-link { display: none !important; }
@@ -103,6 +101,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		.tk-comments .tk-revert-comment { display: none !important; }
 		.tk-comments .tk-preview { display: none !important; }
 		.tk-comments .tk-preview-btn { display: none !important; }
+		/* 隐藏 footer 里的 Powered by 文字 */
+		.tk-comments .tk-footer { display: none !important; }
 
 		/* ===== 输入框 ===== */
 		.tk-comments .tk-input,
@@ -113,7 +113,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			font-family: inherit !important;
 			padding: 0.875rem 1rem !important;
 			border-radius: 0.375rem !important;
-			transition: all 0.3s ease;
 		}
 		.tk-comments .tk-input:focus,
 		.tk-comments textarea.tk-input:focus {
@@ -129,23 +128,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			padding-top: 0.5rem !important;
 		}
 
-		/* ===== 提交按钮 ===== */
-		.tk-submit { margin-bottom: 2.5rem !important; }
-		.tk-comments .tk-el { background: transparent !important; border: none !important; box-shadow: none !important; }
-		.tk-comments .tk-submit .tk-submit-action-icon.el-button {
-			background: linear-gradient(135deg, rgba(128,128,128,0.08), rgba(128,128,128,0.12)) !important;
-			border: none !important;
-			border-radius: 0.375rem !important;
-			color: inherit !important;
-			font-weight: 500 !important;
-			padding: 0.5rem 1.5rem !important;
-			letter-spacing: 0.05em !important;
-			transition: all 0.3s ease;
-		}
-		.tk-comments .tk-submit .tk-submit-action-icon.el-button:hover {
-			color: var(--primary) !important;
-		}
-
 		/* ===== 评论卡片 ===== */
 		.tk-comments .tk-comment {
 			background: transparent !important;
@@ -153,7 +135,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			padding: 1rem 0 !important;
 			margin-bottom: 1.5rem !important;
 			position: relative;
-			transition: all 0.35s ease;
 		}
 		.tk-comments .tk-comment:hover {
 			background: rgba(128,128,128,0.02) !important;
@@ -182,10 +163,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		.tk-comments .tk-nick {
 			font-weight: 600 !important;
 			font-family: var(--font-serif) !important;
-			transition: color 0.25s;
 		}
 		.tk-comments .tk-nick:hover { color: var(--primary) !important; }
-
 		.tk-comments .tk-meta { color: inherit !important; }
 
 		/* ===== 内容 ===== */
@@ -229,8 +208,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			background: transparent !important;
 			padding-left: 1rem !important;
 		}
-
-		/* ===== 加载更多 ===== */
 		.tk-comments .tk-expand {
 			background: rgba(128,128,128,0.03) !important;
 			border: none !important;
@@ -238,35 +215,17 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 			padding: 0.75rem 2rem !important;
 			font-size: 0.875rem;
 			letter-spacing: 0.05em;
-			transition: all 0.3s;
 		}
 		.tk-comments .tk-expand:hover {
 			background: rgba(128,128,128,0.08) !important;
 			color: var(--primary) !important;
 		}
 
-		/* ===== 表情弹窗 ===== */
-		.tk-comments .tk-owo-popup {
-			background: var(--card-bg) !important;
-			border: none !important;
-			border-radius: var(--radius-large) !important;
-			box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-		}
-
 		.tk-comments .tk-no-comment { color: inherit !important; opacity: 0.4; font-style: italic; }
 		.tk-comments .tk-container { background: transparent !important; }
 		.tk-main-header { margin-top: 2.5rem !important; }
-
-		/* ===== 隐藏 Powered by Twikoo ===== */
-		.tk-comments .tk-footer,
-		.tk-comments .tk-footer a,
-		.tk-comments [class*="powered"],
-		.tk-comments [class*="footer"] {
-			display: none !important;
-		}
 	`;
 
-	/** 将 CSS 追加到 <head> 末尾，确保在 Twikoo 自身样式之后 */
 	function applyCustomCSS() {
 		const id = "twikoo-custom-css";
 		if (document.getElementById(id)) return;
@@ -274,50 +233,67 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		el.id = id;
 		el.textContent = CUSTOM_CSS;
 		document.head.appendChild(el);
-		// Fallback: also try setting as a <link> with inline text
-		// Some versions of Twikoo use scoped <style> inside <template>
 	}
 
-	/** 等待 Twikoo stylesheet 加载完毕后再注入我们的样式 */
-	function waitForTwikooReady(retries = 20, interval = 100) {
+	/** 等待 Twikoo stylesheet 加载完后再注入我们的样式 */
+	function waitForTwikooReady(retries = 30, interval = 100) {
 		let count = 0;
 		const timer = setInterval(() => {
 			count++;
 			const twikooCSS = document.querySelector('link[href*="twikoo"]');
-			const twikooStyle = Array.from(document.querySelectorAll("style")).some(
+			const hasTkStyles = Array.from(document.querySelectorAll("style")).some(
 				(s) => s.textContent?.includes(".tk-comments")
 			);
-			if (twikooCSS || twikooStyle) {
+			if (twikooCSS || hasTkStyles) {
 				clearInterval(timer);
 				applyCustomCSS();
 				return;
 			}
 			if (count >= retries) {
-				// Timeout: inject anyway
 				applyCustomCSS();
 				clearInterval(timer);
 			}
 		}, interval);
 	}
 
-	/** 清理 Twikoo 渲染后多余的 DOM 元素 */
+	/** 通过 inline style 强制隐藏元素并改色按钮 */
+	function enforceStylesOnElements(container: HTMLElement) {
+		// 隐藏 footer
+		container.querySelectorAll(".tk-footer").forEach(el => {
+			(el as HTMLElement).style.display = "none";
+			(el as HTMLElement).style.overflow = "hidden";
+			(el as HTMLElement).style.height = "0";
+		});
+
+		// 发送按钮 — 覆盖 Element-UI 的蓝色
+		container.querySelectorAll(".tk-submit .el-button--primary").forEach(btn => {
+			const button = btn as HTMLElement;
+			button.style.background = "linear-gradient(135deg, rgba(128,128,128,0.08), rgba(128,128,128,0.12))";
+			button.style.borderColor = "transparent";
+			button.style.color = "inherit";
+			button.style.borderRadius = "0.375rem";
+			button.style.letterSpacing = "0.05em";
+			button.style.borderWidth = "1px";
+			button.style.borderStyle = "solid";
+		});
+	}
+
+	/** 清理多余 DOM */
 	function cleanupDOM(el: Element) {
 		el.querySelectorAll(
 			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-comment .tk-footer, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-action, .tk-action-link, .tk-icon, .tk-like, .tk-comment .tk-submit-action-icon, .tk-action-btn"
-		).forEach((n) => n.remove());
+		).forEach(n => n.remove());
 	}
 
 	function onCommentsReady(container: HTMLElement) {
-		// 1. 等待 Twikoo 样式注册到 <head>，然后在末尾追加我们的样式
 		waitForTwikooReady();
-
-		// 2. 清理多余 DOM
 		cleanupDOM(container);
+		enforceStylesOnElements(container);
 
-		// 3. 持续监听新增节点（异步渲染的回帖/加载更多）
+		// 持续监听新增节点
 		const observer = new MutationObserver(() => {
 			cleanupDOM(container);
-			waitForTwikooReady();
+			enforceStylesOnElements(container);
 		});
 		observer.observe(container, { childList: true, subtree: true });
 	}
@@ -328,13 +304,11 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 		const envId = container.getAttribute("data-env-id") || "";
 		const region = container.getAttribute("data-region") || "";
-		const path =
-			container.getAttribute("data-path") || window.location.pathname;
+		const path = container.getAttribute("data-path") || window.location.pathname;
 		const lang = container.getAttribute("data-lang") || "zh-CN";
 
 		const script = document.createElement("script");
-		script.src =
-			"https://cdn.jsdelivr.net/npm/twikoo@1.7.4/dist/twikoo.all.min.js";
+		script.src = "https://cdn.jsdelivr.net/npm/twikoo@1.7.4/dist/twikoo.all.min.js";
 		script.async = true;
 
 		script.onload = () => {
@@ -354,71 +328,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		};
 
 		document.head.appendChild(script);
-	}
-
-	function fixTwikooScrollIssue() {
-		const container = document.getElementById("twikoo-comment");
-		if (!container) return;
-
-		let savedScrollPos = 0;
-
-		container.addEventListener("click", (e) => {
-			const target = e.target;
-			if (!(target instanceof HTMLElement)) return;
-			if (
-				target.closest(".tk-submit") ||
-				target.closest(".tk-expand")
-			) {
-				savedScrollPos = window.scrollY;
-
-				setTimeout(() => {
-					if (window.scrollY !== savedScrollPos) {
-						window.scrollTo({
-							top: savedScrollPos,
-							behavior: "auto",
-						});
-					}
-				}, 50);
-
-				setTimeout(() => {
-					if (window.scrollY !== savedScrollPos) {
-						window.scrollTo({
-							top: savedScrollPos,
-							behavior: "auto",
-						});
-					}
-				}, 200);
-			}
-		});
-
-		const form = container.querySelector("form");
-		if (form) {
-			form.addEventListener("submit", (e) => {
-				e.preventDefault();
-			});
-		}
-
-		const originalHash = window.location.hash;
-		window.addEventListener(
-			"hashchange",
-			() => {
-				if (
-					(window.location.hash === "" || window.location.hash === "#") &&
-					Math.abs(window.scrollY - savedScrollPos) > 100
-				) {
-					history.replaceState(
-						null,
-						"",
-						window.location.pathname + originalHash,
-					);
-					window.scrollTo({
-						top: savedScrollPos,
-						behavior: "auto",
-					});
-				}
-			},
-			{ passive: true },
-		);
 	}
 
 	const twikooObserver = new IntersectionObserver(
