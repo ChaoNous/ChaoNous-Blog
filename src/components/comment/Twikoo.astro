@@ -71,8 +71,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-input),
 	:global(.tk-comments .tk-preview) {
 		background: rgba(128, 128, 128, 0.03) !important;
-		border: 1px solid rgba(128, 128, 128, 0.15) !important;
-		border-radius: 0 !important;
+		border: none !important;
 		color: inherit !important;
 		font-family: inherit !important;
 		transition: all 0.3s ease;
@@ -111,7 +110,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-submit) {
 		background: linear-gradient(135deg, rgba(128, 128, 128, 0.08) 0%, rgba(128, 128, 128, 0.12) 100%) !important;
 		color: inherit !important;
-		border: 1px solid rgba(128, 128, 128, 0.2) !important;
+		border: none !important;
 		border-radius: 0 !important;
 		font-weight: 500 !important;
 		padding: 0.5rem 1.5rem !important;
@@ -128,7 +127,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-preview-btn) {
 		background: rgba(128, 128, 128, 0.05) !important;
 		color: inherit !important;
-		border: 1px solid rgba(128, 128, 128, 0.1) !important;
+		border: none !important;
 		border-radius: 0 !important;
 		transition: all 0.3s;
 		padding: 0.5rem 1rem !important;
@@ -143,10 +142,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-comment) {
 		background: transparent !important;
 		border: none !important;
-		border-left: 2px solid rgba(128, 128, 128, 0.2) !important;
 		border-radius: 0 !important;
 		margin-bottom: 1.5rem !important;
-		padding: 1rem 1rem 1rem 1.25rem !important;
+		padding: 1rem 0 !important;
 		transition: all 0.35s ease;
 		position: relative;
 	}
@@ -154,7 +152,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-comment::before) {
 		content: "";
 		position: absolute;
-		left: -2px;
+		left: 0;
 		top: 0;
 		bottom: 0;
 		width: 2px;
@@ -256,7 +254,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	/* ===== 加载更多按钮 ===== */
 	:global(.tk-comments .tk-expand) {
 		background: rgba(128, 128, 128, 0.03) !important;
-		border: 1px solid rgba(128, 128, 128, 0.15) !important;
+		border: none !important;
 		color: inherit !important;
 		border-radius: 0 !important;
 		transition: all 0.3s;
@@ -274,7 +272,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	/* ===== 表情弹窗 — 与主题一致 ===== */
 	:global(.tk-comments .tk-owo-popup) {
 		background: var(--card-bg, rgba(255, 255, 255, 0.95)) !important;
-		border: 1px solid rgba(128, 128, 128, 0.15) !important;
+		border: none !important;
 		border-radius: 0 !important;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 		backdrop-filter: none;
@@ -286,14 +284,13 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		padding: 0.15em 0.4em !important;
 		border-radius: 0 !important;
 		font-family: inherit !important;
-		border: 1px solid rgba(128, 128, 128, 0.1);
 	}
 
 	:global(.tk-comments .tk-content pre) {
 		background: rgba(128, 128, 128, 0.04) !important;
 		padding: 1rem !important;
 		border-radius: 0 !important;
-		border: 1px solid rgba(128, 128, 128, 0.12) !important;
+		border: none !important;
 	}
 
 	:global(.tk-comments .tk-content blockquote) {
