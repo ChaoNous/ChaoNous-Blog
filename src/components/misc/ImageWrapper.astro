@@ -73,8 +73,8 @@ if (isLocal) {
 		// Generate LQIP: resize to 8px wide, output as tiny base64 WebP
 		if (blur && img) {
 			try {
-				// Use img.sourcePath for direct file access - more reliable than manual path reconstruction
-				const buffer = await sharp(img.sourcePath)
+				// Use img.fsPath for filesystem path
+				const buffer = await sharp((img as any).fsPath)
 					.resize(8, undefined, { fit: "inside" })
 					.webp({ quality: 15 })
 					.toBuffer();

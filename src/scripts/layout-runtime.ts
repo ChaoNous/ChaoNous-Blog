@@ -66,7 +66,7 @@ function throttle(
     const args = arguments;
     const context = this;
     if (!inThrottle) {
-      func.apply(context, args);
+      func.apply(context, [...args]);
       inThrottle = true;
       setTimeout(() => (inThrottle = false), limit);
     }

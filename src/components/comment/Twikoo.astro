@@ -63,7 +63,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		// Push to the very end of <head> so our rules cascade over Vue scoped styles
 		document.head.appendChild(s);
 		s.id = id;
-		const cssVars = getPrimaryColor(); // "var(--primary)" → fallback color
+		getPrimaryColor();
 		s.textContent = `
 		/* == hide unwanted elements — high-specificity selectors to beat scoped Vue styles == */
 		body .tk-header { display: none!important; }

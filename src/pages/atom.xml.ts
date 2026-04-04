@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
   }
 
   const posts = (await getSortedPosts()).filter(
-    (post) => !post.data.encrypted && post.data.draft !== true,
+    (post) => !(post.data as any).encrypted && post.data.draft !== true,
   );
 
   let atomFeed = `<?xml version="1.0" encoding="utf-8"?>

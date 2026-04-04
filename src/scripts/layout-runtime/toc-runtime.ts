@@ -25,9 +25,9 @@ export function clearTocNotReady() {
 }
 
 export function syncDesktopTocVisibility(
-  scrollTop: number,
-  bannerHeight: number,
-  bannerEnabled: boolean,
+  _scrollTop: number,
+  _bannerHeight: number,
+  _bannerEnabled: boolean,
 ) {
   // Banner removed — no longer gate TOC visibility on banner scroll
   const toc = document.getElementById("toc-wrapper");

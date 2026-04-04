@@ -11,7 +11,7 @@ export async function GET(context: APIContext) {
     throw Error("site not set");
   }
 
-  const posts = (await getSortedPosts()).filter((post) => !post.data.encrypted);
+  const posts = (await getSortedPosts()).filter((post) => !(post.data as any).encrypted && !post.data.draft);
 
   const feed: RSSFeedItem[] = [];
 

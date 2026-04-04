@@ -116,4 +116,11 @@ export const en: Translation = {
   // Page Views Stats
   [Key.pageViewsLoading]: "Loading stats...",
   [Key.pageViewsUnavailable]: "Stats unavailable",
+
+  // Navigation
+  [Key.navLinks]: "Links",
+  [Key.navMy]: "My",
+  [Key.navAbout]: "About",
+  [Key.navOthers]: "Others",
+  [Key.diary]: "Diary",
 };

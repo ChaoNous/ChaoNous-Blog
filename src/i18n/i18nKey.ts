@@ -110,6 +110,13 @@ enum I18nKey {
   // 页面访问量统计
   pageViewsLoading = "pageViewsLoading",
   pageViewsUnavailable = "pageViewsUnavailable",
+
+  // 导航栏
+  navLinks = "navLinks",
+  navMy = "navMy",
+  navAbout = "navAbout",
+  navOthers = "navOthers",
+  diary = "diary",
 }
 
 export default I18nKey;

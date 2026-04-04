@@ -24,6 +24,9 @@ interface VitalPayload {
   ts: number;
 }
 
+// Make this file a module so `declare global` is allowed
+export {};
+
 declare global {
   interface Window {
     webVitals?: {

@@ -2,7 +2,7 @@
 export interface PageLifecycleRecord {
   name: string;
   shouldRun?: () => boolean;
-  init: () => (() => void) | void;
+  init: () => Promise<void | (() => void)> | void | (() => void);
   cleanup: (() => void) | null;
 }
 
@@ -15,13 +15,6 @@ export interface PageLifecycleState {
 declare global {
   interface Window {
     __pageLifecycleState?: PageLifecycleState;
-    swup?: {
-      hooks?: {
-        on: (event: string, fn: () => void) => void;
-      };
-    };
-    registerPageScript?: typeof registerPageScript;
-    cleanupPageScripts?: typeof cleanupPageScripts;
   }
 }
 
@@ -115,7 +108,7 @@ function setupPageLifecycle(): void {
 
 export function registerPageScript(
   name: string,
-  options: { shouldRun?: () => boolean; init: () => (() => void) | void },
+  options: { shouldRun?: () => boolean; init: () => Promise<void | (() => void)> | void | (() => void) },
 ): () => void {
   setupPageLifecycle();
 

@@ -1,7 +1,3 @@
-import {
-  BP_DESKTOP,
-} from "../../constants/constants";
-
 export function syncNavbarHomeState(isHomePage: boolean) {
   const navbar = document.getElementById("navbar");
   if (navbar) {
@@ -22,6 +18,6 @@ export function refreshNavbarTransparency() {
   }
 }
 
-export function handleNavbarLinkClick(scrollTop: number) {
+export function handleNavbarLinkClick(_scrollTop: number) {
   // Banner removed, no longer need banner-based logic
 }

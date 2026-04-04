@@ -120,6 +120,7 @@ const {
     visitsText: i18n(I18nKey.profileStatsVisits)
 }}>
     function generateStatsText(pageViews, visits) {
+        // @ts-ignore - pageViewsText and visitsText injected via define:vars at build time
         return `${pageViewsText} ${pageViews} · ${visitsText} ${visits}`;
     }
 

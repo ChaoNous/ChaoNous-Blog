@@ -11,13 +11,13 @@ declare global {
 }
 
 class CodeBlockCollapser {
-  private processedBlocks: WeakSet<Element>;
+  private _processedBlocks = new WeakSet<Element>();
   private observer: MutationObserver | null;
   private isThemeChanging: boolean;
   private debug: boolean;
 
   constructor() {
-    this.processedBlocks = new WeakSet();
+    this.clearProcessedBlocks();
     this.observer = null;
     this.isThemeChanging = false;
     this.debug = false;
@@ -48,7 +48,7 @@ class CodeBlockCollapser {
     });
   }
 
-  private syncWithThemeOptimizer(): void {
+  syncWithThemeOptimizer(): void {
     const codeBlocks = document.querySelectorAll(".expressive-code");
 
     if (window.themeOptimizer) {
@@ -98,14 +98,14 @@ class CodeBlockCollapser {
           }
 
           document.querySelectorAll(".expressive-code").forEach((block) => {
-            block.style.transition = "none";
+            (block as HTMLElement).style.transition = "none";
           });
         } else if (!isTransitioning && this.isThemeChanging) {
           this.isThemeChanging = false;
 
           requestAnimationFrame(() => {
             document.querySelectorAll(".expressive-code").forEach((block) => {
-              block.style.transition = "";
+              (block as HTMLElement).style.transition = "";
             });
 
             setTimeout(() => {
@@ -124,16 +124,16 @@ class CodeBlockCollapser {
     });
   }
 
-  private setupCodeBlocks(): void {
+  setupCodeBlocks(): void {
     requestAnimationFrame(() => {
       const codeBlocks = document.querySelectorAll(".expressive-code");
       this.log(`Found ${codeBlocks.length} code blocks to process`);
 
       codeBlocks.forEach((codeBlock, index) => {
-        if (!this.processedBlocks.has(codeBlock)) {
+        if (!this._processedBlocks.has(codeBlock)) {
           this.log(`Enhancing code block ${index + 1}`);
           this.enhanceCodeBlock(codeBlock);
-          this.processedBlocks.add(codeBlock);
+          this._processedBlocks.add(codeBlock);
         } else {
           this.log(`Code block ${index + 1} already processed`);
         }
@@ -261,7 +261,7 @@ class CodeBlockCollapser {
       }
 
       if (shouldReinit) {
-        clearTimeout(debounceTimer);
+        if (debounceTimer) clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => this.setupCodeBlocks(), 30);
       }
     });
@@ -277,8 +277,11 @@ class CodeBlockCollapser {
       this.observer.disconnect();
       this.observer = null;
     }
+    this.clearProcessedBlocks();
+  }
 
-    this.processedBlocks = new WeakSet();
+  clearProcessedBlocks(): void {
+    this._processedBlocks = new WeakSet();
   }
 
   collapseAll(): void {
@@ -303,7 +306,7 @@ window.codeBlockCollapser = codeBlockCollapser;
 
 registerPageScript("code-collapse", {
   init() {
-    codeBlockCollapser.processedBlocks = new WeakSet();
+    codeBlockCollapser.clearProcessedBlocks();
     setTimeout(() => {
       codeBlockCollapser.setupCodeBlocks();
       codeBlockCollapser.syncWithThemeOptimizer();

@@ -73,6 +73,7 @@ export async function initFancybox(): Promise<void> {
     caption: false,
   };
 
+  // @ts-expect-error Fancybox runtime supports these options (Thumbs, Toolbar, keyboard, preload, etc.) despite stricter types
   Fancybox.bind(albumImagesSelector, {
     ...commonConfig,
     groupAll: true,
@@ -83,6 +84,7 @@ export async function initFancybox(): Promise<void> {
   });
   fancyboxSelectors.push(albumImagesSelector);
 
+  // @ts-expect-error Fancybox runtime supports `source` and other options despite stricter types
   Fancybox.bind(albumLinksSelector, {
     ...commonConfig,
     source: (el: HTMLElement) => {
@@ -91,6 +93,7 @@ export async function initFancybox(): Promise<void> {
   });
   fancyboxSelectors.push(albumLinksSelector);
 
+  // @ts-expect-error Fancybox runtime supports these options despite stricter types
   Fancybox.bind(singleFancyboxSelector, commonConfig);
   fancyboxSelectors.push(singleFancyboxSelector);
 }
@@ -98,7 +101,7 @@ export async function initFancybox(): Promise<void> {
 export function cleanupFancybox(): void {
   if (!Fancybox) return;
   fancyboxSelectors.forEach((selector) => {
-    Fancybox.unbind(selector);
+    if (Fancybox) Fancybox.unbind(selector);
   });
   fancyboxSelectors = [];
 }

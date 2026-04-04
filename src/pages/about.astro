@@ -27,7 +27,7 @@ import ImageWrapper from "../components/misc/ImageWrapper.astro";
 			<section class="about-section">
 				<div class="about-avatar-wrapper">
 					<ImageWrapper
-						src={profileConfig.avatar}
+						src={profileConfig.avatar || ""}
 						alt={profileConfig.name}
 						class="about-avatar"
 						width={128}

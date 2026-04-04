@@ -173,7 +173,7 @@ const headingsJson = JSON.stringify(headings);
 		private content: HTMLElement | null;
 		private headings: HTMLElement[] = [];
 		private tocItems: HTMLElement[] = [];
-		private activeIndex = -1;
+
 		private observer: MutationObserver | null = null;
 		private readonly handleScroll = () => this.updateActive();
 		private readonly handleResize = () => this.updateActive();
@@ -335,7 +335,7 @@ const headingsJson = JSON.stringify(headings);
 		private updateActive() {
 			if (!this.content || this.headings.length === 0) return;
 			const scrollY = window.scrollY;
-			this.activeIndex = updateActiveHeading(this.headings, this.tocItems, scrollY, 150);
+			updateActiveHeading(this.headings, this.tocItems, scrollY, 150);
 		}
 
 		private bindEvents() {

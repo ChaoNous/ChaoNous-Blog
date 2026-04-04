@@ -251,7 +251,7 @@ const tocDepth = siteConfig.toc.depth;
 		private wrapper: HTMLElement | null;
 		private isOpen = false;
 		private observer: MutationObserver | null = null;
-		private headings: HTMLElement[] = [];
+		private headings: Element[] = [];
 		private tocItems: HTMLElement[] = [];
 		private activeIndex = -1;
 		private handleScroll = () => {
@@ -374,7 +374,7 @@ const tocDepth = siteConfig.toc.depth;
 			let html = "";
 			let h1Count = 0;
 
-			headingsData.forEach((heading) => {
+			headingsData.forEach((heading: { depth: number; slug: string; text: string }) => {
 				if (heading.depth >= maxVisibleDepth) return;
 
 				const indent = heading.depth - minLevel;

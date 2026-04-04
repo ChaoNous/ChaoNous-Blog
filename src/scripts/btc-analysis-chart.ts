@@ -1,3 +1,4 @@
+// @ts-ignore - echarts loaded via CDN
 import type { EChartsType } from "echarts";
 import { registerPageScript } from "./page-lifecycle.ts";
 
@@ -25,7 +26,7 @@ interface BtcChartState {
   miniChart: EChartsType | null;
   resizeHandler: (() => void) | null;
   intersectionObserver: IntersectionObserver | null;
-  idleTimer: ReturnType<typeof setTimeout> | null;
+  idleTimer: number | null;
   initPromise: Promise<void | (() => void)> | null;
 }
 
@@ -556,10 +557,7 @@ function scheduleChartInitialization(): void {
       state.intersectionObserver.disconnect();
       state.intersectionObserver = null;
     }
-    if (state.idleTimer) {
-      window.clearTimeout(state.idleTimer);
-      state.idleTimer = null;
-    }
+    state.idleTimer = null;
     void initBtcAnalysisCharts();
   };
 
@@ -576,7 +574,7 @@ function scheduleChartInitialization(): void {
     return;
   }
 
-  state.idleTimer = window.setTimeout(runInit, 300);
+  state.idleTimer = globalThis.setTimeout(runInit, 300) as unknown as number;
 }
 
 registerPageScript("btc-analysis-chart", {

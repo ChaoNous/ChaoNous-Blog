@@ -36,8 +36,7 @@ function scheduleIdleTask(task: () => void, timeout = 3000) {
 }
 
 function syncDesktopViewportState() {
-  const scrollTop = document.documentElement.scrollTop;
-
+  // Banner removed — no longer need scroll detection
   requestAnimationFrame(() => {
     // Banner removed — no longer sync TOC/navbar visibility
   });

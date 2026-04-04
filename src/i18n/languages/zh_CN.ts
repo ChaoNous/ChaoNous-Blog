@@ -106,4 +106,11 @@ export const zh_CN: Translation = {
 
   [Key.pageViewsLoading]: "统计加载中...",
   [Key.pageViewsUnavailable]: "统计不可用",
+
+  // 导航栏
+  [Key.navLinks]: "链接",
+  [Key.navMy]: "我的",
+  [Key.navAbout]: "关于",
+  [Key.navOthers]: "其他",
+  [Key.diary]: "日记",
 };

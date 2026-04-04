@@ -5,6 +5,7 @@ import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
+import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
 import { widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
@@ -16,7 +17,6 @@ const isSidebarTOC = tocMode === "sidebar";
 
 interface Props {
 	title?: string;
-	banner?: string;
 	description?: string;
 	lang?: string;
 	setOGTypeArticle?: boolean;
@@ -27,7 +27,6 @@ interface Props {
 
 const {
 	title,
-	banner,
 	description,
 	lang,
 	setOGTypeArticle,
@@ -91,7 +90,6 @@ const mainContentClass = `
 
 <Layout
 	title={title}
-	banner={banner}
 	description={description}
 	lang={lang}
 	setOGTypeArticle={setOGTypeArticle}
