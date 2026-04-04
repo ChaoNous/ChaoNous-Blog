@@ -72,9 +72,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		body .tk-divider { display: none!important; }
 		body .tk-extras { display: none!important; }
 		body .tk-extra { display: none!important; }
-		body .tk-comment .tk-icon,
-		body .tk-comment .tk-action,
-		body .tk-comment .tk-action-btn,
 		body .tk-comment .tk-like,
 		body .tk-comment .tk-revert-comment { display: none!important; }
 		/* 隐藏字数计数 */
@@ -214,9 +211,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	/** force-hide elements & restyle buttons via setProperty() (bypasses all CSS conflicts) */
 	function enforceInlineStyles(container: HTMLElement) {
-		// remove unwanted DOM nodes（保留 .tk-action-link 回复按钮、保留 .tk-comment .tk-submit-action-icon）
+		// remove unwanted DOM nodes（保留 .tk-action-link 回复按钮 + .tk-submit-action-icon）
 		container.querySelectorAll(
-			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-comment .tk-icon, .tk-comment .tk-action, .tk-comment .tk-like, .tk-comment .tk-action-btn"
+			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-like"
 		).forEach(el => el.remove());
 
 		// footer: remove + force inline style (Vue re-renders, so use setProperty with important)
