@@ -143,6 +143,17 @@ const { remarkPluginFrontmatter } = await render(entry);
 		line-height: 1.04;
 		letter-spacing: -0.03em;
 		text-wrap: balance;
+		transition: background-size 500ms ease-out;
+		background: repeating-linear-gradient(
+			to right,
+			currentColor 0 6px,
+			transparent 6px 12px
+		) no-repeat left bottom / 0 2px;
+	}
+
+	.post-card-title:hover {
+		background-size: 100% 2px;
+		transition: background-size 500ms ease-out;
 	}
 
 	.post-card-excerpt {
