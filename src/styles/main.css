@@ -941,14 +941,14 @@ body {
 }
 
 #navbar > div {
-  background: var(--nav-bg) !important;
-  border-radius: var(--nav-radius) !important;
+  background: transparent !important;
+  border-radius: 0 !important;
   will-change: background, backdrop-filter, box-shadow;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none !important;
   outline: none;
-  backdrop-filter: var(--nav-blur) !important;
-  box-shadow: var(--nav-shadow) !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
   color: var(--navbar-foreground) !important;
 }
 
@@ -968,15 +968,16 @@ body {
 
 #navbar[data-transparent-mode="semi"] > div,
 #navbar[data-transparent-mode="semifull"].scrolled > div {
-  --nav-bg: rgba(255, 255, 255, 0.55);
-  --nav-blur: blur(20px);
-  --nav-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: transparent !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
 }
 
 :root.dark #navbar[data-transparent-mode="semi"] > div,
 :root.dark #navbar[data-transparent-mode="semifull"].scrolled > div {
-  --nav-bg: rgba(0, 0, 0, 0.55);
-  --nav-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 #navbar > div a,
