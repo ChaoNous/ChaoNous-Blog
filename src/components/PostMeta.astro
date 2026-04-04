@@ -54,13 +54,15 @@ const {
         <div class="meta-icon">
             <Icon name="material-symbols:book-2-outline-rounded" class="text-xl"></Icon>
         </div>
-        <div class="flex flex-row flex-nowrap items-center">
-            <a href={getCategoryUrl(category || "")} aria-label={`View all posts in the ${category} category`}
-               class="link-lg transition text-50 font-medium
-                            hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap">
-                {category || i18n(I18nKey.uncategorized)}
-            </a>
-        </div>
+        <a href={getCategoryUrl(category || "")}
+           class="category-link group flex items-center gap-1 transition text-50 font-medium
+                        hover:text-(--primary) dark:hover:text-(--primary) whitespace-nowrap">
+            <span class="flex-shrink min-w-0">{category || i18n(I18nKey.uncategorized)}</span>
+            <Icon
+                name="material-symbols:chevron-right-rounded"
+                class="category-arrow text-lg text-(--primary) opacity-0 translate-x-[-2px] group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0"
+            />
+        </a>
     </div>
 
     <!-- word count -->
@@ -96,6 +98,25 @@ const {
 	.post-meta-group a,
 	.post-meta-group span {
 		opacity: 0.9;
+	}
+
+	.category-link {
+		transition: color 300ms ease-in-out;
+	}
+
+	.category-arrow {
+		opacity: 0;
+		transform: translateX(-2px);
+		transition: opacity 300ms ease-out, transform 300ms ease-out;
+	}
+
+	.category-link:hover .category-arrow {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	.category-link * {
+		transition-duration: 0s;
 	}
 
 	@media (max-width: 767px) {
