@@ -78,7 +78,10 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		body .tk-input-count { display: none!important; }
 		body .tk-preview, body .tk-preview-btn { display: none!important; }
 
-		/* footer — must beat Vue scoped styles */
+		/* reply link — prevent scroll-to-top on click */
+		body .tk-action-link {
+			cursor: pointer;
+		}
 		#twikoo-comment .tk-comments .tk-footer,
 		.twikoo-container .tk-footer,
 		body .tk-footer {
@@ -209,12 +212,26 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		return getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || "#b36147";
 	}
 
+	/** stop .tk-action-link (reply link) from scrolling to top */
+	function disableReplyLinkScroll() {
+		document.querySelectorAll(".tk-action-link[href='#']").forEach(el => {
+			const a = el as HTMLAnchorElement;
+			if (a.getAttribute("data-scroll-prevented")) return;
+			a.addEventListener("click", (e) => e.preventDefault());
+			a.setAttribute("data-scroll-prevented", "true");
+			// also remove the hash anchor behavior
+			a.setAttribute("href", "javascript:void(0)");
+		});
+	}
+
 	/** force-hide elements & restyle buttons via setProperty() (bypasses all CSS conflicts) */
 	function enforceInlineStyles(container: HTMLElement) {
 		// remove unwanted DOM nodes（保留 .tk-action-link 回复按钮 + .tk-submit-action-icon）
 		container.querySelectorAll(
 			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-like"
 		).forEach(el => el.remove());
+		// prevent reply links from scrolling to top
+		disableReplyLinkScroll();
 
 		// footer: remove + force inline style (Vue re-renders, so use setProperty with important)
 		container.querySelectorAll(".tk-footer").forEach(el => {
@@ -248,7 +265,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 				if (m.type === "childList") { needsFix = true; break; }
 				if (m.type === "attributes") {
 					const t = m.target as Element;
-					if (t.matches?.(".tk-footer, .el-button--primary, .tk-send")) {
+					if (t.matches?.(".tk-footer, .el-button--primary, .tk-send, .tk-action-link, .tk-submit")) {
 						needsFix = true; break;
 					}
 				}
