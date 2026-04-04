@@ -74,11 +74,11 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		body .tk-extra { display: none!important; }
 		body .tk-comment .tk-icon,
 		body .tk-comment .tk-action,
-		body .tk-comment .tk-action-link,
 		body .tk-comment .tk-action-btn,
 		body .tk-comment .tk-like,
-		body .tk-comment .tk-revert-comment,
-		body .tk-comment .tk-submit-action-icon { display: none!important; }
+		body .tk-comment .tk-revert-comment { display: none!important; }
+		/* 隐藏字数计数 */
+		body .tk-input-count { display: none!important; }
 		body .tk-preview, body .tk-preview-btn { display: none!important; }
 
 		/* footer — must beat Vue scoped styles */
@@ -171,13 +171,28 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		body .tk-replies {
 			border-top: none!important;
 			margin-top: 1rem!important;
-			margin-left: 2.5rem!important;
+			margin-left: 2rem!important;
+			padding: 0.5rem 0 0.5rem 1rem;
 		}
 		body .tk-reply {
 			border: none!important;
-			border-left: 1px solid rgba(128,128,128,0.15)!important;
 			background: transparent!important;
-			padding-left: 1rem!important;
+			padding: 0.75rem 0!important;
+		}
+		/* 三级及更深层级回复再缩进 */
+		body .tk-replies .tk-replies {
+			margin-left: 1.5rem!important;
+		}
+		/* 回复按钮样式 */
+		body .tk-action-link {
+			opacity: 0.5!important;
+			transition: opacity 0.2s!important;
+			color: inherit!important;
+			text-decoration: none!important;
+		}
+		body .tk-action-link:hover {
+			opacity: 1!important;
+			color: var(--primary)!important;
 		}
 		body .tk-expand {
 			background: rgba(128,128,128,0.03)!important;
@@ -199,9 +214,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	/** force-hide elements & restyle buttons via setProperty() (bypasses all CSS conflicts) */
 	function enforceInlineStyles(container: HTMLElement) {
-		// remove unwanted DOM nodes
+		// remove unwanted DOM nodes（保留 .tk-action-link 回复按钮、保留 .tk-comment .tk-submit-action-icon）
 		container.querySelectorAll(
-			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-comment .tk-icon, .tk-comment .tk-action, .tk-comment .tk-action-link, .tk-comment .tk-like, .tk-comment .tk-submit-action-icon, .tk-comment .tk-action-btn"
+			".tk-header, .tk-time, .tk-comments-title, .tk-divider, .tk-extras, .tk-extra, .tk-preview, .tk-preview-btn, .tk-revert-comment, .tk-comment .tk-icon, .tk-comment .tk-action, .tk-comment .tk-like, .tk-comment .tk-action-btn"
 		).forEach(el => el.remove());
 
 		// footer: remove + force inline style (Vue re-renders, so use setProperty with important)
