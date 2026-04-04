@@ -113,7 +113,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 			<a
 				href={url}
 				aria-label={title}
-				class="post-card-enter !hidden md:flex! btn-regular w-13 absolute right-4 top-4 bottom-4 rounded-xl bg-(--enter-btn-bg) hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95"
+				class="post-card-enter !hidden md:flex! btn-regular w-13 h-13 absolute right-4 top-4 bottom-4 my-auto rounded-xl bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) active:scale-95 transition-colors duration-150"
 			>
 				<Icon
 					name="material-symbols:chevron-right-rounded"
@@ -166,18 +166,6 @@ const { remarkPluginFrontmatter } = await render(entry);
 		filter: saturate(1.03) contrast(1.02);
 	}
 
-	.post-card-enter {
-		opacity: 0.82;
-		border: 1px solid var(--line-divider) !important;
-		outline: 1px solid var(--line-divider);
-		outline-offset: -1px;
-	}
-
-	.post-card-enter:hover {
-		opacity: 1;
-		border-color: var(--primary) !important;
-		outline-color: var(--primary);
-	}
 
 	@media (max-width: 767px) {
 		.post-card-title {
@@ -189,6 +177,14 @@ const { remarkPluginFrontmatter } = await render(entry);
 		.post-card-excerpt {
 			font-size: 1rem;
 			line-height: 1.72;
+		}
+
+		.post-card-enter {
+			opacity: 0.82;
+		}
+
+		.post-card-enter:hover {
+			opacity: 1;
 		}
 	}
 </style>
