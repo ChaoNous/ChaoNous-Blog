@@ -446,21 +446,16 @@ body::-webkit-scrollbar {
 
   .btn-plain {
     @apply transition-colors duration-150 relative flex items-center justify-center bg-none text-black hover:text-(--primary) dark:text-white dark:hover:text-(--primary);
-    &:not(.scale-animation) {
-      @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active);
-    }
-    &.scale-animation {
-      background: transparent;
-      transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
-    }
-    &.scale-animation:hover {
-      background-color: color-mix(in oklch, var(--primary) 6%, transparent);
-      color: var(--primary);
-    }
-    &.scale-animation:active {
-      background-color: color-mix(in oklch, var(--primary) 12%, transparent);
-      color: var(--primary);
-    }
+    background: transparent;
+    transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  .btn-plain:hover {
+    background-color: color-mix(in oklch, var(--primary) 6%, transparent);
+    color: var(--primary);
+  }
+  .btn-plain:active {
+    background-color: color-mix(in oklch, var(--primary) 12%, transparent);
+    color: var(--primary);
   }
 
   .btn-regular {
