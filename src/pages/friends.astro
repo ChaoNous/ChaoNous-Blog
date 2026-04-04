@@ -230,7 +230,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 	.friend-card:hover .card-name { color: var(--primary); }
 	.card-desc {
 		font-size: 1rem;
-		color: rgba(0, 0, 0, 0.5);
+		color: color-mix(in oklch, var(--deep-text) 50%, transparent);
 		margin: 0;
 		line-height: 1.4;
 		white-space: nowrap;
@@ -269,7 +269,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 	}
 	.apply-icon-wrapper svg { width: 1.5rem; height: 1.5rem; }
 	.apply-title { font-size: 1.25rem; font-weight: 600; color: var(--deep-text); margin: 0; }
-	.apply-subtitle { font-size: 1rem; color: rgba(0, 0, 0, 0.5); margin: 0.25rem 0 0; }
+	.apply-subtitle { font-size: 1rem; color: color-mix(in oklch, var(--deep-text) 50%, transparent); margin: 0.25rem 0 0; }
 	.apply-body { display: flex; flex-direction: column; gap: 1.5rem; }
 
 	.quote-card {
@@ -293,7 +293,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 		z-index: 1;
 		margin: 0;
 		font-size: 1.05rem;
-		color: rgba(0, 0, 0, 0.6);
+		color: color-mix(in oklch, var(--deep-text) 50%, transparent);
 		line-height: 1.6;
 	}
 	.quote-card p:first-of-type { font-weight: 500; color: var(--deep-text); margin-bottom: 0.25rem; }
@@ -321,7 +321,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 	}
 	.step-icon svg { width: 1.25rem; height: 1.25rem; }
 	.step-card h4 { font-size: 1.05rem; font-weight: 600; color: var(--deep-text); margin: 0 0 0.25rem; }
-	.step-card p { font-size: 1rem; color: rgba(0, 0, 0, 0.5); margin: 0; }
+	.step-card p { font-size: 1rem; color: color-mix(in oklch, var(--deep-text) 50%, transparent); margin: 0; }
 
 	.format-section { background: var(--card-bg); border: none; border-radius: 0.75rem; overflow: hidden; }
 	.format-header {
@@ -331,7 +331,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 		padding: 0.75rem 1rem;
 		background: rgba(0, 0, 0, 0.03);
 	}
-	.format-label { font-size: 1rem; font-weight: 600; color: rgba(0, 0, 0, 0.6); }
+	.format-label { font-size: 1rem; font-weight: 600; color: color-mix(in oklch, var(--deep-text) 50%, transparent); }
 	.format-copy-btn {
 		display: inline-flex;
 		align-items: center;
@@ -340,7 +340,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 		background: var(--card-bg);
 		border: none;
 		border-radius: 0.375rem;
-		color: rgba(0, 0, 0, 0.5);
+		color: color-mix(in oklch, var(--deep-text) 50%, transparent);
 		font-size: 1rem;
 		cursor: pointer;
 		transition: all 0.2s ease;
@@ -348,7 +348,7 @@ const subtitle = i18n(I18nKey.friendsSubtitle);
 	.format-copy-btn:hover { color: var(--primary); }
 	.format-copy-btn svg { width: 0.875rem; height: 0.875rem; }
 	.format-code { padding: 1rem; margin: 0; overflow-x: auto; }
-	.format-code code { font-family: var(--font-content); font-size: 1rem; color: rgba(0, 0, 0, 0.7); line-height: 1.6; }
+	.format-code code { font-family: var(--font-content); font-size: 1rem; color: color-mix(in oklch, var(--deep-text) 70%, transparent); line-height: 1.6; }
 
 	.apply-cta {
 		display: flex;
