@@ -451,6 +451,14 @@ body::-webkit-scrollbar {
     }
     &.scale-animation {
       @apply expand-animation;
+      background: transparent;
+      transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+    }
+    &.scale-animation:hover {
+      background-color: color-mix(in oklch, var(--primary) 6%, transparent);
+    }
+    &.scale-animation:active {
+      background-color: color-mix(in oklch, var(--primary) 12%, transparent);
     }
   }
 
