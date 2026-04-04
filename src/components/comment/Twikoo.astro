@@ -38,8 +38,34 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 </div>
 
 <style>
+	.twikoo-wrapper {
+		position: relative;
+	}
+
 	.twikoo-container {
 		min-height: 200px;
+		padding: 1.25rem 1rem;
+		background:
+			radial-gradient(ellipse 75% 65% at 50% 45%,
+				rgba(248, 244, 230, 0.55) 0%,
+				rgba(242, 235, 218, 0.35) 60%,
+				transparent 100%
+			),
+			linear-gradient(180deg, rgba(245, 240, 225, 0.08) 0%, transparent 100%);
+		border-radius: var(--radius-large);
+		position: relative;
+	}
+
+	.twikoo-container::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		border-radius: var(--radius-large);
+		background:
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.03' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E") center/300px 300px;
+		opacity: 0.03;
+		mix-blend-mode: multiply;
 	}
 
 	:global(.tk-comments) {
@@ -71,11 +97,12 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-input),
 	:global(.tk-comments .tk-preview) {
 		background: rgba(128, 128, 128, 0.03) !important;
-		border: none !important;
+		border: 1px solid var(--line-divider) !important;
 		color: inherit !important;
 		font-family: inherit !important;
 		transition: all 0.3s ease;
 		padding: 0.875rem 1rem !important;
+		border-radius: 0.375rem !important;
 	}
 
 	:global(.tk-comments .tk-input::placeholder) {
@@ -86,7 +113,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 	:global(.tk-comments .tk-input:focus) {
 		border-color: var(--primary) !important;
 		background: rgba(128, 128, 128, 0.02) !important;
-		box-shadow: 0 0 0 3px rgba(128, 128, 128, 0.05) !important;
+		box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 15%, transparent) !important;
 	}
 
 	:global(.tk-comments .tk-actions) {
@@ -111,7 +138,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		background: linear-gradient(135deg, rgba(128, 128, 128, 0.08) 0%, rgba(128, 128, 128, 0.12) 100%) !important;
 		color: inherit !important;
 		border: none !important;
-		border-radius: 0 !important;
+		border-radius: 0.375rem !important;
 		font-weight: 500 !important;
 		padding: 0.5rem 1.5rem !important;
 		transition: all 0.3s ease;
@@ -128,7 +155,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		background: rgba(128, 128, 128, 0.05) !important;
 		color: inherit !important;
 		border: none !important;
-		border-radius: 0 !important;
+		border-radius: 0.375rem !important;
 		transition: all 0.3s;
 		padding: 0.5rem 1rem !important;
 	}
@@ -271,9 +298,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	/* ===== 表情弹窗 — 与主题一致 ===== */
 	:global(.tk-comments .tk-owo-popup) {
-		background: var(--card-bg, rgba(255, 255, 255, 0.95)) !important;
+		background: var(--card-bg) !important;
 		border: none !important;
-		border-radius: 0 !important;
+		border-radius: var(--radius-large) !important;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 		backdrop-filter: none;
 	}
@@ -303,12 +330,6 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		font-style: italic;
 	}
 
-	/* ===== 加载中与元信息 ===== */
-	:global(.tk-loading) {
-		color: inherit !important;
-		opacity: 0.4;
-	}
-
 	/* ===== 评论计数标题 ===== */
 	:global(.tk-comments-title) {
 		color: inherit !important;
@@ -326,13 +347,32 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		outline: none !important;
 	}
 
-	/* ===== 暗色模式微调 ===== */
-	:global(.dark .tk-comments .tk-comment) {
-		border-left-color: rgba(128, 128, 128, 0.3) !important;
+	/* ===== 分割线 — 主题化 ===== */
+	:global(.tk-comments .tk-divider) {
+		background: linear-gradient(90deg,
+			transparent 0%,
+			var(--line-divider) 20%,
+			var(--line-divider) 80%,
+			transparent 100%
+		) !important;
+		border: none !important;
+		height: 1px !important;
 	}
 
-	:global(.dark .tk-comments .tk-submit) {
-		background: linear-gradient(135deg, rgba(128, 128, 128, 0.12) 0%, rgba(128, 128, 128, 0.18) 100%) !important;
+	/* ===== 暗色模式微调 ===== */
+	:global(.dark .twikoo-container) {
+		background:
+			radial-gradient(ellipse 75% 65% at 50% 45%,
+				rgba(60, 50, 42, 0.5) 0%,
+				rgba(48, 40, 33, 0.35) 60%,
+				transparent 100%
+			),
+			linear-gradient(180deg, rgba(55, 45, 38, 0.08) 0%, transparent 100%);
+	}
+
+	:global(.dark .twikoo-container::before) {
+		mix-blend-mode: screen;
+		opacity: 0.06;
 	}
 </style>
 
