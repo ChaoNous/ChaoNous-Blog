@@ -2,7 +2,7 @@
 title: 景德镇一日印象：御窑、陶博馆与陶溪川
 published: 2026-03-16
 description: 围绕陶阳里历史文化旅游区、景德镇中国陶瓷博物馆与陶溪川文创街区的一次简短记录。
-image: "/assets/posts/jingdezhen/jingdezhen-1.webp"
+image: "../../../src/assets/posts/jingdezhen/jingdezhen-1.webp"
 tags: [旅行, 江西, 景德镇, 陶瓷, 博物馆]
 category: 游记
 ---

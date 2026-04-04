@@ -12,6 +12,7 @@ interface Props {
 	width?: number;
 	height?: number;
 	widths?: number[];
+	sizes?: string;
 	fetchpriority?: "high" | "low" | "auto";
 	decoding?: "async" | "sync" | "auto";
 	aspectRatio?: string;
@@ -31,6 +32,7 @@ const {
 	width,
 	height,
 	widths,
+	sizes,
 	fetchpriority = "auto",
 	decoding = "async",
 	aspectRatio,
@@ -127,9 +129,10 @@ const referrerPolicy = !isLocal && isBilibiliImage ? "no-referrer" : undefined;
 				widths={
 					widths ||
 					(img.width > 800
-						? [400, 800, 1200, 1600, img.width]
+						? [400, 640, 768, 1024, img.width]
 						: undefined)
 				}
+				sizes={sizes}
 				fetchpriority={fetchpriority}
 				decoding={decoding}
 				class:list={[{ "relative z-10": blurDataURL }]}

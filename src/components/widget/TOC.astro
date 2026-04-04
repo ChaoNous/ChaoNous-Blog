@@ -76,18 +76,19 @@ const className = Astro.props.class;
 			if (min > max) {
 				this.activeIndicator?.setAttribute("style", `opacity: 0`);
 			} else {
-				let parentOffset = this.tocEl?.getBoundingClientRect().top || 0;
-				let scrollOffset = this.tocEl?.scrollTop || 0;
+				const tocEl = this.tocEl;
+				const activeIndicator = this.activeIndicator;
 				const minEntry = this.tocEntries[min];
 				const maxEntry = this.tocEntries[max];
-				if (minEntry && maxEntry) {
-					let top = minEntry.getBoundingClientRect().top - parentOffset + scrollOffset;
-					let bottom = maxEntry.getBoundingClientRect().bottom - parentOffset + scrollOffset;
-					this.activeIndicator?.setAttribute(
-						"style",
-						`top: ${top}px; height: ${bottom - top}px`,
-					);
-				}
+				// Read all layout values before writing anything
+				const parentOffset = tocEl?.getBoundingClientRect().top ?? 0;
+				const scrollOffset = tocEl?.scrollTop ?? 0;
+				const top = minEntry ? minEntry.getBoundingClientRect().top - parentOffset + scrollOffset : 0;
+				const bottom = maxEntry ? maxEntry.getBoundingClientRect().bottom - parentOffset + scrollOffset : 0;
+				activeIndicator?.setAttribute(
+					"style",
+					`top: ${top}px; height: ${bottom - top}px`,
+				);
 			}
 		};
 
