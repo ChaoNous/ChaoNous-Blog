@@ -168,10 +168,15 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 	.post-card-enter {
 		opacity: 0.82;
+		border: 1px solid var(--line-divider) !important;
+		outline: 1px solid var(--line-divider);
+		outline-offset: -1px;
 	}
 
 	.post-card-enter:hover {
 		opacity: 1;
+		border-color: var(--primary) !important;
+		outline-color: var(--primary);
 	}
 
 	@media (max-width: 767px) {
