@@ -4,17 +4,6 @@ import {
 	type ResolvedBannerImages,
 } from "../../utils/banner-utils";
 import { url } from "../../utils/url-utils";
-import { getImage } from "astro:assets";
-
-// Desktop banner images
-import desktopBanner1 from "../../assets/desktop-banner/banner1.webp";
-import desktopBanner2 from "../../assets/desktop-banner/banner2.webp";
-import desktopBanner3 from "../../assets/desktop-banner/banner3.webp";
-
-// Mobile banner images
-import mobileBanner1 from "../../assets/mobile-banner/banner1.webp";
-import mobileBanner2 from "../../assets/mobile-banner/banner2.webp";
-import mobileBanner3 from "../../assets/mobile-banner/banner3.webp";
 
 interface Props {
 	bannerImages: ResolvedBannerImages;
@@ -34,85 +23,10 @@ const desktopImages = normalizeBannerSources(bannerImages.desktop);
 const mobileImages = normalizeBannerSources(bannerImages.mobile);
 const count = Math.max(desktopImages.length, mobileImages.length);
 
-// Map config string paths to imported image modules
-const desktopImageMap: Record<string, ImageMetadata> = {
-	"/assets/desktop-banner/banner1.webp": desktopBanner1,
-	"/assets/desktop-banner/banner2.webp": desktopBanner2,
-	"/assets/desktop-banner/banner3.webp": desktopBanner3,
-};
-
-const mobileImageMap: Record<string, ImageMetadata> = {
-	"/assets/mobile-banner/banner1.webp": mobileBanner1,
-	"/assets/mobile-banner/banner2.webp": mobileBanner2,
-	"/assets/mobile-banner/banner3.webp": mobileBanner3,
-};
-
-// Image sizes for srcset (width in pixels)
-const desktopSizes = [800, 1200, 1600];
-const mobileSizes = [480, 640, 768];
-
-// Build optimized image with srcset
-async function getOptimizedImage(
-	imageMap: Record<string, ImageMetadata>,
-	configPath: string,
-	sizes: number[],
-) {
-	const imported = imageMap[configPath];
-	if (!imported) {
-		// Fallback to original URL if image not found in map
-		return { src: url(configPath), srcset: undefined, width: undefined };
-	}
-
-	const widthToUse = Math.min(imported.width, Math.max(...sizes));
-	const validSizes = sizes.filter((s) => s <= imported.width);
-	if (validSizes.length === 0) {
-		validSizes.push(widthToUse);
-	}
-
-	const srcsetParts: string[] = [];
-	for (const size of validSizes) {
-		const optimized = await getImage({
-			src: imported,
-			width: size,
-			format: "webp",
-			quality: 75,
-		});
-		srcsetParts.push(`${optimized.src} ${size}w`);
-	}
-
-	const fallback = await getImage({
-		src: imported,
-		width: widthToUse,
-		format: "webp",
-		quality: 75,
-	});
-
-	return {
-		src: fallback.src,
-		srcset: srcsetParts.join(", "),
-		width: widthToUse,
-	};
-}
-
-// Pre-compute all optimized images
-const desktopOptimized: Awaited<ReturnType<typeof getOptimizedImage>>[] = [];
-const mobileOptimized: Awaited<ReturnType<typeof getOptimizedImage>>[] = [];
-
-for (let i = 0; i < count; i++) {
-	const desktopSrc = desktopImages[i] || desktopImages[0];
-	const mobileSrc = mobileImages[i] || mobileImages[0];
-	desktopOptimized.push(
-		await getOptimizedImage(desktopImageMap, desktopSrc, desktopSizes),
-	);
-	mobileOptimized.push(
-		await getOptimizedImage(mobileImageMap, mobileSrc, mobileSizes),
-	);
-}
-
-// Object-position style
+// 构建图片样式
 const imageStyle = `object-position: ${position}`;
 
-// First image index for LCP optimization
+// 首屏图片索引（用于 LCP 优化）
 const firstImageIndex = 0;
 ---
 
@@ -120,8 +34,9 @@ const firstImageIndex = 0;
 	<ul id="banner-list" class="h-full w-full relative overflow-hidden">
 		{
 			Array.from({ length: count }).map((_, index) => {
-				const desktop = desktopOptimized[index];
-				const mobile = mobileOptimized[index];
+				const desktopSrc = desktopImages[index] || desktopImages[0];
+				const mobileSrc = mobileImages[index] || mobileImages[0];
+				// 首屏图片使用高优先级加载，其余图片延迟加载
 				const isFirstImage = index === firstImageIndex;
 				const imageLoading = isFirstImage ? "eager" : "lazy";
 				const imagePriority = isFirstImage ? "high" : "low";
@@ -137,32 +52,27 @@ const firstImageIndex = 0;
 						data-index={index}
 						style={isFirstImage ? "z-index: 2;" : "z-index: 1;"}
 					>
+						{/* 使用 picture 元素让浏览器只加载匹配的图片 */}
 						<picture class="absolute inset-0 block h-full w-full">
-							{/* Mobile image srcset */}
-							{mobile.srcset && (
-								<source
-									srcset={mobile.srcset}
-									sizes="(max-width: 767px) 100vw"
-									media="(max-width: 767px)"
-								/>
-							)}
-							{/* Desktop image srcset */}
-							{desktop.srcset && (
-								<source
-									srcset={desktop.srcset}
-									sizes="(max-width: 1279px) 80vw, 100vw"
-								/>
-							)}
-							{/* Fallback img with Astro-optimized src */}
+							{/* 移动端图片源：仅在小屏幕下加载 */}
+							<source
+								srcset={url(mobileSrc)}
+								media="(max-width: 767px)"
+							/>
+							{/* 默认使用桌面端图片 - 首屏图片使用 fetchpriority="high" 优化 LCP */}
 							<img
-								src={desktop.src}
+								src={url(desktopSrc)}
 								alt={`Banner image ${index + 1}`}
 								class="w-full h-full object-cover"
 								style={imageStyle}
+								sizes={isFirstImage
+									? "(max-width: 767px) 100vw, 100vw"
+									: "(max-width: 767px) 768px, 1920px"}
 								loading={imageLoading}
 								fetchpriority={imagePriority}
 								decoding={isFirstImage ? "sync" : "async"}
 								draggable="false"
+								{...(isFirstImage && { fetchpriority: "high" })}
 							/>
 						</picture>
 					</li>
@@ -215,6 +125,7 @@ const firstImageIndex = 0;
 				const img = item.querySelector("img");
 				if (!img || img.dataset.bannerPreloaded === "true") return;
 
+				// 触发浏览器预加载（通过访问 src）
 				const preloadSrc = img.currentSrc || img.src;
 				if (!preloadSrc) return;
 
