@@ -31,9 +31,6 @@ const { remarkPluginFrontmatter } = await render(entry);
 		className,
 	]}
 	style={style}
-	role="link"
-	tabindex="0"
-	data-card-link={url}
 >
 	<div
 		class="post-card-hover flex flex-col-reverse md:flex-col w-full h-full rounded-(--radius-large) overflow-hidden relative"
@@ -50,7 +47,6 @@ const { remarkPluginFrontmatter } = await render(entry);
 			<a
 				href={url}
 				class="post-card-title-link w-full block font-black mb-3 text-3xl text-100"
-				tabindex="-1"
 			>
 				<span class="inline-flex items-center gap-2 w-full">
 					{
@@ -64,7 +60,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 					<span class="flex-shrink min-w-0">{title}</span>
 					<Icon
 						name="material-symbols:chevron-right-rounded"
-						class="title-arrow text-3xl text-(--primary) opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0"
+						class="post-card-title-arrow text-3xl text-(--primary) flex-shrink-0"
 					/>
 				</span>
 			</a>
@@ -133,8 +129,6 @@ const { remarkPluginFrontmatter } = await render(entry);
 				</a>
 			)
 		}
-
-		<span class="ripple"></span>
 	</div>
 </div>
 
@@ -168,20 +162,23 @@ const { remarkPluginFrontmatter } = await render(entry);
 		gap: 0.55rem;
 	}
 
-	.post-card-title {
-		font-size: clamp(2rem, 2.3vw, 3rem);
-		line-height: 1.04;
-		letter-spacing: -0.03em;
-		text-wrap: balance;
-	}
-
 	.post-card-title-link {
 		transition: color 300ms ease-in-out;
-		cursor: pointer;
 	}
 
 	.post-card-title-link:hover {
 		color: var(--primary);
+	}
+
+	.post-card-title-arrow {
+		opacity: 0;
+		transform: translateX(-4px);
+		transition: opacity 300ms ease-out, transform 300ms ease-out;
+	}
+
+	.post-card-title-link:hover .post-card-title-arrow {
+		opacity: 1;
+		transform: translateX(0);
 	}
 
 	.post-card-excerpt {
@@ -226,77 +223,4 @@ const { remarkPluginFrontmatter } = await render(entry);
 			opacity: 1;
 		}
 	}
-
-	.ripple {
-		position: absolute;
-		border-radius: 50%;
-		background: var(--primary);
-		opacity: 0;
-		pointer-events: none;
-		z-index: 999;
-		transform: scale(0);
-	}
-
-	.ripple.animate {
-		animation: rippleEffect 600ms ease-out forwards;
-	}
-
-	@keyframes rippleEffect {
-		0% {
-			opacity: 0.35;
-			transform: scale(0);
-		}
-		100% {
-			opacity: 0;
-			transform: scale(1);
-		}
-	}
 </style>
-
-<script>
-	function createRipple(event: MouseEvent) {
-		const card = (event.target as HTMLElement)
-			.closest("[data-card-link]") as HTMLElement;
-		if (!card) return;
-
-		const ripple = card.querySelector(".ripple") as HTMLElement;
-		if (!ripple) return;
-
-		const rect = card.getBoundingClientRect();
-		const x = event.clientX - rect.left;
-		const y = event.clientY - rect.top;
-		const size = Math.max(rect.width, rect.height) * 2;
-
-		ripple.style.width = ripple.style.height = size + "px";
-		ripple.style.left = x - size / 2 + "px";
-		ripple.style.top = y - size / 2 + "px";
-
-		ripple.classList.remove("animate");
-		void 0;
-		ripple.classList.add("animate");
-	}
-
-	document.addEventListener("click", (e) => {
-		const card = (e.target as HTMLElement).closest("[data-card-link]") as HTMLElement;
-		if (!card) return;
-
-		const linkEl = (e.target as HTMLElement).closest("a") as HTMLAnchorElement;
-		if (linkEl) return;
-
-		e.preventDefault();
-		createRipple(e);
-		const link = card.getAttribute("data-card-link");
-		if (link) window.location.href = link;
-	});
-
-	document.addEventListener("keydown", (e) => {
-		if (e.key === "Enter" || e.key === " ") {
-			const card = (e.target as HTMLElement).closest("[data-card-link]") as HTMLElement;
-			if (card && document.activeElement === card) {
-				e.preventDefault();
-				const link = card.getAttribute("data-card-link");
-				if (link) window.location.href = link;
-			}
-		}
-	});
-</script>
