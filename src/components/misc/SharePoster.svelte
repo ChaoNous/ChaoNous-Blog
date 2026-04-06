@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onDestroy } from "svelte";
 	import Icon from "@iconify/svelte";
 	import QRCode from "qrcode";
 	import I18nKey from "../../i18n/i18nKey";
@@ -18,7 +19,7 @@
 	let generating = false;
 	let themeColor = "#558e88";
 
-	// 生成分享海报
+	// ??????
 	const SCALE = 2;
 	const WIDTH = 425 * SCALE;
 	const PADDING = 24 * SCALE;
@@ -138,12 +139,12 @@
 			canvas.width = WIDTH;
 			canvas.height = canvasHeight;
 
-			// 背景
+			// ??
 			ctx.fillStyle = "#ffffff";
 			drawRoundedRect(ctx, 0, 0, canvas.width, canvas.height, 16 * SCALE);
 			ctx.fill();
 
-			// 装饰圆
+			// ???
 			ctx.save();
 			ctx.globalAlpha = 0.1;
 			ctx.fillStyle = themeColor;
@@ -155,7 +156,7 @@
 			ctx.fill();
 			ctx.restore();
 
-			// 封面图
+			// ???
 			if (coverImg) {
 				const imgRatio = coverImg.width / coverImg.height;
 				const targetRatio = WIDTH / coverHeight;
@@ -181,7 +182,7 @@
 				ctx.restore();
 			}
 
-			// 日期徽章
+			// ????
 			const dateObj = parseDate(pubDate);
 			if (dateObj) {
 				const dateBoxW = 60 * SCALE;
@@ -210,7 +211,7 @@
 				ctx.fillText(`${dateObj.year} ${dateObj.month}`, dateBoxX + dateBoxW / 2, dateBoxY + 51 * SCALE);
 			}
 
-			// 标题
+			// ??
 			let drawY = coverHeight + PADDING;
 			ctx.textBaseline = "top";
 			ctx.textAlign = "left";
@@ -222,7 +223,7 @@
 			}
 			drawY += 16 * SCALE - (titleLineHeight - titleFontSize);
 
-			// 描述
+			// ??
 			if (description) {
 				ctx.fillStyle = "#e5e7eb";
 				drawRoundedRect(ctx, PADDING, drawY - 8 * SCALE, 4 * SCALE, descHeight + 8 * SCALE, 2 * SCALE);
@@ -239,7 +240,7 @@
 				drawY += 8 * SCALE;
 			}
 
-			// 分隔线
+			// ???
 			drawY += 24 * SCALE;
 			ctx.beginPath();
 			ctx.strokeStyle = "#f3f4f6";
@@ -249,7 +250,7 @@
 			ctx.stroke();
 			drawY += 16 * SCALE;
 
-			// 页脚
+			// ??
 			const footerY = drawY;
 			const qrX = WIDTH - PADDING - qrSize;
 
@@ -372,6 +373,16 @@
 			},
 		};
 	}
+
+	$: if (typeof document !== "undefined") {
+		document.body.style.overflow = showPoster ? "hidden" : "";
+	}
+
+	onDestroy(() => {
+		if (typeof document !== "undefined") {
+			document.body.style.overflow = "";
+		}
+	});
 </script>
 
 <button
@@ -382,9 +393,9 @@
 	<span>{i18n(I18nKey.shareArticle)}</span>
 </button>
 
-<!-- 海报弹窗 -->
+<!-- ???? -->
 {#if showPoster}
-	<div class="poster-modal" on:click={closeModal}>
+	<div class="poster-modal" use:portal on:click={closeModal}>
 		<div class="poster-content" on:click|stopPropagation>
 			<button class="close-btn" on:click={closeModal}>
 				<Icon icon="material-symbols:close" width="20" height="20" />
@@ -443,7 +454,7 @@
 		transform: scale(0.98);
 	}
 
-	/* 海报弹窗 */
+	/* ???? */
 	.poster-modal {
 		position: fixed;
 		inset: 0;
