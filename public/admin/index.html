@@ -6,12 +6,18 @@
     (function(){
         const pwd = 'chaonous1.';
         if (sessionStorage.getItem('admin_pwd') !== pwd) {
-            const input = prompt('CNC 站务身份验证\n请输入管理密码:');
+            const input = prompt('CNC 站长无感登录验证\n请输入管理密码：');
             if (input === pwd) {
                 sessionStorage.setItem('admin_pwd', input);
+                localStorage.setItem('cwd_admin_api_base_url', 'https://cwd-api.198665x.workers.dev');
+                localStorage.setItem('cwd_admin_token', 'chaonous_static_token_v1');
             } else {
                 location.href = '/';
             }
+        } else {
+            // Already validated in this session, ensure config is populated
+            localStorage.setItem('cwd_admin_api_base_url', 'https://cwd-api.198665x.workers.dev');
+            localStorage.setItem('cwd_admin_token', 'chaonous_static_token_v1');
         }
     })();
 </script>
