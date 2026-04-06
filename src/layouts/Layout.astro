@@ -24,10 +24,12 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	postSlug?: string;
+	canonicalUrl?: string;
 }
 
 let { title, description, lang, setOGTypeArticle, postSlug } =
 	Astro.props;
+const canonicalUrl = Astro.props.canonicalUrl || Astro.url.toString();
 
 const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
 
@@ -66,12 +68,12 @@ const siteLang = lang.replace("_", "-");
 		<title>{pageTitle}</title>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="canonical" href={Astro.url} />
+		<link rel="canonical" href={canonicalUrl} />
 		<meta name="description" content={description || pageTitle} />
 		<meta name="google" content="notranslate" />
 		<meta name="googlebot" content="notranslate" />
 
-		<!-- DNS 预解析和预连接优化 -->
+		<!-- DNS 棰勮В鏋愬拰棰勮繛鎺ヤ紭鍖?-->
 		<link rel="dns-prefetch" href="https://code.iconify.design" />
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
 		<link rel="preconnect" href="https://api.i-meto.com" crossorigin />
@@ -79,7 +81,7 @@ const siteLang = lang.replace("_", "-");
 			<link rel="preconnect" href={commentConfig.envId} crossorigin />
 		)}
 
-		<!-- 关键页面 prefetch（仅首页加载时启用） -->
+		<!-- 鍏抽敭椤甸潰 prefetch锛堜粎棣栭〉鍔犺浇鏃跺惎鐢級 -->
 		{isHomePage && (
 			<>
 				<link rel="prefetch" href={url("/archive/")} />
@@ -98,7 +100,7 @@ const siteLang = lang.replace("_", "-");
 		}
 		<meta name="author" content={profileConfig.name} />
 		<meta property="og:site_name" content={siteConfig.title} />
-		<meta property="og:url" content={Astro.url} />
+		<meta property="og:url" content={canonicalUrl} />
 		<meta property="og:title" content={pageTitle} />
 		<meta property="og:description" content={description || pageTitle} />
 		{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
@@ -113,7 +115,7 @@ const siteLang = lang.replace("_", "-");
 			)
 		}
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta property="twitter:url" content={Astro.url} />
+		<meta property="twitter:url" content={canonicalUrl} />
 		<meta name="twitter:title" content={pageTitle} />
 		<meta name="twitter:description" content={description || pageTitle} />
 		{ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
@@ -252,7 +254,7 @@ const siteLang = lang.replace("_", "-");
 			href={`${Astro.site}rss.xml`}
 		/>
 
-		<!-- 结构化数据 -->
+		<!-- 缁撴瀯鍖栨暟鎹?-->
 		<JsonLd type={setOGTypeArticle ? "article" : "website"} />
 	</head>
 	<body
@@ -262,13 +264,13 @@ const siteLang = lang.replace("_", "-");
 		<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
 			<defs>
 				<filter id="silk-weave" color-interpolation-filters="sRGB">
-					<!-- 经线: 高频水平 × 低频垂直 → 垂直丝线 -->
+					<!-- 缁忕嚎: 楂橀姘村钩 脳 浣庨鍨傜洿 鈫?鍨傜洿涓濈嚎 -->
 					<feTurbulence type="fractalNoise" baseFrequency="0.5 0.02" numOctaves="3" seed="1" result="warp" />
-					<!-- 纬线: 低频水平 × 高频垂直 → 水平丝线 -->
+					<!-- 绾嚎: 浣庨姘村钩 脳 楂橀鍨傜洿 鈫?姘村钩涓濈嚎 -->
 					<feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="3" seed="2" result="weft" />
-					<!-- 叠加: 经纬线混合形成织物纹理 -->
+					<!-- 鍙犲姞: 缁忕含绾挎贩鍚堝舰鎴愮粐鐗╃汗鐞?-->
 					<feBlend mode="screen" in="warp" in2="weft" result="fabric" />
-					<!-- 柔化: 降低透明度，使纹理柔和不刺眼 -->
+					<!-- 鏌斿寲: 闄嶄綆閫忔槑搴︼紝浣跨汗鐞嗘煍鍜屼笉鍒虹溂 -->
 					<feColorMatrix type="matrix"
 						values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
 						in="fabric" />
@@ -327,9 +329,9 @@ const siteLang = lang.replace("_", "-");
 	import "../scripts/layout-runtime.ts";
 </script>
 
-<!-- 非首屏关键脚本延迟加载 -->
+<!-- 闈為灞忓叧閿剼鏈欢杩熷姞杞?-->
 <script>
-	// 使用 requestIdleCallback 延迟加载非关键脚本，进一步减少主线程阻塞
+	// 浣跨敤 requestIdleCallback 寤惰繜鍔犺浇闈炲叧閿剼鏈紝杩涗竴姝ュ噺灏戜富绾跨▼闃诲
 	function scheduleIdleTask(callback: () => void, timeout = 3000) {
 		if ("requestIdleCallback" in window) {
 			window.requestIdleCallback(callback, { timeout });
@@ -338,7 +340,7 @@ const siteLang = lang.replace("_", "-");
 		}
 	}
 
-	// 页面加载完成后延迟加载非关键脚本
+	// 椤甸潰鍔犺浇瀹屾垚鍚庡欢杩熷姞杞介潪鍏抽敭鑴氭湰
 		if (document.readyState === "loading") {
 			document.addEventListener("DOMContentLoaded", () => {
 				scheduleIdleTask(() => {

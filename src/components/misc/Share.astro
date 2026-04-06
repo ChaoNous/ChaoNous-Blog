@@ -8,6 +8,7 @@ interface Props {
 	title: string;
 	id: string;
 	pubDate: Date;
+	url: string;
 	class?: string;
 	author?: string;
 	description?: string;
@@ -15,9 +16,8 @@ interface Props {
 	avatar?: string;
 }
 
-const { title, pubDate, author, description, coverImage, avatar } = Astro.props;
+const { title, pubDate, author, description, coverImage, avatar, url } = Astro.props;
 const className = Astro.props.class || "";
-const postUrl = Astro.url.toString();
 ---
 
 <div class={`share-component ${className}`}>
@@ -36,7 +36,7 @@ const postUrl = Astro.url.toString();
 		<SharePoster
 			client:visible
 			title={title}
-			url={postUrl}
+			url={url}
 			description={description || ""}
 			author={author || ""}
 			pubDate={pubDate.toISOString()}

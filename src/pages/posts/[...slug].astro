@@ -6,7 +6,11 @@ import PostDetailLayout from "@components/post/PostDetailLayout.astro";
 import Share from "@components/misc/Share.astro";
 import Twikoo from "@components/comment/Twikoo.astro";
 import { getSortedPosts } from "@utils/content-utils";
-import { getFileDirFromPath, removeFileExtension } from "@utils/url-utils";
+import {
+	getFileDirFromPath,
+	getPostUrl,
+	removeFileExtension,
+} from "@utils/url-utils";
 import {
 	commentConfig,
 	licenseConfig,
@@ -26,13 +30,13 @@ export async function getStaticPaths() {
 	for (const entry of blogEntries) {
 		const defaultSlug = removeFileExtension(entry.id);
 
-		// 添加默认 slug 路径
+		// 娣诲姞榛樿 slug 璺緞
 		paths.push({
 			params: { slug: defaultSlug },
 			props: { entry },
 		});
 
-		// 处理 alias 路径
+		// 澶勭悊 alias 璺緞
 		if (entry.data.alias) {
 			let alias = entry.data.alias
 				.replace(/^\/+/, "")
@@ -63,9 +67,12 @@ const posterAvatarUrl = await resolveSharePosterImage({
 });
 
 const normalizedCategory = entry.data.category || undefined;
+const canonicalPath = getPostUrl(entry);
+const canonicalUrl = Astro.site
+	? new URL(canonicalPath, Astro.site).toString()
+	: new URL(canonicalPath, Astro.url).toString();
 
-// 构建封面图的绝对 URL（用于 JSON-LD image 字段）
-const coverImage = entry.data.image;
+// 鏋勫缓灏侀潰鍥剧殑缁濆 URL锛堢敤浜?JSON-LD image 瀛楁锛?const coverImage = entry.data.image;
 let imageAbsoluteUrl: string | undefined;
 if (coverImage) {
 	if (coverImage.startsWith("http://") || coverImage.startsWith("https://")) {
@@ -83,7 +90,7 @@ const jsonLd = buildBlogPostingJsonLd({
 	lang: entry.data.lang,
 	authorName: profileConfig.name,
 	siteUrl: Astro.site,
-	pageUrl: Astro.url,
+	pageUrl: canonicalUrl,
 	imageUrl: imageAbsoluteUrl,
 	wordCount: remarkPluginFrontmatter?.words,
 	tags: entry.data.tags,
@@ -96,6 +103,7 @@ const jsonLd = buildBlogPostingJsonLd({
 	entry={entry}
 	headings={headings}
 	jsonLd={jsonLd}
+	canonicalUrl={canonicalUrl}
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
 >
 	<Markdown class="mb-6 markdown-content onload-animation">
@@ -108,6 +116,7 @@ const jsonLd = buildBlogPostingJsonLd({
 				<Share
 					title={entry.data.title}
 					id={entry.id}
+					url={canonicalUrl}
 					pubDate={entry.data.published}
 					author={entry.data.author}
 					description={entry.data.description}

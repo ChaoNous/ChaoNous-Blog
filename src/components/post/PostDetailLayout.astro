@@ -15,14 +15,15 @@ interface Props {
 	entry: CollectionEntry<"posts">;
 	headings?: MarkdownHeading[];
 	jsonLd: Record<string, unknown>;
+	canonicalUrl?: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	remarkPluginFrontmatter: any; // Astro render() 返回的类型
-}
+	remarkPluginFrontmatter: any; // Astro render() 杩斿洖鐨勭被鍨?}
 
 const {
 	entry,
 	headings = [],
 	jsonLd,
+	canonicalUrl,
 	remarkPluginFrontmatter,
 } = Astro.props;
 ---
@@ -33,6 +34,7 @@ const {
 	lang={entry.data.lang}
 	setOGTypeArticle={true}
 	postSlug={entry.id}
+	canonicalUrl={canonicalUrl}
 	headings={headings}
 	isPostPage={true}
 >
@@ -118,8 +120,8 @@ const {
 					(!entry.data.image ||
 						(entry.data.image &&
 							!siteConfig.showCoverInContent)) && (
-						<div class="mt-4 mb-5" />
-					)
+							<div class="mt-4 mb-5" />
+						)
 				}
 			</div>
 
