@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><script>
+    const expectedPassword = 'chaonous1.';
+    const stored = sessionStorage.getItem('admin_pwd');
+    if (stored !== expectedPassword) {
+        let p = prompt('请输入管理员私密密码:');
+        if (p === expectedPassword) {
+            sessionStorage.setItem('admin_pwd', p);
+        } else {
+            alert('密码错误或取消，返回主页');
+            window.location.href = '/';
+        }
+    }
+</script>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="shortcut icon" href="https://cwd.js.org/icon.png" type="image/x-icon">
+	<title>CWD 评论系统</title>
+  <script type="module" crossorigin src="/admin/assets/index-CfYJWwXb.js"></script>
+  <link rel="stylesheet" crossorigin href="/admin/assets/index-BCuQ8W5n.css">
+</head>
+
+<body>
+	<div id="app"></div>
+</body>
+
+</html>
