@@ -671,7 +671,7 @@
 	>
 		<!-- Orb trigger shown when the player is hidden -->
 		<div
-			class="orb-player w-12 h-12 bg-(--primary) rounded-xl shadow-lg cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center hover:scale-110 active:scale-95"
+			class="orb-player rounded-xl cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center"
 			class:opacity-0={!isHidden}
 			class:scale-0={!isHidden}
 			class:pointer-events-none={!isHidden}
@@ -687,25 +687,28 @@
 			aria-label={i18n(Key.musicPlayerShow)}
 		>
 			{#if isLoading}
-				<Icon icon="eos-icons:loading" class="text-white text-lg" />
+				<Icon
+					icon="eos-icons:loading"
+					class="hidden-player-icon text-(--primary) text-2xl"
+				/>
 			{:else if isPlaying}
 				<div class="flex space-x-0.5">
 					<div
-						class="w-0.5 h-3 bg-white rounded-full animate-pulse"
+						class="hidden-player-bar w-0.5 h-3 rounded-full animate-pulse"
 					></div>
 					<div
-						class="w-0.5 h-4 bg-white rounded-full animate-pulse"
+						class="hidden-player-bar w-0.5 h-4 rounded-full animate-pulse"
 						style="animation-delay: 150ms;"
 					></div>
 					<div
-						class="w-0.5 h-2 bg-white rounded-full animate-pulse"
+						class="hidden-player-bar w-0.5 h-2 rounded-full animate-pulse"
 						style="animation-delay: 300ms;"
 					></div>
 				</div>
 			{:else}
 				<Icon
 					icon="material-symbols:music-note"
-					class="text-white text-lg"
+					class="hidden-player-icon text-(--primary) text-2xl"
 				/>
 			{/if}
 		</div>
@@ -1158,27 +1161,26 @@
 	<style>
 		.orb-player {
 			position: relative;
+			width: 100%;
+			height: 100%;
+			color: var(--primary);
+			background: var(--card-bg);
+			border: 1px solid var(--line-divider);
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			opacity: 0.85;
 			backdrop-filter: blur(10px);
 			-webkit-backdrop-filter: blur(10px);
 		}
 		.orb-player::before {
-			content: "";
-			position: absolute;
-			inset: -0.125rem;
-			background: linear-gradient(
-				45deg,
-				var(--primary),
-				transparent,
-				var(--primary)
-			);
-			border-radius: 0.875rem;
-			z-index: -1;
-			opacity: 0;
-			transition: opacity 0.3s ease;
+			content: none;
 		}
-		.orb-player:hover::before {
-			opacity: 0.3;
-			animation: rotate 2s linear infinite;
+		.orb-player:hover {
+			background: var(--btn-plain-bg-hover);
+			opacity: 1;
+			transform: translateY(-2px);
+		}
+		.hidden-player-bar {
+			background: var(--primary);
 		}
 		.orb-player .animate-pulse {
 			animation: musicWave 1.5s ease-in-out infinite;
@@ -1201,8 +1203,8 @@
 			}
 		}
 		.music-player.hidden-mode {
-			width: 3rem;
-			height: 3rem;
+			width: 4rem;
+			height: 4rem;
 		}
 		.music-player {
 			max-width: 20rem;
@@ -1360,6 +1362,10 @@
 				/*left: 0.5rem !important;*/
 				bottom: 0.5rem !important;
 				right: 0.5rem !important;
+			}
+			.music-player.hidden-mode {
+				width: 3rem;
+				height: 3rem;
 			}
 			.mini-player {
 				width: min(280px, calc(100dvw - 1rem));
