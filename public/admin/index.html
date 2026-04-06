@@ -11,13 +11,16 @@
                 sessionStorage.setItem('admin_pwd', input);
                 localStorage.setItem('cwd_admin_api_base_url', 'https://cwd-api.198665x.workers.dev');
                 localStorage.setItem('cwd_admin_token', 'chaonous_static_token_v1');
+                location.reload(); 
             } else {
                 location.href = '/';
             }
         } else {
-            // Already validated in this session, ensure config is populated
-            localStorage.setItem('cwd_admin_api_base_url', 'https://cwd-api.198665x.workers.dev');
-            localStorage.setItem('cwd_admin_token', 'chaonous_static_token_v1');
+            if (!localStorage.getItem('cwd_admin_token')) {
+                localStorage.setItem('cwd_admin_api_base_url', 'https://cwd-api.198665x.workers.dev');
+                localStorage.setItem('cwd_admin_token', 'chaonous_static_token_v1');
+                location.reload();
+            }
         }
     })();
 </script>
