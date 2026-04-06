@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
-import Twikoo from "@components/comment/Twikoo.astro";
+import Cwd from "@components/comment/Cwd.astro";
 import Share from "@components/misc/Share.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
@@ -124,7 +124,7 @@ const jsonLd = buildBlogPostingJsonLd({
 	{
 		commentConfig.enable && (
 			<div slot="post-actions" class="comment-wrapper">
-				<Twikoo
+				<Cwd
 					envId={commentConfig.envId}
 					region={commentConfig.region}
 					lang={commentConfig.lang}
