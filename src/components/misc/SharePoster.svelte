@@ -18,7 +18,7 @@
 	let generating = false;
 	let themeColor = "#558e88";
 
-	// ?????????
+	// 生成分享海报
 	const SCALE = 2;
 	const WIDTH = 425 * SCALE;
 	const PADDING = 24 * SCALE;
@@ -138,12 +138,13 @@
 			canvas.width = WIDTH;
 			canvas.height = canvasHeight;
 
-			// ???
+			// 背景
 			ctx.fillStyle = "#ffffff";
 			drawRoundedRect(ctx, 0, 0, canvas.width, canvas.height, 16 * SCALE);
 			ctx.fill();
 
-			// ?????			ctx.save();
+			// 装饰圆
+			ctx.save();
 			ctx.globalAlpha = 0.1;
 			ctx.fillStyle = themeColor;
 			ctx.beginPath();
@@ -154,7 +155,8 @@
 			ctx.fill();
 			ctx.restore();
 
-			// ?????			if (coverImg) {
+			// 封面图
+			if (coverImg) {
 				const imgRatio = coverImg.width / coverImg.height;
 				const targetRatio = WIDTH / coverHeight;
 				let sx: number, sy: number, sWidth: number, sHeight: number;
@@ -179,7 +181,7 @@
 				ctx.restore();
 			}
 
-			// ??????
+			// 日期徽章
 			const dateObj = parseDate(pubDate);
 			if (dateObj) {
 				const dateBoxW = 60 * SCALE;
@@ -208,7 +210,7 @@
 				ctx.fillText(`${dateObj.year} ${dateObj.month}`, dateBoxX + dateBoxW / 2, dateBoxY + 51 * SCALE);
 			}
 
-			// ???
+			// 标题
 			let drawY = coverHeight + PADDING;
 			ctx.textBaseline = "top";
 			ctx.textAlign = "left";
@@ -220,7 +222,7 @@
 			}
 			drawY += 16 * SCALE - (titleLineHeight - titleFontSize);
 
-			// ???
+			// 描述
 			if (description) {
 				ctx.fillStyle = "#e5e7eb";
 				drawRoundedRect(ctx, PADDING, drawY - 8 * SCALE, 4 * SCALE, descHeight + 8 * SCALE, 2 * SCALE);
@@ -237,7 +239,8 @@
 				drawY += 8 * SCALE;
 			}
 
-			// ?????			drawY += 24 * SCALE;
+			// 分隔线
+			drawY += 24 * SCALE;
 			ctx.beginPath();
 			ctx.strokeStyle = "#f3f4f6";
 			ctx.lineWidth = 1 * SCALE;
@@ -246,7 +249,7 @@
 			ctx.stroke();
 			drawY += 16 * SCALE;
 
-			// ???
+			// 页脚
 			const footerY = drawY;
 			const qrX = WIDTH - PADDING - qrSize;
 
@@ -379,7 +382,7 @@
 	<span>{i18n(I18nKey.shareArticle)}</span>
 </button>
 
-<!-- ?????? -->
+<!-- 海报弹窗 -->
 {#if showPoster}
 	<div class="poster-modal" on:click={closeModal}>
 		<div class="poster-content" on:click|stopPropagation>
@@ -440,7 +443,7 @@
 		transform: scale(0.98);
 	}
 
-	/* ?????? */
+	/* 海报弹窗 */
 	.poster-modal {
 		position: fixed;
 		inset: 0;
