@@ -157,7 +157,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 
 export const commentConfig: CommentConfig = {
   enable: true,
-  envId: "https://twikoo-cloudflare.198665x.workers.dev",
+  envId: "", // 请填写你部署的 cwd API 地址 (Please fill in your deployed cwd API address)
   region: "",
   lang: "zh-CN",
 };
