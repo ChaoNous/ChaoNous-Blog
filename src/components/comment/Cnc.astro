@@ -1,0 +1,113 @@
+---
+interface Props {
+	envId: string;
+	region?: string;
+	path?: string;
+	lang?: string;
+}
+
+const { envId, lang = 'auto' } = Astro.props;
+---
+
+<div id="cnc-comments" data-api-url={envId} data-lang={lang} class="cnc-wrapper mt-8 mb-6 relative w-full"></div>
+
+<script>
+	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
+
+	let cncInstance: any = null;
+
+	function getTheme() {
+		return document.documentElement.classList.contains("dark") ? "dark" : "light";
+	}
+
+	function initCNC(container: HTMLElement) {
+		if (cncInstance) {
+			cncInstance.unmount();
+			cncInstance = null;
+		}
+
+		const apiBaseUrl = container.getAttribute("data-api-url") || "";
+		const lang = container.getAttribute("data-lang") || "auto";
+		const postSlug = window.location.pathname;
+
+		// Use CWDComments internally (its global name) but refer to CNC conceptually
+		const CWDComments = (window as any).CWDComments;
+		if (!CWDComments) {
+			console.warn("CNC Error: Backend script not loaded.");
+			return;
+		}
+
+		cncInstance = new CWDComments({
+			el: container,
+			apiBaseUrl: apiBaseUrl,
+			lang: lang,
+			postSlug: postSlug,
+			theme: getTheme(),
+		});
+
+		cncInstance.mount();
+		console.log("CNC system initialized.");
+	}
+
+	function loadCNCScript(container: HTMLElement) {
+		if ((window as any).CWDComments) {
+			initCNC(container);
+			return;
+		}
+
+		const existingScript = document.getElementById("cnc-script");
+		if (existingScript) return;
+
+		const script = document.createElement("script");
+		script.id = "cnc-script";
+		script.src = "https://unpkg.com/cwd-widget@latest/dist/cwd.js";
+		script.async = true;
+		script.onload = () => {
+			initCNC(container);
+		};
+		script.onerror = () => {
+			console.error("CNC (ChaoNous Comment) system failed to load.");
+		};
+		document.head.appendChild(script);
+	}
+
+	registerPageScript("cnc-comment", {
+		shouldRun() {
+			return document.getElementById("cnc-comments") !== null;
+		},
+		init() {
+			const root = document.getElementById("cnc-comments");
+			if (!root) return;
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							loadCNCScript(entry.target as HTMLElement);
+							observer.unobserve(entry.target);
+						}
+					});
+				},
+				{ rootMargin: "200px" }
+			);
+
+			observer.observe(root);
+
+			const themeObserver = new MutationObserver(() => {
+				if (cncInstance) {
+					cncInstance.updateConfig({ theme: getTheme() });
+				}
+			});
+			themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+			return () => {
+				observer.disconnect();
+				themeObserver.disconnect();
+				if (cncInstance) {
+					cncInstance.unmount();
+					cncInstance = null;
+				}
+			};
+		},
+	});
+</script>

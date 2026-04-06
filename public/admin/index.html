@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-<head><script>
-    const expectedPassword = 'chaonous1.';
-    const stored = sessionStorage.getItem('admin_pwd');
-    if (stored !== expectedPassword) {
-        let p = prompt('请输入管理员私密密码:');
-        if (p === expectedPassword) {
-            sessionStorage.setItem('admin_pwd', p);
-        } else {
-            alert('密码错误或取消，返回主页');
-            window.location.href = '/';
+<head>
+<script>
+    (function(){
+        const pwd = 'chaonous1.';
+        if (sessionStorage.getItem('admin_pwd') !== pwd) {
+            const input = prompt('CNC 站务身份验证\n请输入管理密码:');
+            if (input === pwd) {
+                sessionStorage.setItem('admin_pwd', input);
+            } else {
+                location.href = '/';
+            }
         }
-    }
+    })();
 </script>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="shortcut icon" href="https://cwd.js.org/icon.png" type="image/x-icon">
-	<title>CWD 评论系统</title>
+	<title>CNC 管理仪表盘 | ChaoNous Comment</title>
   <script type="module" crossorigin src="/admin/assets/index-CfYJWwXb.js"></script>
   <link rel="stylesheet" crossorigin href="/admin/assets/index-BCuQ8W5n.css">
 </head>
