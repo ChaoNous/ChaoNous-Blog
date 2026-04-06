@@ -1,4 +1,4 @@
-export function initializeArticleToc() {
+export function initializeArticleToc(): void {
   const tocWrapper = document.getElementById("toc-wrapper");
   if (!tocWrapper) return;
 
@@ -10,14 +10,14 @@ export function initializeArticleToc() {
   }
 }
 
-export function markTocNotReady() {
+export function markTocNotReady(): void {
   const toc = document.getElementById("toc-wrapper");
   if (toc) {
     toc.classList.add("toc-not-ready");
   }
 }
 
-export function clearTocNotReady() {
+export function clearTocNotReady(): void {
   const toc = document.getElementById("toc-wrapper");
   if (toc) {
     toc.classList.remove("toc-not-ready");
@@ -28,7 +28,7 @@ export function syncDesktopTocVisibility(
   _scrollTop: number,
   _bannerHeight: number,
   _bannerEnabled: boolean,
-) {
+): void {
   // Banner removed — no longer gate TOC visibility on banner scroll
   const toc = document.getElementById("toc-wrapper");
   if (toc) {

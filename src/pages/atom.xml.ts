@@ -4,7 +4,7 @@ import { getSortedPosts } from "@/utils/content-utils";
 import { getPostUrl } from "@/utils/url-utils";
 import { parseMarkdown, processImagesInContent } from "@/utils/feed-utils";
 
-export async function GET(context: APIContext) {
+export async function GET(context: APIContext): Promise<Response> {
   if (!context.site) {
     throw Error("site not set");
   }

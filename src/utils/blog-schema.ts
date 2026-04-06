@@ -35,7 +35,7 @@ export function buildBlogPostingJsonLd({
   tags,
   category,
   defaultLang,
-}: BlogPostingSchemaInput) {
+}: BlogPostingSchemaInput): Record<string, unknown> {
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",

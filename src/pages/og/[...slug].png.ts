@@ -40,7 +40,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 let fontCache: { regular: Buffer | null; bold: Buffer | null } | null = null;
 
-function loadOgFonts() {
+function loadOgFonts(): { regular: Buffer | null; bold: Buffer | null } {
   if (fontCache) {
     return fontCache;
   }
@@ -68,7 +68,7 @@ function loadOgFonts() {
 
 export async function GET({
   props,
-}: APIContext<{ post: CollectionEntry<"posts"> }>) {
+}: APIContext<{ post: CollectionEntry<"posts"> }>): Promise<Response> {
   const { post } = props;
 
   const { regular: fontRegular, bold: fontBold } = loadOgFonts();

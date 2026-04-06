@@ -129,7 +129,7 @@ export class WidgetManager {
     );
   }
 
-  getBreakpoints() {
+  getBreakpoints(): SidebarLayoutConfig["responsive"]["breakpoints"] {
     return this.config.responsive.breakpoints;
   }
 
@@ -162,4 +162,4 @@ export class WidgetManager {
   }
 }
 
-export const widgetManager = new WidgetManager();
+export const widgetManager: WidgetManager = new WidgetManager();

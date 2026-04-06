@@ -1,11 +1,11 @@
-export function revealBanner() {
+export function revealBanner(): void {
   // Banner removed — no-op
 }
 
-export function syncBannerHeightExtend() {
+export function syncBannerHeightExtend(): void {
   // Banner removed — no-op
 }
 
-export function cleanupBannerRuntime() {
+export function cleanupBannerRuntime(): void {
   // Banner removed — no-op
 }

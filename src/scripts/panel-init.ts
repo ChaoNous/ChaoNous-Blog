@@ -2,7 +2,7 @@ import type { PanelId } from "../utils/panel-manager";
 
 let panelManagerInitialization: Promise<unknown> | null = null;
 
-export async function initializePanelManager() {
+export async function initializePanelManager(): Promise<unknown> {
   if (!panelManagerInitialization) {
     panelManagerInitialization = (async () => {
       try {
@@ -11,7 +11,7 @@ export async function initializePanelManager() {
           __panelManagerOutsideClickBound?: boolean;
         };
 
-        function setClickOutsideToClose(panel: string, ignores: string[]) {
+        function setClickOutsideToClose(panel: string, ignores: string[]): void {
           document.addEventListener("click", async (event) => {
             const target = event.target;
             if (!(target instanceof Node)) return;

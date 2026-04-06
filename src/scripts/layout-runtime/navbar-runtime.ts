@@ -1,11 +1,11 @@
-export function syncNavbarHomeState(isHomePage: boolean) {
+export function syncNavbarHomeState(isHomePage: boolean): void {
   const navbar = document.getElementById("navbar");
   if (navbar) {
     navbar.setAttribute("data-is-home", isHomePage.toString());
   }
 }
 
-export function refreshNavbarTransparency() {
+export function refreshNavbarTransparency(): void {
   const navbar = document.getElementById("navbar");
   if (!navbar) return;
 
@@ -18,6 +18,6 @@ export function refreshNavbarTransparency() {
   }
 }
 
-export function handleNavbarLinkClick(_scrollTop: number) {
+export function handleNavbarLinkClick(_scrollTop: number): void {
   // Banner removed, no longer need banner-based logic
 }

@@ -27,7 +27,7 @@ import { initFancybox, cleanupFancybox, checkKatex } from "./fancybox-runtime";
 import { initCustomScrollbar } from "./katex-scrollbar";
 import { removePostPageActionButtons } from "./post-page-cleanup";
 
-function scheduleIdleTask(task: () => void, timeout = 3000) {
+function scheduleIdleTask(task: () => void, timeout = 3000): void {
   if ("requestIdleCallback" in window) {
     window.requestIdleCallback(task);
     return;
@@ -35,14 +35,14 @@ function scheduleIdleTask(task: () => void, timeout = 3000) {
   globalThis.setTimeout(task, timeout);
 }
 
-function syncDesktopViewportState() {
+function syncDesktopViewportState(): void {
   // Banner removed — no longer need scroll detection
   requestAnimationFrame(() => {
     // Banner removed — no longer sync TOC/navbar visibility
   });
 }
 
-function refreshDesktopRuntimeState() {
+function refreshDesktopRuntimeState(): void {
   refreshNavbarTransparency();
 }
 
