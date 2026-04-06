@@ -379,6 +379,7 @@
 	on:click={generatePoster}
 	aria-label={i18n(I18nKey.shareArticle)}
 >
+	<Icon icon="material-symbols:image-outline-rounded" width="18" height="18" />
 	<span>{i18n(I18nKey.shareArticle)}</span>
 </button>
 
@@ -423,20 +424,22 @@
 	.share-poster-btn {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		gap: 0.5rem;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
-		border: none;
-		background: var(--btn-regular-bg);
-		color: var(--text-primary);
+		width: 100%;
+		padding: 0.75rem 1rem;
+		border-radius: 0.75rem;
+		border: 1px solid var(--primary);
+		background: var(--primary);
+		color: white;
 		font-size: 0.9375rem;
 		font-weight: 500;
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: transform 0.2s ease, filter 0.2s ease;
 	}
 
 	.share-poster-btn:hover {
-		background: var(--btn-regular-bg-hover);
+		filter: brightness(1.05);
 	}
 
 	.share-poster-btn:active {
