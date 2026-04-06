@@ -671,7 +671,7 @@
 	>
 		<!-- Orb trigger shown when the player is hidden -->
 		<div
-			class="orb-player w-12 h-12 bg-(--primary) rounded-full shadow-lg cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center hover:scale-110 active:scale-95"
+			class="orb-player w-12 h-12 bg-(--primary) rounded-xl shadow-lg cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center hover:scale-110 active:scale-95"
 			class:opacity-0={!isHidden}
 			class:scale-0={!isHidden}
 			class:pointer-events-none={!isHidden}
@@ -1171,7 +1171,7 @@
 				transparent,
 				var(--primary)
 			);
-			border-radius: 50%;
+			border-radius: 0.875rem;
 			z-index: -1;
 			opacity: 0;
 			transition: opacity 0.3s ease;
