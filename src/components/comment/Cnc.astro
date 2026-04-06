@@ -12,7 +12,7 @@ const { envId, lang = 'auto' } = Astro.props;
 <div id="cnc-comments" data-api-url={envId} data-lang={lang} class="cnc-wrapper mt-8 mb-6 relative w-full"></div>
 
 <script>
-	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
+	import { registerPageScript } from "@/scripts/page-lifecycle.ts";
 
 	let cncInstance: any = null;
 
