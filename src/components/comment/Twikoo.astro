@@ -56,7 +56,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	const FORM_LABELS = ["昵称*", "邮箱*", "网站"];
 
-	function getCommentRoot() {
+	function getCommentRoot(container?: HTMLElement) {
+		if (container) return container;
 		return (
 			document.querySelector("#comments .twikoo") ||
 			document.querySelector("#comments #twikoo-comment")
@@ -450,8 +451,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		}
 	}
 
-	function disableReplyLinkScroll() {
-		document.querySelectorAll(".tk-action-link[href='#']").forEach((el) => {
+	function disableReplyLinkScroll(container: HTMLElement) {
+		container.querySelectorAll(".tk-action-link[href='#']").forEach((el) => {
 			const anchor = el as HTMLAnchorElement;
 			if (anchor.getAttribute("data-scroll-prevented")) return;
 
@@ -471,7 +472,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		normalizeCommentLabels(container);
 		normalizeCommentForm(container);
 		normalizeSubmitButton(container);
-		disableReplyLinkScroll();
+		disableReplyLinkScroll(container);
 
 		container.querySelectorAll(".tk-footer").forEach((el) => {
 			const footer = el as HTMLElement;
@@ -494,8 +495,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		});
 	}
 
-	function applyEnhancements() {
-		const root = getCommentRoot();
+	function applyEnhancements(container?: HTMLElement) {
+		const root = getCommentRoot(container);
 		if (!root) return false;
 
 		enforceInlineStyles(root);
@@ -503,8 +504,8 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		return true;
 	}
 
-	function waitForTwikooReady(attempt = 0) {
-		const root = getCommentRoot();
+	function waitForTwikooReady(container: HTMLElement, attempt = 0) {
+		const root = getCommentRoot(container);
 		const isReady =
 			root !== null &&
 			(root.querySelector(".tk-comments") !== null || root.querySelector(".tk-submit") !== null);
@@ -512,7 +513,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		if (isReady) {
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
-					applyEnhancements();
+					applyEnhancements(root);
 				});
 			});
 			return;
@@ -520,7 +521,7 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 		if (attempt >= 40) return;
 		window.setTimeout(() => {
-			waitForTwikooReady(attempt + 1);
+			waitForTwikooReady(root, attempt + 1);
 		}, 150);
 	}
 
@@ -569,22 +570,25 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		const path = container.getAttribute("data-path") || window.location.pathname;
 		const lang = container.getAttribute("data-lang") || "zh-CN";
 
+		// Generate a unique ID to prevent Swup crossfade duplicates from hijacking the selector
+		const uniqueId = "twikoo-comment-" + Math.random().toString(36).substring(2, 9);
+		container.id = uniqueId;
+
 		twikoo.init({
 			envId,
-			el: "#twikoo-comment",
+			el: "#" + uniqueId,
 			region,
 			path,
 			lang,
 			onCommentLoaded: () => {
-				applyEnhancements();
+				applyEnhancements(container);
 			},
 		});
 
-		waitForTwikooReady();
+		waitForTwikooReady(container);
 	}
 
-	function initTwikoo() {
-		const container = document.getElementById("twikoo-comment");
+	function initTwikoo(container: HTMLElement) {
 		if (!container || container.dataset.tkMounted === "true") return;
 
 		injectGlobalStyles();
@@ -616,8 +620,9 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 		(entries) => {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting) {
-					initTwikoo();
-					twikooObserver.disconnect();
+					const target = entry.target as HTMLElement;
+					initTwikoo(target);
+					twikooObserver.unobserve(target);
 				}
 			});
 		},
@@ -626,10 +631,12 @@ const { envId, region = "", path = "", lang = "zh-CN" } = Astro.props;
 
 	registerPageScript("twikoo-comment", {
 		shouldRun() {
-			return document.getElementById("twikoo-comment") !== null;
+			return document.getElementById("comments") !== null;
 		},
 		init() {
-			const container = document.getElementById("twikoo-comment");
+			// Find the actual element within the wrapper
+			const commentRoot = document.getElementById("comments");
+			const container = commentRoot?.querySelector(".twikoo-container > div") as HTMLElement;
 			if (container) {
 				twikooObserver.observe(container);
 			}
