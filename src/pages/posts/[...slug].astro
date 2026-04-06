@@ -1,20 +1,17 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
+import Twikoo from "@components/comment/Twikoo.astro";
+import Share from "@components/misc/Share.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
-import Share from "@components/misc/Share.astro";
-import Twikoo from "@components/comment/Twikoo.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import {
 	getFileDirFromPath,
 	getPostUrl,
 	removeFileExtension,
 } from "@utils/url-utils";
-import {
-	commentConfig,
-	licenseConfig,
-} from "src/config";
+import { commentConfig, licenseConfig } from "src/config";
 import { profileConfig, siteConfig } from "../../config";
 import { buildBlogPostingJsonLd } from "../../utils/blog-schema";
 import { resolveSharePosterImage } from "../../utils/share-poster-assets";
@@ -30,17 +27,13 @@ export async function getStaticPaths() {
 	for (const entry of blogEntries) {
 		const defaultSlug = removeFileExtension(entry.id);
 
-		// 娣诲姞榛樿 slug 璺緞
 		paths.push({
 			params: { slug: defaultSlug },
 			props: { entry },
 		});
 
-		// 澶勭悊 alias 璺緞
 		if (entry.data.alias) {
-			let alias = entry.data.alias
-				.replace(/^\/+/, "")
-				.replace(/\/+$/, "");
+			let alias = entry.data.alias.replace(/^\/+/, "").replace(/\/+$/, "");
 			if (alias.startsWith("posts/")) {
 				alias = alias.replace(/^posts\//, "");
 			}
@@ -72,7 +65,7 @@ const canonicalUrl = Astro.site
 	? new URL(canonicalPath, Astro.site).toString()
 	: new URL(canonicalPath, Astro.url).toString();
 
-// 鏋勫缓灏侀潰鍥剧殑缁濆 URL锛堢敤浜?JSON-LD image 瀛楁锛?const coverImage = entry.data.image;
+const coverImage = entry.data.image;
 let imageAbsoluteUrl: string | undefined;
 if (coverImage) {
 	if (coverImage.startsWith("http://") || coverImage.startsWith("https://")) {
