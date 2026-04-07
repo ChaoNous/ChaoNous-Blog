@@ -5,7 +5,6 @@ interface Props {
 	postSlug?: string;
 	postUrl?: string;
 	postTitle?: string;
-	requireModeration?: boolean;
 }
 
 const {
@@ -14,7 +13,6 @@ const {
 	postSlug = "",
 	postUrl = "",
 	postTitle = "",
-	requireModeration = true,
 } = Astro.props;
 ---
 
@@ -25,7 +23,6 @@ const {
 	data-post-slug={postSlug}
 	data-post-url={postUrl}
 	data-post-title={postTitle}
-	data-require-moderation={requireModeration ? "true" : "false"}
 	class="site-comments-root mt-8 mb-6 relative w-full"
 >
 	<div class="site-comments-boot rounded-3xl border border-[rgba(36,24,22,0.08)] bg-[rgba(255,255,255,0.76)] px-5 py-4 text-sm text-[rgba(36,24,22,0.72)] backdrop-blur-sm dark:border-[rgba(244,237,231,0.08)] dark:bg-[rgba(35,24,22,0.82)] dark:text-[rgba(244,237,231,0.72)]">
@@ -53,8 +50,6 @@ const {
 				postSlug: root.getAttribute("data-post-slug") || window.location.pathname,
 				postUrl: root.getAttribute("data-post-url") || window.location.href,
 				postTitle: root.getAttribute("data-post-title") || document.title,
-				requireModeration:
-					root.getAttribute("data-require-moderation") !== "false",
 			});
 		},
 	});

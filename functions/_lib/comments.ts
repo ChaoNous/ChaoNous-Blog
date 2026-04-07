@@ -11,7 +11,6 @@ interface D1Database {
 
 export interface Env {
 	COMMENTS_DB: D1Database;
-	COMMENT_REQUIRE_MODERATION?: string;
 	COMMENT_ADMIN_PASSWORD?: string;
 }
 
@@ -25,7 +24,6 @@ export interface CommentRecord {
 	author_email: string;
 	author_url: string | null;
 	content: string;
-	status: string;
 	created_at: number;
 	updated_at: number;
 }
@@ -38,10 +36,6 @@ export function json(data: unknown, status = 200): Response {
 			"cache-control": "no-store",
 		},
 	});
-}
-
-export function requireModeration(env: Env): boolean {
-	return env.COMMENT_REQUIRE_MODERATION !== "false";
 }
 
 export function getAdminPassword(request: Request): string {

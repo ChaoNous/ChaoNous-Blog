@@ -8,17 +8,13 @@ CREATE TABLE IF NOT EXISTS comments (
   author_email TEXT NOT NULL,
   author_url TEXT,
   content TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'pending',
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL,
   FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_comments_post_status_created
-  ON comments (post_slug, status, created_at);
-
-CREATE INDEX IF NOT EXISTS idx_comments_status_created
-  ON comments (status, created_at);
+CREATE INDEX IF NOT EXISTS idx_comments_post_created
+  ON comments (post_slug, created_at);
 
 CREATE INDEX IF NOT EXISTS idx_comments_parent_id
   ON comments (parent_id);

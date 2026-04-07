@@ -159,7 +159,6 @@ export const commentConfig: CommentConfig = {
   enable: true,
   apiBasePath: "/api/comments",
   lang: "zh-CN",
-  requireModeration: false,
 };
 
 export const sidebarLayoutConfig: SidebarLayoutConfig = {

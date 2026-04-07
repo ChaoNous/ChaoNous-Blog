@@ -27,7 +27,6 @@ interface MountSiteCommentsOptions {
 	postUrl: string;
 	postTitle: string;
 	lang?: string;
-	requireModeration?: boolean;
 }
 
 interface SiteCommentsState {
@@ -153,11 +152,7 @@ function renderState(
 					<button type="submit" class="site-comments-submit"${state.submitting ? " disabled" : ""}>
 						${state.submitting ? "提交中…" : "提交评论"}
 					</button>
-					${
-						options.requireModeration
-							? `<span class="site-comments-hint">新评论默认进入审核队列，审核通过后显示。</span>`
-							: `<span class="site-comments-hint">评论提交后会直接发布到页面。</span>`
-					}
+					<span class="site-comments-hint">评论提交后会直接发布到页面。</span>
 				</div>
 			</form>
 			<div class="site-comments-list">${commentsHtml}</div>
@@ -256,11 +251,7 @@ export function mountSiteComments(
 			setState({
 				submitting: false,
 				replyTarget: null,
-				success:
-					result?.message ||
-					(options.requireModeration
-						? "评论已提交，等待审核。"
-						: "评论已发布。"),
+				success: result?.message || "评论已发布。",
 			});
 			await loadComments();
 		} catch (error) {

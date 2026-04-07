@@ -241,5 +241,4 @@ export type CommentConfig = {
   enable: boolean;
   apiBasePath?: string;
   lang?: string;
-  requireModeration?: boolean;
 };
