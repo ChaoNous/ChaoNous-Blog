@@ -4,20 +4,57 @@ interface Props {
 	region?: string;
 	path?: string;
 	lang?: string;
+	postSlug?: string;
+	postUrl?: string;
+	postTitle?: string;
 }
 
-const { envId, lang = 'auto' } = Astro.props;
+const {
+	envId,
+	lang = 'auto',
+	postSlug = '',
+	postUrl = '',
+	postTitle = '',
+} = Astro.props;
 ---
 
-<div id="cnc-comments" data-api-url={envId} data-lang={lang} class="cnc-wrapper mt-8 mb-6 relative w-full"></div>
+<div
+	id="cnc-comments"
+	data-api-url={envId}
+	data-lang={lang}
+	data-post-slug={postSlug}
+	data-post-url={postUrl}
+	data-post-title={postTitle}
+	class="cnc-wrapper mt-8 mb-6 relative w-full"
+>
+	<div class="cnc-loading rounded-2xl border border-[rgba(36,24,22,0.08)] bg-[rgba(255,255,255,0.72)] px-5 py-4 text-sm text-[rgba(36,24,22,0.72)] backdrop-blur-sm dark:border-[rgba(244,237,231,0.08)] dark:bg-[rgba(35,24,22,0.82)] dark:text-[rgba(244,237,231,0.72)]">
+		评论区正在加载…
+	</div>
+</div>
 
 <script>
 	import { registerPageScript } from "@/scripts/page-lifecycle.ts";
 
 	let cncInstance: any = null;
+	const CWD_WIDGET_VERSION = "0.1.11";
 
 	function getTheme() {
 		return document.documentElement.classList.contains("dark") ? "dark" : "light";
+	}
+
+	function renderFallback(container: HTMLElement, message = "评论系统暂时不可用，请稍后再试。") {
+		container.innerHTML = `
+			<div class="cnc-fallback rounded-2xl border border-[rgba(36,24,22,0.08)] bg-[rgba(255,255,255,0.72)] px-5 py-4 backdrop-blur-sm dark:border-[rgba(244,237,231,0.08)] dark:bg-[rgba(35,24,22,0.82)]">
+				<p class="m-0 text-sm leading-7 text-[rgba(36,24,22,0.82)] dark:text-[rgba(244,237,231,0.82)]">${message}</p>
+				<button type="button" class="cnc-retry mt-3 inline-flex rounded-full border border-current px-3 py-1 text-sm">
+					重试加载
+				</button>
+			</div>
+		`;
+
+		container
+			.querySelector<HTMLButtonElement>(".cnc-retry")
+			?.addEventListener("click", () => loadCNCScript(container, true), { once: true });
 	}
 
 	function initCNC(container: HTMLElement) {
@@ -28,12 +65,20 @@ const { envId, lang = 'auto' } = Astro.props;
 
 		const apiBaseUrl = container.getAttribute("data-api-url") || "";
 		const lang = container.getAttribute("data-lang") || "auto";
-		const postSlug = window.location.pathname;
+		const canonicalPostSlug =
+			container.getAttribute("data-post-slug") ||
+			container.getAttribute("data-post-url") ||
+			window.location.pathname;
+		const canonicalPostUrl =
+			container.getAttribute("data-post-url") || canonicalPostSlug;
+		const resolvedPostTitle =
+			container.getAttribute("data-post-title") || document.title;
 
 		// Use CWDComments internally (its global name) but refer to CNC conceptually
 		const CWDComments = (window as any).CWDComments;
 		if (!CWDComments) {
 			console.warn("CNC Error: Backend script not loaded.");
+			renderFallback(container);
 			return;
 		}
 
@@ -41,7 +86,9 @@ const { envId, lang = 'auto' } = Astro.props;
 			el: container,
 			apiBaseUrl: apiBaseUrl,
 			lang: lang,
-			postSlug: postSlug,
+			postSlug: canonicalPostSlug,
+			postUrl: canonicalPostUrl,
+			postTitle: resolvedPostTitle,
 			theme: getTheme(),
 		});
 
@@ -49,24 +96,28 @@ const { envId, lang = 'auto' } = Astro.props;
 		console.log("CNC system initialized.");
 	}
 
-	function loadCNCScript(container: HTMLElement) {
+	function loadCNCScript(container: HTMLElement, forceReload = false) {
 		if ((window as any).CWDComments) {
 			initCNC(container);
 			return;
 		}
 
 		const existingScript = document.getElementById("cnc-script");
-		if (existingScript) return;
+		if (existingScript && !forceReload) return;
+		if (existingScript && forceReload) {
+			existingScript.remove();
+		}
 
 		const script = document.createElement("script");
 		script.id = "cnc-script";
-		script.src = "https://unpkg.com/cwd-widget@latest/dist/cwd.js";
+		script.src = `https://unpkg.com/cwd-widget@${CWD_WIDGET_VERSION}/dist/cwd.js`;
 		script.async = true;
 		script.onload = () => {
 			initCNC(container);
 		};
 		script.onerror = () => {
 			console.error("CNC (ChaoNous Comment) system failed to load.");
+			renderFallback(container);
 		};
 		document.head.appendChild(script);
 	}
