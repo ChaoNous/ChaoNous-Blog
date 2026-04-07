@@ -29,6 +29,52 @@ function formatCommentContent(content: string): string {
 	return escapeHtml(content).replaceAll("\n", "<br />");
 }
 
+function renderCommentForm(
+	state: SiteCommentsState,
+	replyTarget: { id: number; authorName: string } | null,
+	submitting = false,
+): string {
+	const replyBanner = replyTarget
+		? `
+			<div class="site-comments-replying is-inline">
+				<span>${COMMENT_MESSAGES.replyPrefix}${escapeHtml(replyTarget.authorName)}</span>
+				<button type="button" class="link-btn" data-action="cancel-reply">${COMMENT_MESSAGES.cancelReply}</button>
+			</div>
+		`
+		: "";
+
+	return `
+		${replyBanner}
+		<form class="site-comments-form">
+			<div class="site-comments-grid">
+				<label class="site-comments-field">
+					<span>${COMMENT_MESSAGES.nameLabel}</span>
+					<input name="name" type="text" maxlength="50" required placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.name)}" />
+				</label>
+				<label class="site-comments-field">
+					<span>${COMMENT_MESSAGES.emailLabel}</span>
+					<input name="email" type="email" maxlength="120" required placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.email)}" />
+				</label>
+			</div>
+			<label class="site-comments-field">
+				<span>${COMMENT_MESSAGES.urlLabel}</span>
+				<input name="url" type="text" inputmode="url" maxlength="200" placeholder="${COMMENT_MESSAGES.optionalPlaceholder}" value="${escapeHtml(state.visitorInfo.url)}" />
+			</label>
+			<label class="site-comments-field">
+				<span>${COMMENT_MESSAGES.contentLabel}</span>
+				<textarea name="content" rows="${replyTarget ? 4 : 5}" maxlength="2000" required placeholder="${COMMENT_MESSAGES.contentPlaceholder}"></textarea>
+			</label>
+			<input name="parentId" type="hidden" value="${replyTarget?.id ?? ""}" />
+			<div class="site-comments-actions">
+				<button type="submit" class="site-comments-submit"${submitting ? " disabled" : ""}>
+					${submitting ? COMMENT_MESSAGES.submitBusy : COMMENT_MESSAGES.submitIdle}
+				</button>
+				<span class="site-comments-hint">${COMMENT_MESSAGES.submitHint}</span>
+			</div>
+		</form>
+	`;
+}
+
 function renderCommentItem(
 	comment: SiteComment,
 	options: MountSiteCommentsOptions,
@@ -39,7 +85,7 @@ function renderCommentItem(
 		.map((reply) => renderCommentItem(reply, options, state, depth + 1))
 		.join("");
 
-	const isSoftDeleted = comment.authorName === "已注销";
+	const isSoftDeleted = comment.authorName === "宸叉敞閿€";
 	if (isSoftDeleted) {
 		return repliesHtml
 			? `
@@ -58,9 +104,14 @@ function renderCommentItem(
 
 	const deleteButton = state.ownedComments[String(comment.id)]
 		? `<button type="button" class="site-comment-delete-btn link-btn" data-delete-id="${comment.id}">
-				删除
+				鍒犻櫎
 			</button>`
 		: "";
+
+	const inlineReplyForm =
+		state.replyTarget?.id === comment.id
+			? `<div class="site-comment-inline-reply">${renderCommentForm(state, state.replyTarget, state.submitting)}</div>`
+			: "";
 
 	return `
 		<article class="site-comment-card${depth > 0 ? " is-reply" : ""}">
@@ -72,11 +123,12 @@ function renderCommentItem(
 				<div class="site-comment-actions-inline">
 					${deleteButton}
 					<button type="button" class="site-comment-reply-btn link-btn" data-reply-id="${comment.id}" data-reply-author="${authorLabel}">
-						回复
+						鍥炲
 					</button>
 				</div>
 			</header>
 			<div class="site-comment-content">${formatCommentContent(comment.content)}</div>
+			${inlineReplyForm}
 			${repliesHtml ? `<div class="site-comment-replies">${repliesHtml}</div>` : ""}
 		</article>
 	`;
@@ -101,48 +153,11 @@ export function renderCommentsState(
 			? `<div class="site-comments-notice is-success">${escapeHtml(state.success)}</div>`
 			: "";
 
-	const replyBanner = state.replyTarget
-		? `
-			<div class="site-comments-replying">
-				<span>${COMMENT_MESSAGES.replyPrefix}${escapeHtml(state.replyTarget.authorName)}</span>
-				<button type="button" class="link-btn" data-action="cancel-reply">${COMMENT_MESSAGES.cancelReply}</button>
-			</div>
-		`
-		: "";
-
 	container.innerHTML = `
 		<section class="site-comments-shell">
 			${noticeHtml}
-			${replyBanner}
-			<form class="site-comments-form">
-				<div class="site-comments-grid">
-					<label class="site-comments-field">
-						<span>${COMMENT_MESSAGES.nameLabel}</span>
-						<input name="name" type="text" maxlength="50" required placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.name)}" />
-					</label>
-					<label class="site-comments-field">
-						<span>${COMMENT_MESSAGES.emailLabel}</span>
-						<input name="email" type="email" maxlength="120" required placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.email)}" />
-					</label>
-				</div>
-				<label class="site-comments-field">
-					<span>${COMMENT_MESSAGES.urlLabel}</span>
-					<input name="url" type="text" inputmode="url" maxlength="200" placeholder="${COMMENT_MESSAGES.optionalPlaceholder}" value="${escapeHtml(state.visitorInfo.url)}" />
-				</label>
-				<label class="site-comments-field">
-					<span>${COMMENT_MESSAGES.contentLabel}</span>
-					<textarea name="content" rows="5" maxlength="2000" required placeholder="${COMMENT_MESSAGES.contentPlaceholder}"></textarea>
-				</label>
-				<input name="parentId" type="hidden" value="${state.replyTarget?.id ?? ""}" />
-				<div class="site-comments-actions">
-					<button type="submit" class="site-comments-submit"${state.submitting ? " disabled" : ""}>
-						${state.submitting ? COMMENT_MESSAGES.submitBusy : COMMENT_MESSAGES.submitIdle}
-					</button>
-					<span class="site-comments-hint">${COMMENT_MESSAGES.submitHint}</span>
-				</div>
-			</form>
+			${renderCommentForm(state, null, state.submitting && !state.replyTarget)}
 			<div class="site-comments-list">${commentsHtml}</div>
 		</section>
 	`;
 }
-

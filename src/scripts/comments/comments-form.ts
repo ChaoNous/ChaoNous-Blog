@@ -13,14 +13,16 @@ export function bindCommentEvents({
 	onCancelReply,
 	onDelete,
 }: BindCommentEventsOptions): void {
-	const form = container.querySelector<HTMLFormElement>(".site-comments-form");
-	if (form && !form.dataset.bound) {
-		form.dataset.bound = "true";
-		form.addEventListener("submit", (event) => {
-			event.preventDefault();
-			onSubmit(form);
+	container
+		.querySelectorAll<HTMLFormElement>(".site-comments-form")
+		.forEach((form) => {
+			if (form.dataset.bound === "true") return;
+			form.dataset.bound = "true";
+			form.addEventListener("submit", (event) => {
+				event.preventDefault();
+				onSubmit(form);
+			});
 		});
-	}
 
 	container
 		.querySelectorAll<HTMLButtonElement>("[data-reply-id]")
@@ -55,4 +57,3 @@ export function bindCommentEvents({
 			});
 		});
 }
-

@@ -42,7 +42,9 @@ export function mountSiteComments(
 					success: "",
 				});
 				container
-					.querySelector<HTMLTextAreaElement>('textarea[name="content"]')
+					.querySelector<HTMLTextAreaElement>(
+						`.site-comment-inline-reply textarea[name="content"]`,
+					)
 					?.focus();
 			},
 			onCancelReply: () => {
