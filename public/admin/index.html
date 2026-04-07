@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="robots" content="noindex,nofollow,noarchive" />
-	<title>评论后台 | ChaoNous</title>
+	<title>&#x8BC4;&#x8BBA;&#x540E;&#x53F0; | ChaoNous</title>
 	<style>
 		:root {
 			color-scheme: light dark;
@@ -175,26 +175,26 @@
 <body>
 	<main>
 		<section class="panel stack">
-			<h1>评论后台</h1>
-			<p>后台运行在同域 API 上，不再依赖站外评论服务。</p>
-			<p>当前模式：新评论默认直接发布，无需审核。</p>
+			<h1>&#x8BC4;&#x8BBA;&#x540E;&#x53F0;</h1>
+			<p>&#x540E;&#x53F0;&#x8FD0;&#x884C;&#x5728;&#x540C;&#x57DF; API &#x4E4B;&#x4E0A;&#xFF0C;&#x4E0D;&#x518D;&#x4F9D;&#x8D56;&#x7AD9;&#x5916;&#x8BC4;&#x8BBA;&#x670D;&#x52A1;&#x3002;</p>
+			<p>&#x5F53;&#x524D;&#x6A21;&#x5F0F;&#xFF1A;&#x65B0;&#x8BC4;&#x8BBA;&#x9ED8;&#x8BA4;&#x76F4;&#x63A5;&#x53D1;&#x5E03;&#xFF0C;&#x65E0;&#x9700;&#x5BA1;&#x6838;&#x3002;</p>
 		</section>
 
 		<section class="panel stack">
 			<div class="row">
-				<input id="admin-password" type="password" placeholder="输入评论后台密码" />
+				<input id="admin-password" type="password" placeholder="&#x8F93;&#x5165;&#x8BC4;&#x8BBA;&#x540E;&#x53F0;&#x5BC6;&#x7801;" />
 				<select id="comment-status">
-					<option value="approved">已发布</option>
-					<option value="pending">待审核</option>
-					<option value="rejected">已拒绝</option>
+					<option value="approved">&#x5DF2;&#x53D1;&#x5E03;</option>
+					<option value="pending">&#x5F85;&#x5BA1;&#x6838;</option>
+					<option value="rejected">&#x5DF2;&#x62D2;&#x7EDD;</option>
 				</select>
-				<button id="load-comments">加载评论</button>
+				<button id="load-comments">&#x52A0;&#x8F7D;&#x8BC4;&#x8BBA;</button>
 			</div>
-			<div id="admin-notice" class="notice">输入后台密码后即可读取评论列表，默认显示已发布评论。</div>
+			<div id="admin-notice" class="notice">&#x8F93;&#x5165;&#x540E;&#x53F0;&#x5BC6;&#x7801;&#x540E;&#x5373;&#x53EF;&#x8BFB;&#x53D6;&#x8BC4;&#x8BBA;&#x5217;&#x8868;&#xFF0C;&#x9ED8;&#x8BA4;&#x663E;&#x793A;&#x5DF2;&#x53D1;&#x5E03;&#x8BC4;&#x8BBA;&#x3002;</div>
 		</section>
 
 		<section class="panel stack">
-			<h2>评论列表</h2>
+			<h2>&#x8BC4;&#x8BBA;&#x5217;&#x8868;</h2>
 			<div id="comment-list" class="comment-list"></div>
 		</section>
 	</main>
