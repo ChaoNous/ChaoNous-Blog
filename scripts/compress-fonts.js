@@ -29,6 +29,7 @@ async function main() {
 		await fontSplit({
 			FontPath: SOURCE_FONT_PATH,
 			destFolder: OUTPUT_DIR,
+			outDir: OUTPUT_DIR, // Ensure compatibility with newer API
 			cssName: "ZhuqueFangsong",
 			targetType: "woff2",
 			chunkSize: 70 * 1024, // 70KB per slice
