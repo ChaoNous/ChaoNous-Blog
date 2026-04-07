@@ -1,0 +1,94 @@
+---
+import type { MarkdownHeading } from "astro";
+import type { WidgetComponentConfig } from "../../types/config";
+import CardTOC from "@components/widget/CardTOC.astro";
+import Categories from "@components/widget/Categories.astro";
+import MusicPlayer from "@components/widget/MusicPlayer.svelte";
+import Profile from "@components/widget/Profile.astro";
+import SiteStats from "@components/widget/SiteStats.astro";
+import TOC from "@components/widget/TOC.astro";
+import { widgetManager } from "@utils/widget-manager";
+
+interface Props {
+	id?: string;
+	components: WidgetComponentConfig[];
+	headings?: MarkdownHeading[];
+	wrapperClass?: string;
+	isPostPage?: boolean;
+}
+
+const {
+	id,
+	components,
+	headings,
+	wrapperClass,
+	isPostPage = Astro.url.pathname.startsWith("/posts/"),
+} = Astro.props;
+
+// 判断是否是文章页面
+
+// 文章页面只显示目录（card-toc），隐藏分类（categories）
+// 其他页面只显示分类（categories），隐藏目录（card-toc）
+// 两者都在左侧头像下方，但互斥显示
+const filteredComponents = components.filter((c) => {
+	// 文章页面隐藏个人资料、分类和站点统计，只保留目录
+	if (c.type === "profile") {
+		return !isPostPage;
+	}
+	if (c.type === "categories") {
+		// 分类：只在非文章页面显示
+		return !isPostPage;
+	}
+	if (c.type === "site-stats") {
+		// 站点统计：只在非文章页面显示
+		return !isPostPage;
+	}
+	if (c.type === "card-toc") {
+		// 目录：只在文章页面显示
+		return isPostPage;
+	}
+	return true;
+});
+
+const componentMap = {
+	profile: Profile,
+	categories: Categories,
+	toc: TOC,
+	"card-toc": CardTOC,
+	"music-player": MusicPlayer,
+	"site-stats": SiteStats,
+};
+---
+
+<div id={id} class:list={wrapperClass}>
+	{
+		filteredComponents.map((component, index) => {
+			const ComponentToRender = componentMap[
+				component.type as keyof typeof componentMap
+			] as any;
+
+			if (!ComponentToRender) {
+				return null;
+			}
+
+			const sharedProps = {
+				class: widgetManager.getComponentClass(component, index),
+				style: widgetManager.getComponentStyle(component, index),
+				...component.customProps,
+			};
+
+			const showDivider = index > 0;
+
+			return (
+				<>
+					{showDivider && <div class="sidebar-divider"></div>}
+					{(component.type === "toc" || component.type === "card-toc") && headings ? (
+						<ComponentToRender {...sharedProps} headings={headings} />
+					) : (
+						<ComponentToRender {...sharedProps} />
+					)}
+				</>
+			);
+		})
+	}
+</div>

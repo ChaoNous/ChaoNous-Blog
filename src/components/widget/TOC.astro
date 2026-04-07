@@ -1,0 +1,371 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+	class?: string;
+	headings?: MarkdownHeading[];
+}
+
+const className = Astro.props.class;
+---
+
+<table-of-contents class:list={[className, "group"]} id="toc">
+
+</table-of-contents>
+
+<script>
+	import { getMinLevel } from "../../utils/toc-utils.js";
+
+	class TableOfContents extends HTMLElement {
+		tocEl: HTMLElement | null = null;
+		visibleClass = "visible";
+		observer: IntersectionObserver;
+		anchorNavTarget: HTMLElement | null = null;
+		headingIdxMap = new Map<string, number>();
+		headings: HTMLElement[] = [];
+		sections: HTMLElement[] = [];
+		tocEntries: HTMLAnchorElement[] = [];
+		active: boolean[] = [];
+		activeIndicator: HTMLElement | null = null;
+		scrollPadding = 24;
+		headingOffset = 112;
+		handleScroll = () => {
+			this.syncActiveHeadingsFromScroll();
+		};
+
+		constructor() {
+			super();
+			this.observer = new IntersectionObserver(this.markVisibleSection, {
+				rootMargin: "-96px 0px -65% 0px",
+				threshold: 0,
+			});
+		}
+
+		markVisibleSection = (entries: IntersectionObserverEntry[]) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting && this.anchorNavTarget == entry.target)
+					this.anchorNavTarget = null;
+			});
+			this.syncActiveHeadingsFromScroll();
+		};
+
+		toggleActiveHeading = () => {
+			let i = this.active.length - 1;
+			let min = this.active.length - 1,
+				max = -1;
+			while (i >= 0 && !this.active[i]) {
+				if (this.tocEntries[i]) {
+					this.tocEntries[i].classList.remove(this.visibleClass);
+				}
+				i--;
+			}
+			while (i >= 0 && this.active[i]) {
+				if (this.tocEntries[i]) {
+					this.tocEntries[i].classList.add(this.visibleClass);
+					min = Math.min(min, i);
+					max = Math.max(max, i);
+				}
+				i--;
+			}
+			while (i >= 0) {
+				if (this.tocEntries[i]) {
+					this.tocEntries[i].classList.remove(this.visibleClass);
+				}
+				i--;
+			}
+			if (min > max) {
+				this.activeIndicator?.setAttribute("style", `opacity: 0`);
+			} else {
+				const tocEl = this.tocEl;
+				const activeIndicator = this.activeIndicator;
+				const minEntry = this.tocEntries[min];
+				const maxEntry = this.tocEntries[max];
+				// Read all layout values before writing anything
+				const parentOffset = tocEl?.getBoundingClientRect().top ?? 0;
+				const scrollOffset = tocEl?.scrollTop ?? 0;
+				const top = minEntry ? minEntry.getBoundingClientRect().top - parentOffset + scrollOffset : 0;
+				const bottom = maxEntry ? maxEntry.getBoundingClientRect().bottom - parentOffset + scrollOffset : 0;
+				activeIndicator?.setAttribute(
+					"style",
+					`top: ${top}px; height: ${bottom - top}px`,
+				);
+			}
+		};
+
+		scrollToActiveHeading = () => {
+			if (this.anchorNavTarget || !this.tocEl) return;
+			const activeHeading = Array.from(
+				this.querySelectorAll<HTMLAnchorElement>(`.${this.visibleClass}`),
+			);
+			if (!activeHeading.length) return;
+
+			const targetEntry = activeHeading[activeHeading.length - 1];
+			const tocHeight = this.tocEl.clientHeight;
+			const currentTop = this.tocEl.scrollTop;
+			const currentBottom = currentTop + tocHeight;
+			const targetTop = targetEntry.offsetTop;
+			const targetBottom = targetTop + targetEntry.offsetHeight;
+			const upperBound = currentTop + tocHeight * 0.2;
+			const lowerBound = currentTop + tocHeight * 0.45;
+			const preferredTop = Math.max(0, targetTop - tocHeight * 0.35);
+
+			if (targetTop < upperBound) {
+				this.tocEl.scrollTo({
+					top: preferredTop,
+					left: 0,
+					behavior: "smooth",
+				});
+				return;
+			}
+
+			if (targetBottom > lowerBound || targetBottom > currentBottom - this.scrollPadding) {
+				this.tocEl.scrollTo({
+					top: preferredTop,
+					left: 0,
+					behavior: "smooth",
+				});
+			}
+		};
+
+		update = () => {
+			requestAnimationFrame(() => {
+				this.toggleActiveHeading();
+				this.scrollToActiveHeading();
+			});
+		};
+
+		markActiveHeading = (idx: number) => {
+			this.active[idx] = true;
+		};
+
+		resetActiveHeadings = () => {
+			this.active.fill(false);
+		};
+
+		syncActiveHeadingsFromScroll = () => {
+			if (!this.headings.length) return;
+
+			let currentIdx = 0;
+			for (let i = 0; i < this.headings.length; i++) {
+				if (this.headings[i].getBoundingClientRect().top <= this.headingOffset) {
+					currentIdx = i;
+				} else {
+					break;
+				}
+			}
+
+			this.resetActiveHeadings();
+			this.markActiveHeading(currentIdx);
+
+			const currentDepth = Number.parseInt(
+				this.headings[currentIdx]?.tagName.slice(1) || "1",
+				10,
+			);
+			for (let i = currentIdx - 1; i >= 0; i--) {
+				const depth = Number.parseInt(
+					this.headings[i]?.tagName.slice(1) || "1",
+					10,
+				);
+				if (depth < currentDepth) {
+					this.markActiveHeading(i);
+					break;
+				}
+			}
+
+			this.update();
+		};
+
+		handleAnchorClick = (event: Event) => {
+			const anchor = event
+				.composedPath()
+				.find((element) => element instanceof HTMLAnchorElement);
+
+			if (anchor) {
+				event.preventDefault();
+
+				const id = decodeURIComponent(anchor.hash?.substring(1));
+				const targetElement = document.getElementById(id);
+
+				if (targetElement) {
+					const navbarHeight = 80;
+					const targetTop =
+						targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+					window.scrollTo({
+						top: targetTop,
+						behavior: "smooth",
+					});
+				}
+
+				const idx = this.headingIdxMap.get(id);
+				if (idx !== undefined) {
+					this.anchorNavTarget = this.headings[idx];
+				} else {
+					this.anchorNavTarget = null;
+				}
+			}
+		};
+
+		connectedCallback() {
+			const element =
+				document.querySelector(".custom-md") ||
+				document.querySelector(".prose") ||
+				document.querySelector(".markdown-content");
+			let initialized = false;
+			const tryInit = () => {
+				if (!initialized) {
+					initialized = true;
+					this.init();
+				}
+			};
+			if (element) {
+				element.addEventListener("animationend", tryInit, { once: true });
+				setTimeout(tryInit, 300);
+			} else {
+				tryInit();
+				setTimeout(tryInit, 300);
+			}
+		}
+
+		init() {
+			this.regenerateTOC();
+
+			this.tocEl = this;
+
+			this.tocEl.addEventListener("click", this.handleAnchorClick, {
+				capture: true,
+			});
+			window.addEventListener("scroll", this.handleScroll, {
+				passive: true,
+			});
+			window.addEventListener("resize", this.handleScroll);
+
+			this.activeIndicator = document.getElementById("active-indicator");
+
+			this.tocEntries = Array.from(
+				this.querySelectorAll<HTMLAnchorElement>("a[href^='#']"),
+			);
+
+			if (this.tocEntries.length === 0) return;
+
+			this.sections = new Array(this.tocEntries.length);
+			this.headings = new Array(this.tocEntries.length);
+			for (let i = 0; i < this.tocEntries.length; i++) {
+				const id = decodeURIComponent(this.tocEntries[i].hash?.substring(1));
+				const heading = document.getElementById(id);
+				if (heading instanceof HTMLElement) {
+					this.headings[i] = heading;
+					this.sections[i] = heading;
+					this.headingIdxMap.set(id, i);
+				}
+			}
+			this.active = new Array(this.tocEntries.length).fill(false);
+
+			this.sections.forEach((section) => this.observer.observe(section));
+
+			this.syncActiveHeadingsFromScroll();
+		}
+
+		regenerateTOC(retryCount = 0) {
+			const isPostPage =
+				window.location.pathname.includes("/posts/") ||
+				document.querySelector(".custom-md, .markdown-content") !== null;
+			if (!isPostPage) {
+				this.innerHTML = "";
+				delete this.dataset.loaded;
+				return;
+			}
+
+			const headings = Array.from(
+				document.querySelectorAll("h1, h2, h3, h4, h5, h6"),
+			)
+				.filter((h) => h.id)
+				.map((h) => ({
+					depth: parseInt(h.tagName.substring(1)),
+					slug: h.id,
+					text: (h.textContent || "").replace(/#+\s*$/, ""),
+				}));
+
+			if (headings.length === 0 && retryCount < 3) {
+				setTimeout(() => this.regenerateTOC(retryCount + 1), 120);
+				return;
+			}
+			if (headings.length === 0) {
+				this.innerHTML = "";
+				delete this.dataset.loaded;
+				return;
+			}
+
+			const minDepth = getMinLevel(headings);
+
+			const siteConfig = (window as any).siteConfig || {};
+			const maxLevel = siteConfig.toc?.depth || 3;
+
+			let heading1Count = 1;
+			const maxVisibleDepth = minDepth + maxLevel;
+			const tocHTML = headings
+				.filter((heading) => heading.depth < maxVisibleDepth)
+				.map((heading) => {
+					const depthClass =
+						heading.depth === minDepth
+							? ""
+							: heading.depth === minDepth + 1
+								? "ml-4"
+								: "ml-8";
+
+					let badgeContent = "";
+					if (heading.depth === minDepth) {
+						badgeContent = heading1Count.toString();
+						heading1Count++;
+					} else if (heading.depth === minDepth + 1) {
+						badgeContent =
+							'<div class="transition w-2 h-2 rounded-[0.1875rem] bg-(--toc-badge-bg)"></div>';
+					} else {
+						badgeContent =
+							'<div class="transition w-1.5 h-1.5 rounded-sm bg-black/5 dark:bg-white/10"></div>';
+					}
+
+					return `<a href="#${heading.slug}" class="px-2 flex gap-2 relative transition w-full min-h-9 rounded-xl hover:bg-(--toc-btn-hover) active:bg-(--toc-btn-active) py-2">
+                    <div class="transition w-5 h-5 shrink-0 rounded-lg text-base flex items-center justify-center font-bold ${depthClass} ${heading.depth === minDepth ? "bg-(--toc-badge-bg) text-(--btn-content)" : ""}">
+                        ${badgeContent}
+                    </div>
+                    <div class="transition text-base ${heading.depth <= minDepth + 1 ? "text-50" : "text-30"}">${heading.text}</div>
+                </a>`;
+				})
+				.join("");
+			this.innerHTML =
+				tocHTML +
+				'<div id="active-indicator" style="opacity: 0" class="-z-10 absolute bg-(--toc-btn-hover) left-0 right-0 rounded-xl transition-all group-hover:bg-transparent border-2 border-(--toc-btn-hover) group-hover:border-(--toc-btn-active) border-dashed"></div>';
+			this.dataset.loaded = "true";
+		}
+
+		disconnectedCallback() {
+			this.sections.forEach((section) => this.observer.unobserve(section));
+			this.observer.disconnect();
+			this.tocEl?.removeEventListener("click", this.handleAnchorClick);
+			window.removeEventListener("scroll", this.handleScroll);
+			window.removeEventListener("resize", this.handleScroll);
+		}
+	}
+
+	if (!customElements.get("table-of-contents")) {
+		customElements.define("table-of-contents", TableOfContents);
+	}
+</script>
+
+<style>
+	table-of-contents#toc {
+		height: 100%;
+		min-height: 0;
+		max-height: 100%;
+		overflow: auto;
+		position: relative;
+		scroll-behavior: smooth;
+		display: block;
+		overscroll-behavior: contain;
+	}
+
+	table-of-contents#toc::-webkit-scrollbar {
+		display: none;
+	}
+</style>

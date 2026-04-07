@@ -1,0 +1,380 @@
+---
+import type { MarkdownHeading } from "astro";
+import { siteConfig } from "../../config";
+import WidgetLayout from "./WidgetLayout.astro";
+
+interface Props {
+	class?: string;
+	style?: string;
+	headings?: MarkdownHeading[];
+}
+
+const { headings = [] } = Astro.props;
+const className = Astro.props.class;
+const style = Astro.props.style;
+const tocDepth = siteConfig.toc.depth;
+const headingsJson = JSON.stringify(headings);
+---
+
+<WidgetLayout
+	id="card-toc"
+	name="目录"
+	class={className}
+	style={style}
+>
+	<div
+		class="card-toc-wrapper"
+		data-depth={tocDepth}
+		data-headings={headingsJson}
+	>
+		<div class="toc-scroll-container overflow-y-auto overflow-x-hidden">
+			<div class="toc-content" data-card-toc-content></div>
+		</div>
+	</div>
+</WidgetLayout>
+
+<style>
+	:global(widget-layout[data-id="card-toc"]) {
+		display: flex;
+		flex-direction: column;
+		flex: 0 1 auto;
+		min-height: 0;
+		overflow: visible !important;
+	}
+
+	#card-toc {
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		overflow: visible;
+	}
+
+	.card-toc-wrapper {
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+	}
+
+	.toc-scroll-container {
+		flex: 0 1 auto;
+		min-height: 0;
+		overflow-y: auto;
+		max-height: calc(100vh - 12rem);
+	}
+
+	.toc-scroll-container::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	.toc-scroll-container::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.toc-scroll-container::-webkit-scrollbar-thumb {
+		background: var(--line-color);
+		border-radius: 2px;
+	}
+
+	:global(.card-toc-item) {
+		display: flex;
+		align-items: flex-start;
+		padding: 0.6rem 0.8rem;
+		color: var(--text-secondary);
+		text-decoration: none;
+		font-size: 1rem;
+		line-height: 1.55;
+		border-radius: 0.85rem;
+		transition: all 0.2s;
+		cursor: pointer;
+	}
+
+	:global(.card-toc-item:hover) {
+		color: var(--primary);
+		background: color-mix(in oklch, var(--primary) 5%, transparent);
+	}
+
+	:global(.card-toc-item.active) {
+		color: var(--primary);
+		font-weight: 600;
+		box-shadow: none;
+	}
+
+	:global(.card-toc-badge) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.25rem;
+		height: 1.25rem;
+		background: transparent;
+		color: var(--primary);
+		border-radius: 0.25rem;
+		font-size: 1rem;
+		font-weight: bold;
+		margin-right: 0.5rem;
+		flex-shrink: 0;
+	}
+
+	:global(.card-toc-item.active .card-toc-badge) {
+		background: transparent;
+		color: var(--primary);
+	}
+
+	:global(.card-toc-dot) {
+		display: block;
+		width: 0.5rem;
+		height: 0.5rem;
+		background: var(--line-divider);
+		border-radius: 50%;
+		margin-right: 0.75rem;
+		margin-left: 0.25rem;
+		margin-top: calc((1.5em - 0.5rem) / 2);
+		flex-shrink: 0;
+	}
+
+	:global(.card-toc-dot-small) {
+		display: block;
+		width: 0.35rem;
+		height: 0.35rem;
+		background: var(--line-divider);
+		border-radius: 50%;
+		margin-right: 0.75rem;
+		margin-left: 0.35rem;
+		margin-top: calc((1.5em - 0.35rem) / 2);
+		flex-shrink: 0;
+	}
+
+	:global(.card-toc-item.active .card-toc-dot),
+	:global(.card-toc-item.active .card-toc-dot-small) {
+		background: var(--primary);
+	}
+
+	:global(.card-toc-text) {
+		flex: 1;
+		overflow: visible;
+		text-overflow: unset;
+		white-space: normal;
+		word-break: break-word;
+		overflow-wrap: anywhere;
+	}
+</style>
+
+<script>
+	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
+	import { getMinLevel, updateActiveHeading } from "../../utils/toc-utils.js";
+
+	interface HeadingData {
+		depth: number;
+		slug: string;
+		text: string;
+	}
+
+	class CardTOC {
+		private wrapper: HTMLElement;
+		private content: HTMLElement | null;
+		private headings: HTMLElement[] = [];
+		private tocItems: HTMLElement[] = [];
+
+		private observer: MutationObserver | null = null;
+		private readonly handleScroll = () => this.updateActive();
+		private readonly handleResize = () => this.updateActive();
+		private readonly handleClick = (event: Event) => {
+			const item = (event.target as HTMLElement).closest(".card-toc-item");
+			if (!item) return;
+
+			const id = item.getAttribute("data-heading-id");
+			if (!id) return;
+
+			const element = document.getElementById(id);
+			if (!element) return;
+
+			const top = element.getBoundingClientRect().top + window.scrollY - 80;
+			window.scrollTo({ top, behavior: "smooth" });
+		};
+
+		constructor(wrapper: HTMLElement) {
+			this.wrapper = wrapper;
+			this.content = wrapper.querySelector("[data-card-toc-content]");
+			this.init();
+		}
+
+		private init() {
+			const headingsAttr = this.wrapper.dataset.headings;
+			if (headingsAttr) {
+				try {
+					const headingsData: HeadingData[] = JSON.parse(headingsAttr);
+					if (headingsData.length > 0) {
+						this.generateTOCFromHeadingsData(headingsData);
+						this.bindEvents();
+						return;
+					}
+				} catch (error) {
+					console.warn("Failed to parse headings data:", error);
+				}
+			}
+
+			this.generateTOC();
+			this.bindEvents();
+			this.observeContent();
+		}
+
+		private generateTOCFromHeadingsData(headingsData: HeadingData[]) {
+			if (!this.content) return;
+
+			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
+			const minLevel = getMinLevel(headingsData);
+			const maxVisibleDepth = minLevel + depthLevels;
+
+			this.headings = [];
+			let html = "";
+			let h1Count = 0;
+
+			headingsData.forEach((heading) => {
+				if (heading.depth >= maxVisibleDepth) return;
+
+				const domElement = document.getElementById(heading.slug);
+				if (domElement) {
+					this.headings.push(domElement);
+				}
+
+				const indent = heading.depth - minLevel;
+				let badge = "";
+
+				if (heading.depth === minLevel) {
+					h1Count++;
+					badge = `<span class="card-toc-badge">${h1Count}</span>`;
+				} else if (heading.depth === minLevel + 1) {
+					badge = '<span class="card-toc-dot"></span>';
+				} else {
+					badge = '<span class="card-toc-dot-small"></span>';
+				}
+
+				const text = heading.text.replace(/#+\s*$/, "");
+				html += `<div class="card-toc-item" style="padding-left: ${0.5 + indent}rem" data-heading-id="${heading.slug}">${badge}<span class="card-toc-text">${text}</span></div>`;
+			});
+
+			this.render(html);
+			this.wrapper.classList.remove("hidden");
+			this.updateActive();
+		}
+
+		private observeContent() {
+			const contentWrapper = document.getElementById("post-container");
+			if (!contentWrapper) return;
+
+			this.observer = new MutationObserver(() => {
+				this.generateTOC();
+			});
+
+			this.observer.observe(contentWrapper, {
+				childList: true,
+				subtree: true,
+			});
+		}
+
+		private generateTOC() {
+			const container = document.getElementById("post-container");
+			if (!container) {
+				this.wrapper.classList.add("hidden");
+				return;
+			}
+
+			const allHeadings = container.querySelectorAll(
+				"h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]",
+			);
+
+			if (allHeadings.length === 0) {
+				this.wrapper.classList.add("hidden");
+				this.headings = [];
+				this.render("");
+				return;
+			}
+
+			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
+			const headingArray = Array.from(allHeadings) as HTMLElement[];
+			const minLevel = getMinLevel(headingArray);
+			const maxVisibleDepth = minLevel + depthLevels;
+
+			this.headings = [];
+			let html = "";
+			let h1Count = 0;
+
+			headingArray.forEach((heading) => {
+				const level = parseInt(heading.tagName[1], 10);
+				if (level >= maxVisibleDepth) return;
+
+				this.headings.push(heading);
+
+				const indent = level - minLevel;
+				let badge = "";
+
+				if (level === minLevel) {
+					h1Count++;
+					badge = `<span class="card-toc-badge">${h1Count}</span>`;
+				} else if (level === minLevel + 1) {
+					badge = '<span class="card-toc-dot"></span>';
+				} else {
+					badge = '<span class="card-toc-dot-small"></span>';
+				}
+
+				const text = (heading.textContent || "").replace(/#+\s*$/, "");
+				html += `<div class="card-toc-item" style="padding-left: ${0.5 + indent}rem" data-heading-id="${heading.id}">${badge}<span class="card-toc-text">${text}</span></div>`;
+			});
+
+			this.render(html);
+			this.wrapper.classList.remove("hidden");
+			this.updateActive();
+		}
+
+		private render(html: string) {
+			if (!this.content) return;
+
+			this.content.innerHTML = html;
+			this.tocItems = Array.from(this.content.querySelectorAll(".card-toc-item"));
+		}
+
+		private updateActive() {
+			if (!this.content || this.headings.length === 0) return;
+			const scrollY = window.scrollY;
+			updateActiveHeading(this.headings, this.tocItems, scrollY, 150);
+		}
+
+		private bindEvents() {
+			window.addEventListener("scroll", this.handleScroll, { passive: true });
+			window.addEventListener("resize", this.handleResize, { passive: true });
+			this.content?.addEventListener("click", this.handleClick);
+		}
+
+		destroy() {
+			window.removeEventListener("scroll", this.handleScroll);
+			window.removeEventListener("resize", this.handleResize);
+			this.content?.removeEventListener("click", this.handleClick);
+			this.observer?.disconnect();
+		}
+	}
+
+	type CardTOCWindow = Window & {
+		__cardTocInstances?: CardTOC[];
+	};
+
+	const initCardTOC = () => {
+		const cardTocWindow = window as CardTOCWindow;
+		cardTocWindow.__cardTocInstances?.forEach((instance) => instance.destroy());
+		cardTocWindow.__cardTocInstances = Array.from(
+			document.querySelectorAll(".card-toc-wrapper"),
+		).map((wrapper) => new CardTOC(wrapper as HTMLElement));
+	};
+
+	registerPageScript("card-toc", {
+		shouldRun() {
+			return document.querySelector(".card-toc-wrapper") !== null;
+		},
+		init() {
+			initCardTOC();
+			return () => {
+				const cardTocWindow = window as CardTOCWindow;
+				cardTocWindow.__cardTocInstances?.forEach((instance) => instance.destroy());
+				cardTocWindow.__cardTocInstances = [];
+			};
+		},
+	});
+</script>

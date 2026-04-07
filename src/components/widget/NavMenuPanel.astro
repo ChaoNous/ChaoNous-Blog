@@ -1,0 +1,228 @@
+---
+import { Icon } from "astro-icon/components";
+import { LinkPresets } from "../../constants/link-presets";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
+import { LinkPreset, type NavBarLink } from "../../types/config";
+import { url } from "../../utils/url-utils";
+
+interface Props {
+	links: NavBarLink[];
+}
+
+const navTitleMap: Record<string, string> = {
+	Links: I18nKey.navLinks,
+	My: I18nKey.navMy,
+	About: I18nKey.navAbout,
+	Others: I18nKey.navOthers,
+	Diary: I18nKey.diary,
+	Gallery: I18nKey.albums,
+	Friends: I18nKey.friends,
+};
+
+const getLocalizedName = (name: string): string => {
+	const keyValue = navTitleMap[name];
+	if (keyValue) {
+		return i18n(keyValue as I18nKey);
+	}
+	return name;
+};
+
+type ProcessedNavBarLink = Omit<NavBarLink, "children"> & {
+	children?: ProcessedNavBarLink[];
+};
+
+const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
+	(link: NavBarLink): ProcessedNavBarLink => ({
+		...link,
+		children: link.children?.map(
+			(child: NavBarLink | LinkPreset): ProcessedNavBarLink => {
+				if (typeof child === "number") {
+					return LinkPresets[child] as ProcessedNavBarLink;
+				}
+				return child as ProcessedNavBarLink;
+			},
+		),
+	}),
+);
+
+---
+
+<div
+	id="nav-menu-panel"
+	class:list={[
+		"mobile-menu-panel float-panel-closed absolute transition-all fixed right-0 left-0 px-2 py-2 max-h-[80vh] overflow-y-auto",
+	]}
+>
+	{
+		processedLinks.map((link) => (
+			<div class="mobile-menu-item">
+				{link.children && link.children.length > 0 ? (
+					<div class="mobile-dropdown" data-mobile-dropdown>
+				<button
+							class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4 w-full text-left
+                            hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+							data-mobile-dropdown-trigger
+							aria-expanded="false"
+						>
+							<div class="flex items-center transition nav-item-text font-bold">
+								{link.icon && (
+									<Icon
+										name={link.icon}
+										class="text-[1.1rem] mr-2"
+									/>
+								)}
+								{getLocalizedName(link.name)}
+							</div>
+							<Icon
+								name="material-symbols:keyboard-arrow-down-rounded"
+								class="transition text-[1.25rem] text-(--primary) mobile-dropdown-arrow duration-200"
+							/>
+						</button>
+						<div class="mobile-submenu" data-mobile-submenu>
+							{link.children.map((child) => (
+								<a
+									href={
+										child.external
+											? child.url
+											: url(child.url)
+									}
+									class="group flex justify-between items-center py-2.5 pl-6 pr-2 rounded-xl gap-4
+                                   hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
+									target={child.external ? "_blank" : null}
+								>
+									<div class="flex items-center transition nav-subitem-text font-medium">
+										{child.icon && (
+											<Icon
+												name={child.icon}
+												class="text-[1.1rem] mr-2"
+											/>
+										)}
+										{getLocalizedName(child.name)}
+									</div>
+									{child.external && (
+										<Icon
+											name="fa7-solid:arrow-up-right-from-square"
+											class="transition text-[1rem] nav-arrow"
+										/>
+									)}
+								</a>
+							))}
+						</div>
+					</div>
+				) : (
+					<a
+						href={link.external ? link.url : url(link.url)}
+						class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4
+                    hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition
+                "
+						target={link.external ? "_blank" : null}
+					>
+						<div class="flex items-center transition nav-item-text font-bold">
+							{link.icon && (
+								<Icon
+									name={link.icon}
+									class="text-[1.1rem] mr-2"
+								/>
+							)}
+							{getLocalizedName(link.name)}
+						</div>
+						{!link.external && (
+							<Icon
+								name="material-symbols:chevron-right-rounded"
+								class="transition text-[1.25rem] text-(--primary)"
+							/>
+						)}
+						{link.external && (
+							<Icon
+								name="fa7-solid:arrow-up-right-from-square"
+								class="transition text-[1rem] nav-arrow"
+							/>
+						)}
+					</a>
+				)}
+			</div>
+		))
+	}
+</div>
+
+<style>
+	@reference "../../styles/main.css";
+
+	.mobile-submenu {
+		@apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
+	}
+
+	.mobile-dropdown[data-expanded="true"] .mobile-submenu {
+		@apply max-h-96;
+	}
+
+	.mobile-dropdown[data-expanded="true"] .mobile-dropdown-arrow {
+		@apply rotate-180;
+	}
+
+	.nav-item-text {
+		color: color-mix(in oklch, var(--text-main) 75%, transparent);
+	}
+
+	.nav-subitem-text {
+		color: color-mix(in oklch, var(--text-main) 60%, transparent);
+	}
+
+	.nav-arrow {
+		color: var(--text-disabled);
+	}
+</style>
+
+<script>
+	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
+
+	registerPageScript("mobile-nav-menu-panel", {
+		shouldRun() {
+			return document.getElementById("nav-menu-panel") !== null;
+		},
+		init() {
+			const closeSiblingDropdowns = (activeDropdown: Element) => {
+				const mobileDropdowns = document.querySelectorAll(
+					"[data-mobile-dropdown]",
+				);
+				mobileDropdowns.forEach((dropdown) => {
+					if (dropdown === activeDropdown) return;
+					dropdown.setAttribute("data-expanded", "false");
+					const otherTrigger = dropdown.querySelector(
+						"[data-mobile-dropdown-trigger]",
+					);
+					if (otherTrigger instanceof HTMLElement) {
+						otherTrigger.setAttribute("aria-expanded", "false");
+					}
+				});
+			};
+
+			const handleClick = (event: MouseEvent) => {
+				const target = event.target;
+				if (!(target instanceof Element)) return;
+
+				const trigger = target.closest("[data-mobile-dropdown-trigger]");
+				if (!(trigger instanceof HTMLElement)) return;
+
+				const dropdown = trigger.closest("[data-mobile-dropdown]");
+				if (!(dropdown instanceof HTMLElement)) return;
+
+				event.preventDefault();
+				const isExpanded =
+					dropdown.getAttribute("data-expanded") === "true";
+				closeSiblingDropdowns(dropdown);
+
+				const newState = (!isExpanded).toString();
+				dropdown.setAttribute("data-expanded", newState);
+				trigger.setAttribute("aria-expanded", newState);
+			};
+
+			document.addEventListener("click", handleClick);
+
+			return () => {
+				document.removeEventListener("click", handleClick);
+			};
+		},
+	});
+</script>

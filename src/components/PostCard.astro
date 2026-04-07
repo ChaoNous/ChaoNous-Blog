@@ -1,0 +1,231 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { getFileDirFromPath, getPostUrl } from "@/utils/url-utils";
+import ImageWrapper from "./misc/ImageWrapper.astro";
+import PostMetadata from "./PostMeta.astro";
+
+interface Props {
+	class?: string;
+	entry: CollectionEntry<"posts">;
+	style?: string;
+}
+
+const { entry, style } = Astro.props;
+const className = Astro.props.class;
+
+const { title, published, updated, category, image, description, pinned } =
+	entry.data;
+
+const url = getPostUrl(entry);
+const hasCover = image !== undefined && image !== null && image !== "";
+const coverWidth = "28%";
+
+const { remarkPluginFrontmatter } = await render(entry);
+---
+
+<div
+	class:list={[
+		"card-base post-card-shell flex flex-col w-full rounded-(--radius-large) overflow-hidden relative",
+		className,
+	]}
+	style={style}
+>
+	<div
+		class="post-card-hover flex flex-col-reverse md:flex-col w-full h-full rounded-(--radius-large) overflow-hidden relative"
+	>
+		<div
+			class:list={[
+				"post-card-body pl-6 md:pl-10 pr-6 md:pr-4 pt-6 md:pt-8 pb-6 md:pb-7 relative",
+				{
+					"w-full md:w-[calc(100%-3.25rem-0.75rem)]": !hasCover,
+					"w-full md:w-[calc(100%-var(--coverWidth)-0.75rem)]": hasCover,
+				},
+			]}
+		>
+			<a
+				href={url}
+				class="post-card-title-link w-full block font-black mb-3 text-3xl text-100"
+			>
+				<span class="inline-flex items-center gap-2 w-full">
+					{
+						pinned && (
+							<Icon
+								name="mdi:pin"
+								class="inline text-(--primary) text-2xl -translate-y-0.5 flex-shrink-0"
+							/>
+						)
+					}
+					<span class="flex-shrink min-w-0">{title}</span>
+					<Icon
+						name="material-symbols:chevron-right-rounded"
+						class="post-card-title-arrow text-3xl text-(--primary) flex-shrink-0"
+					/>
+				</span>
+			</a>
+
+			<PostMetadata
+				published={published}
+				updated={updated}
+				category={category || ""}
+				hideUpdateDate={true}
+				className="mb-4"
+				words={remarkPluginFrontmatter.words}
+				showWordCount={true}
+			/>
+
+			<div
+				class:list={[
+					"post-card-excerpt transition text-100 font-bold text-lg leading-8 mb-1 pr-0 md:pr-8",
+					{ "line-clamp-3 md:line-clamp-2": !description },
+				]}
+			>
+				{description || remarkPluginFrontmatter.excerpt}
+			</div>
+		</div>
+
+		{
+			hasCover && (
+				<a
+					href={url}
+					aria-label={title}
+					class:list={[
+						"group post-card-cover",
+						"max-h-[28vh] md:max-h-none mx-4 mt-4 -mb-1 md:mb-0 md:mx-0 md:mt-0",
+						"md:w-(--coverWidth) relative md:absolute md:top-4 md:bottom-4 md:right-4 rounded-xl overflow-hidden active:scale-95",
+					]}
+					style="aspect-ratio: 16/9;"
+				>
+					<div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/18 group-active:bg-black/28 transition" />
+					<div class="absolute pointer-events-none z-20 w-full h-full flex items-center justify-center ">
+						<Icon
+							name="material-symbols:chevron-right-rounded"
+							class="transition opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 text-white text-5xl"
+						/>
+					</div>
+					<ImageWrapper
+						src={image}
+						basePath={getFileDirFromPath(entry.filePath || "")}
+						alt="Cover Image of the Post"
+						class="w-full h-full"
+						blur={true}
+						sizes="(max-width: 1023px) 65vw, 20vw"
+					/>
+				</a>
+			)
+		}
+
+		{
+			!hasCover && (
+				<a
+					href={url}
+					aria-label={title}
+					class="post-card-enter !hidden md:flex! btn-regular w-13 absolute right-4 top-4 bottom-4 rounded-xl bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) active:scale-95 transition-colors duration-150"
+				>
+					<Icon
+						name="material-symbols:chevron-right-rounded"
+						class="transition text-(--primary) text-4xl mx-auto"
+					/>
+				</a>
+			)
+		}
+	</div>
+</div>
+
+<style define:vars={{ coverWidth }}>
+	.post-card-shell {
+		padding-block: 0.25rem;
+		transition: transform 300ms ease-in-out, box-shadow 300ms ease-in-out;
+	}
+
+	.post-card-shell:hover {
+		transform: translateY(-0.25rem);
+		box-shadow: var(--shadow-lg);
+	}
+
+	.post-card-shell:active {
+		transform: translateY(0);
+	}
+
+	@media (max-width: 767px) {
+		.post-card-shell:hover {
+			transform: none;
+			box-shadow: none;
+		}
+	}
+</style>
+
+<style>
+	.post-card-body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	.post-card-title-link {
+		transition: color 300ms ease-in-out;
+	}
+
+	.post-card-title-link:hover {
+		color: var(--primary);
+	}
+
+	.post-card-title-link * {
+		transition-duration: 0s;
+	}
+
+	.post-card-title-arrow {
+		opacity: 0;
+		transform: translateX(-4px);
+		transition: opacity 300ms ease-out, transform 300ms ease-out;
+	}
+
+	.post-card-title-link:hover .post-card-title-arrow {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	.post-card-excerpt {
+		font-size: clamp(1rem, 1.02rem + 0.18vw, 1.18rem);
+		line-height: 1.8;
+		font-weight: 430;
+		color: color-mix(in oklch, currentColor 72%, transparent);
+		text-wrap: pretty;
+		max-width: 42rem;
+	}
+
+	.post-card-cover img {
+		transform: scale(1.01);
+		transition:
+			transform 360ms ease,
+			filter 360ms ease;
+	}
+
+	.post-card-cover:hover img {
+		transform: scale(1.045);
+		filter: saturate(1.03) contrast(1.02);
+	}
+
+
+	@media (max-width: 767px) {
+		.post-card-title {
+			font-size: 1.7rem;
+			line-height: 1.12;
+			letter-spacing: -0.02em;
+		}
+
+		.post-card-excerpt {
+			font-size: 1rem;
+			line-height: 1.72;
+		}
+
+		.post-card-enter {
+			opacity: 0.82;
+		}
+
+		.post-card-enter:hover {
+			opacity: 1;
+		}
+	}
+</style>

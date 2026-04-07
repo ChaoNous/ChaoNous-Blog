@@ -1,0 +1,65 @@
+# RSS/Atom CORS headers
+/atom.xml
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET
+  Access-Control-Max-Age: 86400
+
+/rss.xml
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET
+  Access-Control-Max-Age: 86400
+
+# Static assets - immutable long-term cache (Astro hashes filenames)
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Build-generated assets (post-build script output) - hashed filenames
+/assets/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Font files (legacy path) - long-term cache
+/assets/font/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Image assets - long-term cache (30 days)
+/assets/images/*
+  Cache-Control: public, max-age=2592000
+/assets/icons/*
+  Cache-Control: public, max-age=2592000
+/assets/desktop-banner/*
+  Cache-Control: public, max-age=2592000, immutable
+/assets/mobile-banner/*
+  Cache-Control: public, max-age=2592000, immutable
+/assets/posts/*
+  Cache-Control: public, max-age=2592000
+
+# Pagefind search index - medium cache
+/pagefind/*
+  Cache-Control: public, max-age=3600
+
+# JS files in public - medium cache
+/js/*
+  Cache-Control: public, max-age=86400
+
+# CSS files in public - medium cache
+/assets/css/*
+  Cache-Control: public, max-age=86400
+
+# Favicon - long-term cache
+/favicon/*
+  Cache-Control: public, max-age=2592000
+
+# HTML pages - security headers
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()

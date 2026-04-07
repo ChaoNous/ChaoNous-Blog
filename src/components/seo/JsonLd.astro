@@ -1,0 +1,107 @@
+---
+import { siteConfig, profileConfig } from "@/config";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	type?: "website" | "article" | "person";
+	article?: {
+		title: string;
+		description?: string;
+		published?: Date;
+		modified?: Date;
+		image?: string;
+	};
+}
+
+const { type = "website", article } = Astro.props;
+
+// WebSite 结构化数据
+const websiteSchema = {
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	name: siteConfig.title,
+	url: siteConfig.siteURL,
+	description: siteConfig.subtitle,
+	publisher: {
+		"@type": "Organization",
+		name: siteConfig.title,
+		url: siteConfig.siteURL,
+		logo: {
+			"@type": "ImageObject",
+			url: url("/favicon/favicon.png"),
+		},
+	},
+	potentialAction: {
+		"@type": "SearchAction",
+		target: {
+			"@type": "EntryPoint",
+			urlTemplate: `${siteConfig.siteURL}search?q={search_term_string}`,
+		},
+		"query-input": "required name=search_term_string",
+	},
+};
+
+// Person 结构化数据
+const personSchema = {
+	"@context": "https://schema.org",
+	"@type": "Person",
+	name: profileConfig.name,
+	url: siteConfig.siteURL,
+	image: profileConfig.avatar
+		? url(profileConfig.avatar.startsWith("/")
+				? profileConfig.avatar
+				: `/src/assets/${profileConfig.avatar}`)
+		: undefined,
+	description: profileConfig.bio,
+	sameAs: profileConfig.links.map((link) => link.url),
+};
+
+// Article 结构化数据
+const articleSchema = article
+	? {
+			"@context": "https://schema.org",
+			"@type": "Article",
+			headline: article.title,
+			description: article.description,
+			image: article.image ? url(article.image) : undefined,
+			datePublished: article.published?.toISOString(),
+			dateModified: article.modified?.toISOString() || article.published?.toISOString(),
+			author: {
+				"@type": "Person",
+				name: profileConfig.name,
+				url: siteConfig.siteURL,
+			},
+			publisher: {
+				"@type": "Organization",
+				name: siteConfig.title,
+				url: siteConfig.siteURL,
+				logo: {
+					"@type": "ImageObject",
+					url: url("/favicon/favicon.png"),
+				},
+			},
+			mainEntityOfPage: {
+				"@type": "WebPage",
+				"@id": Astro.url.href,
+			},
+		}
+	: null;
+
+const schemas = [];
+
+if (type === "website" || type === "article") {
+	schemas.push(websiteSchema);
+}
+
+if (type === "person") {
+	schemas.push(personSchema);
+}
+
+if (type === "article" && articleSchema) {
+	schemas.push(articleSchema);
+}
+---
+
+{schemas.map((schema) => (
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+))}

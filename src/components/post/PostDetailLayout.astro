@@ -1,0 +1,203 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { MarkdownHeading } from "astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "../../components/misc/ImageWrapper.astro";
+import PostMetadata from "../../components/PostMeta.astro";
+import { siteConfig } from "../../config";
+import { getFileDirFromPath } from "../../utils/url-utils";
+import PostNavigation from "./PostNavigation.astro";
+
+interface Props {
+	entry: CollectionEntry<"posts">;
+	headings?: MarkdownHeading[];
+	jsonLd: Record<string, unknown>;
+	canonicalUrl?: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	remarkPluginFrontmatter: any;
+}
+
+const {
+	entry,
+	headings = [],
+	jsonLd,
+	canonicalUrl,
+	remarkPluginFrontmatter,
+} = Astro.props;
+---
+
+<MainGridLayout
+	title={entry.data.title}
+	description={entry.data.description}
+	lang={entry.data.lang}
+	setOGTypeArticle={true}
+	postSlug={entry.id}
+	canonicalUrl={canonicalUrl}
+	headings={headings}
+	isPostPage={true}
+>
+	<script
+		is:inline
+		slot="head"
+		type="application/ld+json"
+		set:html={JSON.stringify(jsonLd)}
+	/>
+	<script>
+		import("../../scripts/right-sidebar-layout.ts");
+	</script>
+	<div
+		class="post-article-shell flex w-full rounded-(--radius-large) overflow-hidden relative mb-4"
+	>
+		<div
+			id="post-container"
+			class:list={[
+				"card-base post-article-card z-10 px-4 md:px-12 pt-8 md:pt-10 pb-8 md:pb-10 relative w-full ",
+				{},
+			]}
+		>
+			<div
+				class="post-reading-meta flex flex-row text-50 gap-5 md:gap-6 mb-4 md:mb-5 transition onload-animation"
+			>
+				<div class="flex flex-row items-center">
+					<div
+						class="transition h-6 w-6 rounded-md bg-(--line-divider) flex items-center justify-center mr-2"
+					>
+						<Icon name="material-symbols:notes-rounded" />
+					</div>
+					<div class="text-base">
+						{remarkPluginFrontmatter.words}
+						{" " + i18n(I18nKey.wordsCount)}
+					</div>
+				</div>
+				<div class="flex flex-row items-center">
+					<div
+						class="transition h-6 w-6 rounded-md bg-(--line-divider) flex items-center justify-center mr-2"
+					>
+						<Icon
+							name="material-symbols:schedule-outline-rounded"
+						/>
+					</div>
+					<div class="text-base">
+						{remarkPluginFrontmatter.minutes}
+						{
+							" " +
+								i18n(
+									remarkPluginFrontmatter.minutes === 1
+										? I18nKey.minuteCount
+										: I18nKey.minutesCount,
+								)
+						}
+					</div>
+				</div>
+			</div>
+
+			<div class="relative onload-animation">
+				<div
+					data-pagefind-body
+					data-pagefind-weight="10"
+					data-pagefind-meta="title"
+					class="post-article-title transition w-full block font-bold mb-4 md:mb-5
+                    text-3xl md:text-[2.25rem]/[2.75rem]
+                    text-90
+                    md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
+                    before:absolute before:top-4 before:-left-5"
+				>
+					{entry.data.title}
+				</div>
+			</div>
+
+			<div class="onload-animation">
+				<PostMetadata
+					className="mb-5"
+					published={entry.data.published}
+					updated={entry.data.updated}
+					category={entry.data.category || undefined}
+					statsSlug={canonicalUrl}
+					statsUrl={canonicalUrl}
+					statsTitle={entry.data.title}
+				/>
+				{
+					(!entry.data.image ||
+						(entry.data.image &&
+							!siteConfig.showCoverInContent)) && (
+							<div class="mt-4 mb-5" />
+						)
+				}
+			</div>
+
+			{
+				entry.data.image && siteConfig.showCoverInContent && (
+					<>
+						<div class="mt-4" />
+						<ImageWrapper
+							id="post-cover"
+							src={entry.data.image}
+							basePath={getFileDirFromPath(entry.filePath || "")}
+							class="mb-8 rounded-xl banner-container onload-animation"
+							sizes="(max-width: 1023px) 95vw, 75vw"
+							blur={true}
+						/>
+					</>
+				)
+			}
+
+			<slot />
+			<slot name="post-actions" />
+		</div>
+	</div>
+
+	<PostNavigation
+		nextSlug={entry.data.nextSlug}
+		nextTitle={entry.data.nextTitle}
+		prevSlug={entry.data.prevSlug}
+		prevTitle={entry.data.prevTitle}
+	/>
+</MainGridLayout>
+
+<style>
+	.post-article-shell {
+		max-width: 100%;
+	}
+
+	.post-article-card {
+		max-width: 100%;
+		margin-inline: auto;
+	}
+
+	.post-reading-meta {
+		font-size: 1rem;
+		letter-spacing: 0.01em;
+		opacity: 0.86;
+	}
+
+	.post-article-title {
+		font-size: clamp(2.35rem, 4.6vw, 4.55rem);
+		line-height: 1.02;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+	}
+
+	@media (max-width: 767px) {
+		.post-article-card {
+			max-width: 100%;
+		}
+
+		.post-reading-meta {
+			flex-wrap: wrap;
+			gap: 0.65rem 1rem;
+			font-size: 0.94rem;
+		}
+
+		.post-article-title {
+			font-size: 1.95rem;
+			line-height: 1.16;
+			letter-spacing: -0.025em;
+			width: 100%;
+			max-width: none;
+			text-wrap: wrap;
+		}
+	}
+</style>
