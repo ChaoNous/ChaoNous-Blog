@@ -1304,6 +1304,8 @@
 		.music-player .player-play-button:focus-visible,
 		.music-player .player-mode-button:active:not(:disabled),
 		.music-player .player-play-button:active:not(:disabled) {
+			background: transparent !important;
+			background-color: transparent !important;
 			box-shadow: none !important;
 		}
 
