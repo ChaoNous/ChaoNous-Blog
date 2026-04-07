@@ -6,6 +6,46 @@
 	<meta name="robots" content="noindex,nofollow,noarchive" />
 	<title>CNC Admin | ChaoNous</title>
 	<style>
+		@font-face {
+			font-family: "Zhuque Fangsong UI";
+			src: url("/assets/fonts/ZhuqueFangsong-Regular-UI.woff2") format("woff2");
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: "Crimson Pro";
+			src: url("/assets/fonts/CrimsonPro-Regular.woff2") format("woff2");
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: "Crimson Pro";
+			src: url("/assets/fonts/CrimsonPro-Medium.woff2") format("woff2");
+			font-style: normal;
+			font-weight: 500;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: "Crimson Pro";
+			src: url("/assets/fonts/CrimsonPro-SemiBold.woff2") format("woff2");
+			font-style: normal;
+			font-weight: 600;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: "Crimson Pro";
+			src: url("/assets/fonts/CrimsonPro-Bold.woff2") format("woff2");
+			font-style: normal;
+			font-weight: 700;
+			font-display: swap;
+		}
+
 		:root {
 			color-scheme: light;
 			--bg: #f4efe8;
@@ -21,7 +61,8 @@
 			--success: #1f7a4d;
 			--danger: #b64435;
 			--shadow: 0 1.25rem 3rem rgba(36, 24, 22, 0.08);
-			font-family: "Crimson Pro", "Zhuque Fangsong UI", serif;
+			--font-content: "Zhuque Fangsong UI", "Crimson Pro", serif;
+			font-family: var(--font-content);
 		}
 
 		:root[data-theme="dark"] {
@@ -48,9 +89,19 @@
 			min-height: 100%;
 			background: radial-gradient(circle at top, var(--bg-accent), transparent 32%), var(--bg);
 			color: var(--text);
+			font-family: var(--font-content);
 		}
 
 		body { min-height: 100vh; }
+
+		body,
+		button,
+		input,
+		textarea,
+		select,
+		option {
+			font-family: var(--font-content);
+		}
 
 		button, input, textarea { font: inherit; }
 		button { cursor: pointer; }

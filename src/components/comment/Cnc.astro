@@ -62,11 +62,22 @@ const {
 		background: rgba(255, 255, 255, 0.8);
 		padding: 1.25rem;
 		backdrop-filter: blur(16px);
+		font-family: var(--font-content, "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif);
 	}
 
 	.dark .site-comments-shell {
 		border-color: rgba(244, 237, 231, 0.08);
 		background: rgba(35, 24, 22, 0.84);
+	}
+
+	.site-comments-root,
+	.site-comments-root *,
+	.site-comments-shell,
+	.site-comments-shell button,
+	.site-comments-shell input,
+	.site-comments-shell textarea,
+	.site-comments-shell select {
+		font-family: var(--font-content, "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif);
 	}
 
 	.site-comments-head {
