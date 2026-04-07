@@ -1403,20 +1403,22 @@
 				right: 1rem !important;
 			}
 			.music-player.hidden-mode {
-				width: 3rem;
-				height: 3rem;
-				min-width: 3rem;
-				max-width: 3rem;
-				min-height: 3rem;
-				max-height: 3rem;
+				width: 3rem !important;
+				height: 3rem !important;
+				min-width: 3rem !important;
+				max-width: 3rem !important;
+				min-height: 3rem !important;
+				max-height: 3rem !important;
 			}
 			.mini-player {
 				width: var(--mobile-player-width) !important;
+				min-width: var(--mobile-player-width) !important;
 				max-width: var(--mobile-player-width) !important;
 			}
 			.music-player.expanded,
 			.expanded-player {
 				width: var(--mobile-player-width) !important;
+				min-width: var(--mobile-player-width) !important;
 				max-width: var(--mobile-player-width) !important;
 				/*left: 0.5rem !important;*/
 				right: 1rem !important;
@@ -1424,6 +1426,7 @@
 			.expanded-player,
 			.playlist-panel {
 				width: var(--mobile-player-width) !important;
+				min-width: var(--mobile-player-width) !important;
 				/*left: 0.5rem !important;*/
 				right: 1rem !important;
 				max-width: var(--mobile-player-width) !important;
@@ -1449,6 +1452,7 @@
 			.expanded-player,
 			.playlist-panel {
 				width: var(--mobile-player-width) !important;
+				min-width: var(--mobile-player-width) !important;
 				max-width: var(--mobile-player-width) !important;
 			}
 			.song-title {
