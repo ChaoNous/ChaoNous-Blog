@@ -100,9 +100,7 @@ function renderState(
 	const commentsHtml = state.loading
 		? `<div class="site-comments-empty">评论加载中…</div>`
 		: state.comments.length > 0
-			? state.comments
-					.map((comment) => renderCommentItem(comment, options))
-					.join("")
+			? state.comments.map((comment) => renderCommentItem(comment, options)).join("")
 			: `<div class="site-comments-empty">还没有评论，欢迎留下第一条。</div>`;
 
 	const noticeHtml = state.error
