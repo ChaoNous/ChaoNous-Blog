@@ -15,7 +15,7 @@ export function createCommentsListController({
 	function updateSelectionUi() {
 		const selectedCount = state.selectedCommentIds.size;
 		dom.commentsSelectionCount.textContent =
-			selectedCount > 0 ? `已选 ${formatNumber(selectedCount)} 条` : "未选择评论";
+			selectedCount > 0 ? `?? ${formatNumber(selectedCount)} ?` : "?????";
 		dom.commentsBulkDelete.disabled = selectedCount === 0;
 
 		const checkboxes = Array.from(
@@ -35,7 +35,7 @@ export function createCommentsListController({
 
 		if (!items.length) {
 			dom.commentsList.innerHTML =
-				'<div class="message info">没有匹配的评论。</div>';
+				'<div class="message info">????????</div>';
 			return;
 		}
 
@@ -54,7 +54,7 @@ export function createCommentsListController({
 						<div class="comment-row-main">
 							<label class="comment-check">
 								<input data-role="comment-select" type="checkbox" value="${item.id}" />
-								<span>选中</span>
+								<span>??</span>
 							</label>
 							<div>
 								<strong>${escapeHtml(item.authorName)}</strong>
@@ -63,7 +63,7 @@ export function createCommentsListController({
 						</div>
 						<div class="inline-actions">
 							<span class="table-meta">${formatDate(item.createdAt)}</span>
-							<button class="ghost-button danger-button" data-action="delete" data-id="${item.id}" type="button">删除</button>
+							<button class="ghost-button danger-button" data-action="delete" data-id="${item.id}" type="button">??</button>
 						</div>
 					</div>
 					<div>${escapeHtml(item.content).replaceAll("\n", "<br />")}</div>
@@ -92,7 +92,7 @@ export function createCommentsListController({
 		}
 
 		dom.commentsList.innerHTML =
-			'<div class="message info">正在加载评论…</div>';
+			'<div class="message info">???????</div>';
 		const payload = await request(`/api/admin/comments?${params.toString()}`);
 		state.commentsTotalPages = Number(payload.pagination.total || 0);
 
@@ -107,8 +107,7 @@ export function createCommentsListController({
 
 		renderComments(payload.data || []);
 		dom.commentsPaginationMeta.textContent =
-			`第 ${payload.pagination.page} / ${Math.max(payload.pagination.total, 1)} 页，` +
-			` 共 ${formatNumber(payload.pagination.totalCount)} 条评论`;
+			`? ${payload.pagination.page} / ${Math.max(payload.pagination.total, 1)} ??? ${formatNumber(payload.pagination.totalCount)} ???`;
 		dom.commentsPrev.disabled = state.commentsPage <= 1;
 		dom.commentsNext.disabled =
 			state.commentsTotalPages === 0 ||
@@ -117,16 +116,16 @@ export function createCommentsListController({
 
 	async function deleteComment(id) {
 		const confirmed = window.confirm(
-			"确认删除这条评论？如果有回复，会一并删除。",
+			"?????????????????????",
 		);
 		if (!confirmed) return;
 
-		setMessage(dom.appMessage, "正在删除评论…", "info");
+		setMessage(dom.appMessage, "???????", "info");
 		await request(`/api/admin/comments/${id}`, {
 			method: "DELETE",
 		});
 		state.selectedCommentIds.delete(id);
-		await refreshCommentsAndOverview("评论已删除。");
+		await refreshCommentsAndOverview("??????");
 	}
 
 	function bindEvents() {
@@ -144,7 +143,7 @@ export function createCommentsListController({
 
 		document.getElementById("comments-refresh").addEventListener("click", async () => {
 			try {
-				await refreshCommentsAndOverview("评论列表已刷新。");
+				await refreshCommentsAndOverview("????????");
 			} catch (error) {
 				setMessage(dom.appMessage, error.message, "error");
 			}
@@ -228,4 +227,3 @@ export function createCommentsListController({
 		resetSelection,
 	};
 }
-

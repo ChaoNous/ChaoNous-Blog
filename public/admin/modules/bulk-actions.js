@@ -9,16 +9,16 @@ export function createBulkActionsController({
 	async function bulkDeleteComments() {
 		const ids = Array.from(state.selectedCommentIds);
 		if (!ids.length) {
-			setMessage(dom.appMessage, "请先选择要删除的评论。", "error");
+			setMessage(dom.appMessage, "???????????", "error");
 			return;
 		}
 
 		const confirmed = window.confirm(
-			`确认批量删除 ${ids.length} 条评论？如果包含回复，会一并删除。`,
+			`?????? ${ids.length} ?????????????????`,
 		);
 		if (!confirmed) return;
 
-		setMessage(dom.appMessage, "正在执行批量删除…", "info");
+		setMessage(dom.appMessage, "?????????", "info");
 		const payload = await request("/api/admin/comments/bulk", {
 			method: "POST",
 			headers: {
@@ -32,7 +32,7 @@ export function createBulkActionsController({
 
 		resetSelection();
 		await refreshCommentsAndOverview(
-			payload.message || "批量删除已完成。",
+			payload.message || "????????",
 		);
 	}
 
@@ -50,4 +50,3 @@ export function createBulkActionsController({
 		bindEvents,
 	};
 }
-

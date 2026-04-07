@@ -2,7 +2,6 @@ import { createJsonRequest, downloadExport } from "/admin/modules/api.js";
 import { createBulkActionsController } from "/admin/modules/bulk-actions.js";
 import { createCommentsListController } from "/admin/modules/comments-list.js";
 import { createSessionController } from "/admin/modules/session.js";
-import { createSettingsController } from "/admin/modules/settings.js";
 import { createAdminState, pageMeta, storageKeys } from "/admin/modules/state.js";
 import {
 	escapeHtml,
@@ -23,8 +22,6 @@ const dom = {
 	appMessage: document.getElementById("app-message"),
 	pageTitle: document.getElementById("page-title"),
 	pageSubtitle: document.getElementById("page-subtitle"),
-	sidebarMode: document.getElementById("sidebar-mode"),
-	dashboardMode: document.getElementById("dashboard-mode"),
 	themeToggle: document.getElementById("theme-toggle"),
 	logoutButton: document.getElementById("logout-button"),
 	metricCommentsTotal: document.getElementById("metric-comments-total"),
@@ -46,9 +43,6 @@ const dom = {
 	analyticsPageCount: document.getElementById("analytics-page-count"),
 	analyticsTrend: document.getElementById("analytics-trend"),
 	analyticsPages: document.getElementById("analytics-pages"),
-	settingsSite: document.getElementById("settings-site"),
-	settingsComment: document.getElementById("settings-comment"),
-	settingsSecurity: document.getElementById("settings-security"),
 };
 
 function setTheme(theme) {
@@ -56,8 +50,7 @@ function setTheme(theme) {
 	state.theme = nextTheme;
 	document.documentElement.setAttribute("data-theme", nextTheme);
 	localStorage.setItem(storageKeys.theme, nextTheme);
-	dom.themeToggle.textContent =
-		nextTheme === "dark" ? "切换到浅色" : "切换到深色";
+	dom.themeToggle.textContent = nextTheme === "dark" ? "?????" : "?????";
 }
 
 const sessionController = createSessionController({
@@ -74,7 +67,7 @@ const request = createJsonRequest({
 
 function renderBarChart(container, items, key) {
 	if (!items.length) {
-		container.innerHTML = `<div class="message info">暂无可用数据。</div>`;
+		container.innerHTML = `<div class="message info">???????</div>`;
 		return;
 	}
 
@@ -97,7 +90,7 @@ function renderBarChart(container, items, key) {
 function renderRecentComments(items) {
 	if (!items.length) {
 		dom.dashboardRecentComments.innerHTML =
-			'<div class="message info">暂无近期评论。</div>';
+			'<div class="message info">???????</div>';
 		return;
 	}
 
@@ -120,7 +113,7 @@ function renderRecentComments(items) {
 function renderHotPosts(items) {
 	if (!items.length) {
 		dom.dashboardHotPosts.innerHTML =
-			'<div class="message info">暂无文章评论数据。</div>';
+			'<div class="message info">?????????</div>';
 		return;
 	}
 
@@ -130,7 +123,7 @@ function renderHotPosts(items) {
 			<div class="info-item">
 				<div class="page-row-header">
 					<strong>${escapeHtml(item.postTitle || item.postSlug)}</strong>
-					<span>${formatNumber(item.commentCount)} 条</span>
+					<span>${formatNumber(item.commentCount)} ?</span>
 				</div>
 				<div class="table-meta">${escapeHtml(item.postSlug)}</div>
 			</div>
@@ -152,7 +145,7 @@ async function loadOverview() {
 function renderAnalyticsPages(items) {
 	if (!items.length) {
 		dom.analyticsPages.innerHTML =
-			'<div class="message info">暂无访问统计数据。</div>';
+			'<div class="message info">?????????</div>';
 		return;
 	}
 
@@ -215,20 +208,14 @@ const bulkActionsController = createBulkActionsController({
 	refreshCommentsAndOverview,
 });
 
-const settingsController = createSettingsController({
-	dom,
-	request,
-});
-
 async function bootstrapApp() {
 	await Promise.all([
 		loadOverview(),
 		commentsListController.loadComments(),
 		loadAnalytics(),
-		settingsController.loadSettings(),
 	]);
 	showView(state.currentView);
-	setMessage(dom.appMessage, "后台数据已加载。", "success");
+	setMessage(dom.appMessage, "????????", "success");
 }
 
 dom.loginForm.addEventListener("submit", (event) => {
@@ -251,10 +238,10 @@ document.querySelectorAll(".nav-button").forEach((button) => {
 });
 
 document.getElementById("dashboard-refresh").addEventListener("click", async () => {
-	setMessage(dom.appMessage, "正在刷新看板…", "info");
+	setMessage(dom.appMessage, "???????", "info");
 	try {
-		await Promise.all([loadOverview(), settingsController.loadSettings()]);
-		setMessage(dom.appMessage, "看板已刷新。", "success");
+		await loadOverview();
+		setMessage(dom.appMessage, "??????", "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}
@@ -263,7 +250,7 @@ document.getElementById("dashboard-refresh").addEventListener("click", async () 
 document.getElementById("analytics-refresh").addEventListener("click", async () => {
 	try {
 		await loadAnalytics();
-		setMessage(dom.appMessage, "访问统计已刷新。", "success");
+		setMessage(dom.appMessage, "????????", "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}
@@ -272,7 +259,7 @@ document.getElementById("analytics-refresh").addEventListener("click", async () 
 document.getElementById("export-comments").addEventListener("click", async () => {
 	try {
 		await downloadExport("comments");
-		setMessage(dom.appMessage, "评论数据已开始导出。", "success");
+		setMessage(dom.appMessage, "??????????", "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}
@@ -281,7 +268,7 @@ document.getElementById("export-comments").addEventListener("click", async () =>
 document.getElementById("export-analytics").addEventListener("click", async () => {
 	try {
 		await downloadExport("analytics");
-		setMessage(dom.appMessage, "访问统计数据已开始导出。", "success");
+		setMessage(dom.appMessage, "??????????", "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}

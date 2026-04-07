@@ -18,7 +18,7 @@ export function createSessionController({
 		dom.loginPasswordInput.value = "";
 		setMessage(
 			dom.loginMessage,
-			message || "会话已失效，请重新登录。",
+			message || "????????????",
 			"error",
 		);
 	}
@@ -26,12 +26,12 @@ export function createSessionController({
 	async function tryLogin(bootstrapApp) {
 		const password = dom.loginPasswordInput.value.trim();
 		if (!password) {
-			setMessage(dom.loginMessage, "请先输入后台密码。", "error");
+			setMessage(dom.loginMessage, "?????????", "error");
 			return;
 		}
 
 		dom.loginSubmit.disabled = true;
-		setMessage(dom.loginMessage, "正在创建后台会话…", "info");
+		setMessage(dom.loginMessage, "?????????", "info");
 
 		try {
 			const response = await fetch("/api/admin/session", {
@@ -45,7 +45,7 @@ export function createSessionController({
 			});
 
 			if (!response.ok) {
-				let message = "登录失败。";
+				let message = "?????";
 				try {
 					const payload = await response.json();
 					message = payload.message || message;
@@ -61,7 +61,7 @@ export function createSessionController({
 		} catch (error) {
 			setMessage(
 				dom.loginMessage,
-				error instanceof Error ? error.message : "登录失败。",
+				error instanceof Error ? error.message : "?????",
 				"error",
 			);
 		} finally {
@@ -84,7 +84,7 @@ export function createSessionController({
 		setAuthenticated(false);
 		setMessage(
 			dom.loginMessage,
-			options && options.expired ? "会话已过期，请重新登录。" : "已退出。",
+			options && options.expired ? "????????????" : "????",
 			options && options.expired ? "error" : "info",
 		);
 	}
@@ -102,7 +102,7 @@ export function createSessionController({
 			});
 
 			if (!response.ok) {
-				throw new Error("会话状态读取失败。");
+				throw new Error("?????????");
 			}
 
 			const payload = await response.json();
@@ -126,4 +126,3 @@ export function createSessionController({
 		restoreSession,
 	};
 }
-

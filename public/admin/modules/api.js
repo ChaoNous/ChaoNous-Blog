@@ -10,7 +10,7 @@ export function createJsonRequest({ onUnauthorized }) {
 		});
 
 		if (!response.ok) {
-			let message = "请求失败。";
+			let message = "?????";
 			try {
 				const payload = await response.json();
 				message = payload.message || message;
@@ -38,7 +38,7 @@ export async function downloadExport(type) {
 	);
 
 	if (!response.ok) {
-		let message = "导出失败。";
+		let message = "?????";
 		try {
 			const payload = await response.json();
 			message = payload.message || message;
@@ -61,4 +61,3 @@ export async function downloadExport(type) {
 	anchor.remove();
 	URL.revokeObjectURL(url);
 }
-

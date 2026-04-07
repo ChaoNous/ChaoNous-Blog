@@ -393,22 +393,10 @@
 					<span>&#x641c;&#x7d22;&#x3001;&#x9009;&#x62e9;&#x3001;&#x5220;&#x9664;&#x5168;&#x90e8;&#x5df2;&#x53d1;&#x5e03;&#x8bc4;&#x8bba;</span>
 				</button>
 				<button class="nav-button" data-view="analytics" type="button">
-					<strong>&#x8bbf;&#x95ee;&#x7edf;&#x8ba1;</strong>
-					<span>&#x9875;&#x9762; PV / Visits &#x6982;&#x89c8;&#x4e0e;&#x6392;&#x884c;</span>
-				</button>
-				<button class="nav-button" data-view="settings" type="button">
-					<strong>&#x7ad9;&#x70b9;&#x8bbe;&#x7f6e;</strong>
-					<span>&#x67e5;&#x770b;&#x5f53;&#x524d;&#x76f4;&#x63a5;&#x53d1;&#x5e03;&#x7b56;&#x7565;&#x548c;&#x8fd0;&#x884c;&#x4fe1;&#x606f;</span>
-				</button>
-				<button class="nav-button" data-view="data" type="button">
-					<strong>&#x6570;&#x636e;&#x7ba1;&#x7406;</strong>
-					<span>&#x5bfc;&#x51fa;&#x8bc4;&#x8bba;&#x4e0e;&#x8bbf;&#x95ee;&#x7edf;&#x8ba1;&#x6570;&#x636e;</span>
+					<strong>&#x7edf;&#x8ba1;&#x4e0e;&#x5bfc;&#x51fa;</strong>
+					<span>&#x67e5;&#x770b; PV / Visits&#x3001;&#x70ed;&#x95e8;&#x9875;&#x9762;&#x5e76;&#x5bfc;&#x51fa;&#x6570;&#x636e;</span>
 				</button>
 			</nav>
-			<div class="panel" style="padding: 1rem;">
-				<div class="mini-badge">&#x53d1;&#x5e03;&#x7b56;&#x7565;</div>
-				<p id="sidebar-mode" class="text-soft" style="margin: 0.6rem 0 0;">&#x76f4;&#x63a5;&#x53d1;&#x5e03;</p>
-			</div>
 		</aside>
 
 		<main class="shell-main">
@@ -416,7 +404,7 @@
 				<div>
 					<span class="page-badge">&#x540e;&#x53f0;&#x5df2;&#x767b;&#x5f55;</span>
 					<h1 id="page-title">&#x6570;&#x636e;&#x770b;&#x677f;</h1>
-					<p id="page-subtitle" class="page-subtitle">&#x4ee5;&#x65e0;&#x72b6;&#x6001;&#x7ba1;&#x7406;&#x65b9;&#x5f0f;&#x67e5;&#x770b;&#x5f53;&#x524d;&#x5168;&#x90e8;&#x8bc4;&#x8bba;&#x548c;&#x7ad9;&#x70b9;&#x6570;&#x636e;&#x3002;</p>
+					<p id="page-subtitle" class="page-subtitle">&#x67e5;&#x770b;&#x8bc4;&#x8bba;&#x3001;&#x7ad9;&#x70b9;&#x7edf;&#x8ba1;&#x548c;&#x5bfc;&#x51fa;&#x6570;&#x636e;&#x3002;</p>
 				</div>
 				<div class="header-actions">
 					<button id="theme-toggle" class="ghost-button" type="button">&#x5207;&#x6362;&#x5916;&#x89c2;</button>
@@ -462,11 +450,11 @@
 						<div id="dashboard-hot-posts" class="info-list"></div>
 					</section>
 					<section class="info-card small">
-						<h3 class="card-title">&#x8fd0;&#x884c;&#x72b6;&#x6001;</h3>
+						<h3 class="card-title">&#x7cfb;&#x7edf;&#x6982;&#x51b5;</h3>
 						<div class="kv-list">
-							<div class="kv-row"><div class="kv-key">&#x53d1;&#x5e03;&#x6a21;&#x5f0f;</div><div id="dashboard-mode">&#x76f4;&#x63a5;&#x53d1;&#x5e03;</div></div>
-							<div class="kv-row"><div class="kv-key">&#x7ebf;&#x7a0b;&#x4e3b;&#x952e;</div><div>canonicalUrl</div></div>
-							<div class="kv-row"><div class="kv-key">&#x8fd0;&#x884c;&#x73af;&#x5883;</div><div>Cloudflare Pages Functions + D1</div></div>
+							<div class="kv-row"><div class="kv-key">&#x8bc4;&#x8bba;&#x552f;&#x4e00;&#x952e;</div><div>canonicalUrl</div></div>
+							<div class="kv-row"><div class="kv-key">&#x5b58;&#x50a8;</div><div>Cloudflare D1</div></div>
+							<div class="kv-row"><div class="kv-key">&#x8fd0;&#x884c;</div><div>Pages Functions</div></div>
 						</div>
 					</section>
 				</div>
@@ -523,57 +511,17 @@
 								<h3 class="card-title">&#x8fd1;&#x671f;&#x8bbf;&#x95ee;&#x8d8b;&#x52bf;</h3>
 								<p class="card-desc">&#x5c55;&#x793a;&#x9875;&#x9762;&#x8bbf;&#x95ee;&#x8d8b;&#x52bf;&#x548c;&#x7ad9;&#x5185;&#x7edf;&#x8ba1;&#x6570;&#x636e;&#x3002;</p>
 							</div>
-							<button id="analytics-refresh" class="ghost-button" type="button">&#x5237;&#x65b0;</button>
+							<div class="inline-actions">
+								<button id="export-comments" class="ghost-button" type="button">&#x5bfc;&#x51fa;&#x8bc4;&#x8bba;</button>
+								<button id="export-analytics" class="ghost-button" type="button">&#x5bfc;&#x51fa;&#x7edf;&#x8ba1;</button>
+								<button id="analytics-refresh" class="ghost-button" type="button">&#x5237;&#x65b0;</button>
+							</div>
 						</div>
 						<div id="analytics-trend" class="bar-chart"></div>
 					</section>
 					<section class="table-card small">
 						<h3 class="card-title">&#x70ed;&#x95e8;&#x9875;&#x9762;</h3>
 						<div id="analytics-pages" class="info-list"></div>
-					</section>
-				</div>
-			</section>
-
-			<section id="view-settings" class="page-section">
-				<div class="settings-grid">
-					<section class="info-card small">
-						<h3 class="card-title">&#x7ad9;&#x70b9;&#x4fe1;&#x606f;</h3>
-						<div id="settings-site" class="kv-list"></div>
-					</section>
-					<section class="info-card small">
-						<h3 class="card-title">&#x8bc4;&#x8bba;&#x7b56;&#x7565;</h3>
-						<div id="settings-comment" class="kv-list"></div>
-					</section>
-					<section class="info-card small">
-						<h3 class="card-title">&#x540e;&#x53f0;&#x9274;&#x6743;</h3>
-						<div id="settings-security" class="kv-list"></div>
-					</section>
-				</div>
-			</section>
-
-			<section id="view-data" class="page-section">
-				<div class="data-grid">
-					<section class="info-card small">
-						<h3 class="card-title">&#x8bc4;&#x8bba;&#x6570;&#x636e;&#x5bfc;&#x51fa;</h3>
-						<p class="card-desc">&#x5bfc;&#x51fa;&#x6240;&#x6709;&#x8bc4;&#x8bba;&#x4e3a; JSON&#xff0c;&#x7528;&#x4e8e;&#x8fc1;&#x79fb;&#x6216;&#x5907;&#x4efd;&#x3002;</p>
-						<div class="card-actions">
-							<button id="export-comments" class="button" type="button">&#x5bfc;&#x51fa;&#x8bc4;&#x8bba;</button>
-						</div>
-					</section>
-					<section class="info-card small">
-						<h3 class="card-title">&#x8bbf;&#x95ee;&#x7edf;&#x8ba1;&#x5bfc;&#x51fa;</h3>
-						<p class="card-desc">&#x5bfc;&#x51fa;&#x9875;&#x9762; PV / Visits &#x7edf;&#x8ba1;&#x4e3a; JSON&#xff0c;&#x7528;&#x4e8e;&#x590d;&#x7528;&#x6216;&#x5206;&#x6790;&#x3002;</p>
-						<div class="card-actions">
-							<button id="export-analytics" class="button" type="button">&#x5bfc;&#x51fa;&#x7edf;&#x8ba1;</button>
-						</div>
-					</section>
-					<section class="info-card small">
-						<h3 class="card-title">&#x4f7f;&#x7528;&#x8bf4;&#x660e;</h3>
-						<div class="kv-list">
-							<div class="kv-row"><div class="kv-key">&#x6570;&#x636e;&#x6e90;</div><div>Cloudflare D1</div></div>
-							<div class="kv-row"><div class="kv-key">&#x8fd0;&#x884c;&#x65b9;&#x5f0f;</div><div>&#x7ad9;&#x70b9;&#x540c;&#x57df; Pages Functions</div></div>
-							<div class="kv-row"><div class="kv-key">&#x540e;&#x53f0;&#x80fd;&#x529b;</div><div>&#x652f;&#x6301;&#x5355;&#x6761;&#x5220;&#x9664;&#x3001;&#x6279;&#x91cf;&#x5220;&#x9664;&#x548c;&#x4f1a;&#x8bdd;&#x767b;&#x5f55;</div></div>
-						</div>
 					</section>
 				</div>
 			</section>
