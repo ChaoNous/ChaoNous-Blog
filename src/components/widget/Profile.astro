@@ -44,8 +44,20 @@ import { i18n } from "../../i18n/translation";
 		>
 		</div>
 
-		<div class="text-[1.05rem] leading-relaxed text-center font-medium mb-4 transition whitespace-pre-line" style="color: var(--text-main);">
-			{"行路难！行路难！多歧路，今安在？\n长风破浪会有时，直挂云帆济沧海。"}
+		<div
+			class="text-[1.05rem] leading-relaxed text-center font-medium mb-4 transition whitespace-pre-line"
+			style="color: var(--text-main);"
+		>
+			<span
+				class="profile-bio"
+				data-profile-bio
+				data-typewriter-enabled={profileConfig.typewriter?.enable ? "true" : "false"}
+				data-typewriter-speed={String(profileConfig.typewriter?.speed ?? 140)}
+				data-bio={profileConfig.bio ?? ""}
+			>
+				{profileConfig.bio}
+			</span>
+			<span class="profile-bio-cursor" aria-hidden="true"></span>
 		</div>
 
 		<div class="flex flex-wrap gap-2 justify-center mb-1">
@@ -101,16 +113,102 @@ import { i18n } from "../../i18n/translation";
 	</div>
 </div>
 
+<style>
+	.profile-bio-cursor {
+		display: inline-block;
+		width: 0.08em;
+		height: 1em;
+		margin-left: 0.2em;
+		vertical-align: -0.08em;
+		background: currentColor;
+		opacity: 0;
+		animation: profile-bio-cursor-blink 1.15s steps(1, end) infinite;
+	}
+
+	.profile-bio-cursor.is-active {
+		opacity: 1;
+	}
+
+	@keyframes profile-bio-cursor-blink {
+		0%,
+		45% {
+			opacity: 1;
+		}
+
+		55%,
+		100% {
+			opacity: 0;
+		}
+	}
+</style>
+
 <script
 	is:inline
 	define:vars={{
+		profileBio: profileConfig.bio ?? "",
+		profileTypewriterEnabled: profileConfig.typewriter?.enable ?? false,
+		profileTypewriterSpeed: profileConfig.typewriter?.speed ?? 140,
 		profileStatsPageViews: i18n(I18nKey.profileStatsPageViews),
 		profileStatsVisits: i18n(I18nKey.profileStatsVisits),
-	profileStatsUnavailable: i18n(I18nKey.profileStatsUnavailable),
-}}
+		profileStatsUnavailable: i18n(I18nKey.profileStatsUnavailable),
+	}}
 >
 	function generateStatsText(pageViews, visits) {
 		return `${profileStatsPageViews} ${pageViews} · ${profileStatsVisits} ${visits}`;
+	}
+
+	function createTypewriterController() {
+		const bioElement = document.querySelector("[data-profile-bio]");
+		if (!(bioElement instanceof HTMLElement)) {
+			return {
+				cleanup() {},
+			};
+		}
+
+		const cursor = bioElement.parentElement?.querySelector(".profile-bio-cursor");
+		const shouldAnimate = profileTypewriterEnabled && profileBio.trim().length > 0;
+
+		if (!shouldAnimate) {
+			bioElement.textContent = profileBio;
+			cursor?.classList.remove("is-active");
+			return {
+				cleanup() {},
+			};
+		}
+
+		let frameId = 0;
+		let timeoutId = 0;
+		let charIndex = 0;
+		let isDisposed = false;
+		const speed = Math.max(110, Number(profileTypewriterSpeed) || 140);
+
+		cursor?.classList.add("is-active");
+		bioElement.textContent = "";
+
+		const step = () => {
+			if (isDisposed) return;
+			charIndex += 1;
+			bioElement.textContent = profileBio.slice(0, charIndex);
+			if (charIndex >= profileBio.length) {
+				cursor?.classList.remove("is-active");
+				return;
+			}
+			timeoutId = window.setTimeout(() => {
+				frameId = window.requestAnimationFrame(step);
+			}, speed);
+		};
+
+		frameId = window.requestAnimationFrame(step);
+
+		return {
+			cleanup() {
+				isDisposed = true;
+				window.cancelAnimationFrame(frameId);
+				window.clearTimeout(timeoutId);
+				bioElement.textContent = profileBio;
+				cursor?.classList.remove("is-active");
+			},
+		};
 	}
 
 	async function fetchSiteStats() {
@@ -149,6 +247,14 @@ import { i18n } from "../../i18n/translation";
 
 	(async () => {
 		const { registerPageScript } = await import("../../scripts/page-lifecycle.ts");
+		registerPageScript("profile-bio-typewriter", {
+			shouldRun() {
+				return document.querySelector("[data-profile-bio]") !== null;
+			},
+			init() {
+				return createTypewriterController();
+			},
+		});
 		registerPageScript("profile-site-stats", {
 			shouldRun() {
 				return document.querySelector(".site-stats-container") !== null;

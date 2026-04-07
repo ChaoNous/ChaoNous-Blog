@@ -100,10 +100,10 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
   avatar: "assets/images/avatar.webp",
   name: "ChaoNous",
-  bio: "行路难！行路难！多歧路，今安在？长风破浪会有时，直挂云帆济沧海。",
+  bio: "行路难！行路难！多歧路，今安在？\n长风破浪会有时，直挂云帆济沧海。",
   typewriter: {
     enable: true,
-    speed: 80,
+    speed: 140,
   },
   links: [
     {
