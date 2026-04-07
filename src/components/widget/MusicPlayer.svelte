@@ -1249,6 +1249,11 @@
 			box-sizing: border-box;
 			/*left: 0;*/
 		}
+		.mini-player-surface,
+		.expanded-player-surface {
+			width: 100%;
+			box-sizing: border-box;
+		}
 		.expanded-player {
 			width: 20rem;
 			position: absolute;
@@ -1441,6 +1446,21 @@
 			.controls button {
 				width: 36px;
 				height: 36px;
+			}
+			.expanded-player-surface {
+				padding: 0.75rem !important;
+			}
+			.expanded-player .flex.items-center.gap-4.mb-4 {
+				gap: 0.75rem !important;
+				margin-bottom: 0.75rem !important;
+			}
+			.expanded-player .cover-container.w-16.h-16 {
+				width: 3rem !important;
+				height: 3rem !important;
+			}
+			.expanded-player .song-title {
+				font-size: 0.95rem !important;
+				line-height: 1.3 !important;
 			}
 			.volume-popover {
 				bottom: calc(100% + 0.125rem);
