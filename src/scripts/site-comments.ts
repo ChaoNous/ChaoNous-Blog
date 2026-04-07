@@ -125,7 +125,7 @@ function renderState(
 		<section class="site-comments-shell">
 			<div class="site-comments-head">
 				<h2 class="site-comments-title">评论</h2>
-				<p class="site-comments-subtitle">评论与审核逻辑已迁回站内，同域 API 提交。</p>
+				<p class="site-comments-subtitle">评论系统已迁回站内，同域 API 直接提交并发布。</p>
 			</div>
 			${noticeHtml}
 			${replyBanner}
@@ -156,7 +156,7 @@ function renderState(
 					${
 						options.requireModeration
 							? `<span class="site-comments-hint">新评论默认进入审核队列，审核通过后显示。</span>`
-							: `<span class="site-comments-hint">评论会直接发布到页面。</span>`
+							: `<span class="site-comments-hint">评论提交后会直接发布到页面。</span>`
 					}
 				</div>
 			</form>

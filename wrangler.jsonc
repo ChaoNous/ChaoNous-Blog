@@ -4,7 +4,7 @@
   "compatibility_date": "2026-04-07",
   "pages_build_output_dir": "./dist",
   "vars": {
-    "COMMENT_REQUIRE_MODERATION": "true"
+    "COMMENT_REQUIRE_MODERATION": "false"
   },
   "d1_databases": [
     {
