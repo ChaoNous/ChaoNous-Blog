@@ -85,7 +85,8 @@ function renderCommentItem(
 		.map((reply) => renderCommentItem(reply, options, state, depth + 1))
 		.join("");
 
-	const isSoftDeleted = comment.authorName === "宸叉敞閿€";
+	const isSoftDeleted =
+		comment.authorName === COMMENT_MESSAGES.softDeletedAuthor;
 	if (isSoftDeleted) {
 		return repliesHtml
 			? `
@@ -104,7 +105,7 @@ function renderCommentItem(
 
 	const deleteButton = state.ownedComments[String(comment.id)]
 		? `<button type="button" class="site-comment-delete-btn link-btn" data-delete-id="${comment.id}">
-				鍒犻櫎
+				${COMMENT_MESSAGES.deleteLabel}
 			</button>`
 		: "";
 
@@ -123,7 +124,7 @@ function renderCommentItem(
 				<div class="site-comment-actions-inline">
 					${deleteButton}
 					<button type="button" class="site-comment-reply-btn link-btn" data-reply-id="${comment.id}" data-reply-author="${authorLabel}">
-						鍥炲
+						${COMMENT_MESSAGES.replyLabel}
 					</button>
 				</div>
 			</header>
