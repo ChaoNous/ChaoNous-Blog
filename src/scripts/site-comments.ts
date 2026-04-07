@@ -156,17 +156,17 @@ function renderState(
 			<form class="site-comments-form">
 				<div class="site-comments-grid">
 					<label class="site-comments-field">
-						<span>昵称（必填）</span>
-						<input name="name" type="text" maxlength="50" required placeholder="必填" value="${escapeHtml(state.visitorInfo.name)}" />
+						<span>昵称</span>
+						<input name="name" type="text" maxlength="50" required placeholder="你的名字" value="${escapeHtml(state.visitorInfo.name)}" />
 					</label>
 					<label class="site-comments-field">
-						<span>邮箱（必填）</span>
-						<input name="email" type="email" maxlength="120" required placeholder="必填" value="${escapeHtml(state.visitorInfo.email)}" />
+						<span>邮箱</span>
+						<input name="email" type="email" maxlength="120" required placeholder="name@example.com" value="${escapeHtml(state.visitorInfo.email)}" />
 					</label>
 				</div>
 				<label class="site-comments-field">
-					<span>网址（选填）</span>
-					<input name="url" type="text" inputmode="url" maxlength="200" placeholder="选填" value="${escapeHtml(state.visitorInfo.url)}" />
+					<span>网址</span>
+					<input name="url" type="text" inputmode="url" maxlength="200" placeholder="chaonous.com" value="${escapeHtml(state.visitorInfo.url)}" />
 				</label>
 				<label class="site-comments-field">
 					<span>内容</span>
