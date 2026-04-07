@@ -31,6 +31,9 @@ export const onRequestGet = async ({
 				threadKey: "canonicalUrl",
 				storage: "Cloudflare D1",
 				runtime: "Cloudflare Pages Functions",
+				avatarMode: "md5-hash",
+				avatarSource:
+					env.COMMENT_AVATAR_PREFIX?.trim() || "https://gravatar.com/avatar",
 			},
 			security: {
 				authMode: "session-cookie",

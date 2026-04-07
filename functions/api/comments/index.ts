@@ -53,8 +53,11 @@ export const onRequestGet = async ({
 			.bind(postSlug)
 			.first<{ total_count: number }>();
 
-		const normalized = (result.results || []).map((record) =>
-			normalizeComment(record),
+		const avatarPrefix = env.COMMENT_AVATAR_PREFIX?.trim();
+		const normalized = await Promise.all(
+			(result.results || []).map((record) =>
+				normalizeComment(record, avatarPrefix),
+			),
 		);
 		const data = nestComments(normalized);
 		const totalCount = Number(totalResult?.total_count || 0);

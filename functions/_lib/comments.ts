@@ -13,6 +13,7 @@ export interface Env {
 	COMMENTS_DB: D1Database;
 	COMMENT_ADMIN_PASSWORD?: string;
 	COMMENT_SESSION_SECRET?: string;
+	COMMENT_AVATAR_PREFIX?: string;
 }
 
 export interface CommentRecord {
@@ -31,6 +32,8 @@ export interface CommentRecord {
 
 const ADMIN_SESSION_COOKIE = "cnc_admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
+const DEFAULT_COMMENT_AVATAR_PREFIX = "https://gravatar.com/avatar";
+const DEFAULT_COMMENT_AVATAR_HASH = "00000000000000000000000000000000";
 
 export function json(
 	data: unknown,
@@ -180,31 +183,48 @@ function normalizeIdentityValue(value: string): string {
 	return value.trim().toLowerCase();
 }
 
-function hashIdentity(value: string): string {
-	let hash = 2166136261;
+async function md5Hex(value: string): Promise<string> {
 	const input = normalizeIdentityValue(value);
-
-	for (let index = 0; index < input.length; index += 1) {
-		hash ^= input.charCodeAt(index);
-		hash = Math.imul(hash, 16777619);
-	}
-
-	return (hash >>> 0).toString(16).padStart(8, "0");
+	const data = new TextEncoder().encode(input);
+	const digest = await crypto.subtle.digest("MD5", data);
+	return Array.from(new Uint8Array(digest))
+		.map((item) => item.toString(16).padStart(2, "0"))
+		.join("");
 }
 
-export function createCommentAvatarUrl(
+export async function createCommentAvatarUrl(
 	email: string,
 	name: string,
-): string {
-	const source = normalizeIdentityValue(email || name || "anonymous");
-	const seed = hashIdentity(source);
-	const params = new URLSearchParams({
-		name: name.trim() || "匿名",
-	});
-	return `/api/avatar/${seed}?${params.toString()}`;
+	avatarPrefix = DEFAULT_COMMENT_AVATAR_PREFIX,
+): Promise<string> {
+	const normalizedPrefix =
+		avatarPrefix.trim() || DEFAULT_COMMENT_AVATAR_PREFIX;
+	const identifier = normalizeIdentityValue(email || name || "");
+	const hash = identifier
+		? await md5Hex(identifier)
+		: DEFAULT_COMMENT_AVATAR_HASH;
+
+	return `${normalizedPrefix}/${hash}?s=120&d=retro`;
 }
 
-export function normalizeComment(record: CommentRecord) {
+export interface NormalizedComment {
+	id: number;
+	parentId: number | null;
+	postSlug: string;
+	postUrl: string;
+	postTitle: string;
+	authorName: string;
+	authorUrl: string | null;
+	avatarUrl: string;
+	content: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export async function normalizeComment(
+	record: CommentRecord,
+	avatarPrefix?: string,
+): Promise<NormalizedComment> {
 	return {
 		id: record.id,
 		parentId: record.parent_id,
@@ -213,23 +233,27 @@ export function normalizeComment(record: CommentRecord) {
 		postTitle: record.post_title,
 		authorName: record.author_name,
 		authorUrl: record.author_url,
-		avatarUrl: createCommentAvatarUrl(record.author_email, record.author_name),
+		avatarUrl: await createCommentAvatarUrl(
+			record.author_email,
+			record.author_name,
+			avatarPrefix,
+		),
 		content: record.content,
 		createdAt: toIso(record.created_at),
 		updatedAt: toIso(record.updated_at),
 	};
 }
 
-export function nestComments(records: ReturnType<typeof normalizeComment>[]) {
+export function nestComments(records: NormalizedComment[]) {
 	const map = new Map<
 		number,
-		ReturnType<typeof normalizeComment> & {
-			replies: ReturnType<typeof normalizeComment>[];
+		NormalizedComment & {
+			replies: NormalizedComment[];
 		}
 	>();
 	const roots: Array<
-		ReturnType<typeof normalizeComment> & {
-			replies: ReturnType<typeof normalizeComment>[];
+		NormalizedComment & {
+			replies: NormalizedComment[];
 		}
 	> = [];
 
