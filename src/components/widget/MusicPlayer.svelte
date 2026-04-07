@@ -1246,6 +1246,7 @@
 			position: absolute;
 			bottom: 0;
 			right: 0;
+			box-sizing: border-box;
 			/*left: 0;*/
 		}
 		.expanded-player {
@@ -1253,6 +1254,7 @@
 			position: absolute;
 			bottom: 0;
 			right: 0;
+			box-sizing: border-box;
 		}
 		.music-player button,
 		.music-player [role="button"],
@@ -1411,17 +1413,19 @@
 				max-height: 3rem !important;
 			}
 			.mini-player {
-				width: var(--mobile-player-width) !important;
-				min-width: var(--mobile-player-width) !important;
-				max-width: var(--mobile-player-width) !important;
+				left: 0 !important;
+				right: 0 !important;
+				width: 100% !important;
+				min-width: 100% !important;
+				max-width: 100% !important;
 			}
 			.music-player.expanded,
 			.expanded-player {
-				width: var(--mobile-player-width) !important;
-				min-width: var(--mobile-player-width) !important;
-				max-width: var(--mobile-player-width) !important;
-				/*left: 0.5rem !important;*/
-				right: 1rem !important;
+				left: 0 !important;
+				right: 0 !important;
+				width: 100% !important;
+				min-width: 100% !important;
+				max-width: 100% !important;
 			}
 			.expanded-player,
 			.playlist-panel {
@@ -1449,7 +1453,11 @@
 				max-width: var(--mobile-player-width) !important;
 			}
 			.mini-player,
-			.expanded-player,
+			.expanded-player {
+				width: 100% !important;
+				min-width: 100% !important;
+				max-width: 100% !important;
+			}
 			.playlist-panel {
 				width: var(--mobile-player-width) !important;
 				min-width: var(--mobile-player-width) !important;
