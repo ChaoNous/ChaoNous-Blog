@@ -37,6 +37,7 @@ interface SiteCommentsState {
 	submitting: boolean;
 	replyTarget: { id: number; authorName: string } | null;
 	ownedComments: Record<string, string>;
+	visitorInfo: { name: string; email: string; url: string };
 }
 
 function normalizeUrlInput(value: string): string {
@@ -155,17 +156,17 @@ function renderState(
 			<form class="site-comments-form">
 				<div class="site-comments-grid">
 					<label class="site-comments-field">
-						<span>昵称</span>
-						<input name="name" type="text" maxlength="50" required placeholder="你的名字" />
+						<span>昵称（必填）</span>
+						<input name="name" type="text" maxlength="50" required placeholder="必填" value="${escapeHtml(state.visitorInfo.name)}" />
 					</label>
 					<label class="site-comments-field">
-						<span>邮箱</span>
-						<input name="email" type="email" maxlength="120" required placeholder="name@example.com" />
+						<span>邮箱（必填）</span>
+						<input name="email" type="email" maxlength="120" required placeholder="必填" value="${escapeHtml(state.visitorInfo.email)}" />
 					</label>
 				</div>
 				<label class="site-comments-field">
-					<span>网址</span>
-					<input name="url" type="text" inputmode="url" maxlength="200" placeholder="chaonous.com" />
+					<span>网址（选填）</span>
+					<input name="url" type="text" inputmode="url" maxlength="200" placeholder="选填" value="${escapeHtml(state.visitorInfo.url)}" />
 				</label>
 				<label class="site-comments-field">
 					<span>内容</span>
@@ -200,6 +201,13 @@ export function mountSiteComments(
 				return JSON.parse(localStorage.getItem("cnc_visitor_comments") || "{}");
 			} catch {
 				return {};
+			}
+		})(),
+		visitorInfo: (() => {
+			try {
+				return JSON.parse(localStorage.getItem("cnc_visitor_info") || '{"name":"","email":"","url":""}');
+			} catch {
+				return { name: "", email: "", url: "" };
 			}
 		})(),
 	};
@@ -278,12 +286,20 @@ export function mountSiteComments(
 				throw new Error(result?.message || "评论提交失败，请稍后再试。");
 			}
 
+			const visitorInfo = {
+				name: payload.name,
+				email: payload.email,
+				url: payload.url || "",
+			};
+			localStorage.setItem("cnc_visitor_info", JSON.stringify(visitorInfo));
+
 			form.reset();
 
 			if (result.deleteToken) {
 				const owned = { ...state.ownedComments, [result.id]: result.deleteToken };
 				localStorage.setItem("cnc_visitor_comments", JSON.stringify(owned));
 				setState({
+					visitorInfo,
 					ownedComments: owned,
 					submitting: false,
 					replyTarget: null,
@@ -291,6 +307,7 @@ export function mountSiteComments(
 				});
 			} else {
 				setState({
+					visitorInfo,
 					submitting: false,
 					replyTarget: null,
 					success: result?.message || "评论已发布。",
