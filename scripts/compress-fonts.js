@@ -16,6 +16,7 @@ const SHOULD_ATTEMPT_SPLIT = process.env.ENABLE_FONT_SPLIT === "true";
 
 function writeStaticSliceCss() {
 	let cssContent = fs.readFileSync(STATIC_RESULT_CSS_PATH, "utf8");
+	cssContent = cssContent.replace(/^(?:\s*\/\*[\s\S]*?\*\/\s*)+/u, "");
 	cssContent = cssContent.replace(/url\((['"]?)(\.\/)?([^'")]+)\1\)/g, (match, quote, _dotSlash, url) => {
 		if (url.startsWith("http") || url.startsWith("/")) {
 			return match;
@@ -97,6 +98,7 @@ async function main() {
 			const tempCssPath = path.join(OUTPUT_DIR, "result.css");
 			if (fs.existsSync(tempCssPath)) {
 				let cssContent = fs.readFileSync(tempCssPath, "utf8");
+				cssContent = cssContent.replace(/^(?:\s*\/\*[\s\S]*?\*\/\s*)+/u, "");
 				cssContent = cssContent.replace(/url\(['"]?([^'"]+)['"]?\)/g, (match, url) => {
 					if (!url.startsWith("http") && !url.startsWith("/")) {
 						return `url('/fonts/zhuque/${url}')`;

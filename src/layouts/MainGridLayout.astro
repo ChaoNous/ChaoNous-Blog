@@ -110,7 +110,7 @@ const mainContentClass = `
 		};
 	</script>
 
-	<!-- Iconify 鍥炬爣鍔犺浇鍣?-->
+	<!-- Iconify 图标加载器 -->
 	<IconifyLoader />
 
 	<!-- Navbar -->
@@ -141,7 +141,7 @@ const mainContentClass = `
 			>
 
 				{
-				/* 宸︿晶杈规爮 - 鏍规嵁閰嶇疆鏉′欢娓叉煋 */
+				/* 左侧边栏：按配置条件渲染 */
 				}
 				{
 					(mobileShowSidebar ||
@@ -230,7 +230,7 @@ const mainContentClass = `
 		)
 	}
 
-	<!-- 绌?TOC 瀹瑰櫒鍗犱綅 - 鍦ㄩ潪 sidebar-TOC 妯″紡涓嬩繚鐣欒妭鐐逛緵 Swup 鍒囨崲鏃惰瘑鍒?-->
+	<!-- 空 TOC 容器占位：在非 sidebar-TOC 模式下保留节点，方便 Swup 切换时识别 -->
 	{
 		(!siteConfig.toc.enable || isFloatTOC) && (
 			<div id="toc-container" class="hidden" />

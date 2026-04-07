@@ -72,14 +72,14 @@ const siteLang = lang.replace("_", "-");
 		<meta name="google" content="notranslate" />
 		<meta name="googlebot" content="notranslate" />
 
-		<!-- DNS ??????????????-->
+		<!-- DNS prefetch 与 preconnect -->
 		<link rel="dns-prefetch" href="https://code.iconify.design" />
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
 		<link rel="preconnect" href="https://api.i-meto.com" crossorigin />
-		<!-- ?????? prefetch??????????????? -->
+		<!-- DNS prefetch ? preconnect -->
 		{isHomePage && (
 			<>
-				<link rel="prefetch" href={url("/archive/")} />
+		<!-- 首页关键页面预取 -->
 				<link rel="prefetch" href={url("/about/")} />
 				<link rel="prefetch" href={url("/friends/")} />
 			</>
@@ -166,9 +166,16 @@ const siteLang = lang.replace("_", "-");
 
 			const themeValue = getPreferredTheme();
 			const isDark = themeValue === DARK_MODE;
-			document.documentElement.classList.toggle("dark", isDark);
 			document.documentElement.setAttribute(
 				"data-theme",
+				isDark ? DARK_MODE : LIGHT_MODE,
+			);
+			document.documentElement.setAttribute(
+				"data-color-scheme",
+				isDark ? "dark" : "light",
+			);
+			document.documentElement.setAttribute(
+				"data-shiki-theme",
 				isDark ? "github-dark" : "github-light",
 			);
 
@@ -179,8 +186,7 @@ const siteLang = lang.replace("_", "-");
 					window.theme.themeValue = value;
 				},
 			};
-
-			// Load the hue from local storage
+			// Load the hue from local storage.
 			const hue = localStorage.getItem("hue") || configHue;
 			document.documentElement.style.setProperty("--hue", hue);
 
@@ -188,6 +194,15 @@ const siteLang = lang.replace("_", "-");
 
 			// Apply desktop page scaling early to avoid a visible relayout flash.
 			(function () {
+				function updateViewportHeightVar() {
+					document.documentElement.style.setProperty(
+						"--vh",
+						`${window.innerHeight * 0.01}px`,
+					);
+				}
+
+				updateViewportHeightVar();
+
 				if (pageScaling && pageScaling.enable) {
 					function adjustPageScale() {
 						const isTouch =
@@ -220,7 +235,6 @@ const siteLang = lang.replace("_", "-");
 
 					// Keep scaling in sync after viewport changes and swup navigation.
 					window.addEventListener("resize", adjustPageScale);
-
 					document.addEventListener(
 						"swup:page:view",
 						adjustPageScale,
@@ -230,6 +244,11 @@ const siteLang = lang.replace("_", "-");
 						adjustPageScale,
 					);
 				}
+
+				window.addEventListener(
+					"orientationchange",
+					updateViewportHeightVar,
+				);
 			})();
 		</script>
 		<style
@@ -238,7 +257,6 @@ const siteLang = lang.replace("_", "-");
 				"page-width": `${PAGE_WIDTH}rem`,
 			}}
 		></style>
-
 		<!-- defines global css variables -->
 		<slot name="head" />
 
@@ -249,7 +267,7 @@ const siteLang = lang.replace("_", "-");
 			href={`${Astro.site}rss.xml`}
 		/>
 
-		<!-- ????????-->
+		<!-- ????? -->
 		<JsonLd type={setOGTypeArticle ? "article" : "website"} />
 	</head>
 	<body
@@ -259,13 +277,13 @@ const siteLang = lang.replace("_", "-");
 		<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
 			<defs>
 				<filter id="silk-weave" color-interpolation-filters="sRGB">
-					<!-- ???: ?????? ? ?????? ???????? -->
+					<!-- ??????? ? ???? -->
 					<feTurbulence type="fractalNoise" baseFrequency="0.5 0.02" numOctaves="3" seed="1" result="warp" />
-					<!-- ???: ?????? ? ?????? ???????? -->
+					<!-- 缁绢剛鍤? 娴ｅ酣顣跺鏉戦挬 鑴?妤傛﹢顣堕崹鍌滄纯 閳?濮樻潙閽╂稉婵堝殠 -->
 					<feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="3" seed="2" result="weft" />
-					<!-- ???: ?????????????????-->
+					<!-- ??????? ? ???? -->
 					<feBlend mode="screen" in="warp" in2="weft" result="fabric" />
-					<!-- ???: ????????????????????? -->
+					<!-- ??????????????? -->
 					<feColorMatrix type="matrix"
 						values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
 						in="fabric" />
@@ -324,9 +342,9 @@ const siteLang = lang.replace("_", "-");
 	import "../scripts/layout-runtime.ts";
 </script>
 
-<!-- ?????????????????-->
+<!-- ??????????? -->
 <script>
-	// ??? requestIdleCallback ??????????????????????????????
+	// ?? requestIdleCallback ????????????????????
 	function scheduleIdleTask(callback: () => void, timeout = 3000) {
 		if ("requestIdleCallback" in window) {
 			window.requestIdleCallback(callback, { timeout });
@@ -335,7 +353,7 @@ const siteLang = lang.replace("_", "-");
 		}
 	}
 
-	// ????????????????????????
+	// ?????????????????
 		if (document.readyState === "loading") {
 			document.addEventListener("DOMContentLoaded", () => {
 				scheduleIdleTask(() => {
