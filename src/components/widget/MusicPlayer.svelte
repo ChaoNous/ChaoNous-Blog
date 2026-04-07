@@ -930,7 +930,7 @@
 			</div>
 			<div class="controls flex items-center justify-center gap-2 mb-4">
 				<button
-					class="player-mode-button w-10 h-10 rounded-lg btn-regular"
+					class="btn-plain w-10 h-10 rounded-lg"
 					aria-label={isShuffled
 						? i18n(Key.musicPlayerShuffle)
 						: isRepeating === 1
@@ -961,7 +961,7 @@
 					/>
 				</button>
 				<button
-					class="player-play-button btn-regular w-12 h-12 rounded-full"
+					class="btn-plain w-10 h-10 rounded-lg"
 					aria-label={isPlaying
 						? i18n(Key.musicPlayerPause)
 						: i18n(Key.musicPlayerPlay)}
@@ -1296,19 +1296,6 @@
 			color: var(--primary);
 		}
 
-		.music-player .player-mode-button,
-		.music-player .player-play-button,
-		.music-player .player-mode-button:hover:not(:disabled),
-		.music-player .player-play-button:hover:not(:disabled),
-		.music-player .player-mode-button:focus-visible,
-		.music-player .player-play-button:focus-visible,
-		.music-player .player-mode-button:active:not(:disabled),
-		.music-player .player-play-button:active:not(:disabled) {
-			background: transparent !important;
-			background-color: transparent !important;
-			box-shadow: none !important;
-		}
-
 		.music-player button:active:not(:disabled),
 		.music-player [role="button"]:active,
 		.playlist-item:active,
@@ -1402,10 +1389,6 @@
 				width: 36px;
 				height: 36px;
 			}
-			.controls button:nth-child(3) {
-				width: 44px;
-				height: 44px;
-			}
 			.volume-popover {
 				bottom: calc(100% + 0.125rem);
 			}
@@ -1427,10 +1410,6 @@
 			.controls button {
 				width: 32px;
 				height: 32px;
-			}
-			.controls button:nth-child(3) {
-				width: 40px;
-				height: 40px;
 			}
 			.playlist-item {
 				padding: 8px 12px;
@@ -1504,10 +1483,5 @@
 			animation-play-state: running;
 		}
 
-		/* Make primary buttons feel more tactile */
-		button.bg-\[var\(--primary\)\] {
-			box-shadow: 0 0 0 2px var(--primary);
-			border: none;
-		}
 	</style>
 {/if}
