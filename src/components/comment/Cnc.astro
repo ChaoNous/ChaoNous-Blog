@@ -202,6 +202,38 @@ const {
 		box-shadow: 0 0 0 1px rgba(244, 237, 231, 0.08);
 	}
 
+	.site-comments-field input:-webkit-autofill,
+	.site-comments-field input:-webkit-autofill:hover,
+	.site-comments-field input:-webkit-autofill:focus,
+	.site-comments-field input:-webkit-autofill:active {
+		-webkit-text-fill-color: rgba(36, 24, 22, 0.92);
+		caret-color: rgba(36, 24, 22, 0.92);
+		-webkit-box-shadow:
+			0 0 0 1000px var(--panel-bg) inset,
+			0 0 0 1px var(--display-panel-border);
+		box-shadow:
+			0 0 0 1000px var(--panel-bg) inset,
+			0 0 0 1px var(--display-panel-border);
+		transition: background-color 9999s ease-out 0s;
+		background-clip: padding-box;
+		backdrop-filter: blur(20px) saturate(160%);
+		-webkit-backdrop-filter: blur(20px) saturate(160%);
+	}
+
+	.dark .site-comments-field input:-webkit-autofill,
+	.dark .site-comments-field input:-webkit-autofill:hover,
+	.dark .site-comments-field input:-webkit-autofill:focus,
+	.dark .site-comments-field input:-webkit-autofill:active {
+		-webkit-text-fill-color: rgba(244, 237, 231, 0.92);
+		caret-color: rgba(244, 237, 231, 0.92);
+		-webkit-box-shadow:
+			0 0 0 1000px var(--panel-bg) inset,
+			0 0 0 1px var(--display-panel-border);
+		box-shadow:
+			0 0 0 1000px var(--panel-bg) inset,
+			0 0 0 1px var(--display-panel-border);
+	}
+
 	.site-comments-actions {
 		display: flex;
 		flex-wrap: wrap;
