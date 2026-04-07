@@ -1,7 +1,7 @@
-/* Sliced Font Placeholder */
+/* Auto fallback generated during build */
 @font-face {
   font-family: "ZhuqueFangsong";
-  src: url("/assets/fonts/ZhuqueFangsong-Regular-UI.woff2") format("woff2");
+  src: url("/assets/fonts/ZhuqueFangsong-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
