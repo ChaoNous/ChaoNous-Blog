@@ -1,24 +1,20 @@
 (function () {
 	const storageKeys = {
-		password: "cnc-admin-password",
-		apiBaseUrl: "cnc-admin-api-base-url",
 		theme: "cnc-admin-theme",
 	};
 
 	const state = {
-		password: "",
-		apiBaseUrl: "",
 		theme: "light",
 		currentView: "dashboard",
 		commentsPage: 1,
 		commentsTotalPages: 0,
 		commentsSearch: "",
+		selectedCommentIds: new Set(),
 	};
 
 	const loginScreen = document.getElementById("login-screen");
 	const adminApp = document.getElementById("admin-app");
 	const loginForm = document.getElementById("login-form");
-	const loginApiInput = document.getElementById("login-api");
 	const loginPasswordInput = document.getElementById("login-password");
 	const loginSubmit = document.getElementById("login-submit");
 	const loginMessage = document.getElementById("login-message");
@@ -42,6 +38,9 @@
 	const commentsPaginationMeta = document.getElementById("comments-pagination-meta");
 	const commentsPrev = document.getElementById("comments-prev");
 	const commentsNext = document.getElementById("comments-next");
+	const commentsSelectionCount = document.getElementById("comments-selection-count");
+	const commentsSelectPage = document.getElementById("comments-select-page");
+	const commentsBulkDelete = document.getElementById("comments-bulk-delete");
 
 	const analyticsTotalPv = document.getElementById("analytics-total-pv");
 	const analyticsTotalVisits = document.getElementById("analytics-total-visits");
@@ -62,7 +61,7 @@
 		comments: {
 			title: "\u8bc4\u8bba\u7ba1\u7406",
 			subtitle:
-				"\u6240\u6709\u8bc4\u8bba\u90fd\u5df2\u76f4\u63a5\u53d1\u5e03\uff0c\u8fd9\u91cc\u7528\u4e8e\u641c\u7d22\u548c\u5206\u9875\u67e5\u770b\u3002",
+				"\u6240\u6709\u8bc4\u8bba\u90fd\u5df2\u76f4\u63a5\u53d1\u5e03\uff0c\u53ef\u4ee5\u5355\u6761\u5220\u9664\u6216\u6279\u91cf\u5904\u7406\u3002",
 		},
 		analytics: {
 			title: "\u8bbf\u95ee\u7edf\u8ba1",
@@ -72,7 +71,7 @@
 		settings: {
 			title: "\u7ad9\u70b9\u8bbe\u7f6e",
 			subtitle:
-				"\u5c06\u5f53\u524d\u76f4\u63a5\u53d1\u5e03\u7b56\u7565\u3001\u7ebf\u7a0b\u4e3b\u952e\u548c\u9274\u6743\u65b9\u5f0f\u96c6\u4e2d\u5c55\u793a\u3002",
+				"\u5c06\u5f53\u524d\u76f4\u63a5\u53d1\u5e03\u7b56\u7565\u3001\u7ebf\u7a0b\u4e3b\u952e\u548c\u4f1a\u8bdd\u9274\u6743\u65b9\u5f0f\u96c6\u4e2d\u5c55\u793a\u3002",
 		},
 		data: {
 			title: "\u6570\u636e\u7ba1\u7406",
@@ -120,18 +119,50 @@
 		target.className = `message ${type || "info"}`;
 	}
 
-	function normalizeBaseUrl(value) {
-		return (value || "").trim().replace(/\/+$/, "");
+	function resetSelection() {
+		state.selectedCommentIds.clear();
+		updateSelectionUi();
+	}
+
+	function updateSelectionUi() {
+		const selectedCount = state.selectedCommentIds.size;
+		commentsSelectionCount.textContent =
+			selectedCount > 0
+				? `\u5df2\u9009 ${formatNumber(selectedCount)} \u6761`
+				: "\u672a\u9009\u62e9\u8bc4\u8bba";
+		commentsBulkDelete.disabled = selectedCount === 0;
+
+		const checkboxes = Array.from(
+			commentsList.querySelectorAll('[data-role="comment-select"]'),
+		);
+		const selectableCount = checkboxes.length;
+		const checkedCount = checkboxes.filter((node) => node.checked).length;
+		commentsSelectPage.checked =
+			selectableCount > 0 && checkedCount === selectableCount;
+		commentsSelectPage.indeterminate =
+			checkedCount > 0 && checkedCount < selectableCount;
+		commentsSelectPage.disabled = selectableCount === 0;
+	}
+
+	function handleUnauthorized(message) {
+		setAuthenticated(false);
+		resetSelection();
+		loginPasswordInput.value = "";
+		setMessage(
+			loginMessage,
+			message || "\u4f1a\u8bdd\u5df2\u5931\u6548\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002",
+			"error",
+		);
 	}
 
 	async function request(path, options) {
-		const response = await fetch(`${state.apiBaseUrl}${path}`, {
-			...options,
+		const response = await fetch(path, {
+			credentials: "same-origin",
 			headers: {
 				Accept: "application/json",
-				"x-comment-admin-password": state.password,
 				...(options && options.headers ? options.headers : {}),
 			},
+			...options,
 		});
 
 		if (!response.ok) {
@@ -142,6 +173,11 @@
 			} catch {
 				/* ignore */
 			}
+
+			if (response.status === 401) {
+				handleUnauthorized(message);
+			}
+
 			throw new Error(message);
 		}
 
@@ -226,6 +262,8 @@
 	}
 
 	function renderComments(items) {
+		resetSelection();
+
 		if (!items.length) {
 			commentsList.innerHTML =
 				'<div class="message info">\u6ca1\u6709\u5339\u914d\u7684\u8bc4\u8bba\u3002</div>';
@@ -233,22 +271,45 @@
 		}
 
 		commentsList.innerHTML = items
-			.map(
-				(item) => `
+			.map((item) => {
+				const authorMeta = [
+					item.authorEmail ? escapeHtml(item.authorEmail) : "",
+					item.authorUrl ? escapeHtml(item.authorUrl) : "",
+				]
+					.filter(Boolean)
+					.join(" / ");
+
+				return `
 				<article class="comment-row" data-id="${item.id}">
 					<div class="comment-row-header">
-						<div>
-							<strong>${escapeHtml(item.authorName)}</strong>
-							<span class="table-meta">&nbsp;${escapeHtml(item.postTitle || item.postSlug)}</span>
+						<div class="comment-row-main">
+							<label class="comment-check">
+								<input data-role="comment-select" type="checkbox" value="${item.id}" />
+								<span>\u9009\u4e2d</span>
+							</label>
+							<div>
+								<strong>${escapeHtml(item.authorName)}</strong>
+								<span class="table-meta">&nbsp;${escapeHtml(item.postTitle || item.postSlug)}</span>
+							</div>
 						</div>
-						<div class="table-meta">${formatDate(item.createdAt)}</div>
+						<div class="inline-actions">
+							<span class="table-meta">${formatDate(item.createdAt)}</span>
+							<button class="ghost-button danger-button" data-action="delete" data-id="${item.id}" type="button">\u5220\u9664</button>
+						</div>
 					</div>
 					<div>${escapeHtml(item.content).replaceAll("\n", "<br />")}</div>
 					<div class="table-meta" style="margin-top: 0.65rem;">${escapeHtml(item.postSlug)}</div>
+					${
+						authorMeta
+							? `<div class="table-meta" style="margin-top: 0.4rem;">${authorMeta}</div>`
+							: ""
+					}
 				</article>
-			`,
-			)
+			`;
+			})
 			.join("");
+
+		updateSelectionUi();
 	}
 
 	async function loadComments() {
@@ -265,6 +326,12 @@
 			'<div class="message info">\u6b63\u5728\u52a0\u8f7d\u8bc4\u8bba\u2026</div>';
 		const payload = await request(`/api/admin/comments?${params.toString()}`);
 		state.commentsTotalPages = Number(payload.pagination.total || 0);
+
+		if (state.commentsPage > 1 && state.commentsTotalPages > 0 && state.commentsPage > state.commentsTotalPages) {
+			state.commentsPage = state.commentsTotalPages;
+			return loadComments();
+		}
+
 		renderComments(payload.data || []);
 		commentsPaginationMeta.textContent =
 			`\u7b2c ${payload.pagination.page} / ${Math.max(payload.pagination.total, 1)} \u9875\uff0c` +
@@ -291,7 +358,7 @@
 						<span>${formatNumber(item.pageviews)} PV</span>
 					</div>
 					<div class="table-meta">${escapeHtml(item.postSlug)}</div>
-					<div class="table-meta" style="margin-top: 0.5rem;">Visits ${formatNumber(item.visits)} · ${formatDate(item.updatedAt)}</div>
+					<div class="table-meta" style="margin-top: 0.5rem;">Visits ${formatNumber(item.visits)} / ${formatDate(item.updatedAt)}</div>
 				</article>
 			`,
 			)
@@ -331,15 +398,20 @@
 
 	async function downloadExport(type) {
 		const response = await fetch(
-			`${state.apiBaseUrl}/api/admin/export?type=${encodeURIComponent(type)}`,
+			`/api/admin/export?type=${encodeURIComponent(type)}`,
 			{
-				headers: {
-					"x-comment-admin-password": state.password,
-				},
+				credentials: "same-origin",
 			},
 		);
 		if (!response.ok) {
-			throw new Error("\u5bfc\u51fa\u5931\u8d25\u3002");
+			let message = "\u5bfc\u51fa\u5931\u8d25\u3002";
+			try {
+				const payload = await response.json();
+				message = payload.message || message;
+			} catch {
+				/* ignore */
+			}
+			throw new Error(message);
 		}
 		const blob = await response.blob();
 		const url = URL.createObjectURL(blob);
@@ -379,21 +451,39 @@
 	}
 
 	async function tryLogin() {
-		state.password = loginPasswordInput.value.trim();
-		state.apiBaseUrl = normalizeBaseUrl(loginApiInput.value) || window.location.origin;
+		const password = loginPasswordInput.value.trim();
 
-		if (!state.password) {
+		if (!password) {
 			setMessage(loginMessage, "\u8bf7\u5148\u8f93\u5165\u540e\u53f0\u5bc6\u7801\u3002", "error");
 			return;
 		}
 
 		loginSubmit.disabled = true;
-		setMessage(loginMessage, "\u6b63\u5728\u9a8c\u8bc1\u540e\u53f0\u5bc6\u7801\u2026", "info");
+		setMessage(loginMessage, "\u6b63\u5728\u521b\u5efa\u540e\u53f0\u4f1a\u8bdd\u2026", "info");
 
 		try {
-			await request("/api/admin/overview");
-			sessionStorage.setItem(storageKeys.password, state.password);
-			localStorage.setItem(storageKeys.apiBaseUrl, state.apiBaseUrl);
+			const response = await fetch("/api/admin/session", {
+				method: "POST",
+				credentials: "same-origin",
+				headers: {
+					"content-type": "application/json; charset=utf-8",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({ password }),
+			});
+
+			if (!response.ok) {
+				let message = "\u767b\u5f55\u5931\u8d25\u3002";
+				try {
+					const payload = await response.json();
+					message = payload.message || message;
+				} catch {
+					/* ignore */
+				}
+				throw new Error(message);
+			}
+
+			loginPasswordInput.value = "";
 			setAuthenticated(true);
 			await bootstrapApp();
 		} catch (error) {
@@ -407,39 +497,90 @@
 		}
 	}
 
-	function logout() {
-		sessionStorage.removeItem(storageKeys.password);
-		state.password = "";
+	async function logout(options) {
+		try {
+			await fetch("/api/admin/session", {
+				method: "DELETE",
+				credentials: "same-origin",
+			});
+		} catch {
+			/* ignore */
+		}
+
+		resetSelection();
 		loginPasswordInput.value = "";
 		setAuthenticated(false);
-		setMessage(loginMessage, "\u5df2\u9000\u51fa\u3002", "info");
+		setMessage(
+			loginMessage,
+			options && options.expired
+				? "\u4f1a\u8bdd\u5df2\u8fc7\u671f\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002"
+				: "\u5df2\u9000\u51fa\u3002",
+			options && options.expired ? "error" : "info",
+		);
 	}
 
 	async function restoreSession() {
 		const savedTheme = localStorage.getItem(storageKeys.theme) || "light";
 		setTheme(savedTheme);
 
-		const savedApiBaseUrl =
-			localStorage.getItem(storageKeys.apiBaseUrl) || window.location.origin;
-		loginApiInput.value = savedApiBaseUrl;
-		state.apiBaseUrl = normalizeBaseUrl(savedApiBaseUrl);
-
-		const savedPassword = sessionStorage.getItem(storageKeys.password) || "";
-		if (!savedPassword) {
-			setAuthenticated(false);
-			return;
-		}
-
-		state.password = savedPassword;
-		loginPasswordInput.value = savedPassword;
-
 		try {
-			await request("/api/admin/overview");
+			const payload = await request("/api/admin/session");
+			if (!payload.authenticated) {
+				setAuthenticated(false);
+				return;
+			}
+
 			setAuthenticated(true);
 			await bootstrapApp();
 		} catch {
-			logout();
+			await logout({ expired: true });
 		}
+	}
+
+	async function refreshCommentsAndOverview(message) {
+		await Promise.all([loadComments(), loadOverview()]);
+		setMessage(appMessage, message, "success");
+	}
+
+	async function deleteComment(id) {
+		const confirmed = window.confirm("\u786e\u8ba4\u5220\u9664\u8fd9\u6761\u8bc4\u8bba\uff1f\u5982\u679c\u6709\u56de\u590d\uff0c\u4f1a\u4e00\u5e76\u5220\u9664\u3002");
+		if (!confirmed) return;
+
+		setMessage(appMessage, "\u6b63\u5728\u5220\u9664\u8bc4\u8bba\u2026", "info");
+		await request(`/api/admin/comments/${id}`, {
+			method: "DELETE",
+		});
+		state.selectedCommentIds.delete(id);
+		await refreshCommentsAndOverview("\u8bc4\u8bba\u5df2\u5220\u9664\u3002");
+	}
+
+	async function bulkDeleteComments() {
+		const ids = Array.from(state.selectedCommentIds);
+		if (!ids.length) {
+			setMessage(appMessage, "\u8bf7\u5148\u9009\u62e9\u8981\u5220\u9664\u7684\u8bc4\u8bba\u3002", "error");
+			return;
+		}
+
+		const confirmed = window.confirm(
+			`\u786e\u8ba4\u6279\u91cf\u5220\u9664 ${ids.length} \u6761\u8bc4\u8bba\uff1f\u5982\u679c\u5305\u542b\u56de\u590d\uff0c\u4f1a\u4e00\u5e76\u5220\u9664\u3002`,
+		);
+		if (!confirmed) return;
+
+		setMessage(appMessage, "\u6b63\u5728\u6267\u884c\u6279\u91cf\u5220\u9664\u2026", "info");
+		const payload = await request("/api/admin/comments/bulk", {
+			method: "POST",
+			headers: {
+				"content-type": "application/json; charset=utf-8",
+			},
+			body: JSON.stringify({
+				action: "delete",
+				ids,
+			}),
+		});
+		resetSelection();
+		await refreshCommentsAndOverview(
+			payload.message || "\u6279\u91cf\u5220\u9664\u5df2\u5b8c\u6210\u3002",
+		);
 	}
 
 	loginForm.addEventListener("submit", (event) => {
@@ -451,7 +592,9 @@
 		setTheme(state.theme === "dark" ? "light" : "dark");
 	});
 
-	logoutButton.addEventListener("click", logout);
+	logoutButton.addEventListener("click", () => {
+		void logout();
+	});
 
 	document.querySelectorAll(".nav-button").forEach((button) => {
 		button.addEventListener("click", () => {
@@ -505,6 +648,65 @@
 			await loadComments();
 		} catch (error) {
 			setMessage(appMessage, error.message, "error");
+		}
+	});
+
+	commentsSelectPage.addEventListener("change", () => {
+		const checked = commentsSelectPage.checked;
+		commentsList
+			.querySelectorAll('[data-role="comment-select"]')
+			.forEach((node) => {
+				node.checked = checked;
+				const id = Number.parseInt(node.value, 10);
+				if (!Number.isFinite(id) || id <= 0) return;
+				if (checked) {
+					state.selectedCommentIds.add(id);
+				} else {
+					state.selectedCommentIds.delete(id);
+				}
+			});
+		updateSelectionUi();
+	});
+
+	commentsBulkDelete.addEventListener("click", async () => {
+		try {
+			await bulkDeleteComments();
+		} catch (error) {
+			setMessage(appMessage, error.message, "error");
+		}
+	});
+
+	commentsList.addEventListener("change", (event) => {
+		const target = event.target;
+		if (!(target instanceof HTMLInputElement)) return;
+		if (target.dataset.role !== "comment-select") return;
+
+		const id = Number.parseInt(target.value, 10);
+		if (!Number.isFinite(id) || id <= 0) return;
+		if (target.checked) {
+			state.selectedCommentIds.add(id);
+		} else {
+			state.selectedCommentIds.delete(id);
+		}
+		updateSelectionUi();
+	});
+
+	commentsList.addEventListener("click", async (event) => {
+		const target = event.target;
+		if (!(target instanceof HTMLElement)) return;
+		const button = target.closest("[data-action='delete']");
+		if (!(button instanceof HTMLButtonElement)) return;
+
+		const id = Number.parseInt(button.dataset.id || "", 10);
+		if (!Number.isFinite(id) || id <= 0) return;
+
+		try {
+			button.disabled = true;
+			await deleteComment(id);
+		} catch (error) {
+			setMessage(appMessage, error.message, "error");
+		} finally {
+			button.disabled = false;
 		}
 	});
 

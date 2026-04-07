@@ -37,7 +37,7 @@ export const onRequestGet = async ({
 	env: Env;
 	request: Request;
 }) => {
-	if (!isAdminAuthorized(request, env)) {
+	if (!(await isAdminAuthorized(request, env))) {
 		return unauthorized("\u540e\u53f0\u5bc6\u7801\u4e0d\u6b63\u786e\u3002");
 	}
 

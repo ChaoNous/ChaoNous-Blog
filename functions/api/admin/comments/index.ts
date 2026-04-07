@@ -1,7 +1,6 @@
 import {
 	json,
 	isAdminAuthorized,
-	normalizeComment,
 	serverError,
 	unauthorized,
 	type CommentRecord,
@@ -15,7 +14,7 @@ export const onRequestGet = async ({
 	env: Env;
 	request: Request;
 }) => {
-	if (!isAdminAuthorized(request, env)) {
+	if (!(await isAdminAuthorized(request, env))) {
 		return unauthorized("\u540e\u53f0\u5bc6\u7801\u4e0d\u6b63\u786e\u3002");
 	}
 
@@ -74,7 +73,19 @@ export const onRequestGet = async ({
 		const totalCount = Number(total?.total_count || 0);
 
 		return json({
-			data: (rows.results || []).map((record) => normalizeComment(record)),
+			data: (rows.results || []).map((record) => ({
+				id: record.id,
+				parentId: record.parent_id,
+				postSlug: record.post_slug,
+				postUrl: record.post_url,
+				postTitle: record.post_title,
+				authorName: record.author_name,
+				authorEmail: record.author_email,
+				authorUrl: record.author_url,
+				content: record.content,
+				createdAt: new Date(record.created_at).toISOString(),
+				updatedAt: new Date(record.updated_at).toISOString(),
+			})),
 			pagination: {
 				page,
 				limit,

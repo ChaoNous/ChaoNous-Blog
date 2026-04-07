@@ -123,6 +123,8 @@
 			align-items: center;
 		}
 
+		.inline-actions { justify-content: flex-end; }
+
 		.button, .ghost-button {
 			border: 0;
 			border-radius: 999px;
@@ -141,6 +143,11 @@
 			background: var(--panel-soft);
 			color: var(--text);
 			border: 1px solid var(--border);
+		}
+
+		.danger-button {
+			color: var(--danger);
+			border-color: rgba(182, 68, 53, 0.18);
 		}
 
 		.message {
@@ -240,6 +247,18 @@
 			border: 1px solid var(--border);
 		}
 
+		.comment-row-main, .selection-meta, .comment-check {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.75rem;
+			align-items: center;
+		}
+
+		.comment-check {
+			font-size: 0.9rem;
+			color: var(--text-soft);
+		}
+
 		.comment-item-header, .comment-row-header, .page-row-header {
 			display: flex;
 			flex-wrap: wrap;
@@ -295,14 +314,10 @@
 			</div>
 			<form id="login-form" class="form-grid">
 				<label class="form-field">
-					<span class="form-label">&#x7ad9;&#x70b9; API</span>
-					<input id="login-api" class="form-input" type="text" value="https://chaonous.com" />
-				</label>
-				<label class="form-field">
 					<span class="form-label">&#x540e;&#x53f0;&#x5bc6;&#x7801;</span>
 					<input id="login-password" class="form-input" type="password" autocomplete="current-password" />
 				</label>
-				<div id="login-message" class="message info">&#x8f93;&#x5165;&#x5bc6;&#x7801;&#x540e;&#x767b;&#x5f55;&#xff0c;&#x6240;&#x6709;&#x8bc4;&#x8bba;&#x90fd;&#x4f1a;&#x4ee5;&#x76f4;&#x63a5;&#x53d1;&#x5e03;&#x6a21;&#x5f0f;&#x7edf;&#x4e00;&#x7ba1;&#x7406;&#x3002;</div>
+				<div id="login-message" class="message info">&#x8f93;&#x5165;&#x5bc6;&#x7801;&#x540e;&#x767b;&#x5f55;&#xff0c;&#x540e;&#x53f0;&#x4f1a;&#x521b;&#x5efa; HttpOnly &#x4f1a;&#x8bdd;&#xff0c;&#x65e0;&#x9700;&#x518d;&#x5728;&#x524d;&#x7aef;&#x4fdd;&#x5b58;&#x5bc6;&#x7801;&#x3002;</div>
 				<div class="form-actions">
 					<button id="login-submit" class="button" type="submit">&#x767b;&#x5f55;</button>
 				</div>
@@ -315,7 +330,7 @@
 			<div class="panel" style="padding: 1rem;">
 				<span class="page-badge">CNC</span>
 				<h2 class="sidebar-title">ChaoNous Admin</h2>
-				<p class="text-soft">&#x540e;&#x53f0;&#x5df2;&#x5207;&#x6362;&#x4e3a;&#x65e0;&#x5ba1;&#x6838;&#x72b6;&#x6001;&#x7684;&#x76f4;&#x63a5;&#x53d1;&#x5e03;&#x7ba1;&#x7406;&#x6a21;&#x5f0f;&#x3002;</p>
+				<p class="text-soft">&#x540e;&#x53f0;&#x5df2;&#x5207;&#x6362;&#x4e3a;&#x4f1a;&#x8bdd;&#x767b;&#x5f55; + &#x76f4;&#x63a5;&#x53d1;&#x5e03;&#x7684;&#x8bc4;&#x8bba;&#x7ba1;&#x7406;&#x6a21;&#x5f0f;&#x3002;</p>
 			</div>
 			<nav class="sidebar-nav">
 				<button class="nav-button active" data-view="dashboard" type="button">
@@ -324,7 +339,7 @@
 				</button>
 				<button class="nav-button" data-view="comments" type="button">
 					<strong>&#x8bc4;&#x8bba;&#x7ba1;&#x7406;</strong>
-					<span>&#x641c;&#x7d22;&#x548c;&#x5206;&#x9875;&#x6d4f;&#x89c8;&#x5168;&#x90e8;&#x5df2;&#x53d1;&#x5e03;&#x8bc4;&#x8bba;</span>
+					<span>&#x641c;&#x7d22;&#x3001;&#x9009;&#x62e9;&#x3001;&#x5220;&#x9664;&#x5168;&#x90e8;&#x5df2;&#x53d1;&#x5e03;&#x8bc4;&#x8bba;</span>
 				</button>
 				<button class="nav-button" data-view="analytics" type="button">
 					<strong>&#x8bbf;&#x95ee;&#x7edf;&#x8ba1;</strong>
@@ -413,6 +428,11 @@
 							<input id="comments-search" class="form-input" type="search" placeholder="&#x641c;&#x7d22;&#x4f5c;&#x8005;&#x3001;&#x5185;&#x5bb9;&#x3001;&#x6587;&#x7ae0;" />
 						</div>
 						<div class="toolbar-group">
+							<label class="selection-meta">
+								<input id="comments-select-page" type="checkbox" />
+								<span id="comments-selection-count">&#x672a;&#x9009;&#x62e9;&#x8bc4;&#x8bba;</span>
+							</label>
+							<button id="comments-bulk-delete" class="ghost-button danger-button" type="button" disabled>&#x6279;&#x91cf;&#x5220;&#x9664;</button>
 							<button id="comments-search-button" class="ghost-button" type="button">&#x67e5;&#x8be2;</button>
 							<button id="comments-refresh" class="ghost-button" type="button">&#x5237;&#x65b0;</button>
 						</div>
@@ -501,7 +521,7 @@
 						<div class="kv-list">
 							<div class="kv-row"><div class="kv-key">&#x6570;&#x636e;&#x6e90;</div><div>Cloudflare D1</div></div>
 							<div class="kv-row"><div class="kv-key">&#x8fd0;&#x884c;&#x65b9;&#x5f0f;</div><div>&#x7ad9;&#x70b9;&#x540c;&#x57df; Pages Functions</div></div>
-							<div class="kv-row"><div class="kv-key">&#x540e;&#x7eed;&#x6269;&#x5c55;</div><div>&#x53ef;&#x7ee7;&#x7eed;&#x8865;&#x8fdb;&#x8bc4;&#x8bba;&#x5220;&#x9664;&#x3001;&#x5bfc;&#x5165;&#x4e0e;&#x4f1a;&#x8bdd;&#x767b;&#x5f55;&#x80fd;&#x529b;</div></div>
+							<div class="kv-row"><div class="kv-key">&#x540e;&#x53f0;&#x80fd;&#x529b;</div><div>&#x652f;&#x6301;&#x5355;&#x6761;&#x5220;&#x9664;&#x3001;&#x6279;&#x91cf;&#x5220;&#x9664;&#x548c;&#x4f1a;&#x8bdd;&#x767b;&#x5f55;</div></div>
 						</div>
 					</section>
 				</div>

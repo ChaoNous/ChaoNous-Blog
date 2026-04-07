@@ -2,26 +2,29 @@
 
 ## 当前架构
 
-评论系统已调整为站内自托管模式，运行时不再依赖外部评论网站服务。
+评论系统已经完全运行在站内，不依赖外部评论服务网站。
 
 - 前端评论组件：`E:\ChaoNous-Blog\src\components\comment\Cnc.astro`
 - 前端评论脚本：`E:\ChaoNous-Blog\src\scripts\site-comments.ts`
 - 同域评论 API：`/api/comments`
 - 同域后台 API：`/api/admin/comments`
+- 后台会话 API：`/api/admin/session`
 - 后台入口：`https://chaonous.com/admin/`
 - Pages Functions 目录：`E:\ChaoNous-Blog\functions`
-- D1 初始化脚本：`E:\ChaoNous-Blog\cloudflare\d1\0001_comment_system.sql`
+- 评论表初始化脚本：`E:\ChaoNous-Blog\cloudflare\d1\0001_comment_system.sql`
 - 页面统计初始化脚本：`E:\ChaoNous-Blog\cloudflare\d1\0002_page_analytics.sql`
+- 评论状态列迁移脚本：`E:\ChaoNous-Blog\cloudflare\d1\0003_drop_comment_status.sql`
+- 后台会话表迁移脚本：`E:\ChaoNous-Blog\cloudflare\d1\0004_admin_sessions.sql`
 - Wrangler 配置：`E:\ChaoNous-Blog\wrangler.jsonc`
 
 ## 运行方式
 
-当前评论系统由以下几部分组成：
+当前评论系统由以下部分组成：
 
 1. Astro 文章页输出评论容器。
 2. 本地评论脚本在页面内挂载评论列表、回复和提交表单。
 3. 评论请求走站内同域 API，不再请求外部评论域名。
-4. Cloudflare Pages Functions 负责评论读写与后台审核接口。
+4. Cloudflare Pages Functions 负责评论读写、后台登录和管理接口。
 5. Cloudflare D1 负责评论与页面统计数据存储。
 
 ## 评论线程主键策略
@@ -31,7 +34,7 @@
 - `postSlug = canonicalUrl`
 - `postUrl = canonicalUrl`
 
-这样可以避免以下问题：
+这样可以避免：
 
 - alias URL 产生重复评论线程
 - 尾斜杠差异导致线程分裂
@@ -41,15 +44,16 @@
 
 - D1 数据库名：`chaonous-blog-comments`
 - D1 绑定名：`COMMENTS_DB`
-- 当前数据库 ID 已写入 `wrangler.jsonc`
+- 当前数据库 ID 已写入 `E:\ChaoNous-Blog\wrangler.jsonc`
 
 当前表结构：
 
 - `comments`
 - `page_stats`
 - `page_visitors`
+- `admin_sessions`
 
-主要字段：
+`comments` 主要字段：
 
 - `post_slug`
 - `post_url`
@@ -59,60 +63,68 @@
 - `author_email`
 - `author_url`
 - `content`
-- `status`
 - `created_at`
 - `updated_at`
 
-页面统计字段：
+说明：
 
-- `page_stats.post_slug`
-- `page_stats.post_url`
-- `page_stats.post_title`
-- `page_stats.pageviews`
-- `page_stats.visits`
-- `page_visitors.visitor_id`
+- `status` 列已经从数据库和业务逻辑中彻底移除
+- 所有评论一律直接发布
+- 删除父评论时，会递归删除其全部子回复
 
-## 审核策略
+## 后台管理能力
 
-当前已关闭默认审核：
+当前后台已支持：
 
-- 配置项：`COMMENT_REQUIRE_MODERATION`
-- 当前值：`false`
+- 会话制登录
+- 自动校验当前会话
+- 单条删除评论
+- 批量删除评论
+- 评论数据导出
+- 页面统计数据导出
 
-行为说明：
+后台核心文件：
 
-- 前台用户提交后直接写入 `approved`
-- 评论提交成功后立即在页面显示
-- 后台 `/admin/` 仍可用于查看与手动调整评论状态
+- 后台页面：`E:\ChaoNous-Blog\public\admin\index.html`
+- 后台脚本：`E:\ChaoNous-Blog\public\admin\comments-admin.js`
+- 会话接口：`E:\ChaoNous-Blog\functions\api\admin\session.ts`
+- 评论列表接口：`E:\ChaoNous-Blog\functions\api\admin\comments\index.ts`
+- 单条删除接口：`E:\ChaoNous-Blog\functions\api\admin\comments\[id].ts`
+- 批量操作接口：`E:\ChaoNous-Blog\functions\api\admin\comments\bulk.ts`
 
 ## 后台认证
 
-当前后台认证方式为同域后台密码校验。
+当前后台认证方式为同域会话登录：
 
-- Secret 名称：`COMMENT_ADMIN_PASSWORD`
-- Secret 已上传到 Cloudflare Pages 项目
-- 前端后台页通过请求头 `x-comment-admin-password` 调用站内审核 API
+- 登录凭据 Secret：`COMMENT_ADMIN_PASSWORD`
+- 会话 Cookie 名：`cnc_admin_session`
+- 登录接口：`POST /api/admin/session`
+- 会话检查接口：`GET /api/admin/session`
+- 登出接口：`DELETE /api/admin/session`
 
-注意：
+安全特性：
 
-- 不要把后台密码写入仓库
-- 若需要轮换后台密码，应同步更新 Pages secret
+- Cookie 为 `HttpOnly`
+- Cookie 为 `Secure`
+- Cookie 为 `SameSite=Strict`
+- 前端不会再把后台密码保存到本地存储
+- 后台 API 不再依赖 `x-comment-admin-password` 请求头
 
 ## 部署要求
 
-由于评论系统现在依赖 Pages Functions，部署方式已改为 Wrangler 部署：
+由于评论系统依赖 Pages Functions 和 D1，部署方式必须保留 Wrangler / Pages Functions 链路。
 
 - 工作流文件：`E:\ChaoNous-Blog\.github\workflows\deploy.yml`
 - 部署命令：`wrangler pages deploy dist --project-name=chaonous-blog`
 
-原因：
+说明：
 
-- 旧的纯静态目录上传方式无法满足同域 Functions + D1 绑定
+- 纯静态目录上传无法满足同域 Functions + D1 绑定
 - 当前部署必须同时带上 `dist` 产物和 `functions` 目录
 
 ## 页面统计
 
-当前文章浏览量与站点总访问量也已经切换为站内实现，不再依赖外部统计脚本。
+文章浏览量与站点访问量也已改为站内实现：
 
 - 文章统计接口：`/api/analytics/pv`
 - 文章访问写入接口：`/api/analytics/visit`
@@ -138,14 +150,4 @@
 
 - `pnpm.cmd dlx wrangler@4 d1 execute chaonous-blog-comments --remote --file=cloudflare/d1/0001_comment_system.sql`
 - `pnpm.cmd dlx wrangler@4 d1 execute chaonous-blog-comments --remote --file=cloudflare/d1/0002_page_analytics.sql`
-
-## 后续建议
-
-当前版本已完成“站内运行、同域 API、同域后台、D1 存储”的基础闭环。
-
-下一阶段建议优先做：
-
-1. 后台密码登录改成更稳的会话机制，而不是每次请求都传密码。
-2. 为评论提交增加限流与防刷策略。
-3. 给评论内容增加更严格的清洗与审计策略。
-4. 如需迁移旧评论，补一个导入脚本，把历史评论写入 D1。
+- `pnpm.cmd dlx wrangler@4 d1 execute chaonous-blog-comments --remote --file=cloudflare/d1/0003_drop_comment_status.sql`
