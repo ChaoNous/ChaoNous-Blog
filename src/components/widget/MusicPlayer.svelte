@@ -1264,7 +1264,6 @@
 			.music-player button:hover:not(:disabled),
 			.music-player [role="button"]:hover,
 			.progress-bar:hover,
-			.volume-bar:hover,
 			.playlist-item:hover,
 			.cover-container:hover {
 				transform: translateY(-1px) scale(1.03);
@@ -1315,8 +1314,7 @@
 				opacity: 0.5;
 			}
 		}
-		.progress-section div:hover,
-		.volume-bar:hover {
+		.progress-section div:hover {
 			/* removed scaling as per user request */
 			transition: transform 0.2s ease;
 		}
