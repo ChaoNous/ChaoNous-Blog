@@ -71,6 +71,7 @@ analyze-*.mjs
 
 # Wrangler
 .wrangler/
+.codex-temp/
 
 # Twikoo local dev
 twikoo-cloudflare/
