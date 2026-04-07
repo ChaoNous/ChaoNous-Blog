@@ -120,10 +120,6 @@ function renderState(
 
 	container.innerHTML = `
 		<section class="site-comments-shell">
-			<div class="site-comments-head">
-				<h2 class="site-comments-title">评论</h2>
-				<p class="site-comments-subtitle">评论系统已迁回站内，同域 API 直接提交并发布。</p>
-			</div>
 			${noticeHtml}
 			${replyBanner}
 			<form class="site-comments-form">
