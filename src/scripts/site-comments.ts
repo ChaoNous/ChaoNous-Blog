@@ -6,6 +6,7 @@ interface SiteComment {
 	postTitle: string;
 	authorName: string;
 	authorUrl: string | null;
+	avatarUrl: string;
 	content: string;
 	createdAt: string;
 	replies: SiteComment[];
@@ -86,6 +87,7 @@ function renderCommentItem(
 		<article class="site-comment-card${depth > 0 ? " is-reply" : ""}">
 			<header class="site-comment-header">
 				<div class="site-comment-meta">
+					<img class="site-comment-avatar" src="${escapeHtml(comment.avatarUrl || "")}" alt="${authorLabel}" loading="lazy" decoding="async" />
 					${author}
 					<time class="site-comment-time" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(formatDate(comment.createdAt, options.lang))}</time>
 				</div>

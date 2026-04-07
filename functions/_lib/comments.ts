@@ -176,6 +176,34 @@ export function toIso(timestamp: number): string {
 	return new Date(timestamp).toISOString();
 }
 
+function normalizeIdentityValue(value: string): string {
+	return value.trim().toLowerCase();
+}
+
+function hashIdentity(value: string): string {
+	let hash = 2166136261;
+	const input = normalizeIdentityValue(value);
+
+	for (let index = 0; index < input.length; index += 1) {
+		hash ^= input.charCodeAt(index);
+		hash = Math.imul(hash, 16777619);
+	}
+
+	return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+export function createCommentAvatarUrl(
+	email: string,
+	name: string,
+): string {
+	const source = normalizeIdentityValue(email || name || "anonymous");
+	const seed = hashIdentity(source);
+	const params = new URLSearchParams({
+		name: name.trim() || "匿名",
+	});
+	return `/api/avatar/${seed}?${params.toString()}`;
+}
+
 export function normalizeComment(record: CommentRecord) {
 	return {
 		id: record.id,
@@ -185,6 +213,7 @@ export function normalizeComment(record: CommentRecord) {
 		postTitle: record.post_title,
 		authorName: record.author_name,
 		authorUrl: record.author_url,
+		avatarUrl: createCommentAvatarUrl(record.author_email, record.author_name),
 		content: record.content,
 		createdAt: toIso(record.created_at),
 		updatedAt: toIso(record.updated_at),
