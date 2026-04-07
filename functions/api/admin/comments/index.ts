@@ -16,7 +16,7 @@ export const onRequestGet = async ({
 	request: Request;
 }) => {
 	if (!isAdminAuthorized(request, env)) {
-		return unauthorized("????????");
+		return unauthorized("后台密码不正确。");
 	}
 
 	try {
@@ -37,6 +37,6 @@ export const onRequestGet = async ({
 		});
 	} catch (error) {
 		console.error("admin:comments:list", error);
-		return serverError("?????????");
+		return serverError("评论后台读取失败。");
 	}
 };

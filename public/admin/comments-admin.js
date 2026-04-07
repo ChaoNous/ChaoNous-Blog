@@ -16,7 +16,7 @@
 
 	function renderComments(items) {
 		if (!items.length) {
-			list.innerHTML = '<div class="notice">??????????</div>';
+			list.innerHTML = '<div class="notice">当前状态下没有评论。</div>';
 			return;
 		}
 
@@ -26,7 +26,7 @@
 					<strong>${item.authorName}</strong>
 					<span>${item.postTitle || item.postSlug}</span>
 					<span>${new Date(item.createdAt).toLocaleString("zh-CN")}</span>
-					<span>??:${item.status}</span>
+					<span>状态：${item.status}</span>
 				</div>
 				<div class="comment-content">${String(item.content).replace(/[&<>"]/g, (char) => ({
 					"&": "&amp;",
@@ -35,9 +35,9 @@
 					'"': "&quot;"
 				}[char])).replace(/\n/g, "<br />")}</div>
 				<div class="comment-actions">
-					<button data-id="${item.id}" data-status="approved">??</button>
-					<button class="secondary" data-id="${item.id}" data-status="rejected">??</button>
-					<button class="secondary" data-id="${item.id}" data-status="pending">?????</button>
+					<button data-id="${item.id}" data-status="approved">通过</button>
+					<button class="secondary" data-id="${item.id}" data-status="rejected">拒绝</button>
+					<button class="secondary" data-id="${item.id}" data-status="pending">转回待审核</button>
 				</div>
 			</article>
 		`).join("");
@@ -46,11 +46,11 @@
 	async function loadComments() {
 		const password = getPassword();
 		if (!password) {
-			setNotice("?????????", "error");
+			setNotice("请先输入后台密码。", "error");
 			return;
 		}
 
-		setNotice("??????.");
+		setNotice("正在读取评论…");
 		list.innerHTML = "";
 
 		const response = await fetch(`/api/admin/comments?status=${encodeURIComponent(statusSelect.value)}`, {
@@ -62,18 +62,18 @@
 
 		const payload = await response.json();
 		if (!response.ok) {
-			setNotice(payload.message || "???????", "error");
+			setNotice(payload.message || "评论读取失败。", "error");
 			return;
 		}
 
-		setNotice(`??? ${payload.data.length} ????`);
+		setNotice(`已加载 ${payload.data.length} 条评论。`);
 		renderComments(payload.data);
 	}
 
 	async function updateStatus(id, status) {
 		const password = getPassword();
 		if (!password) {
-			setNotice("?????????", "error");
+			setNotice("请先输入后台密码。", "error");
 			return;
 		}
 
@@ -89,11 +89,11 @@
 
 		const payload = await response.json();
 		if (!response.ok) {
-			setNotice(payload.message || "?????????", "error");
+			setNotice(payload.message || "评论状态更新失败。", "error");
 			return;
 		}
 
-		setNotice(`?? #${id} ???? ${status}?`);
+		setNotice(`评论 #${id} 已更新为 ${status}。`);
 		await loadComments();
 	}
 

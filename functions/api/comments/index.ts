@@ -33,7 +33,7 @@ export const onRequestGet = async ({
 		);
 
 		if (!postSlug) {
-			return badRequest("???????");
+			return badRequest("缺少文章标识。");
 		}
 
 		const result = await env.COMMENTS_DB.prepare(
@@ -71,7 +71,7 @@ export const onRequestGet = async ({
 		});
 	} catch (error) {
 		console.error("comments:get", error);
-		return serverError("??????,??????");
+		return serverError("评论读取失败，请稍后再试。");
 	}
 };
 
@@ -103,7 +103,7 @@ export const onRequestPost = async ({
 				.first<{ id: number; post_slug: string; status: string }>();
 
 			if (!parent || parent.post_slug !== validated.value.postSlug) {
-				return badRequest("????????");
+				return badRequest("回复目标不存在。");
 			}
 		}
 
@@ -134,12 +134,12 @@ export const onRequestPost = async ({
 				ok: true,
 				id: inserted.meta.last_row_id,
 				status,
-				message: moderation ? "?????,?????" : "??????",
+				message: moderation ? "评论已提交，等待审核。" : "评论已发布。",
 			},
 			201,
 		);
 	} catch (error) {
 		console.error("comments:post", error);
-		return serverError("??????,??????");
+		return serverError("评论提交失败，请稍后再试。");
 	}
 };

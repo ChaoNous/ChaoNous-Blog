@@ -17,12 +17,12 @@ export const onRequestPatch = async ({
 	params: Record<string, string | undefined>;
 }) => {
 	if (!isAdminAuthorized(request, env)) {
-		return unauthorized("????????");
+		return unauthorized("后台密码不正确。");
 	}
 
 	const id = Number.parseInt(String(params.id || ""), 10);
 	if (!Number.isFinite(id) || id <= 0) {
-		return badRequest("???????");
+		return badRequest("评论编号无效。");
 	}
 
 	try {
@@ -32,7 +32,7 @@ export const onRequestPatch = async ({
 			!nextStatus ||
 			!["approved", "rejected", "pending"].includes(nextStatus)
 		) {
-			return badRequest("???????");
+			return badRequest("目标状态无效。");
 		}
 
 		await env.COMMENTS_DB.prepare(
@@ -50,6 +50,6 @@ export const onRequestPatch = async ({
 		});
 	} catch (error) {
 		console.error("admin:comments:update", error);
-		return serverError("?????????");
+		return serverError("评论状态更新失败。");
 	}
 };

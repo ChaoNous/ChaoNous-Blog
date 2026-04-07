@@ -109,11 +109,11 @@ export function badRequest(message: string): Response {
 	return json({ message }, 400);
 }
 
-export function unauthorized(message = "????"): Response {
+export function unauthorized(message = "未授权。"): Response {
 	return json({ message }, 401);
 }
 
-export function serverError(message = "????????"): Response {
+export function serverError(message = "服务暂时不可用。"): Response {
 	return json({ message }, 500);
 }
 
@@ -128,33 +128,33 @@ export function validateSubmission(body: Record<string, unknown>) {
 	const parentIdRaw = String(body.parentId || "").trim();
 	const parentId = parentIdRaw ? Number.parseInt(parentIdRaw, 10) : null;
 
-	if (!postSlug) return { ok: false, message: "???????" } as const;
-	if (!postUrl) return { ok: false, message: "???????" } as const;
+	if (!postSlug) return { ok: false, message: "缺少文章标识。" } as const;
+	if (!postUrl) return { ok: false, message: "缺少文章链接。" } as const;
 	if (!name || name.length > 50) {
-		return { ok: false, message: "????,????? 50 ????" } as const;
+		return { ok: false, message: "昵称必填，且不能超过 50 个字符。" } as const;
 	}
 	if (
 		!email ||
 		email.length > 120 ||
 		!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 	) {
-		return { ok: false, message: "????????" } as const;
+		return { ok: false, message: "请输入有效邮箱。" } as const;
 	}
 	if (url) {
 		try {
 			new URL(url);
 		} catch {
-			return { ok: false, message: "????????" } as const;
+			return { ok: false, message: "网址格式不正确。" } as const;
 		}
 	}
 	if (!content || content.length > 2000) {
 		return {
 			ok: false,
-			message: "??????,????? 2000 ????",
+			message: "评论内容必填，且不能超过 2000 个字符。",
 		} as const;
 	}
 	if (parentIdRaw && (!Number.isFinite(parentId) || (parentId ?? 0) <= 0)) {
-		return { ok: false, message: "???????" } as const;
+		return { ok: false, message: "回复目标无效。" } as const;
 	}
 
 	return {
