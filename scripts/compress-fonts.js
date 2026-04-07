@@ -9,9 +9,24 @@ const ROOT_DIR = path.join(__dirname, "..");
 
 const SOURCE_FONT_PATH = path.join(ROOT_DIR, "public/assets/fonts/ZhuqueFangsong-Regular.ttf");
 const OUTPUT_DIR = path.join(ROOT_DIR, "public/fonts/zhuque");
+const STATIC_RESULT_CSS_PATH = path.join(OUTPUT_DIR, "result.css");
 const GENERATED_CSS_PATH = path.join(ROOT_DIR, "src/styles/generated-zhuque-font.css");
 const FALLBACK_FONT_PUBLIC_PATH = "/assets/fonts/ZhuqueFangsong-Regular.ttf";
 const SHOULD_ATTEMPT_SPLIT = process.env.ENABLE_FONT_SPLIT === "true";
+
+function writeStaticSliceCss() {
+	let cssContent = fs.readFileSync(STATIC_RESULT_CSS_PATH, "utf8");
+	cssContent = cssContent.replace(/url\((['"]?)(\.\/)?([^'")]+)\1\)/g, (match, quote, _dotSlash, url) => {
+		if (url.startsWith("http") || url.startsWith("/")) {
+			return match;
+		}
+		return `url("/fonts/zhuque/${url}")`;
+	});
+	cssContent = `/* Auto generated during build: use prebuilt unicode-range slices */\n${cssContent}`;
+
+	fs.writeFileSync(GENERATED_CSS_PATH, cssContent, "utf8");
+	console.log("[Font-Split] Using prebuilt unicode-range font slices.");
+}
 
 function writeFallbackCss(reason) {
 	const cssContent = `/* Auto fallback generated during build */
@@ -32,6 +47,11 @@ async function main() {
 	if (!fs.existsSync(SOURCE_FONT_PATH)) {
 		console.log(`[Font-Split] Source font not found: ${SOURCE_FONT_PATH}`);
 		writeFallbackCss("source font missing, keep build unblocked");
+		return;
+	}
+
+	if (fs.existsSync(STATIC_RESULT_CSS_PATH)) {
+		writeStaticSliceCss();
 		return;
 	}
 
