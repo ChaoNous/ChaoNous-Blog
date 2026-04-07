@@ -17,6 +17,12 @@ async function main() {
 		return;
 	}
 
+	const stats = fs.statSync(SOURCE_FONT_PATH);
+	console.log(`[Font-Split] Source font file size: ${(stats.size / 1024 / 1024).toFixed(2)} MB`);
+	if (stats.size < 1024 * 1024) {
+		throw new Error(`[Font-Split] Source font file is suspiciously small (${stats.size} bytes). Slicing aborted.`);
+	}
+
 	console.log("[Font-Split] Start slicing Zhuque Fangsong font...");
 
 	// Ensure output directory exists and is clean
