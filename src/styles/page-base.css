@@ -2,7 +2,7 @@
 
 html {
   @apply scroll-smooth;
-  font-size: 112%;
+  font-size: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
   background-color: var(--page-bg);
@@ -12,6 +12,18 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 106%;
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 112%;
+  }
 }
 
 html.dark,

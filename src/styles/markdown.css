@@ -1,12 +1,12 @@
 @reference "tailwindcss";
 
 .custom-md {
-  font-size: 1.04rem;
-  line-height: 1.92;
+  font-size: 0.98rem;
+  line-height: 1.86;
   letter-spacing: 0.005em;
 
   @media (min-width: 768px) {
-    font-size: 1.16rem;
+    font-size: 1.1rem;
     line-height: 1.98;
   }
 

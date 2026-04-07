@@ -13,8 +13,8 @@
 
   /* 放大 logo 文字 */
   .navbar-brand-text {
-    font-size: clamp(1.6rem, 5.5vw, 2.2rem) !important;
-    letter-spacing: 0.05em !important;
+    font-size: clamp(1.28rem, 4.6vw, 1.75rem) !important;
+    letter-spacing: 0.035em !important;
   }
 
   /* 放大品牌图标 */
@@ -49,6 +49,12 @@
     margin-left: 0 !important;
     gap: 0.25rem !important;
     justify-items: end !important;
+  }
+
+  .navbar-actions .btn-plain,
+  .navbar-actions .btn-regular,
+  .navbar-actions button {
+    font-size: 0.94rem !important;
   }
 
   /* 移动端菜单面板位于导航栏下方 */
