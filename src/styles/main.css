@@ -75,9 +75,9 @@ body::before {
   background:
     /* 径向打底光 — 整体明暗层次，不塑造折痕 */
     radial-gradient(ellipse 80% 70% at 45% 40%,
-      rgba(248, 240, 225, 1) 0%,
-      rgba(238, 225, 200, 0.9) 70%,
-      rgba(228, 210, 182, 0.85) 100%
+      rgba(236, 226, 208, 0.96) 0%,
+      rgba(224, 209, 186, 0.88) 70%,
+      rgba(212, 194, 166, 0.82) 100%
     ),
     /* 云纹 */
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='cloud'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004' numOctaves='2' seed='3'/%3E%3CfeGaussianBlur stdDeviation='3'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0.96 0 0 0 0  0.88 0 0 0 0  0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cloud)'/%3E%3C/svg%3E"),
@@ -85,59 +85,59 @@ body::before {
     /* 折痕 1: 35° 方向（右上↙左下），折缝暗线 */
     linear-gradient(35deg,
       transparent 38%,
-      rgba(210, 190, 155, 0.10) 45%,
-      rgba(210, 190, 155, 0.15) 50%,
-      rgba(210, 190, 155, 0.10) 55%,
+      rgba(192, 170, 138, 0.08) 45%,
+      rgba(192, 170, 138, 0.12) 50%,
+      rgba(192, 170, 138, 0.08) 55%,
       transparent 62%
     ),
     /* 折痕 1: 隆起亮线 */
     linear-gradient(35deg,
       transparent 48%,
-      rgba(255, 255, 252, 0.06) 50%,
+      rgba(250, 246, 238, 0.04) 50%,
       transparent 52%
     ),
     /* 折痕 2: 78° 方向（几乎水平，微倾斜） */
     linear-gradient(78deg,
       transparent 32%,
-      rgba(200, 180, 145, 0.08) 40%,
-      rgba(200, 180, 145, 0.12) 50%,
-      rgba(200, 180, 145, 0.08) 60%,
+      rgba(186, 164, 132, 0.07) 40%,
+      rgba(186, 164, 132, 0.10) 50%,
+      rgba(186, 164, 132, 0.07) 60%,
       transparent 68%
     ),
     /* 折痕 3: 105° 方向（左上↘右下） */
     linear-gradient(105deg,
       transparent 25%,
-      rgba(210, 190, 155, 0.07) 35%,
-      rgba(210, 190, 155, 0.10) 42%,
-      rgba(210, 190, 155, 0.07) 49%,
+      rgba(192, 170, 138, 0.06) 35%,
+      rgba(192, 170, 138, 0.08) 42%,
+      rgba(192, 170, 138, 0.06) 49%,
       transparent 59%
     ),
     /* 折痕 4: 142° 方向 */
     linear-gradient(142deg,
       transparent 40%,
-      rgba(205, 185, 150, 0.08) 48%,
-      rgba(205, 185, 150, 0.12) 50%,
-      rgba(205, 185, 150, 0.08) 52%,
+      rgba(188, 166, 134, 0.07) 48%,
+      rgba(188, 166, 134, 0.10) 50%,
+      rgba(188, 166, 134, 0.07) 52%,
       transparent 60%
     ),
     /* 折痕 5: 168° 方向（接近垂直） */
     linear-gradient(168deg,
       transparent 45%,
-      rgba(215, 195, 165, 0.06) 50%,
+      rgba(198, 176, 146, 0.05) 50%,
       transparent 55%
     ),
     /* 折痕 6: 200° 方向（左下↗右上） */
     linear-gradient(200deg,
       transparent 35%,
-      rgba(210, 190, 155, 0.07) 42%,
-      rgba(210, 190, 155, 0.09) 50%,
+      rgba(192, 170, 138, 0.06) 42%,
+      rgba(192, 170, 138, 0.08) 50%,
       transparent 58%
     ),
     /* 对角光泽 — 丝绸漫反射 */
     linear-gradient(130deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.06) 30%,
-      rgba(255, 255, 255, 0.03) 50%,
+      rgba(247, 243, 236, 0.04) 30%,
+      rgba(247, 243, 236, 0.02) 50%,
       transparent 70%
     );
   background-size: 100% 100%, 2000px 2000px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
@@ -770,37 +770,37 @@ html {
 :root {
   --radius-large: 1rem;
   --primary: oklch(0.65 0.20 var(--hue));
-  --page-bg: oklch(0.82 0.04 var(--hue));
-  --page-bg-top: oklch(0.84 0.05 var(--hue));
-  --page-bg-bottom: oklch(0.78 0.03 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.75 0.12 var(--hue)) 35%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.68 0.16 var(--hue)) 28%, transparent);
-  --page-bg-accent-strong: color-mix(in oklch, oklch(0.60 0.18 var(--hue)) 18%, transparent);
-  --page-bg-paper-grain: color-mix(in oklch, oklch(0.92 0.025 var(--hue)) 82%, oklch(0.94 0.02 var(--hue)) 18%);
-  --card-bg: oklch(0.93 0.025 var(--hue));
-  --card-bg-transparent: oklch(0.93 0.025 var(--hue) / 0.88);
+  --page-bg: oklch(0.78 0.04 var(--hue));
+  --page-bg-top: oklch(0.80 0.045 var(--hue));
+  --page-bg-bottom: oklch(0.74 0.03 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.68 0.10 var(--hue)) 28%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.60 0.13 var(--hue)) 22%, transparent);
+  --page-bg-accent-strong: color-mix(in oklch, oklch(0.54 0.15 var(--hue)) 14%, transparent);
+  --page-bg-paper-grain: color-mix(in oklch, oklch(0.87 0.02 var(--hue)) 84%, oklch(0.89 0.018 var(--hue)) 16%);
+  --card-bg: oklch(0.90 0.022 var(--hue));
+  --card-bg-transparent: oklch(0.90 0.022 var(--hue) / 0.88);
   --btn-content: oklch(0.45 0.15 var(--hue));
-  --btn-regular-bg: oklch(0.90 0.05 var(--hue));
-  --btn-regular-bg-hover: oklch(0.85 0.08 var(--hue));
-  --btn-regular-bg-active: oklch(0.80 0.10 var(--hue));
-  --btn-plain-bg-hover: oklch(0.92 0.03 var(--hue));
-  --btn-plain-bg-active: oklch(0.95 0.02 var(--hue));
-  --btn-card-bg-hover: oklch(0.96 0.015 var(--hue));
-  --btn-card-bg-active: oklch(0.88 0.04 var(--hue));
+  --btn-regular-bg: oklch(0.86 0.04 var(--hue));
+  --btn-regular-bg-hover: oklch(0.81 0.06 var(--hue));
+  --btn-regular-bg-active: oklch(0.76 0.08 var(--hue));
+  --btn-plain-bg-hover: oklch(0.89 0.025 var(--hue));
+  --btn-plain-bg-active: oklch(0.86 0.02 var(--hue));
+  --btn-card-bg-hover: oklch(0.91 0.015 var(--hue));
+  --btn-card-bg-active: oklch(0.84 0.035 var(--hue));
   --deep-text: oklch(0.22 0.02 var(--hue));
   --line-divider: rgba(0, 0, 0, 0.06);
   --line-color: rgba(0, 0, 0, 0.08);
   --content-meta: rgba(0, 0, 0, 0.85);
   --selection-bg: oklch(0.82 0.09 var(--hue));
-  --codeblock-bg: oklch(0.90 0.015 var(--hue));
-  --codeblock-topbar-bg: oklch(0.87 0.02 var(--hue));
+  --codeblock-bg: oklch(0.86 0.015 var(--hue));
+  --codeblock-topbar-bg: oklch(0.82 0.018 var(--hue));
   --link-underline: oklch(0.82 0.07 var(--hue));
   --link-hover: oklch(0.78 0.10 var(--hue));
   --link-active: oklch(0.75 0.12 var(--hue));
-  --float-panel-bg: oklch(0.92 0.01 var(--hue));
-  --toc-badge-bg: oklch(0.80 0.08 var(--hue));
-  --toc-btn-hover: oklch(0.86 0.03 var(--hue));
-  --toc-btn-active: oklch(0.84 0.03 var(--hue));
+  --float-panel-bg: oklch(0.88 0.01 var(--hue));
+  --toc-badge-bg: oklch(0.76 0.07 var(--hue));
+  --toc-btn-hover: oklch(0.82 0.028 var(--hue));
+  --toc-btn-active: oklch(0.79 0.028 var(--hue));
   --toc-item-active: oklch(0.60 0.16 var(--hue));
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -811,7 +811,7 @@ html {
   --nav-radius: var(--radius-std);
   --panel-bg: var(--card-bg-transparent);
   --panel-blur: blur(20px);
-  --display-panel-bg: oklch(0.92 0.015 var(--hue) / 0.82);
+  --display-panel-bg: oklch(0.88 0.014 var(--hue) / 0.84);
   --display-panel-border: rgba(0, 0, 0, 0.08);
   --display-panel-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
   --navbar-foreground: var(--deep-text);
