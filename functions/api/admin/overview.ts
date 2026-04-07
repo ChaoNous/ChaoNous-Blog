@@ -8,9 +8,6 @@ import {
 
 interface CountRow {
 	total_count: number;
-	approved_count: number;
-	pending_count: number;
-	rejected_count: number;
 }
 
 interface RecentCommentRow {
@@ -19,7 +16,6 @@ interface RecentCommentRow {
 	post_title: string;
 	author_name: string;
 	content: string;
-	status: string;
 	created_at: number;
 }
 
@@ -49,15 +45,11 @@ export const onRequestGet = async ({
 		const [counts, recentComments, hotPosts, siteAnalytics, trendRows] =
 			await Promise.all([
 				env.COMMENTS_DB.prepare(
-					`SELECT
-						COUNT(*) AS total_count,
-						SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) AS approved_count,
-						SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_count,
-						SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) AS rejected_count
+					`SELECT COUNT(*) AS total_count
 					 FROM comments`,
 				).first<CountRow>(),
 				env.COMMENTS_DB.prepare(
-					`SELECT id, post_slug, post_title, author_name, content, status, created_at
+					`SELECT id, post_slug, post_title, author_name, content, created_at
 					 FROM comments
 					 ORDER BY created_at DESC
 					 LIMIT 6`,
@@ -91,9 +83,6 @@ export const onRequestGet = async ({
 		return json({
 			commentSummary: {
 				total: Number(counts?.total_count || 0),
-				approved: Number(counts?.approved_count || 0),
-				pending: Number(counts?.pending_count || 0),
-				rejected: Number(counts?.rejected_count || 0),
 			},
 			analyticsSummary: {
 				pageviews: Number(siteAnalytics?.pageviews || 0),
@@ -105,7 +94,6 @@ export const onRequestGet = async ({
 				postTitle: item.post_title,
 				authorName: item.author_name,
 				content: item.content,
-				status: item.status,
 				createdAt: new Date(item.created_at).toISOString(),
 			})),
 			hotPosts: (hotPosts.results || []).map((item) => ({

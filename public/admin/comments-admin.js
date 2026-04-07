@@ -13,7 +13,6 @@
 		commentsPage: 1,
 		commentsTotalPages: 0,
 		commentsSearch: "",
-		commentsStatus: "all",
 	};
 
 	const loginScreen = document.getElementById("login-screen");
@@ -32,7 +31,6 @@
 	const logoutButton = document.getElementById("logout-button");
 
 	const metricCommentsTotal = document.getElementById("metric-comments-total");
-	const metricCommentsApproved = document.getElementById("metric-comments-approved");
 	const metricPageviews = document.getElementById("metric-pageviews");
 	const metricVisits = document.getElementById("metric-visits");
 	const dashboardTrend = document.getElementById("dashboard-trend");
@@ -40,7 +38,6 @@
 	const dashboardHotPosts = document.getElementById("dashboard-hot-posts");
 
 	const commentsSearchInput = document.getElementById("comments-search");
-	const commentsStatusSelect = document.getElementById("comments-status");
 	const commentsList = document.getElementById("comments-list");
 	const commentsPaginationMeta = document.getElementById("comments-pagination-meta");
 	const commentsPrev = document.getElementById("comments-prev");
@@ -60,27 +57,27 @@
 		dashboard: {
 			title: "\u6570\u636e\u770b\u677f",
 			subtitle:
-				"\u5bf9\u9f50 `cwd-admin` \u7684\u6982\u89c8\u4f53\u9a8c\uff0c\u5feb\u901f\u67e5\u770b\u8bc4\u8bba\u603b\u91cf\u3001\u70ed\u95e8\u6587\u7ae0\u548c\u8fd1\u671f\u8d8b\u52bf\u3002",
+				"\u4ee5\u76f4\u63a5\u53d1\u5e03\u6a21\u5f0f\u67e5\u770b\u5f53\u524d\u5168\u90e8\u8bc4\u8bba\u548c\u8fd1\u671f\u8d8b\u52bf\u3002",
 		},
 		comments: {
 			title: "\u8bc4\u8bba\u7ba1\u7406",
 			subtitle:
-				"\u652f\u6301\u6309\u72b6\u6001\u3001\u5173\u952e\u5b57\u641c\u7d22\u5e76\u76f4\u63a5\u5207\u6362\u8bc4\u8bba\u72b6\u6001\u3002",
+				"\u6240\u6709\u8bc4\u8bba\u90fd\u5df2\u76f4\u63a5\u53d1\u5e03\uff0c\u8fd9\u91cc\u7528\u4e8e\u641c\u7d22\u548c\u5206\u9875\u67e5\u770b\u3002",
 		},
 		analytics: {
 			title: "\u8bbf\u95ee\u7edf\u8ba1",
 			subtitle:
-				"\u67e5\u770b\u7ad9\u70b9 PV / Visits \u548c\u70ed\u95e8\u9875\u9762\u6392\u884c\uff0c\u8865\u8db3 `cwd` \u540e\u53f0\u7684\u770b\u677f\u611f\u3002",
+				"\u67e5\u770b\u7ad9\u70b9 PV / Visits \u548c\u70ed\u95e8\u9875\u9762\u6392\u884c\u3002",
 		},
 		settings: {
 			title: "\u7ad9\u70b9\u8bbe\u7f6e",
 			subtitle:
-				"\u5c06\u5f53\u524d\u8bc4\u8bba\u8fd0\u884c\u7b56\u7565\u3001\u7ebf\u7a0b\u952e\u548c\u540e\u53f0\u9274\u6743\u65b9\u5f0f\u96c6\u4e2d\u5c55\u793a\u3002",
+				"\u5c06\u5f53\u524d\u76f4\u63a5\u53d1\u5e03\u7b56\u7565\u3001\u7ebf\u7a0b\u4e3b\u952e\u548c\u9274\u6743\u65b9\u5f0f\u96c6\u4e2d\u5c55\u793a\u3002",
 		},
 		data: {
 			title: "\u6570\u636e\u7ba1\u7406",
 			subtitle:
-				"\u53c2\u8003 `cwd-admin` \u7684 Data \u9875\u9762\uff0c\u63d0\u4f9b\u8bc4\u8bba\u4e0e\u7edf\u8ba1\u5bfc\u51fa\u5165\u53e3\u3002",
+				"\u5bfc\u51fa\u8bc4\u8bba\u548c\u8bbf\u95ee\u7edf\u8ba1\u6570\u636e\uff0c\u7528\u4e8e\u5907\u4efd\u6216\u8fc1\u79fb\u3002",
 		},
 	};
 
@@ -164,7 +161,7 @@
 				const width = Math.max(6, Math.round((value / max) * 100));
 				return `
 					<div class="bar-row">
-						<div>${escapeHtml(item.day || item.label || "-")}</div>
+						<div>${escapeHtml(item.day || "-")}</div>
 						<div class="bar-track"><div class="bar-fill" style="width: ${width}%"></div></div>
 						<div>${formatNumber(value)}</div>
 					</div>
@@ -186,11 +183,10 @@
 				<article class="comment-item">
 					<div class="comment-item-header">
 						<strong>${escapeHtml(item.authorName)}</strong>
-						<span class="status-pill ${escapeHtml(item.status)}">${escapeHtml(item.status)}</span>
+						<span class="table-meta">${formatDate(item.createdAt)}</span>
 					</div>
 					<div>${escapeHtml(item.postTitle || item.postSlug)}</div>
 					<div class="table-meta">${escapeHtml(item.content).slice(0, 88)}</div>
-					<div class="table-meta">${formatDate(item.createdAt)}</div>
 				</article>
 			`,
 			)
@@ -222,7 +218,6 @@
 	async function loadOverview() {
 		const payload = await request("/api/admin/overview");
 		metricCommentsTotal.textContent = formatNumber(payload.commentSummary.total);
-		metricCommentsApproved.textContent = formatNumber(payload.commentSummary.approved);
 		metricPageviews.textContent = formatNumber(payload.analyticsSummary.pageviews);
 		metricVisits.textContent = formatNumber(payload.analyticsSummary.visits);
 		renderBarChart(dashboardTrend, payload.commentTrend || [], "total");
@@ -246,18 +241,10 @@
 							<strong>${escapeHtml(item.authorName)}</strong>
 							<span class="table-meta">&nbsp;${escapeHtml(item.postTitle || item.postSlug)}</span>
 						</div>
-						<div class="inline-actions">
-							<span class="status-pill ${escapeHtml(item.status)}">${escapeHtml(item.status)}</span>
-							<span class="table-meta">${formatDate(item.createdAt)}</span>
-						</div>
+						<div class="table-meta">${formatDate(item.createdAt)}</div>
 					</div>
 					<div>${escapeHtml(item.content).replaceAll("\n", "<br />")}</div>
 					<div class="table-meta" style="margin-top: 0.65rem;">${escapeHtml(item.postSlug)}</div>
-					<div class="inline-actions" style="margin-top: 0.85rem;">
-						<button class="status-button" data-action="status" data-status="approved" data-id="${item.id}">\u53d1\u5e03</button>
-						<button class="status-button" data-action="status" data-status="pending" data-id="${item.id}">\u5f85\u5ba1\u6838</button>
-						<button class="status-button" data-action="status" data-status="rejected" data-id="${item.id}">\u62d2\u7edd</button>
-					</div>
 				</article>
 			`,
 			)
@@ -268,7 +255,6 @@
 		const params = new URLSearchParams({
 			page: String(state.commentsPage),
 			limit: "12",
-			status: state.commentsStatus,
 		});
 
 		if (state.commentsSearch) {
@@ -339,23 +325,8 @@
 		renderKvList(settingsSite, payload.site || {});
 		renderKvList(settingsComment, payload.comment || {});
 		renderKvList(settingsSecurity, payload.security || {});
-		const moderationText = payload.comment && payload.comment.requireModeration
-			? "\u5f00\u542f\u5ba1\u6838"
-			: "\u76f4\u63a5\u53d1\u5e03";
-		sidebarMode.textContent = moderationText;
-		dashboardMode.textContent = moderationText;
-	}
-
-	async function updateCommentStatus(id, status) {
-		await request(`/api/admin/comments/${id}`, {
-			method: "PATCH",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ status }),
-		});
-		setMessage(appMessage, `\u8bc4\u8bba #${id} \u5df2\u66f4\u65b0\u4e3a ${status}\u3002`, "success");
-		await Promise.all([loadComments(), loadOverview()]);
+		sidebarMode.textContent = "\u76f4\u63a5\u53d1\u5e03";
+		dashboardMode.textContent = "\u76f4\u63a5\u53d1\u5e03";
 	}
 
 	async function downloadExport(type) {
@@ -501,7 +472,6 @@
 	document.getElementById("comments-search-button").addEventListener("click", async () => {
 		state.commentsPage = 1;
 		state.commentsSearch = commentsSearchInput.value.trim();
-		state.commentsStatus = commentsStatusSelect.value;
 		try {
 			await loadComments();
 		} catch (error) {
@@ -533,18 +503,6 @@
 		state.commentsPage += 1;
 		try {
 			await loadComments();
-		} catch (error) {
-			setMessage(appMessage, error.message, "error");
-		}
-	});
-
-	commentsList.addEventListener("click", async (event) => {
-		const button = event.target.closest('[data-action="status"]');
-		if (!button) return;
-		const id = button.dataset.id;
-		const status = button.dataset.status;
-		try {
-			await updateCommentStatus(id, status);
 		} catch (error) {
 			setMessage(appMessage, error.message, "error");
 		}

@@ -19,7 +19,6 @@
 			--primary: #ab5c3d;
 			--primary-strong: #7f3f23;
 			--success: #1f7a4d;
-			--warning: #bf7a13;
 			--danger: #b64435;
 			--shadow: 0 1.25rem 3rem rgba(36, 24, 22, 0.08);
 			font-family: "Crimson Pro", "Zhuque Fangsong UI", serif;
@@ -38,47 +37,25 @@
 			--primary: #d27250;
 			--primary-strong: #f3a37f;
 			--success: #56b783;
-			--warning: #e6a43d;
 			--danger: #ef7a6f;
 			--shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.26);
 		}
 
-		* {
-			box-sizing: border-box;
-		}
+		* { box-sizing: border-box; }
 
-		html,
-		body {
+		html, body {
 			margin: 0;
 			min-height: 100%;
-			background:
-				radial-gradient(circle at top, var(--bg-accent), transparent 32%),
-				var(--bg);
+			background: radial-gradient(circle at top, var(--bg-accent), transparent 32%), var(--bg);
 			color: var(--text);
 		}
 
-		body {
-			min-height: 100vh;
-		}
+		body { min-height: 100vh; }
 
-		button,
-		input,
-		select,
-		textarea {
-			font: inherit;
-		}
-
-		button {
-			cursor: pointer;
-		}
-
-		a {
-			color: inherit;
-		}
-
-		.hidden {
-			display: none !important;
-		}
+		button, input, textarea { font: inherit; }
+		button { cursor: pointer; }
+		a { color: inherit; }
+		.hidden { display: none !important; }
 
 		.login-screen {
 			min-height: 100vh;
@@ -87,12 +64,7 @@
 			padding: 2rem;
 		}
 
-		.login-card,
-		.panel,
-		.metric-card,
-		.table-card,
-		.info-card,
-		.chart-card {
+		.login-card, .panel, .metric-card, .table-card, .info-card, .chart-card {
 			border: 1px solid var(--border);
 			border-radius: 1.5rem;
 			background: var(--panel);
@@ -107,9 +79,7 @@
 			gap: 1rem;
 		}
 
-		.login-badge,
-		.page-badge,
-		.mini-badge {
+		.login-badge, .page-badge, .mini-badge {
 			display: inline-flex;
 			align-items: center;
 			gap: 0.35rem;
@@ -122,39 +92,16 @@
 			font-weight: 700;
 		}
 
-		.login-title {
-			margin: 0;
-			font-size: clamp(2rem, 4vw, 2.8rem);
-			line-height: 1;
-		}
-
-		.login-subtitle,
-		.page-subtitle,
-		.section-desc,
-		.card-desc,
-		.text-soft,
-		.table-meta {
+		.login-title { margin: 0; font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; }
+		.login-subtitle, .page-subtitle, .card-desc, .text-soft, .table-meta, .metric-label {
 			color: var(--text-soft);
 		}
 
-		.form-grid {
-			display: grid;
-			gap: 0.85rem;
-		}
+		.form-grid, .form-field { display: grid; gap: 0.85rem; }
+		.form-field { gap: 0.4rem; }
+		.form-label { font-size: 0.92rem; font-weight: 700; }
 
-		.form-field {
-			display: grid;
-			gap: 0.4rem;
-		}
-
-		.form-label {
-			font-size: 0.92rem;
-			font-weight: 700;
-		}
-
-		.form-input,
-		.form-select,
-		.form-textarea {
+		.form-input, .form-textarea {
 			width: 100%;
 			border-radius: 1rem;
 			border: 1px solid var(--border);
@@ -164,27 +111,19 @@
 			outline: none;
 		}
 
-		.form-input:focus,
-		.form-select:focus,
-		.form-textarea:focus {
+		.form-input:focus, .form-textarea:focus {
 			border-color: var(--primary);
 			box-shadow: 0 0 0 3px rgba(171, 92, 61, 0.16);
 		}
 
-		.form-actions,
-		.header-actions,
-		.toolbar,
-		.card-actions,
-		.inline-actions {
+		.form-actions, .header-actions, .toolbar, .card-actions, .inline-actions {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 0.75rem;
 			align-items: center;
 		}
 
-		.button,
-		.ghost-button,
-		.status-button {
+		.button, .ghost-button {
 			border: 0;
 			border-radius: 999px;
 			padding: 0.75rem 1rem;
@@ -196,32 +135,12 @@
 			color: white;
 		}
 
-		.button:disabled,
-		.ghost-button:disabled,
-		.status-button:disabled {
-			opacity: 0.6;
-			cursor: not-allowed;
-		}
+		.button:disabled, .ghost-button:disabled { opacity: 0.6; cursor: not-allowed; }
 
 		.ghost-button {
 			background: var(--panel-soft);
 			color: var(--text);
 			border: 1px solid var(--border);
-		}
-
-		.status-button[data-status="approved"] {
-			background: rgba(31, 122, 77, 0.12);
-			color: var(--success);
-		}
-
-		.status-button[data-status="pending"] {
-			background: rgba(191, 122, 19, 0.12);
-			color: var(--warning);
-		}
-
-		.status-button[data-status="rejected"] {
-			background: rgba(182, 68, 53, 0.12);
-			color: var(--danger);
 		}
 
 		.message {
@@ -231,21 +150,9 @@
 			font-size: 0.95rem;
 		}
 
-		.message.info {
-			background: var(--panel-soft);
-		}
-
-		.message.success {
-			background: rgba(31, 122, 77, 0.1);
-			border-color: rgba(31, 122, 77, 0.18);
-			color: var(--success);
-		}
-
-		.message.error {
-			background: rgba(182, 68, 53, 0.1);
-			border-color: rgba(182, 68, 53, 0.16);
-			color: var(--danger);
-		}
+		.message.info { background: var(--panel-soft); }
+		.message.success { background: rgba(31, 122, 77, 0.1); border-color: rgba(31, 122, 77, 0.18); color: var(--success); }
+		.message.error { background: rgba(182, 68, 53, 0.1); border-color: rgba(182, 68, 53, 0.16); color: var(--danger); }
 
 		.admin-shell {
 			display: grid;
@@ -266,15 +173,8 @@
 			height: 100vh;
 		}
 
-		.sidebar-title {
-			margin: 0;
-			font-size: 1.4rem;
-		}
-
-		.sidebar-nav {
-			display: grid;
-			gap: 0.5rem;
-		}
+		.sidebar-title { margin: 0; font-size: 1.4rem; }
+		.sidebar-nav { display: grid; gap: 0.5rem; }
 
 		.nav-button {
 			border: 1px solid transparent;
@@ -287,21 +187,9 @@
 			gap: 0.2rem;
 		}
 
-		.nav-button strong {
-			font-size: 0.98rem;
-			color: var(--text);
-		}
-
-		.nav-button span {
-			font-size: 0.86rem;
-		}
-
-		.nav-button.active {
-			background: var(--panel);
-			border-color: var(--border);
-			box-shadow: var(--shadow);
-			transform: translateX(2px);
-		}
+		.nav-button strong { font-size: 0.98rem; color: var(--text); }
+		.nav-button span { font-size: 0.86rem; }
+		.nav-button.active { background: var(--panel); border-color: var(--border); box-shadow: var(--shadow); transform: translateX(2px); }
 
 		.shell-main {
 			padding: 1.25rem;
@@ -319,117 +207,40 @@
 			align-items: center;
 		}
 
-		.shell-header h1 {
-			margin: 0;
-			font-size: clamp(1.5rem, 3vw, 2rem);
-		}
+		.shell-header h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); }
 
-		.page-section {
-			display: none;
-			gap: 1rem;
-		}
+		.page-section { display: none; gap: 1rem; }
+		.page-section.active { display: grid; }
 
-		.page-section.active {
-			display: grid;
-		}
-
-		.metrics-grid,
-		.chart-grid,
-		.settings-grid,
-		.data-grid {
+		.metrics-grid, .chart-grid, .settings-grid, .data-grid {
 			display: grid;
 			grid-template-columns: repeat(12, minmax(0, 1fr));
 			gap: 1rem;
 		}
 
-		.metric-card,
-		.chart-card,
-		.table-card,
-		.info-card {
-			padding: 1rem;
-		}
+		.metric-card, .chart-card, .table-card, .info-card { padding: 1rem; }
+		.metric-card { grid-column: span 4; display: grid; gap: 0.35rem; }
+		.metric-value { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700; line-height: 1; }
 
-		.metric-card {
-			grid-column: span 3;
-			display: grid;
-			gap: 0.35rem;
-		}
+		.chart-card.large, .table-card.large { grid-column: span 8; }
+		.chart-card.small, .table-card.small, .info-card.small { grid-column: span 4; }
 
-		.metric-value {
-			font-size: clamp(1.9rem, 4vw, 2.6rem);
-			font-weight: 700;
-			line-height: 1;
-		}
+		.card-title { margin: 0; font-size: 1.08rem; }
 
-		.metric-label {
-			font-size: 0.92rem;
-			color: var(--text-soft);
-		}
+		.bar-chart { display: grid; gap: 0.7rem; margin-top: 0.8rem; }
+		.bar-row { display: grid; grid-template-columns: 5rem 1fr auto; gap: 0.75rem; align-items: center; font-size: 0.9rem; }
+		.bar-track { height: 0.65rem; border-radius: 999px; background: var(--panel-soft); overflow: hidden; }
+		.bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--primary), var(--primary-strong)); }
 
-		.chart-card.large,
-		.table-card.large {
-			grid-column: span 8;
-		}
-
-		.chart-card.small,
-		.table-card.small,
-		.info-card.small {
-			grid-column: span 4;
-		}
-
-		.section-title,
-		.card-title {
-			margin: 0;
-			font-size: 1.08rem;
-		}
-
-		.bar-chart {
-			display: grid;
-			gap: 0.7rem;
-			margin-top: 0.8rem;
-		}
-
-		.bar-row {
-			display: grid;
-			grid-template-columns: 5rem 1fr auto;
-			gap: 0.75rem;
-			align-items: center;
-			font-size: 0.9rem;
-		}
-
-		.bar-track {
-			height: 0.65rem;
-			border-radius: 999px;
-			background: var(--panel-soft);
-			overflow: hidden;
-		}
-
-		.bar-fill {
-			height: 100%;
-			border-radius: inherit;
-			background: linear-gradient(90deg, var(--primary), var(--primary-strong));
-		}
-
-		.comment-list,
-		.info-list {
-			display: grid;
-			gap: 0.8rem;
-			margin-top: 0.8rem;
-		}
-
-		.comment-item,
-		.info-item,
-		.page-row,
-		.comment-row {
+		.comment-list, .info-list { display: grid; gap: 0.8rem; margin-top: 0.8rem; }
+		.comment-item, .info-item, .page-row, .comment-row {
 			padding: 0.9rem;
 			border-radius: 1.1rem;
 			background: var(--panel-soft);
 			border: 1px solid var(--border);
 		}
 
-		.comment-item-header,
-		.comment-row-header,
-		.page-row-header {
+		.comment-item-header, .comment-row-header, .page-row-header {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 0.5rem 0.9rem;
@@ -438,45 +249,9 @@
 			margin-bottom: 0.55rem;
 		}
 
-		.status-pill {
-			display: inline-flex;
-			align-items: center;
-			padding: 0.25rem 0.6rem;
-			border-radius: 999px;
-			font-size: 0.8rem;
-			font-weight: 700;
-		}
-
-		.status-pill.approved {
-			background: rgba(31, 122, 77, 0.12);
-			color: var(--success);
-		}
-
-		.status-pill.pending {
-			background: rgba(191, 122, 19, 0.12);
-			color: var(--warning);
-		}
-
-		.status-pill.rejected {
-			background: rgba(182, 68, 53, 0.12);
-			color: var(--danger);
-		}
-
-		.toolbar {
-			justify-content: space-between;
-		}
-
-		.toolbar-group {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.75rem;
-			align-items: center;
-		}
-
-		.toolbar-group .form-input,
-		.toolbar-group .form-select {
-			min-width: 12rem;
-		}
+		.toolbar { justify-content: space-between; }
+		.toolbar-group { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+		.toolbar-group .form-input { min-width: 16rem; }
 
 		.pagination {
 			display: flex;
@@ -487,96 +262,26 @@
 			margin-top: 1rem;
 		}
 
-		.kv-list {
-			display: grid;
-			gap: 0.75rem;
-			margin-top: 0.8rem;
-		}
-
-		.kv-row {
-			display: grid;
-			grid-template-columns: 9rem 1fr;
-			gap: 0.75rem;
-			padding-top: 0.75rem;
-			border-top: 1px dashed var(--border);
-		}
-
-		.kv-row:first-child {
-			border-top: 0;
-			padding-top: 0;
-		}
-
-		.kv-key {
-			color: var(--text-soft);
-		}
-
-		.footer-note {
-			font-size: 0.88rem;
-			color: var(--text-soft);
-		}
+		.kv-list { display: grid; gap: 0.75rem; margin-top: 0.8rem; }
+		.kv-row { display: grid; grid-template-columns: 9rem 1fr; gap: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border); }
+		.kv-row:first-child { border-top: 0; padding-top: 0; }
+		.kv-key, .footer-note { color: var(--text-soft); }
 
 		@media (max-width: 1100px) {
-			.admin-shell {
-				grid-template-columns: 1fr;
-			}
-
-			.sidebar {
-				position: static;
-				height: auto;
-				border-right: 0;
-				border-bottom: 1px solid var(--border);
-			}
-
-			.sidebar-nav {
-				grid-template-columns: repeat(2, minmax(0, 1fr));
-			}
-
-			.metric-card,
-			.chart-card.large,
-			.chart-card.small,
-			.table-card.large,
-			.table-card.small,
-			.info-card.small {
-				grid-column: span 12;
-			}
+			.admin-shell { grid-template-columns: 1fr; }
+			.sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+			.sidebar-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			.metric-card, .chart-card.large, .chart-card.small, .table-card.large, .table-card.small, .info-card.small { grid-column: span 12; }
 		}
 
 		@media (max-width: 720px) {
-			.login-screen,
-			.shell-main,
-			.sidebar {
-				padding: 1rem;
-			}
-
-			.sidebar-nav,
-			.toolbar {
-				grid-template-columns: 1fr;
-			}
-
-			.toolbar,
-			.toolbar-group,
-			.form-actions,
-			.header-actions,
-			.card-actions,
-			.inline-actions,
-			.comment-item-header,
-			.comment-row-header,
-			.page-row-header,
-			.pagination,
-			.kv-row {
+			.login-screen, .shell-main, .sidebar { padding: 1rem; }
+			.toolbar, .toolbar-group, .form-actions, .header-actions, .card-actions, .inline-actions, .comment-item-header, .comment-row-header, .page-row-header, .pagination {
 				flex-direction: column;
 				align-items: stretch;
-				grid-template-columns: 1fr;
 			}
-
-			.bar-row {
-				grid-template-columns: 1fr;
-			}
-
-			.toolbar-group .form-input,
-			.toolbar-group .form-select {
-				min-width: 0;
-			}
+			.bar-row, .kv-row { grid-template-columns: 1fr; }
+			.toolbar-group .form-input { min-width: 0; }
 		}
 	</style>
 </head>
@@ -597,7 +302,7 @@
 					<span class="form-label">&#x540e;&#x53f0;&#x5bc6;&#x7801;</span>
 					<input id="login-password" class="form-input" type="password" autocomplete="current-password" />
 				</label>
-				<div id="login-message" class="message info">&#x8f93;&#x5165;&#x5bc6;&#x7801;&#x540e;&#x767b;&#x5f55;&#xff0c;&#x9875;&#x9762;&#x7ed3;&#x6784;&#x5c06;&#x5207;&#x6362;&#x4e3a;&#x591a;&#x89c6;&#x56fe;&#x540e;&#x53f0;&#x3002;</div>
+				<div id="login-message" class="message info">&#x8f93;&#x5165;&#x5bc6;&#x7801;&#x540e;&#x767b;&#x5f55;&#xff0c;&#x6240;&#x6709;&#x8bc4;&#x8bba;&#x90fd;&#x4f1a;&#x4ee5;&#x76f4;&#x63a5;&#x53d1;&#x5e03;&#x6a21;&#x5f0f;&#x7edf;&#x4e00;&#x7ba1;&#x7406;&#x3002;</div>
 				<div class="form-actions">
 					<button id="login-submit" class="button" type="submit">&#x767b;&#x5f55;</button>
 				</div>
@@ -610,24 +315,24 @@
 			<div class="panel" style="padding: 1rem;">
 				<span class="page-badge">CNC</span>
 				<h2 class="sidebar-title">ChaoNous Admin</h2>
-				<p class="text-soft">&#x53c2;&#x8003; `cwd-admin` &#x7684;&#x4fe1;&#x606f;&#x67b6;&#x6784;&#xff0c;&#x7531;&#x4f60;&#x81ea;&#x5df1;&#x7ad9;&#x70b9;&#x540c;&#x57df; API &#x9a71;&#x52a8;&#x3002;</p>
+				<p class="text-soft">&#x540e;&#x53f0;&#x5df2;&#x5207;&#x6362;&#x4e3a;&#x65e0;&#x5ba1;&#x6838;&#x72b6;&#x6001;&#x7684;&#x76f4;&#x63a5;&#x53d1;&#x5e03;&#x7ba1;&#x7406;&#x6a21;&#x5f0f;&#x3002;</p>
 			</div>
 			<nav class="sidebar-nav">
 				<button class="nav-button active" data-view="dashboard" type="button">
 					<strong>&#x6570;&#x636e;&#x770b;&#x677f;</strong>
-					<span>&#x6982;&#x89c8;&#x8bc4;&#x8bba;&#x3001;&#x8d8b;&#x52bf;&#x4e0e;&#x70ed;&#x95e8;&#x6587;&#x7ae0;</span>
+					<span>&#x6982;&#x89c8;&#x8bc4;&#x8bba;&#x603b;&#x91cf;&#x3001;&#x8d8b;&#x52bf;&#x4e0e;&#x70ed;&#x95e8;&#x6587;&#x7ae0;</span>
 				</button>
 				<button class="nav-button" data-view="comments" type="button">
 					<strong>&#x8bc4;&#x8bba;&#x7ba1;&#x7406;</strong>
-					<span>&#x641c;&#x7d22;&#x3001;&#x7b5b;&#x9009;&#x3001;&#x5ba1;&#x6838;&#x72b6;&#x6001;&#x5207;&#x6362;</span>
+					<span>&#x641c;&#x7d22;&#x548c;&#x5206;&#x9875;&#x6d4f;&#x89c8;&#x5168;&#x90e8;&#x5df2;&#x53d1;&#x5e03;&#x8bc4;&#x8bba;</span>
 				</button>
 				<button class="nav-button" data-view="analytics" type="button">
 					<strong>&#x8bbf;&#x95ee;&#x7edf;&#x8ba1;</strong>
-					<span>&#x9875;&#x9762; PV / UV &#x6982;&#x89c8;&#x4e0e;&#x6392;&#x884c;</span>
+					<span>&#x9875;&#x9762; PV / Visits &#x6982;&#x89c8;&#x4e0e;&#x6392;&#x884c;</span>
 				</button>
 				<button class="nav-button" data-view="settings" type="button">
 					<strong>&#x7ad9;&#x70b9;&#x8bbe;&#x7f6e;</strong>
-					<span>&#x5f53;&#x524d;&#x8bc4;&#x8bba;&#x8fd0;&#x884c;&#x7b56;&#x7565;&#x4e0e;&#x8def;&#x5f84;&#x914d;&#x7f6e;</span>
+					<span>&#x67e5;&#x770b;&#x5f53;&#x524d;&#x76f4;&#x63a5;&#x53d1;&#x5e03;&#x7b56;&#x7565;&#x548c;&#x8fd0;&#x884c;&#x4fe1;&#x606f;</span>
 				</button>
 				<button class="nav-button" data-view="data" type="button">
 					<strong>&#x6570;&#x636e;&#x7ba1;&#x7406;</strong>
@@ -635,7 +340,7 @@
 				</button>
 			</nav>
 			<div class="panel" style="padding: 1rem;">
-				<div class="mini-badge">&#x5f53;&#x524d;&#x6a21;&#x5f0f;</div>
+				<div class="mini-badge">&#x53d1;&#x5e03;&#x7b56;&#x7565;</div>
 				<p id="sidebar-mode" class="text-soft" style="margin: 0.6rem 0 0;">&#x76f4;&#x63a5;&#x53d1;&#x5e03;</p>
 			</div>
 		</aside>
@@ -643,9 +348,9 @@
 		<main class="shell-main">
 			<header class="shell-header panel">
 				<div>
-					<span id="header-badge" class="page-badge">&#x540e;&#x53f0;&#x5df2;&#x767b;&#x5f55;</span>
+					<span class="page-badge">&#x540e;&#x53f0;&#x5df2;&#x767b;&#x5f55;</span>
 					<h1 id="page-title">&#x6570;&#x636e;&#x770b;&#x677f;</h1>
-					<p id="page-subtitle" class="page-subtitle">&#x4ee5; `cwd-admin` &#x7684;&#x591a;&#x89c6;&#x56fe;&#x4f53;&#x9a8c;&#x7ba1;&#x7406;&#x4f60;&#x7684;&#x7ad9;&#x5185;&#x8bc4;&#x8bba;&#x7cfb;&#x7edf;&#x3002;</p>
+					<p id="page-subtitle" class="page-subtitle">&#x4ee5;&#x65e0;&#x72b6;&#x6001;&#x7ba1;&#x7406;&#x65b9;&#x5f0f;&#x67e5;&#x770b;&#x5f53;&#x524d;&#x5168;&#x90e8;&#x8bc4;&#x8bba;&#x548c;&#x7ad9;&#x70b9;&#x6570;&#x636e;&#x3002;</p>
 				</div>
 				<div class="header-actions">
 					<button id="theme-toggle" class="ghost-button" type="button">&#x5207;&#x6362;&#x5916;&#x89c2;</button>
@@ -662,10 +367,6 @@
 						<div id="metric-comments-total" class="metric-value">0</div>
 					</div>
 					<div class="metric-card">
-						<div class="metric-label">&#x5df2;&#x53d1;&#x5e03;</div>
-						<div id="metric-comments-approved" class="metric-value">0</div>
-					</div>
-					<div class="metric-card">
 						<div class="metric-label">&#x7ad9;&#x70b9; PV</div>
 						<div id="metric-pageviews" class="metric-value">0</div>
 					</div>
@@ -680,7 +381,7 @@
 						<div class="card-actions" style="justify-content: space-between;">
 							<div>
 								<h3 class="card-title">&#x8bc4;&#x8bba;&#x8fd1; 14 &#x5929;&#x8d8b;&#x52bf;</h3>
-								<p class="card-desc">&#x53c2;&#x8003; `cwd` &#x540e;&#x53f0;&#x7684;&#x770b;&#x677f;&#x6a21;&#x5f0f;&#xff0c;&#x8fd9;&#x91cc;&#x5c55;&#x793a;&#x6bcf;&#x65e5;&#x8bc4;&#x8bba;&#x65b0;&#x589e;&#x3002;</p>
+								<p class="card-desc">&#x5c55;&#x793a;&#x6700;&#x8fd1; 14 &#x5929;&#x7684;&#x8bc4;&#x8bba;&#x589e;&#x957f;&#x60c5;&#x51b5;&#x3002;</p>
 							</div>
 							<button id="dashboard-refresh" class="ghost-button" type="button">&#x5237;&#x65b0;</button>
 						</div>
@@ -697,7 +398,7 @@
 					<section class="info-card small">
 						<h3 class="card-title">&#x8fd0;&#x884c;&#x72b6;&#x6001;</h3>
 						<div class="kv-list">
-							<div class="kv-row"><div class="kv-key">&#x8bc4;&#x8bba;&#x53d1;&#x5e03;</div><div id="dashboard-mode">&#x76f4;&#x63a5;&#x53d1;&#x5e03;</div></div>
+							<div class="kv-row"><div class="kv-key">&#x53d1;&#x5e03;&#x6a21;&#x5f0f;</div><div id="dashboard-mode">&#x76f4;&#x63a5;&#x53d1;&#x5e03;</div></div>
 							<div class="kv-row"><div class="kv-key">&#x7ebf;&#x7a0b;&#x4e3b;&#x952e;</div><div>canonicalUrl</div></div>
 							<div class="kv-row"><div class="kv-key">&#x8fd0;&#x884c;&#x73af;&#x5883;</div><div>Cloudflare Pages Functions + D1</div></div>
 						</div>
@@ -710,12 +411,6 @@
 					<div class="toolbar">
 						<div class="toolbar-group">
 							<input id="comments-search" class="form-input" type="search" placeholder="&#x641c;&#x7d22;&#x4f5c;&#x8005;&#x3001;&#x5185;&#x5bb9;&#x3001;&#x6587;&#x7ae0;" />
-							<select id="comments-status" class="form-select">
-								<option value="all">&#x6240;&#x6709;&#x72b6;&#x6001;</option>
-								<option value="approved">&#x5df2;&#x53d1;&#x5e03;</option>
-								<option value="pending">&#x5f85;&#x5ba1;&#x6838;</option>
-								<option value="rejected">&#x5df2;&#x62d2;&#x7edd;</option>
-							</select>
 						</div>
 						<div class="toolbar-group">
 							<button id="comments-search-button" class="ghost-button" type="button">&#x67e5;&#x8be2;</button>
@@ -755,7 +450,7 @@
 						<div class="card-actions" style="justify-content: space-between;">
 							<div>
 								<h3 class="card-title">&#x8fd1;&#x671f;&#x8bbf;&#x95ee;&#x8d8b;&#x52bf;</h3>
-								<p class="card-desc">&#x5c55;&#x793a;&#x7edf;&#x8ba1;&#x8868;&#x6700;&#x8fd1;&#x66f4;&#x65b0;&#x7684;&#x9875;&#x9762;&#x8bbf;&#x95ee;&#x7ed3;&#x679c;&#x3002;</p>
+								<p class="card-desc">&#x5c55;&#x793a;&#x9875;&#x9762;&#x8bbf;&#x95ee;&#x8d8b;&#x52bf;&#x548c;&#x7ad9;&#x5185;&#x7edf;&#x8ba1;&#x6570;&#x636e;&#x3002;</p>
 							</div>
 							<button id="analytics-refresh" class="ghost-button" type="button">&#x5237;&#x65b0;</button>
 						</div>
@@ -806,7 +501,7 @@
 						<div class="kv-list">
 							<div class="kv-row"><div class="kv-key">&#x6570;&#x636e;&#x6e90;</div><div>Cloudflare D1</div></div>
 							<div class="kv-row"><div class="kv-key">&#x8fd0;&#x884c;&#x65b9;&#x5f0f;</div><div>&#x7ad9;&#x70b9;&#x540c;&#x57df; Pages Functions</div></div>
-							<div class="kv-row"><div class="kv-key">&#x540e;&#x7eed;&#x6269;&#x5c55;</div><div>&#x53ef;&#x7ee7;&#x7eed;&#x8865;&#x8fdb;&#x5bfc;&#x5165;&#x3001;&#x6279;&#x91cf;&#x5220;&#x9664;&#x3001;&#x4f1a;&#x8bdd;&#x767b;&#x5f55;&#x7b49;&#x80fd;&#x529b;</div></div>
+							<div class="kv-row"><div class="kv-key">&#x540e;&#x7eed;&#x6269;&#x5c55;</div><div>&#x53ef;&#x7ee7;&#x7eed;&#x8865;&#x8fdb;&#x8bc4;&#x8bba;&#x5220;&#x9664;&#x3001;&#x5bfc;&#x5165;&#x4e0e;&#x4f1a;&#x8bdd;&#x767b;&#x5f55;&#x80fd;&#x529b;</div></div>
 						</div>
 					</section>
 				</div>

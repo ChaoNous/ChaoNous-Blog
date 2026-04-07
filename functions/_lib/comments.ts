@@ -68,7 +68,6 @@ export function normalizeComment(record: CommentRecord) {
 		authorName: record.author_name,
 		authorUrl: record.author_url,
 		content: record.content,
-		status: record.status,
 		createdAt: toIso(record.created_at),
 		updatedAt: toIso(record.updated_at),
 	};

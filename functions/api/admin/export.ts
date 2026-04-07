@@ -38,7 +38,7 @@ export const onRequestGet = async ({
 		}
 
 		const rows = await env.COMMENTS_DB.prepare(
-			`SELECT id, post_slug, post_url, post_title, parent_id, author_name, author_email, author_url, content, status, created_at, updated_at
+			`SELECT id, post_slug, post_url, post_title, parent_id, author_name, author_email, author_url, content, created_at, updated_at
 			 FROM comments
 			 ORDER BY created_at DESC`,
 		).all();

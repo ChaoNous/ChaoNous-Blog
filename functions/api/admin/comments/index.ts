@@ -21,7 +21,6 @@ export const onRequestGet = async ({
 
 	try {
 		const url = new URL(request.url);
-		const status = url.searchParams.get("status")?.trim() || "";
 		const search = url.searchParams.get("search")?.trim() || "";
 		const page = Math.max(
 			1,
@@ -35,32 +34,23 @@ export const onRequestGet = async ({
 			),
 		);
 
-		const whereClauses: string[] = [];
 		const params: unknown[] = [];
-
-		if (status && status !== "all") {
-			whereClauses.push(`status = ?${params.length + 1}`);
-			params.push(status);
-		}
+		let whereSql = "";
 
 		if (search) {
 			const keyword = `%${search.replace(/\s+/g, "%")}%`;
-			const baseIndex = params.length + 1;
-			whereClauses.push(
-				`(
-					post_title LIKE ?${baseIndex}
-					OR post_slug LIKE ?${baseIndex + 1}
-					OR author_name LIKE ?${baseIndex + 2}
-					OR author_email LIKE ?${baseIndex + 3}
-					OR content LIKE ?${baseIndex + 4}
-				)`,
-			);
+			whereSql = `
+				WHERE (
+					post_title LIKE ?1
+					OR post_slug LIKE ?2
+					OR author_name LIKE ?3
+					OR author_email LIKE ?4
+					OR content LIKE ?5
+				)
+			`;
 			params.push(keyword, keyword, keyword, keyword, keyword);
 		}
 
-		const whereSql = whereClauses.length
-			? `WHERE ${whereClauses.join(" AND ")}`
-			: "";
 		const paginationIndex = params.length + 1;
 
 		const rows = await env.COMMENTS_DB.prepare(

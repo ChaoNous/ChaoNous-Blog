@@ -3,7 +3,6 @@ import {
 	json,
 	nestComments,
 	normalizeComment,
-	requireModeration,
 	serverError,
 	type CommentRecord,
 	type Env,
@@ -33,13 +32,13 @@ export const onRequestGet = async ({
 		);
 
 		if (!postSlug) {
-			return badRequest("缺少文章标识。");
+			return badRequest("\u7f3a\u5c11\u6587\u7ae0\u6807\u8bc6\u3002");
 		}
 
 		const result = await env.COMMENTS_DB.prepare(
 			`SELECT id, parent_id, post_slug, post_url, post_title, author_name, author_email, author_url, content, status, created_at, updated_at
 			 FROM comments
-			 WHERE post_slug = ?1 AND status = 'approved'
+			 WHERE post_slug = ?1
 			 ORDER BY created_at ASC
 			 LIMIT ?2 OFFSET ?3`,
 		)
@@ -49,7 +48,7 @@ export const onRequestGet = async ({
 		const totalResult = await env.COMMENTS_DB.prepare(
 			`SELECT COUNT(*) AS total_count
 			 FROM comments
-			 WHERE post_slug = ?1 AND status = 'approved'`,
+			 WHERE post_slug = ?1`,
 		)
 			.bind(postSlug)
 			.first<{ total_count: number }>();
@@ -71,7 +70,9 @@ export const onRequestGet = async ({
 		});
 	} catch (error) {
 		console.error("comments:get", error);
-		return serverError("评论读取失败，请稍后再试。");
+		return serverError(
+			"\u8bc4\u8bba\u8bfb\u53d6\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5\u3002",
+		);
 	}
 };
 
@@ -90,20 +91,18 @@ export const onRequestPost = async ({
 		}
 
 		const now = Date.now();
-		const moderation = requireModeration(env);
-		const status = moderation ? "pending" : "approved";
 
 		if (validated.value.parentId) {
 			const parent = await env.COMMENTS_DB.prepare(
-				`SELECT id, post_slug, status
+				`SELECT id, post_slug
 				 FROM comments
 				 WHERE id = ?1`,
 			)
 				.bind(validated.value.parentId)
-				.first<{ id: number; post_slug: string; status: string }>();
+				.first<{ id: number; post_slug: string }>();
 
 			if (!parent || parent.post_slug !== validated.value.postSlug) {
-				return badRequest("回复目标不存在。");
+				return badRequest("\u56de\u590d\u76ee\u6807\u4e0d\u5b58\u5728\u3002");
 			}
 		}
 
@@ -112,7 +111,7 @@ export const onRequestPost = async ({
 				post_slug, post_url, post_title,
 				parent_id, author_name, author_email, author_url,
 				content, status, created_at, updated_at
-			) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)`,
+			) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, 'approved', ?9, ?10)`,
 		)
 			.bind(
 				validated.value.postSlug,
@@ -123,7 +122,6 @@ export const onRequestPost = async ({
 				validated.value.email,
 				validated.value.url,
 				validated.value.content,
-				status,
 				now,
 				now,
 			)
@@ -133,13 +131,14 @@ export const onRequestPost = async ({
 			{
 				ok: true,
 				id: inserted.meta.last_row_id,
-				status,
-				message: moderation ? "评论已提交，等待审核。" : "评论已发布。",
+				message: "\u8bc4\u8bba\u5df2\u53d1\u5e03\u3002",
 			},
 			201,
 		);
 	} catch (error) {
 		console.error("comments:post", error);
-		return serverError("评论提交失败，请稍后再试。");
+		return serverError(
+			"\u8bc4\u8bba\u63d0\u4ea4\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5\u3002",
+		);
 	}
 };

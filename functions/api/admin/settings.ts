@@ -27,7 +27,7 @@ export const onRequestGet = async ({
 				analyticsApiPath: "/api/admin/analytics",
 			},
 			comment: {
-				requireModeration: env.COMMENT_REQUIRE_MODERATION !== "false",
+				publishMode: "direct",
 				threadKey: "canonicalUrl",
 				storage: "Cloudflare D1",
 				runtime: "Cloudflare Pages Functions",
