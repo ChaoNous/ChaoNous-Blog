@@ -930,13 +930,13 @@
 			</div>
 			<div class="controls flex items-center justify-center gap-2 mb-4">
 				<button
-					class="w-10 h-10 rounded-lg btn-regular"
+					class="player-mode-button w-10 h-10 rounded-lg btn-regular"
 					aria-label={isShuffled
 						? i18n(Key.musicPlayerShuffle)
 						: isRepeating === 1
 							? i18n(Key.musicPlayerRepeatOne)
 							: i18n(Key.musicPlayerRepeat)}
-					on:click={toggleRepeat}
+					on:click|stopPropagation={toggleRepeat}
 				>
 					{#if isShuffled}
 						<Icon icon="material-symbols:shuffle" class="text-lg" />
@@ -961,13 +961,13 @@
 					/>
 				</button>
 				<button
-					class="btn-regular w-12 h-12 rounded-full"
+					class="player-play-button btn-regular w-12 h-12 rounded-full"
 					aria-label={isPlaying
 						? i18n(Key.musicPlayerPause)
 						: i18n(Key.musicPlayerPlay)}
 					class:opacity-50={isLoading}
 					disabled={isLoading}
-					on:click={togglePlay}
+					on:click|stopPropagation={togglePlay}
 				>
 					{#if isLoading}
 						<Icon icon="eos-icons:loading" class="text-xl" />
@@ -1294,6 +1294,15 @@
 				inset 0 0 0 999px
 					color-mix(in oklab, var(--primary) 10%, transparent);
 			color: var(--primary);
+		}
+
+		.music-player .player-mode-button,
+		.music-player .player-play-button,
+		.music-player .player-mode-button:hover:not(:disabled),
+		.music-player .player-play-button:hover:not(:disabled),
+		.music-player .player-mode-button:focus-visible,
+		.music-player .player-play-button:focus-visible {
+			box-shadow: none;
 		}
 
 		.music-player button:active:not(:disabled),
