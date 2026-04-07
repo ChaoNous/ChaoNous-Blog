@@ -36,6 +36,7 @@ interface SiteCommentsState {
 	loading: boolean;
 	submitting: boolean;
 	replyTarget: { id: number; authorName: string } | null;
+	ownedComments: Record<string, string>;
 }
 
 function normalizeUrlInput(value: string): string {
@@ -72,6 +73,7 @@ function formatCommentContent(content: string): string {
 function renderCommentItem(
 	comment: SiteComment,
 	options: MountSiteCommentsOptions,
+	state: SiteCommentsState,
 	depth = 0,
 ): string {
 	const authorLabel = escapeHtml(comment.authorName || "匿名");
@@ -79,8 +81,15 @@ function renderCommentItem(
 		? `<a href="${escapeHtml(comment.authorUrl)}" target="_blank" rel="nofollow noopener noreferrer" class="site-comment-author link-btn">${authorLabel}</a>`
 		: `<span class="site-comment-author">${authorLabel}</span>`;
 	const replies = comment.replies
-		.map((reply) => renderCommentItem(reply, options, depth + 1))
+		.map((reply) => renderCommentItem(reply, options, state, depth + 1))
 		.join("");
+
+	const isOwned = state.ownedComments[comment.id.toString()];
+	const deleteBtn = isOwned
+		? `<button type="button" class="site-comment-delete-btn link-btn" data-delete-id="${comment.id}">
+				删除
+			</button>`
+		: "";
 
 	return `
 		<article class="site-comment-card${depth > 0 ? " is-reply" : ""}">
@@ -89,9 +98,12 @@ function renderCommentItem(
 					${author}
 					<time class="site-comment-time" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(formatDate(comment.createdAt, options.lang))}</time>
 				</div>
-				<button type="button" class="site-comment-reply-btn link-btn" data-reply-id="${comment.id}" data-reply-author="${authorLabel}">
-					回复
-				</button>
+				<div class="site-comment-actions-inline">
+					${deleteBtn}
+					<button type="button" class="site-comment-reply-btn link-btn" data-reply-id="${comment.id}" data-reply-author="${authorLabel}">
+						回复
+					</button>
+				</div>
 			</header>
 			<div class="site-comment-content">${formatCommentContent(comment.content)}</div>
 			${replies ? `<div class="site-comment-replies">${replies}</div>` : ""}
@@ -107,7 +119,7 @@ function renderState(
 	const commentsHtml = state.loading
 		? `<div class="site-comments-empty">评论加载中…</div>`
 		: state.comments.length > 0
-			? state.comments.map((comment) => renderCommentItem(comment, options)).join("")
+			? state.comments.map((comment) => renderCommentItem(comment, options, state)).join("")
 			: `<div class="site-comments-empty">还没有评论，欢迎留下第一条。</div>`;
 
 	const noticeHtml = state.error
@@ -172,6 +184,13 @@ export function mountSiteComments(
 		loading: true,
 		submitting: false,
 		replyTarget: null,
+		ownedComments: (() => {
+			try {
+				return JSON.parse(localStorage.getItem("cnc_visitor_comments") || "{}");
+			} catch {
+				return {};
+			}
+		})(),
 	};
 
 	let disposed = false;
@@ -249,11 +268,23 @@ export function mountSiteComments(
 			}
 
 			form.reset();
-			setState({
-				submitting: false,
-				replyTarget: null,
-				success: result?.message || "评论已发布。",
-			});
+
+			if (result.deleteToken) {
+				const owned = { ...state.ownedComments, [result.id]: result.deleteToken };
+				localStorage.setItem("cnc_visitor_comments", JSON.stringify(owned));
+				setState({
+					ownedComments: owned,
+					submitting: false,
+					replyTarget: null,
+					success: result?.message || "评论已发布。",
+				});
+			} else {
+				setState({
+					submitting: false,
+					replyTarget: null,
+					success: result?.message || "评论已发布。",
+				});
+			}
 			await loadComments();
 		} catch (error) {
 			setState({
@@ -262,6 +293,51 @@ export function mountSiteComments(
 					error instanceof Error
 						? error.message
 						: "评论提交失败，请稍后再试。",
+			});
+		}
+	};
+
+	const deleteComment = async (id: number) => {
+		const token = state.ownedComments[id.toString()];
+		if (!token) return;
+
+		if (!confirm("确定要删除这条评论吗？如果是该回复包含后续回复，它们也会被一并删除。")) {
+			return;
+		}
+
+		setState({ loading: true, error: "", success: "" });
+
+		try {
+			const response = await fetch(`${options.apiBasePath}/${id}?token=${token}`, {
+				method: "DELETE",
+				headers: {
+					Accept: "application/json",
+				},
+			});
+
+			const result = await response.json();
+			if (!response.ok) {
+				throw new Error(result?.message || "评论删除失败，请稍后再试。");
+			}
+
+			// Clean up local storage
+			const owned = { ...state.ownedComments };
+			delete owned[id.toString()];
+			localStorage.setItem("cnc_visitor_comments", JSON.stringify(owned));
+
+			setState({
+				ownedComments: owned,
+				success: result?.message || "评论已删除。",
+			});
+			await loadComments();
+		} catch (error) {
+			console.error("deleteComment error:", error);
+			setState({
+				loading: false,
+				error:
+					error instanceof Error
+						? error.message
+						: "评论删除失败，请稍后再试。",
 			});
 		}
 	};
@@ -307,6 +383,16 @@ export function mountSiteComments(
 						error: "",
 						success: "",
 					});
+				});
+			});
+
+		container
+			.querySelectorAll<HTMLButtonElement>("[data-delete-id]")
+			.forEach((button) => {
+				if (button.dataset.bound === "true") return;
+				button.dataset.bound = "true";
+				button.addEventListener("click", () => {
+					void deleteComment(Number(button.dataset.deleteId));
 				});
 			});
 	};

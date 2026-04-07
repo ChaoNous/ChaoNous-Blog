@@ -25,6 +25,7 @@ export interface CommentRecord {
 	author_email: string;
 	author_url: string | null;
 	content: string;
+	delete_token?: string | null;
 	created_at: number;
 	updated_at: number;
 }
@@ -90,6 +91,12 @@ function createSessionId(): string {
 			.slice(0, 10),
 	).join("");
 	return `${timePart}${randomPart}`;
+}
+
+export function createDeleteToken(): string {
+	const array = new Uint8Array(32);
+	crypto.getRandomValues(array);
+	return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 export function getAdminSessionToken(request: Request): string {

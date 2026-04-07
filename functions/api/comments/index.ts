@@ -1,5 +1,6 @@
 import {
 	badRequest,
+	createDeleteToken,
 	json,
 	nestComments,
 	normalizeComment,
@@ -91,6 +92,7 @@ export const onRequestPost = async ({
 		}
 
 		const now = Date.now();
+		const deleteToken = createDeleteToken();
 
 		if (validated.value.parentId) {
 			const parent = await env.COMMENTS_DB.prepare(
@@ -110,8 +112,8 @@ export const onRequestPost = async ({
 			`INSERT INTO comments (
 				post_slug, post_url, post_title,
 				parent_id, author_name, author_email, author_url,
-				content, created_at, updated_at
-			) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)`,
+				content, delete_token, created_at, updated_at
+			) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)`,
 		)
 			.bind(
 				validated.value.postSlug,
@@ -122,6 +124,7 @@ export const onRequestPost = async ({
 				validated.value.email,
 				validated.value.url,
 				validated.value.content,
+				deleteToken,
 				now,
 				now,
 			)
@@ -131,6 +134,7 @@ export const onRequestPost = async ({
 			{
 				ok: true,
 				id: inserted.meta.last_row_id,
+				deleteToken,
 				message: "\u8bc4\u8bba\u5df2\u53d1\u5e03\u3002",
 			},
 			201,
