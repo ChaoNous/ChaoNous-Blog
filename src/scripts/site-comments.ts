@@ -76,13 +76,26 @@ function renderCommentItem(
 	state: SiteCommentsState,
 	depth = 0,
 ): string {
+	const replies = comment.replies
+		.map((reply) => renderCommentItem(reply, options, state, depth + 1))
+		.join("");
+
+	// Soft-deleted comment: muted display, no actions
+	const isSoftDeleted = comment.authorName === "已注销";
+
+	if (isSoftDeleted) {
+		return `
+		<article class="site-comment-card is-deleted${depth > 0 ? " is-reply" : ""}">
+			<div class="site-comment-content site-comment-deleted-text">${escapeHtml(comment.content)}</div>
+			${replies ? `<div class="site-comment-replies">${replies}</div>` : ""}
+		</article>
+		`;
+	}
+
 	const authorLabel = escapeHtml(comment.authorName || "匿名");
 	const author = comment.authorUrl
 		? `<a href="${escapeHtml(comment.authorUrl)}" target="_blank" rel="nofollow noopener noreferrer" class="site-comment-author link-btn">${authorLabel}</a>`
 		: `<span class="site-comment-author">${authorLabel}</span>`;
-	const replies = comment.replies
-		.map((reply) => renderCommentItem(reply, options, state, depth + 1))
-		.join("");
 
 	const isOwned = state.ownedComments[comment.id.toString()];
 	const deleteBtn = isOwned
@@ -301,7 +314,7 @@ export function mountSiteComments(
 		const token = state.ownedComments[id.toString()];
 		if (!token) return;
 
-		if (!confirm("确定要删除这条评论吗？如果是该回复包含后续回复，它们也会被一并删除。")) {
+		if (!confirm("确定要删除这条评论吗？删除后你的个人信息和评论内容将被清除，但评论位置会保留以维持讨论结构。")) {
 			return;
 		}
 

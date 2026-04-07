@@ -1,9 +1,9 @@
 import {
 	badRequest,
-	deleteCommentsByIds,
 	json,
 	notFound,
 	serverError,
+	softDeleteComment,
 	unauthorized,
 	type Env,
 } from "../../_lib/comments";
@@ -23,18 +23,8 @@ export const onRequestDelete = async ({
 			return badRequest("\u65e0\u6548\u7684\u8bc4\u8bba ID\u3002");
 		}
 
-		// Try to get token from header or query
 		const url = new URL(request.url);
-		let deleteToken = url.searchParams.get("token")?.trim();
-
-		if (!deleteToken) {
-			try {
-				const body = (await request.json().catch(() => ({}))) as any;
-				deleteToken = body.token?.trim();
-			} catch {
-				// Ignore body parse error
-			}
-		}
+		const deleteToken = url.searchParams.get("token")?.trim();
 
 		if (!deleteToken) {
 			return unauthorized("\u7f3a\u5c11\u5220\u9664\u51ed\u8bc1\u3002");
@@ -56,11 +46,10 @@ export const onRequestDelete = async ({
 			return unauthorized("\u5220\u9664\u51ed\u8bc1\u4e0d\u6b63\u786e\u3002");
 		}
 
-		const count = await deleteCommentsByIds(env, [id]);
+		await softDeleteComment(env, id);
 
 		return json({
 			ok: true,
-			count,
 			message: "\u8bc4\u8bba\u5df2\u5220\u9664\u3002",
 		});
 	} catch (error) {

@@ -2,7 +2,7 @@ interface D1PreparedStatement {
 	bind(...values: unknown[]): D1PreparedStatement;
 	all<T>(): Promise<{ results: T[] }>;
 	first<T>(): Promise<T | null>;
-	run(): Promise<{ meta: { last_row_id?: number } }>;
+	run(): Promise<{ meta: { last_row_id?: number; changes?: number } }>;
 }
 
 interface D1Database {
@@ -94,9 +94,27 @@ function createSessionId(): string {
 }
 
 export function createDeleteToken(): string {
-	const array = new Uint8Array(32);
-	crypto.getRandomValues(array);
-	return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("");
+	return crypto.randomUUID();
+}
+
+export async function softDeleteComment(
+	env: Env,
+	id: number,
+): Promise<boolean> {
+	const result = await env.COMMENTS_DB.prepare(
+		`UPDATE comments
+		 SET content = '该评论已被作者删除',
+		     author_name = '已注销',
+		     author_email = '',
+		     author_url = NULL,
+		     delete_token = NULL,
+		     updated_at = ?2
+		 WHERE id = ?1`,
+	)
+		.bind(id, Date.now())
+		.run();
+
+	return (result.meta.changes ?? 0) > 0;
 }
 
 export function getAdminSessionToken(request: Request): string {
