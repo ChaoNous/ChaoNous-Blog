@@ -84,12 +84,10 @@ function renderCommentItem(
 	const isSoftDeleted = comment.authorName === "已注销";
 
 	if (isSoftDeleted) {
-		return `
-		<article class="site-comment-card is-deleted${depth > 0 ? " is-reply" : ""}">
-			<div class="site-comment-content site-comment-deleted-text">${escapeHtml(comment.content)}</div>
-			${replies ? `<div class="site-comment-replies">${replies}</div>` : ""}
-		</article>
-		`;
+		return replies ? `
+		<article class="site-comment-card is-deleted-shell${depth > 0 ? " is-reply" : ""}">
+			<div class="site-comment-replies">${replies}</div>
+		</article>` : "";
 	}
 
 	const authorLabel = escapeHtml(comment.authorName || "匿名");

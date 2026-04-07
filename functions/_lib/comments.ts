@@ -103,7 +103,7 @@ export async function softDeleteComment(
 ): Promise<boolean> {
 	const result = await env.COMMENTS_DB.prepare(
 		`UPDATE comments
-		 SET content = '该评论已被作者删除',
+		 SET content = '',
 		     author_name = '已注销',
 		     author_email = '',
 		     author_url = NULL,
