@@ -125,9 +125,9 @@ const jsonLd = buildBlogPostingJsonLd({
 		commentConfig.enable && (
 			<div slot="post-actions" class="comment-wrapper">
 				<Cnc
-					envId={commentConfig.envId}
-					region={commentConfig.region}
+					apiBasePath={commentConfig.apiBasePath}
 					lang={commentConfig.lang}
+					requireModeration={commentConfig.requireModeration}
 					postSlug={canonicalUrl}
 					postUrl={canonicalUrl}
 					postTitle={entry.data.title}

@@ -4,7 +4,6 @@ import BackToTop from "@components/control/BackToTop.astro";
 import JsonLd from "@components/seo/JsonLd.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import { musicPlayerConfig, profileConfig, siteConfig } from "@/config";
-import { commentConfig } from "@/config";
 
 import {
 	DARK_MODE,
@@ -73,15 +72,11 @@ const siteLang = lang.replace("_", "-");
 		<meta name="google" content="notranslate" />
 		<meta name="googlebot" content="notranslate" />
 
-		<!-- DNS 棰勮В鏋愬拰棰勮繛鎺ヤ紭鍖?-->
+		<!-- DNS ??????????????-->
 		<link rel="dns-prefetch" href="https://code.iconify.design" />
 		<link rel="preconnect" href="https://code.iconify.design" crossorigin />
 		<link rel="preconnect" href="https://api.i-meto.com" crossorigin />
-		{commentConfig.enable && (
-			<link rel="preconnect" href={commentConfig.envId} crossorigin />
-		)}
-
-		<!-- 鍏抽敭椤甸潰 prefetch锛堜粎棣栭〉鍔犺浇鏃跺惎鐢級 -->
+		<!-- ?????? prefetch??????????????? -->
 		{isHomePage && (
 			<>
 				<link rel="prefetch" href={url("/archive/")} />
@@ -254,7 +249,7 @@ const siteLang = lang.replace("_", "-");
 			href={`${Astro.site}rss.xml`}
 		/>
 
-		<!-- 缁撴瀯鍖栨暟鎹?-->
+		<!-- ????????-->
 		<JsonLd type={setOGTypeArticle ? "article" : "website"} />
 	</head>
 	<body
@@ -264,13 +259,13 @@ const siteLang = lang.replace("_", "-");
 		<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
 			<defs>
 				<filter id="silk-weave" color-interpolation-filters="sRGB">
-					<!-- 缁忕嚎: 楂橀姘村钩 脳 浣庨鍨傜洿 鈫?鍨傜洿涓濈嚎 -->
+					<!-- ???: ?????? ? ?????? ???????? -->
 					<feTurbulence type="fractalNoise" baseFrequency="0.5 0.02" numOctaves="3" seed="1" result="warp" />
-					<!-- 绾嚎: 浣庨姘村钩 脳 楂橀鍨傜洿 鈫?姘村钩涓濈嚎 -->
+					<!-- ???: ?????? ? ?????? ???????? -->
 					<feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="3" seed="2" result="weft" />
-					<!-- 鍙犲姞: 缁忕含绾挎贩鍚堝舰鎴愮粐鐗╃汗鐞?-->
+					<!-- ???: ?????????????????-->
 					<feBlend mode="screen" in="warp" in2="weft" result="fabric" />
-					<!-- 鏌斿寲: 闄嶄綆閫忔槑搴︼紝浣跨汗鐞嗘煍鍜屼笉鍒虹溂 -->
+					<!-- ???: ????????????????????? -->
 					<feColorMatrix type="matrix"
 						values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
 						in="fabric" />
@@ -329,9 +324,9 @@ const siteLang = lang.replace("_", "-");
 	import "../scripts/layout-runtime.ts";
 </script>
 
-<!-- 闈為灞忓叧閿剼鏈欢杩熷姞杞?-->
+<!-- ?????????????????-->
 <script>
-	// 浣跨敤 requestIdleCallback 寤惰繜鍔犺浇闈炲叧閿剼鏈紝杩涗竴姝ュ噺灏戜富绾跨▼闃诲
+	// ??? requestIdleCallback ??????????????????????????????
 	function scheduleIdleTask(callback: () => void, timeout = 3000) {
 		if ("requestIdleCallback" in window) {
 			window.requestIdleCallback(callback, { timeout });
@@ -340,7 +335,7 @@ const siteLang = lang.replace("_", "-");
 		}
 	}
 
-	// 椤甸潰鍔犺浇瀹屾垚鍚庡欢杩熷姞杞介潪鍏抽敭鑴氭湰
+	// ????????????????????????
 		if (document.readyState === "loading") {
 			document.addEventListener("DOMContentLoaded", () => {
 				scheduleIdleTask(() => {

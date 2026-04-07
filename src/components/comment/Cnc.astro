@@ -1,164 +1,296 @@
 ---
 interface Props {
-	envId: string;
-	region?: string;
-	path?: string;
+	apiBasePath?: string;
 	lang?: string;
 	postSlug?: string;
 	postUrl?: string;
 	postTitle?: string;
+	requireModeration?: boolean;
 }
 
 const {
-	envId,
-	lang = 'auto',
-	postSlug = '',
-	postUrl = '',
-	postTitle = '',
+	apiBasePath = "/api/comments",
+	lang = "zh-CN",
+	postSlug = "",
+	postUrl = "",
+	postTitle = "",
+	requireModeration = true,
 } = Astro.props;
 ---
 
 <div
-	id="cnc-comments"
-	data-api-url={envId}
+	id="site-comments"
+	data-api-base-path={apiBasePath}
 	data-lang={lang}
 	data-post-slug={postSlug}
 	data-post-url={postUrl}
 	data-post-title={postTitle}
-	class="cnc-wrapper mt-8 mb-6 relative w-full"
+	data-require-moderation={requireModeration ? "true" : "false"}
+	class="site-comments-root mt-8 mb-6 relative w-full"
 >
-	<div class="cnc-loading rounded-2xl border border-[rgba(36,24,22,0.08)] bg-[rgba(255,255,255,0.72)] px-5 py-4 text-sm text-[rgba(36,24,22,0.72)] backdrop-blur-sm dark:border-[rgba(244,237,231,0.08)] dark:bg-[rgba(35,24,22,0.82)] dark:text-[rgba(244,237,231,0.72)]">
-		评论区正在加载…
+	<div class="site-comments-boot rounded-3xl border border-[rgba(36,24,22,0.08)] bg-[rgba(255,255,255,0.76)] px-5 py-4 text-sm text-[rgba(36,24,22,0.72)] backdrop-blur-sm dark:border-[rgba(244,237,231,0.08)] dark:bg-[rgba(35,24,22,0.82)] dark:text-[rgba(244,237,231,0.72)]">
+		??????????.
 	</div>
 </div>
 
 <script>
 	import { registerPageScript } from "@/scripts/page-lifecycle.ts";
 
-	let cncInstance: any = null;
-	const CWD_WIDGET_VERSION = "0.1.11";
-
-	function getTheme() {
-		return document.documentElement.classList.contains("dark") ? "dark" : "light";
-	}
-
-	function renderFallback(container: HTMLElement, message = "评论系统暂时不可用，请稍后再试。") {
-		container.innerHTML = `
-			<div class="cnc-fallback rounded-2xl border border-[rgba(36,24,22,0.08)] bg-[rgba(255,255,255,0.72)] px-5 py-4 backdrop-blur-sm dark:border-[rgba(244,237,231,0.08)] dark:bg-[rgba(35,24,22,0.82)]">
-				<p class="m-0 text-sm leading-7 text-[rgba(36,24,22,0.82)] dark:text-[rgba(244,237,231,0.82)]">${message}</p>
-				<button type="button" class="cnc-retry mt-3 inline-flex rounded-full border border-current px-3 py-1 text-sm">
-					重试加载
-				</button>
-			</div>
-		`;
-
-		container
-			.querySelector<HTMLButtonElement>(".cnc-retry")
-			?.addEventListener("click", () => loadCNCScript(container, true), { once: true });
-	}
-
-	function initCNC(container: HTMLElement) {
-		if (cncInstance) {
-			cncInstance.unmount();
-			cncInstance = null;
-		}
-
-		const apiBaseUrl = container.getAttribute("data-api-url") || "";
-		const lang = container.getAttribute("data-lang") || "auto";
-		const canonicalPostSlug =
-			container.getAttribute("data-post-slug") ||
-			container.getAttribute("data-post-url") ||
-			window.location.pathname;
-		const canonicalPostUrl =
-			container.getAttribute("data-post-url") || canonicalPostSlug;
-		const resolvedPostTitle =
-			container.getAttribute("data-post-title") || document.title;
-
-		// Use CWDComments internally (its global name) but refer to CNC conceptually
-		const CWDComments = (window as any).CWDComments;
-		if (!CWDComments) {
-			console.warn("CNC Error: Backend script not loaded.");
-			renderFallback(container);
-			return;
-		}
-
-		cncInstance = new CWDComments({
-			el: container,
-			apiBaseUrl: apiBaseUrl,
-			lang: lang,
-			postSlug: canonicalPostSlug,
-			postUrl: canonicalPostUrl,
-			postTitle: resolvedPostTitle,
-			theme: getTheme(),
-		});
-
-		cncInstance.mount();
-		console.log("CNC system initialized.");
-	}
-
-	function loadCNCScript(container: HTMLElement, forceReload = false) {
-		if ((window as any).CWDComments) {
-			initCNC(container);
-			return;
-		}
-
-		const existingScript = document.getElementById("cnc-script");
-		if (existingScript && !forceReload) return;
-		if (existingScript && forceReload) {
-			existingScript.remove();
-		}
-
-		const script = document.createElement("script");
-		script.id = "cnc-script";
-		script.src = `https://unpkg.com/cwd-widget@${CWD_WIDGET_VERSION}/dist/cwd.js`;
-		script.async = true;
-		script.onload = () => {
-			initCNC(container);
-		};
-		script.onerror = () => {
-			console.error("CNC (ChaoNous Comment) system failed to load.");
-			renderFallback(container);
-		};
-		document.head.appendChild(script);
-	}
-
-	registerPageScript("cnc-comment", {
+	registerPageScript("site-comments", {
 		shouldRun() {
-			return document.getElementById("cnc-comments") !== null;
+			return document.getElementById("site-comments") !== null;
 		},
-		init() {
-			const root = document.getElementById("cnc-comments");
+		async init() {
+			const root = document.getElementById("site-comments");
 			if (!root) return;
 
-			const observer = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						if (entry.isIntersecting) {
-							loadCNCScript(entry.target as HTMLElement);
-							observer.unobserve(entry.target);
-						}
-					});
-				},
-				{ rootMargin: "200px" }
-			);
+			const { mountSiteComments } = await import("@/scripts/site-comments.ts");
 
-			observer.observe(root);
-
-			const themeObserver = new MutationObserver(() => {
-				if (cncInstance) {
-					cncInstance.updateConfig({ theme: getTheme() });
-				}
+			return mountSiteComments(root, {
+				apiBasePath:
+					root.getAttribute("data-api-base-path") || "/api/comments",
+				lang: root.getAttribute("data-lang") || "zh-CN",
+				postSlug: root.getAttribute("data-post-slug") || window.location.pathname,
+				postUrl: root.getAttribute("data-post-url") || window.location.href,
+				postTitle: root.getAttribute("data-post-title") || document.title,
+				requireModeration:
+					root.getAttribute("data-require-moderation") !== "false",
 			});
-			themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-			return () => {
-				observer.disconnect();
-				themeObserver.disconnect();
-				if (cncInstance) {
-					cncInstance.unmount();
-					cncInstance = null;
-				}
-			};
 		},
 	});
 </script>
+
+<style is:global>
+	.site-comments-shell {
+		border: 1px solid rgba(36, 24, 22, 0.08);
+		border-radius: 1.5rem;
+		background: rgba(255, 255, 255, 0.8);
+		padding: 1.25rem;
+		backdrop-filter: blur(16px);
+	}
+
+	.dark .site-comments-shell {
+		border-color: rgba(244, 237, 231, 0.08);
+		background: rgba(35, 24, 22, 0.84);
+	}
+
+	.site-comments-head {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		margin-bottom: 1rem;
+	}
+
+	.site-comments-title {
+		margin: 0;
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: rgba(36, 24, 22, 0.92);
+	}
+
+	.dark .site-comments-title {
+		color: rgba(244, 237, 231, 0.92);
+	}
+
+	.site-comments-subtitle,
+	.site-comments-hint,
+	.site-comments-empty,
+	.site-comment-time {
+		color: rgba(36, 24, 22, 0.64);
+		font-size: 0.92rem;
+	}
+
+	.dark .site-comments-subtitle,
+	.dark .site-comments-hint,
+	.dark .site-comments-empty,
+	.dark .site-comment-time {
+		color: rgba(244, 237, 231, 0.66);
+	}
+
+	.site-comments-form {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+		margin-bottom: 1.2rem;
+	}
+
+	.site-comments-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+	}
+
+	.site-comments-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		font-size: 0.92rem;
+		color: rgba(36, 24, 22, 0.78);
+	}
+
+	.dark .site-comments-field {
+		color: rgba(244, 237, 231, 0.8);
+	}
+
+	.site-comments-field input,
+	.site-comments-field textarea {
+		width: 100%;
+		border-radius: 1rem;
+		border: 1px solid rgba(36, 24, 22, 0.12);
+		background: rgba(255, 255, 255, 0.86);
+		padding: 0.85rem 1rem;
+		color: rgba(36, 24, 22, 0.92);
+		outline: none;
+		transition: border-color 180ms ease, box-shadow 180ms ease;
+	}
+
+	.dark .site-comments-field input,
+	.dark .site-comments-field textarea {
+		border-color: rgba(244, 237, 231, 0.12);
+		background: rgba(24, 17, 16, 0.84);
+		color: rgba(244, 237, 231, 0.92);
+	}
+
+	.site-comments-field input:focus,
+	.site-comments-field textarea:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 18%, transparent);
+	}
+
+	.site-comments-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem 1rem;
+		align-items: center;
+	}
+
+	.site-comments-submit {
+		border: 0;
+		border-radius: 999px;
+		padding: 0.75rem 1.15rem;
+		background: color-mix(in oklch, var(--primary) 88%, black 8%);
+		color: white;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	.site-comments-submit:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	.site-comments-notice,
+	.site-comments-replying {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		margin-bottom: 0.95rem;
+		border-radius: 1rem;
+		padding: 0.85rem 1rem;
+		font-size: 0.94rem;
+	}
+
+	.site-comments-notice.is-error {
+		background: rgba(200, 56, 44, 0.1);
+		color: rgba(142, 31, 21, 0.92);
+	}
+
+	.site-comments-notice.is-success {
+		background: rgba(38, 132, 78, 0.1);
+		color: rgba(21, 94, 57, 0.92);
+	}
+
+	.site-comments-replying {
+		background: rgba(36, 24, 22, 0.05);
+		color: rgba(36, 24, 22, 0.84);
+	}
+
+	.dark .site-comments-replying {
+		background: rgba(244, 237, 231, 0.06);
+		color: rgba(244, 237, 231, 0.86);
+	}
+
+	.site-comments-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.site-comment-card {
+		border-radius: 1.25rem;
+		border: 1px solid rgba(36, 24, 22, 0.08);
+		padding: 1rem;
+		background: rgba(255, 255, 255, 0.56);
+	}
+
+	.dark .site-comment-card {
+		border-color: rgba(244, 237, 231, 0.08);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	.site-comment-card.is-reply {
+		margin-top: 0.75rem;
+		margin-left: 1.1rem;
+	}
+
+	.site-comment-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 0.65rem;
+	}
+
+	.site-comment-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem 0.75rem;
+		align-items: center;
+	}
+
+	.site-comment-author {
+		font-weight: 700;
+		color: rgba(36, 24, 22, 0.92);
+	}
+
+	.dark .site-comment-author {
+		color: rgba(244, 237, 231, 0.92);
+	}
+
+	.site-comment-content {
+		line-height: 1.9;
+		color: rgba(36, 24, 22, 0.86);
+		word-break: break-word;
+	}
+
+	.dark .site-comment-content {
+		color: rgba(244, 237, 231, 0.84);
+	}
+
+	.link-btn {
+		border: 0;
+		background: transparent;
+		padding: 0;
+		color: var(--primary);
+		cursor: pointer;
+		text-decoration: none;
+	}
+
+	@media (max-width: 720px) {
+		.site-comments-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.site-comment-header,
+		.site-comments-actions,
+		.site-comments-replying {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+
+		.site-comment-card.is-reply {
+			margin-left: 0.5rem;
+		}
+	}
+</style>

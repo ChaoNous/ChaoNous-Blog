@@ -239,7 +239,7 @@ export type SidebarLayoutConfig = {
 
 export type CommentConfig = {
   enable: boolean;
-  envId: string;
-  region?: string;
+  apiBasePath?: string;
   lang?: string;
+  requireModeration?: boolean;
 };

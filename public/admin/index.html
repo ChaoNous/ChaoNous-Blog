@@ -4,82 +4,199 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="robots" content="noindex,nofollow,noarchive" />
-	<title>Admin Unavailable | ChaoNous</title>
+	<title>???? | ChaoNous</title>
 	<style>
 		:root {
 			color-scheme: light dark;
 			font-family: "Crimson Pro", "Zhuque Fangsong UI", serif;
+			background:
+				radial-gradient(circle at top, rgba(171, 92, 61, 0.16), transparent 36%),
+				linear-gradient(180deg, #f6f1ec 0%, #efe7df 100%);
+			color: #241816;
+		}
+
+		* {
+			box-sizing: border-box;
 		}
 
 		body {
 			margin: 0;
 			min-height: 100vh;
-			display: grid;
-			place-items: center;
 			padding: 2rem;
-			background:
-				radial-gradient(circle at top, rgba(160, 32, 32, 0.1), transparent 40%),
-				linear-gradient(180deg, #f6f1ec 0%, #efe7df 100%);
-			color: #241816;
+			background: inherit;
+			color: inherit;
 		}
 
 		main {
-			width: min(100%, 42rem);
-			padding: 2rem;
+			width: min(100%, 72rem);
+			margin: 0 auto;
+			display: grid;
+			gap: 1.25rem;
+		}
+
+		.panel {
 			border: 1px solid rgba(36, 24, 22, 0.08);
-			border-radius: 1.25rem;
-			background: rgba(255, 255, 255, 0.78);
+			border-radius: 1.5rem;
+			background: rgba(255, 255, 255, 0.8);
 			box-shadow: 0 1.25rem 3rem rgba(36, 24, 22, 0.08);
-			backdrop-filter: blur(14px);
+			backdrop-filter: blur(16px);
+			padding: 1.25rem;
 		}
 
-		h1 {
-			margin: 0 0 1rem;
-			font-size: clamp(1.8rem, 4vw, 2.4rem);
-			line-height: 1.1;
-		}
-
-		p {
+		h1, h2, p {
 			margin: 0;
-			font-size: 1rem;
-			line-height: 1.75;
 		}
 
-		.note {
-			margin-top: 1rem;
-			color: rgba(36, 24, 22, 0.72);
+		.stack {
+			display: grid;
+			gap: 0.85rem;
 		}
 
-		a {
-			color: inherit;
-			font-weight: 600;
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.8rem;
+			align-items: center;
+		}
+
+		input, select, button, textarea {
+			font: inherit;
+		}
+
+		input, select {
+			width: 100%;
+			border-radius: 999px;
+			border: 1px solid rgba(36, 24, 22, 0.12);
+			padding: 0.75rem 1rem;
+			background: rgba(255, 255, 255, 0.88);
+		}
+
+		button {
+			border: 0;
+			border-radius: 999px;
+			padding: 0.75rem 1rem;
+			cursor: pointer;
+			font-weight: 700;
+			background: #241816;
+			color: #fff;
+		}
+
+		button.secondary {
+			background: rgba(36, 24, 22, 0.08);
+			color: #241816;
+		}
+
+		.notice {
+			border-radius: 1rem;
+			padding: 0.85rem 1rem;
+			font-size: 0.95rem;
+			background: rgba(36, 24, 22, 0.05);
+		}
+
+		.notice.error {
+			background: rgba(193, 54, 43, 0.1);
+			color: #8c2519;
+		}
+
+		.comment-list {
+			display: grid;
+			gap: 0.85rem;
+		}
+
+		.comment-card {
+			border-radius: 1.2rem;
+			border: 1px solid rgba(36, 24, 22, 0.08);
+			padding: 1rem;
+			display: grid;
+			gap: 0.7rem;
+			background: rgba(255, 255, 255, 0.56);
+		}
+
+		.comment-meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem 1rem;
+			font-size: 0.92rem;
+			color: rgba(36, 24, 22, 0.68);
+		}
+
+		.comment-content {
+			line-height: 1.85;
+			white-space: pre-wrap;
+			word-break: break-word;
+		}
+
+		.comment-actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.65rem;
 		}
 
 		@media (prefers-color-scheme: dark) {
-			body {
+			:root {
 				background:
 					radial-gradient(circle at top, rgba(210, 112, 80, 0.18), transparent 38%),
 					linear-gradient(180deg, #2a1d1a 0%, #1a1211 100%);
 				color: #f4ede7;
 			}
 
-			main {
+			.panel {
 				border-color: rgba(244, 237, 231, 0.08);
 				background: rgba(35, 24, 22, 0.82);
 				box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.28);
 			}
 
-			.note {
-				color: rgba(244, 237, 231, 0.72);
+			input, select {
+				border-color: rgba(244, 237, 231, 0.1);
+				background: rgba(24, 17, 16, 0.88);
+				color: inherit;
+			}
+
+			button.secondary {
+				background: rgba(244, 237, 231, 0.08);
+				color: inherit;
+			}
+
+			.notice {
+				background: rgba(244, 237, 231, 0.06);
+			}
+
+			.comment-card {
+				border-color: rgba(244, 237, 231, 0.08);
+				background: rgba(255, 255, 255, 0.03);
+			}
+
+			.comment-meta {
+				color: rgba(244, 237, 231, 0.68);
 			}
 		}
 	</style>
 </head>
 <body>
 	<main>
-		<h1>后台入口已临时关闭</h1>
-		<p>出于安全原因，这个页面不再内嵌管理密码或静态令牌。评论管理后台会在接入受保护的认证方案后再重新开放。</p>
-		<p class="note">当前状态是有意的安全下线，不是页面故障。返回 <a href="/">首页</a>。</p>
+		<section class="panel stack">
+			<h1>????</h1>
+			<p>??????? API ?,???????????</p>
+		</section>
+
+		<section class="panel stack">
+			<div class="row">
+				<input id="admin-password" type="password" placeholder="????????" />
+				<select id="comment-status">
+					<option value="pending">???</option>
+					<option value="approved">???</option>
+					<option value="rejected">???</option>
+				</select>
+				<button id="load-comments">????</button>
+			</div>
+			<div id="admin-notice" class="notice">????????????????</div>
+		</section>
+
+		<section class="panel stack">
+			<h2>????</h2>
+			<div id="comment-list" class="comment-list"></div>
+		</section>
 	</main>
+	<script src="/admin/comments-admin.js" defer></script>
 </body>
 </html>
