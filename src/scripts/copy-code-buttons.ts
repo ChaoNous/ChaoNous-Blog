@@ -47,8 +47,12 @@ async function writeClipboardText(text: string): Promise<void> {
   textArea.select();
 
   try {
-    // @ts-ignore - execCommand is deprecated but needed as fallback for older browsers / sandboxed iframes
-    document.execCommand("copy");
+    const execCommand = (
+      document as unknown as Record<string, unknown>
+    ).execCommand as
+      | undefined
+      | ((commandId: string, showUI?: boolean, value?: string) => boolean);
+    execCommand?.call(document, "copy");
   } finally {
     document.body.removeChild(textArea);
   }

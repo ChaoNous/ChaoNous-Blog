@@ -3,6 +3,7 @@ import {
 	deleteCommentsByIds,
 	json,
 	isAdminAuthorized,
+	readJsonBody,
 	sanitizeCommentIds,
 	serverError,
 	unauthorized,
@@ -21,7 +22,12 @@ export const onRequestPost = async ({
 	}
 
 	try {
-		const body = (await request.json()) as Record<string, unknown>;
+		const parsedBody = await readJsonBody(request);
+		if (!parsedBody.ok) {
+			return parsedBody.response;
+		}
+
+		const body = parsedBody.value;
 		const action = String(body.action || "").trim();
 		const ids = sanitizeCommentIds(body.ids);
 

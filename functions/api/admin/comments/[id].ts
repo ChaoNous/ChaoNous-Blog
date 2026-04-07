@@ -3,6 +3,7 @@ import {
 	json,
 	isAdminAuthorized,
 	notFound,
+	parsePositiveId,
 	serverError,
 	unauthorized,
 	type Env,
@@ -22,8 +23,8 @@ export const onRequestDelete = async ({
 	}
 
 	try {
-		const id = Number.parseInt(String(params.id || ""), 10);
-		if (!Number.isFinite(id) || id <= 0) {
+		const id = parsePositiveId(params.id);
+		if (!id) {
 			return notFound("\u8bc4\u8bba\u4e0d\u5b58\u5728\u3002");
 		}
 

@@ -2,6 +2,7 @@ import {
 	badRequest,
 	json,
 	notFound,
+	parsePositiveId,
 	serverError,
 	softDeleteComment,
 	unauthorized,
@@ -18,8 +19,8 @@ export const onRequestDelete = async ({
 	request: Request;
 }) => {
 	try {
-		const id = Number.parseInt(params.id, 10);
-		if (!Number.isFinite(id) || id <= 0) {
+		const id = parsePositiveId(params.id);
+		if (!id) {
 			return badRequest("\u65e0\u6548\u7684\u8bc4\u8bba ID\u3002");
 		}
 

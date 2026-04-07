@@ -30,6 +30,25 @@ export interface CommentRecord {
 	updated_at: number;
 }
 
+export type CommentApiErrorCode =
+	| "BAD_REQUEST"
+	| "INVALID_JSON"
+	| "UNAUTHORIZED"
+	| "NOT_FOUND"
+	| "SERVER_ERROR";
+
+export interface ApiErrorPayload {
+	ok: false;
+	code: CommentApiErrorCode;
+	message: string;
+}
+
+export interface ApiSuccessPayload<T = Record<string, never>> {
+	ok: true;
+	data?: T;
+	message?: string;
+}
+
 const ADMIN_SESSION_COOKIE = "cnc_admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
 
@@ -46,6 +65,21 @@ export function json(
 			...(headers || {}),
 		},
 	});
+}
+
+function errorResponse(
+	code: CommentApiErrorCode,
+	message: string,
+	status: number,
+): Response {
+	return json(
+		{
+			ok: false,
+			code,
+			message,
+		} satisfies ApiErrorPayload,
+		status,
+	);
 }
 
 function parseCookies(request: Request): Map<string, string> {
@@ -261,21 +295,76 @@ export function nestComments(records: NormalizedComment[]) {
 }
 
 export function badRequest(message: string): Response {
-	return json({ message }, 400);
+	return errorResponse("BAD_REQUEST", message, 400);
 }
 
 export function unauthorized(message = "\u672a\u6388\u6743\u3002"): Response {
-	return json({ message }, 401);
+	return errorResponse("UNAUTHORIZED", message, 401);
 }
 
 export function notFound(message = "\u8d44\u6e90\u4e0d\u5b58\u5728\u3002"): Response {
-	return json({ message }, 404);
+	return errorResponse("NOT_FOUND", message, 404);
 }
 
 export function serverError(
 	message = "\u670d\u52a1\u6682\u65f6\u4e0d\u53ef\u7528\u3002",
 ): Response {
-	return json({ message }, 500);
+	return errorResponse("SERVER_ERROR", message, 500);
+}
+
+export async function readJsonBody(
+	request: Request,
+): Promise<
+	| { ok: true; value: Record<string, unknown> }
+	| { ok: false; response: Response }
+> {
+	try {
+		const body = (await request.json()) as Record<string, unknown>;
+		return { ok: true, value: body };
+	} catch {
+		return {
+			ok: false,
+			response: errorResponse("INVALID_JSON", "请求体不是有效的 JSON。", 400),
+		};
+	}
+}
+
+export function parsePaginationParams(
+	requestUrl: string,
+	defaultLimit = 20,
+	maxLimit = 100,
+) {
+	const url = new URL(requestUrl);
+	const page = Math.max(
+		1,
+		Number.parseInt(url.searchParams.get("page") || "1", 10) || 1,
+	);
+	const limit = Math.min(
+		maxLimit,
+		Math.max(
+			1,
+			Number.parseInt(
+				url.searchParams.get("limit") || String(defaultLimit),
+				10,
+			) || defaultLimit,
+		),
+	);
+
+	return {
+		url,
+		page,
+		limit,
+		offset: (page - 1) * limit,
+	};
+}
+
+export function parsePositiveId(value: unknown): number | null {
+	const parsed = Number.parseInt(String(value || ""), 10);
+	if (!Number.isFinite(parsed) || parsed <= 0) {
+		return null;
+	}
+
+	return parsed;
 }
 
 export function validateSubmission(body: Record<string, unknown>) {

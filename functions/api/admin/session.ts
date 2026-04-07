@@ -6,6 +6,7 @@ import {
 	getAdminSessionToken,
 	json,
 	isAdminAuthorized,
+	readJsonBody,
 	serverError,
 	unauthorized,
 	type Env,
@@ -37,7 +38,12 @@ export const onRequestPost = async ({
 	request: Request;
 }) => {
 	try {
-		const body = (await request.json()) as Record<string, unknown>;
+		const parsedBody = await readJsonBody(request);
+		if (!parsedBody.ok) {
+			return parsedBody.response;
+		}
+
+		const body = parsedBody.value;
 		const password = String(body.password || "").trim();
 
 		if (!(await authenticateAdminPassword(password, env))) {

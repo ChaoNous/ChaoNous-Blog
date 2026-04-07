@@ -1,0 +1,219 @@
+@reference "tailwindcss";
+
+html {
+  @apply scroll-smooth text-black;
+  font-size: 112%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background-color: var(--page-bg);
+  background: var(--page-bg);
+  text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  &.dark {
+    @apply text-white;
+    background-color: var(--page-bg);
+  }
+}
+
+html.dark,
+html.dark body {
+  background: var(--page-bg);
+}
+
+body {
+  @apply text-black dark:text-white;
+  font-family: var(--font-content);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  font-weight: 450;
+  position: relative;
+  letter-spacing: 0.008em;
+  line-height: 1.7;
+  background:
+    radial-gradient(circle at 12% 14%, var(--page-bg-accent-soft) 0%, transparent 30%),
+    radial-gradient(circle at 82% 10%, var(--page-bg-accent) 0%, transparent 26%),
+    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
+  background-attachment: fixed;
+  transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+::selection {
+  background-color: var(--selection-bg);
+  color: inherit;
+}
+
+:root:not(.dark) ::selection {
+  color: #000000;
+}
+
+:root.dark ::selection {
+  color: #ffffff;
+}
+
+.collapsed {
+  height: var(--collapsedHeight);
+}
+
+.custom-md spoiler {
+  --_spoiler-mask: var(--primary);
+  @apply hover:bg-transparent px-1 py-0.5 overflow-hidden rounded-md transition-all duration-150;
+  background-color: var(--_spoiler-mask);
+  box-decoration-break: clone;
+
+  &:not(:hover) {
+    color: var(--_spoiler-mask);
+
+    * {
+      color: var(--_spoiler-mask);
+    }
+  }
+}
+
+:root:not(.dark) .custom-md spoiler {
+  --_spoiler-mask: color-mix(in oklch, var(--primary) 55%, white 45%);
+}
+
+.custom-md img,
+#post-cover img {
+  @apply cursor-zoom-in;
+}
+
+.post-list-container {
+  transition: all 0.3s ease-in-out;
+}
+
+.post-list-container.list-mode {
+  display: flex !important;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.post-list-container.grid-mode {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.post-list-container.grid-mode .post-card-item {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.post-list-container.grid-mode .post-card-item a[href] {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-list-container.grid-mode .post-card-item .description {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-list-container.grid-mode .post-card-item .stats {
+  font-size: 1rem;
+}
+
+.post-list-container.grid-mode .post-card-item .post-meta {
+  margin-bottom: 0.5rem;
+}
+
+.post-card-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 200px;
+}
+
+.custom-md {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+.carousel-item,
+.banner-item {
+  will-change: transform, opacity;
+}
+
+.overflow-auto,
+.overflow-scroll,
+.overflow-x-auto,
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+img,
+picture,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+.carousel-item {
+  contain: layout style;
+}
+
+@media (max-width: 1023px) {
+  #post-list-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  #post-list-container.grid-mode {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  #post-list-container .post-card-item {
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .post-list-container.list-mode {
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print,
+  #navbar-wrapper,
+  .float-panel,
+  .music-player {
+    display: none !important;
+  }
+}

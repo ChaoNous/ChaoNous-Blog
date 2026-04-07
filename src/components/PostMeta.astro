@@ -32,6 +32,8 @@ const {
 	words,
 	showWordCount = false,
 } = Astro.props;
+const pageViewsLabel = i18n(I18nKey.profileStatsPageViews);
+const visitsLabel = i18n(I18nKey.profileStatsVisits);
 ---
 
 <div class:list={["post-meta-group flex flex-wrap text-50 leading-6 items-center gap-4 gap-x-4 gap-y-2", className]}>
@@ -83,6 +85,8 @@ const {
             data-post-slug={statsSlug}
             data-post-url={statsUrl}
             data-post-title={statsTitle || ""}
+            data-page-views-label={pageViewsLabel}
+            data-visits-label={visitsLabel}
         >
             <div class="meta-icon">
                 <Icon name="material-symbols:visibility-outline-rounded" class="text-xl"></Icon>
@@ -124,14 +128,12 @@ const {
 </style>
 
 {!isHome && statsSlug && statsUrl && (
-<script is:inline define:vars={{
-    pageViewsText: i18n(I18nKey.profileStatsPageViews),
-    visitsText: i18n(I18nKey.profileStatsVisits)
-}}>
+<script is:inline>
     const analyticsVisitorStorageKey = "chaonous:analytics-visitor-id";
 
-    function generateStatsText(pageViews, visits) {
-        // @ts-ignore - pageViewsText and visitsText injected via define:vars at build time
+    function generateStatsText(container, pageViews, visits) {
+        const pageViewsText = container?.dataset.pageViewsLabel || "浏览";
+        const visitsText = container?.dataset.visitsLabel || "访客";
         return `${pageViewsText} ${pageViews} · ${visitsText} ${visits}`;
     }
 
@@ -203,7 +205,7 @@ const {
             const visits = stats.visits || 0;
 
             container.classList.remove('hidden');
-            container.querySelector('.page-views-display').textContent = generateStatsText(pageViews, visits);
+            container.querySelector('.page-views-display').textContent = generateStatsText(container, pageViews, visits);
         } catch (error) {
             console.error('Error fetching page views:', error);
             container.classList.add('hidden');

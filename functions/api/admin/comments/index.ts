@@ -1,6 +1,7 @@
 import {
 	json,
 	isAdminAuthorized,
+	parsePaginationParams,
 	serverError,
 	unauthorized,
 	type CommentRecord,
@@ -19,19 +20,12 @@ export const onRequestGet = async ({
 	}
 
 	try {
-		const url = new URL(request.url);
-		const search = url.searchParams.get("search")?.trim() || "";
-		const page = Math.max(
-			1,
-			Number.parseInt(url.searchParams.get("page") || "1", 10) || 1,
-		);
-		const limit = Math.min(
+		const { url, page, limit, offset } = parsePaginationParams(
+			request.url,
+			20,
 			100,
-			Math.max(
-				1,
-				Number.parseInt(url.searchParams.get("limit") || "20", 10) || 20,
-			),
 		);
+		const search = url.searchParams.get("search")?.trim() || "";
 
 		const params: unknown[] = [];
 		let whereSql = "";
@@ -59,7 +53,7 @@ export const onRequestGet = async ({
 			 ORDER BY created_at DESC
 			 LIMIT ?${paginationIndex} OFFSET ?${paginationIndex + 1}`,
 		)
-			.bind(...params, limit, (page - 1) * limit)
+			.bind(...params, limit, offset)
 			.all<CommentRecord>();
 
 		const total = await env.COMMENTS_DB.prepare(

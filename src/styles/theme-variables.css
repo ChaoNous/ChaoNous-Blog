@@ -1,0 +1,111 @@
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Crimson Pro", "ZhuqueFangsong";
+  --font-serif: "Crimson Pro", "ZhuqueFangsong";
+  --font-mono: "Crimson Pro", "ZhuqueFangsong";
+  --font-latin: "Crimson Pro";
+  --font-cjk: "ZhuqueFangsong";
+  --font-content: "ZhuqueFangsong", "Crimson Pro";
+}
+
+body.is-home {
+  --font-sans: "Crimson Pro", "Zhuque Fangsong UI";
+  --font-cjk: "Zhuque Fangsong UI";
+  --font-content: "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro";
+}
+
+:root {
+  --radius-large: 1rem;
+  --primary: oklch(0.65 0.20 var(--hue));
+  --page-bg: oklch(0.78 0.04 var(--hue));
+  --page-bg-top: oklch(0.80 0.045 var(--hue));
+  --page-bg-bottom: oklch(0.74 0.03 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.68 0.10 var(--hue)) 28%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.60 0.13 var(--hue)) 22%, transparent);
+  --page-bg-accent-strong: color-mix(in oklch, oklch(0.54 0.15 var(--hue)) 14%, transparent);
+  --page-bg-paper-grain: color-mix(in oklch, oklch(0.87 0.02 var(--hue)) 84%, oklch(0.89 0.018 var(--hue)) 16%);
+  --card-bg: oklch(0.90 0.022 var(--hue));
+  --card-bg-transparent: oklch(0.90 0.022 var(--hue) / 0.88);
+  --btn-content: oklch(0.45 0.15 var(--hue));
+  --btn-regular-bg: oklch(0.86 0.04 var(--hue));
+  --btn-regular-bg-hover: oklch(0.81 0.06 var(--hue));
+  --btn-regular-bg-active: oklch(0.76 0.08 var(--hue));
+  --btn-plain-bg-hover: oklch(0.89 0.025 var(--hue));
+  --btn-plain-bg-active: oklch(0.86 0.02 var(--hue));
+  --btn-card-bg-hover: oklch(0.91 0.015 var(--hue));
+  --btn-card-bg-active: oklch(0.84 0.035 var(--hue));
+  --deep-text: oklch(0.22 0.02 var(--hue));
+  --line-divider: rgba(0, 0, 0, 0.06);
+  --line-color: rgba(0, 0, 0, 0.08);
+  --content-meta: rgba(0, 0, 0, 0.85);
+  --selection-bg: oklch(0.82 0.09 var(--hue));
+  --codeblock-bg: oklch(0.86 0.015 var(--hue));
+  --codeblock-topbar-bg: oklch(0.82 0.018 var(--hue));
+  --link-underline: oklch(0.82 0.07 var(--hue));
+  --link-hover: oklch(0.78 0.10 var(--hue));
+  --link-active: oklch(0.75 0.12 var(--hue));
+  --float-panel-bg: oklch(0.88 0.01 var(--hue));
+  --toc-badge-bg: oklch(0.76 0.07 var(--hue));
+  --toc-btn-hover: oklch(0.82 0.028 var(--hue));
+  --toc-btn-active: oklch(0.79 0.028 var(--hue));
+  --toc-item-active: oklch(0.60 0.16 var(--hue));
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --radius-std: 0.75rem;
+  --nav-bg: var(--card-bg);
+  --nav-blur: none;
+  --nav-shadow: var(--shadow-sm);
+  --nav-radius: var(--radius-std);
+  --panel-bg: var(--card-bg-transparent);
+  --panel-blur: blur(20px);
+  --display-panel-bg: oklch(0.88 0.014 var(--hue) / 0.84);
+  --display-panel-border: rgba(0, 0, 0, 0.08);
+  --display-panel-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  --navbar-foreground: var(--deep-text);
+  --navbar-overlay-foreground: var(--deep-text);
+}
+
+:root.dark {
+  --primary: oklch(0.75 0.14 var(--hue));
+  --page-bg: oklch(0.35 0.06 var(--hue));
+  --page-bg-top: oklch(0.38 0.07 var(--hue));
+  --page-bg-bottom: oklch(0.32 0.05 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.48 0.12 var(--hue)) 40%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.55 0.16 var(--hue)) 32%, transparent);
+  --page-bg-accent-strong: color-mix(in oklch, oklch(0.60 0.18 var(--hue)) 22%, transparent);
+  --page-bg-paper-grain: color-mix(in oklch, oklch(0.38 0.06 var(--hue)) 84%, oklch(0.32 0.05 var(--hue)) 16%);
+  --card-bg: oklch(0.40 0.055 var(--hue));
+  --card-bg-transparent: oklch(0.40 0.055 var(--hue) / 0.88);
+  --btn-content: oklch(0.75 0.08 var(--hue));
+  --btn-regular-bg: oklch(0.42 0.05 var(--hue));
+  --btn-regular-bg-hover: oklch(0.46 0.06 var(--hue));
+  --btn-regular-bg-active: oklch(0.50 0.07 var(--hue));
+  --btn-plain-bg-hover: oklch(0.40 0.05 var(--hue));
+  --btn-plain-bg-active: oklch(0.38 0.045 var(--hue));
+  --btn-card-bg-hover: oklch(0.38 0.045 var(--hue));
+  --btn-card-bg-active: oklch(0.44 0.055 var(--hue));
+  --deep-text: oklch(0.97 0.012 var(--hue));
+  --line-divider: rgba(255, 255, 255, 0.06);
+  --line-color: rgba(255, 255, 255, 0.08);
+  --content-meta: rgba(255, 255, 255, 0.82);
+  --selection-bg: oklch(0.42 0.08 var(--hue));
+  --codeblock-bg: oklch(0.28 0.03 var(--hue));
+  --codeblock-topbar-bg: oklch(0.24 0.025 var(--hue));
+  --link-underline: oklch(0.42 0.08 var(--hue));
+  --link-hover: oklch(0.46 0.08 var(--hue));
+  --link-active: oklch(0.38 0.05 var(--hue));
+  --float-panel-bg: oklch(0.30 0.02 var(--hue));
+  --toc-badge-bg: var(--btn-regular-bg);
+  --toc-btn-hover: oklch(0.36 0.025 var(--hue));
+  --toc-btn-active: oklch(0.38 0.025 var(--hue));
+  --toc-item-active: oklch(0.50 0.08 var(--hue));
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --display-panel-bg: oklch(0.32 0.025 var(--hue) / 0.82);
+  --display-panel-border: rgba(255, 255, 255, 0.10);
+  --display-panel-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+  --navbar-overlay-foreground: oklch(0.88 0.01 var(--hue));
+}

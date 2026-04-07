@@ -4,6 +4,8 @@ import {
 	json,
 	nestComments,
 	normalizeComment,
+	parsePaginationParams,
+	readJsonBody,
 	serverError,
 	type CommentRecord,
 	type Env,
@@ -18,19 +20,12 @@ export const onRequestGet = async ({
 	request: Request;
 }) => {
 	try {
-		const url = new URL(request.url);
-		const postSlug = url.searchParams.get("postSlug")?.trim();
-		const page = Math.max(
-			1,
-			Number.parseInt(url.searchParams.get("page") || "1", 10) || 1,
-		);
-		const limit = Math.min(
+		const { url, page, limit, offset } = parsePaginationParams(
+			request.url,
+			50,
 			100,
-			Math.max(
-				1,
-				Number.parseInt(url.searchParams.get("limit") || "50", 10) || 50,
-			),
 		);
+		const postSlug = url.searchParams.get("postSlug")?.trim();
 
 		if (!postSlug) {
 			return badRequest("\u7f3a\u5c11\u6587\u7ae0\u6807\u8bc6\u3002");
@@ -43,7 +38,7 @@ export const onRequestGet = async ({
 			 ORDER BY created_at ASC
 			 LIMIT ?2 OFFSET ?3`,
 		)
-			.bind(postSlug, limit, (page - 1) * limit)
+			.bind(postSlug, limit, offset)
 			.all<CommentRecord>();
 
 		const totalResult = await env.COMMENTS_DB.prepare(
@@ -85,7 +80,12 @@ export const onRequestPost = async ({
 	request: Request;
 }) => {
 	try {
-		const body = (await request.json()) as Record<string, unknown>;
+		const parsedBody = await readJsonBody(request);
+		if (!parsedBody.ok) {
+			return parsedBody.response;
+		}
+
+		const body = parsedBody.value;
 		const validated = validateSubmission(body);
 		if (!validated.ok) {
 			return badRequest(validated.message);
