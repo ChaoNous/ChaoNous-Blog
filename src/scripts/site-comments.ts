@@ -6,7 +6,6 @@ interface SiteComment {
 	postTitle: string;
 	authorName: string;
 	authorUrl: string | null;
-	avatarUrl: string;
 	content: string;
 	createdAt: string;
 	replies: SiteComment[];
@@ -75,7 +74,7 @@ function renderCommentItem(
 	options: MountSiteCommentsOptions,
 	depth = 0,
 ): string {
-	const authorLabel = escapeHtml(comment.authorName || "匿名");
+	const authorLabel = escapeHtml(comment.authorName || "??");
 	const author = comment.authorUrl
 		? `<a href="${escapeHtml(comment.authorUrl)}" target="_blank" rel="nofollow noopener noreferrer" class="site-comment-author link-btn">${authorLabel}</a>`
 		: `<span class="site-comment-author">${authorLabel}</span>`;
@@ -87,12 +86,11 @@ function renderCommentItem(
 		<article class="site-comment-card${depth > 0 ? " is-reply" : ""}">
 			<header class="site-comment-header">
 				<div class="site-comment-meta">
-					<img class="site-comment-avatar" src="${escapeHtml(comment.avatarUrl || "")}" alt="${authorLabel}" loading="lazy" decoding="async" />
 					${author}
 					<time class="site-comment-time" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(formatDate(comment.createdAt, options.lang))}</time>
 				</div>
 				<button type="button" class="site-comment-reply-btn link-btn" data-reply-id="${comment.id}" data-reply-author="${authorLabel}">
-					回复
+					??
 				</button>
 			</header>
 			<div class="site-comment-content">${formatCommentContent(comment.content)}</div>
@@ -107,10 +105,10 @@ function renderState(
 	options: MountSiteCommentsOptions,
 ): void {
 	const commentsHtml = state.loading
-		? `<div class="site-comments-empty">评论加载中…</div>`
+		? `<div class="site-comments-empty">?????.</div>`
 		: state.comments.length > 0
 			? state.comments.map((comment) => renderCommentItem(comment, options)).join("")
-			: `<div class="site-comments-empty">还没有评论，欢迎留下第一条。</div>`;
+			: `<div class="site-comments-empty">?????,????????</div>`;
 
 	const noticeHtml = state.error
 		? `<div class="site-comments-notice is-error">${escapeHtml(state.error)}</div>`
@@ -121,8 +119,8 @@ function renderState(
 	const replyBanner = state.replyTarget
 		? `
 			<div class="site-comments-replying">
-				<span>正在回复 ${escapeHtml(state.replyTarget.authorName)}</span>
-				<button type="button" class="link-btn" data-action="cancel-reply">取消</button>
+				<span>???? ${escapeHtml(state.replyTarget.authorName)}</span>
+				<button type="button" class="link-btn" data-action="cancel-reply">??</button>
 			</div>
 		`
 		: "";
@@ -134,28 +132,28 @@ function renderState(
 			<form class="site-comments-form">
 				<div class="site-comments-grid">
 					<label class="site-comments-field">
-						<span>昵称</span>
-						<input name="name" type="text" maxlength="50" required placeholder="你的名字" />
+						<span>??</span>
+						<input name="name" type="text" maxlength="50" required placeholder="????" />
 					</label>
 					<label class="site-comments-field">
-						<span>邮箱</span>
+						<span>??</span>
 						<input name="email" type="email" maxlength="120" required placeholder="name@example.com" />
 					</label>
 				</div>
 				<label class="site-comments-field">
-					<span>网址</span>
+					<span>??</span>
 					<input name="url" type="text" inputmode="url" maxlength="200" placeholder="chaonous.com" />
 				</label>
 				<label class="site-comments-field">
-					<span>内容</span>
-					<textarea name="content" rows="5" maxlength="2000" required placeholder="写下你的想法…"></textarea>
+					<span>??</span>
+					<textarea name="content" rows="5" maxlength="2000" required placeholder="??????."></textarea>
 				</label>
 				<input name="parentId" type="hidden" value="${state.replyTarget?.id ?? ""}" />
 				<div class="site-comments-actions">
 					<button type="submit" class="site-comments-submit"${state.submitting ? " disabled" : ""}>
-						${state.submitting ? "提交中…" : "提交评论"}
+						${state.submitting ? "???." : "????"}
 					</button>
-					<span class="site-comments-hint">评论提交后会直接发布到页面。</span>
+					<span class="site-comments-hint">??????????????</span>
 				</div>
 			</form>
 			<div class="site-comments-list">${commentsHtml}</div>
@@ -200,7 +198,7 @@ export function mountSiteComments(
 			});
 
 			if (!response.ok) {
-				throw new Error("评论加载失败，请稍后再试。");
+				throw new Error("??????,??????");
 			}
 
 			const payload = (await response.json()) as SiteCommentsResponse;
@@ -215,7 +213,7 @@ export function mountSiteComments(
 				error:
 					error instanceof Error
 						? error.message
-						: "评论加载失败，请稍后再试。",
+						: "??????,??????",
 			});
 		}
 	};
@@ -247,14 +245,14 @@ export function mountSiteComments(
 
 			const result = await response.json();
 			if (!response.ok) {
-				throw new Error(result?.message || "评论提交失败，请稍后再试。");
+				throw new Error(result?.message || "??????,??????");
 			}
 
 			form.reset();
 			setState({
 				submitting: false,
 				replyTarget: null,
-				success: result?.message || "评论已发布。",
+				success: result?.message || "??????",
 			});
 			await loadComments();
 		} catch (error) {
@@ -263,7 +261,7 @@ export function mountSiteComments(
 				error:
 					error instanceof Error
 						? error.message
-						: "评论提交失败，请稍后再试。",
+						: "??????,??????",
 			});
 		}
 	};
@@ -287,7 +285,7 @@ export function mountSiteComments(
 					setState({
 						replyTarget: {
 							id: Number(button.dataset.replyId),
-							authorName: button.dataset.replyAuthor || "这条评论",
+							authorName: button.dataset.replyAuthor || "????",
 						},
 						error: "",
 						success: "",

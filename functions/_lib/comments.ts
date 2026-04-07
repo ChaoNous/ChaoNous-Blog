@@ -13,7 +13,6 @@ export interface Env {
 	COMMENTS_DB: D1Database;
 	COMMENT_ADMIN_PASSWORD?: string;
 	COMMENT_SESSION_SECRET?: string;
-	COMMENT_AVATAR_PREFIX?: string;
 }
 
 export interface CommentRecord {
@@ -32,8 +31,6 @@ export interface CommentRecord {
 
 const ADMIN_SESSION_COOKIE = "cnc_admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
-const DEFAULT_COMMENT_AVATAR_PREFIX = "https://gravatar.com/avatar";
-const DEFAULT_COMMENT_AVATAR_HASH = "00000000000000000000000000000000";
 
 export function json(
 	data: unknown,
@@ -179,34 +176,6 @@ export function toIso(timestamp: number): string {
 	return new Date(timestamp).toISOString();
 }
 
-function normalizeIdentityValue(value: string): string {
-	return value.trim().toLowerCase();
-}
-
-async function md5Hex(value: string): Promise<string> {
-	const input = normalizeIdentityValue(value);
-	const data = new TextEncoder().encode(input);
-	const digest = await crypto.subtle.digest("MD5", data);
-	return Array.from(new Uint8Array(digest))
-		.map((item) => item.toString(16).padStart(2, "0"))
-		.join("");
-}
-
-export async function createCommentAvatarUrl(
-	email: string,
-	name: string,
-	avatarPrefix = DEFAULT_COMMENT_AVATAR_PREFIX,
-): Promise<string> {
-	const normalizedPrefix =
-		avatarPrefix.trim() || DEFAULT_COMMENT_AVATAR_PREFIX;
-	const identifier = normalizeIdentityValue(email || name || "");
-	const hash = identifier
-		? await md5Hex(identifier)
-		: DEFAULT_COMMENT_AVATAR_HASH;
-
-	return `${normalizedPrefix}/${hash}?s=120&d=retro`;
-}
-
 export interface NormalizedComment {
 	id: number;
 	parentId: number | null;
@@ -215,16 +184,12 @@ export interface NormalizedComment {
 	postTitle: string;
 	authorName: string;
 	authorUrl: string | null;
-	avatarUrl: string;
 	content: string;
 	createdAt: string;
 	updatedAt: string;
 }
 
-export async function normalizeComment(
-	record: CommentRecord,
-	avatarPrefix?: string,
-): Promise<NormalizedComment> {
+export function normalizeComment(record: CommentRecord): NormalizedComment {
 	return {
 		id: record.id,
 		parentId: record.parent_id,
@@ -233,11 +198,6 @@ export async function normalizeComment(
 		postTitle: record.post_title,
 		authorName: record.author_name,
 		authorUrl: record.author_url,
-		avatarUrl: await createCommentAvatarUrl(
-			record.author_email,
-			record.author_name,
-			avatarPrefix,
-		),
 		content: record.content,
 		createdAt: toIso(record.created_at),
 		updatedAt: toIso(record.updated_at),
