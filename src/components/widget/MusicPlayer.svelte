@@ -709,7 +709,7 @@
 			{#if isLoading}
 				<Icon
 					icon="eos-icons:loading"
-					class="hidden-player-icon text-(--primary) text-2xl"
+					class="hidden-player-icon text-(--primary) text-3xl"
 				/>
 			{:else if isPlaying}
 				<div class="flex space-x-0.5">
@@ -728,7 +728,7 @@
 			{:else}
 				<Icon
 					icon="material-symbols:music-note"
-					class="hidden-player-icon text-(--primary) text-2xl"
+					class="hidden-player-icon text-(--primary) text-3xl"
 				/>
 			{/if}
 		</div>
@@ -1231,6 +1231,10 @@
 		.music-player.hidden-mode {
 			width: 4rem;
 			height: 4rem;
+			min-width: 4rem;
+			max-width: 4rem;
+			min-height: 4rem;
+			max-height: 4rem;
 		}
 		.music-player {
 			max-width: 20rem;
@@ -1399,6 +1403,10 @@
 			.music-player.hidden-mode {
 				width: 3rem;
 				height: 3rem;
+				min-width: 3rem;
+				max-width: 3rem;
+				min-height: 3rem;
+				max-height: 3rem;
 			}
 			.mini-player {
 				width: calc(75dvw - 1rem) !important;
