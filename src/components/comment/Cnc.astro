@@ -58,6 +58,8 @@ const {
 <style is:global>
 	.site-comments-root {
 		--site-comments-font-family: "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif;
+		--site-comments-font-size: 1rem;
+		--site-comments-line-height: 1.85;
 	}
 
 	.site-comments-shell {
@@ -67,6 +69,8 @@ const {
 		padding: 1.25rem;
 		backdrop-filter: blur(16px);
 		font-family: var(--site-comments-font-family) !important;
+		font-size: var(--site-comments-font-size);
+		line-height: var(--site-comments-line-height);
 	}
 
 	.dark .site-comments-shell {
@@ -93,11 +97,14 @@ const {
 	.site-comments-shell .site-comments-replying,
 	.site-comments-shell .link-btn {
 		font-family: var(--site-comments-font-family) !important;
+		font-size: var(--site-comments-font-size) !important;
+		line-height: var(--site-comments-line-height) !important;
 	}
 
 	.site-comments-root input::placeholder,
 	.site-comments-root textarea::placeholder {
 		font-family: var(--site-comments-font-family) !important;
+		font-size: var(--site-comments-font-size) !important;
 	}
 
 	.site-comments-head {
@@ -109,8 +116,9 @@ const {
 
 	.site-comments-title {
 		margin: 0;
-		font-size: 1.15rem;
+		font-size: var(--site-comments-font-size);
 		font-weight: 700;
+		line-height: var(--site-comments-line-height);
 		color: rgba(36, 24, 22, 0.92);
 	}
 
@@ -123,7 +131,8 @@ const {
 	.site-comments-empty,
 	.site-comment-time {
 		color: rgba(36, 24, 22, 0.64);
-		font-size: 0.92rem;
+		font-size: var(--site-comments-font-size);
+		line-height: var(--site-comments-line-height);
 	}
 
 	.dark .site-comments-subtitle,
@@ -150,7 +159,8 @@ const {
 		display: flex;
 		flex-direction: column;
 		gap: 0.35rem;
-		font-size: 0.92rem;
+		font-size: var(--site-comments-font-size);
+		line-height: var(--site-comments-line-height);
 		color: rgba(36, 24, 22, 0.78);
 	}
 
@@ -167,6 +177,8 @@ const {
 		padding: 0.85rem 1rem;
 		color: rgba(36, 24, 22, 0.92);
 		outline: none;
+		font-size: var(--site-comments-font-size);
+		line-height: var(--site-comments-line-height);
 		transition: border-color 180ms ease, box-shadow 180ms ease;
 	}
 
@@ -198,6 +210,8 @@ const {
 		color: white;
 		font-weight: 700;
 		cursor: pointer;
+		font-size: var(--site-comments-font-size);
+		line-height: var(--site-comments-line-height);
 	}
 
 	.site-comments-submit:disabled {
@@ -214,7 +228,8 @@ const {
 		margin-bottom: 0.95rem;
 		border-radius: 1rem;
 		padding: 0.85rem 1rem;
-		font-size: 0.94rem;
+		font-size: var(--site-comments-font-size);
+		line-height: var(--site-comments-line-height);
 	}
 
 	.site-comments-notice.is-error {
@@ -285,7 +300,8 @@ const {
 	}
 
 	.site-comment-content {
-		line-height: 1.9;
+		font-size: var(--site-comments-font-size);
+		line-height: var(--site-comments-line-height);
 		color: rgba(36, 24, 22, 0.86);
 		word-break: break-word;
 	}
