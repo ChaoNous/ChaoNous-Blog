@@ -27,6 +27,8 @@
 	let isHidden = false;
 	// Whether the playlist panel is visible
 	let showPlaylist = false;
+	// Whether the mobile volume popover is visible
+	let showMobileVolumePopover = false;
 	// Current playback position in seconds
 	let currentTime = 0;
 	// Current track duration in seconds
@@ -288,10 +290,12 @@
 		if (isHidden) {
 			isExpanded = false;
 			showPlaylist = false;
+			showMobileVolumePopover = false;
 		}
 	}
 
 	function togglePlaylist() {
+		showMobileVolumePopover = false;
 		showPlaylist = !showPlaylist;
 	}
 
@@ -420,8 +424,12 @@
 	}
 
 	function handleDocumentClick(event: MouseEvent) {
-		if (!showPlaylist) return;
 		const target = event.target;
+		if (target instanceof Node && !playerRoot?.contains(target)) {
+			showMobileVolumePopover = false;
+		}
+
+		if (!showPlaylist) return;
 		if (!(target instanceof Node)) return;
 		if (playlistPanel?.contains(target) || playerRoot?.contains(target))
 			return;
@@ -548,6 +556,18 @@
 		isMuted = !isMuted;
 	}
 
+	function toggleVolumeControl(event: MouseEvent) {
+		event.stopPropagation();
+		if (
+			typeof window !== "undefined" &&
+			window.matchMedia("(max-width: 768px)").matches
+		) {
+			showMobileVolumePopover = !showMobileVolumePopover;
+			return;
+		}
+		toggleMute();
+	}
+
 	function formatTime(seconds: number): string {
 		if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
 		const mins = Math.floor(seconds / 60);
@@ -597,11 +617,9 @@
 		}
 
 		if (mode === "meting") {
-			// 在线歌单立即拉取，首屏尽快替换成真实第一首歌信息。
-			lazyLoadPlaylist();
+			// 鍦ㄧ嚎姝屽崟绔嬪嵆鎷夊彇锛岄灞忓敖蹇浛鎹㈡垚鐪熷疄绗竴棣栨瓕淇℃伅銆?			lazyLoadPlaylist();
 		} else if ("requestIdleCallback" in window) {
-			// 本地模式已经能直接展示第一首歌，歌单初始化继续延后。
-			requestIdleCallback(
+			// 鏈湴妯″紡宸茬粡鑳界洿鎺ュ睍绀虹涓€棣栨瓕锛屾瓕鍗曞垵濮嬪寲缁х画寤跺悗銆?			requestIdleCallback(
 				() => {
 					lazyLoadPlaylist();
 				},
@@ -992,7 +1010,7 @@
 					<button
 						class="btn-plain w-10 h-10 rounded-lg"
 						aria-label={i18n(Key.musicPlayerVolume)}
-						on:click={toggleMute}
+						on:click={toggleVolumeControl}
 					>
 						{#if isMuted || volume === 0}
 							<Icon
@@ -1013,6 +1031,7 @@
 					</button>
 					<div
 						class="volume-popover rounded-2xl card-base overflow-hidden"
+						class:is-open={showMobileVolumePopover}
 						style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
 					>
 							<div class="volume-popover-surface p-3" style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;">
@@ -1031,7 +1050,12 @@
 									saveVolumeSettings();
 								} else if (e.key === "Enter" || e.key === " ") {
 									e.preventDefault();
-									toggleMute();
+									if (
+										typeof window === "undefined" ||
+										!window.matchMedia("(max-width: 768px)").matches
+									) {
+										toggleMute();
+									}
 								}
 							}}
 							role="slider"
@@ -1342,6 +1366,12 @@
 		}
 		.volume-control:hover .volume-popover,
 		.volume-control:focus-within .volume-popover {
+			opacity: 1;
+			visibility: visible;
+			transform: translateX(-50%) translateY(0);
+			pointer-events: auto;
+		}
+		.volume-popover.is-open {
 			opacity: 1;
 			visibility: visible;
 			transform: translateX(-50%) translateY(0);
