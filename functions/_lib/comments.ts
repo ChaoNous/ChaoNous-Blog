@@ -131,26 +131,6 @@ export function createDeleteToken(): string {
 	return crypto.randomUUID();
 }
 
-export async function softDeleteComment(
-	env: Env,
-	id: number,
-): Promise<boolean> {
-	const result = await env.COMMENTS_DB.prepare(
-		`UPDATE comments
-		 SET content = '',
-		     author_name = '已注销',
-		     author_email = '',
-		     author_url = NULL,
-		     delete_token = NULL,
-		     updated_at = ?2
-		 WHERE id = ?1`,
-	)
-		.bind(id, Date.now())
-		.run();
-
-	return (result.meta.changes ?? 0) > 0;
-}
-
 export function getAdminSessionToken(request: Request): string {
 	return parseCookies(request).get(ADMIN_SESSION_COOKIE)?.trim() || "";
 }

@@ -1,10 +1,10 @@
 import {
 	badRequest,
+	deleteCommentsByIds,
 	json,
 	notFound,
 	parsePositiveId,
 	serverError,
-	softDeleteComment,
 	unauthorized,
 	type Env,
 } from "../../_lib/comments";
@@ -47,7 +47,10 @@ export const onRequestDelete = async ({
 			return unauthorized("\u5220\u9664\u51ed\u8bc1\u4e0d\u6b63\u786e\u3002");
 		}
 
-		await softDeleteComment(env, id);
+		const deletedCount = await deleteCommentsByIds(env, [id]);
+		if (!deletedCount) {
+			return notFound("\u8bc4\u8bba\u4e0d\u5b58\u5728\u3002");
+		}
 
 		return json({
 			ok: true,
