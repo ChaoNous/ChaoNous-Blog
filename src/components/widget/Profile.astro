@@ -49,15 +49,15 @@ import { i18n } from "../../i18n/translation";
 			style="color: var(--text-main);"
 		>
 			<span
-				class="profile-bio"
+				class="typewriter inline-block min-h-[3.2em]"
 				data-profile-bio
-				data-typewriter-enabled={profileConfig.typewriter?.enable ? "true" : "false"}
-				data-typewriter-speed={String(profileConfig.typewriter?.speed ?? 140)}
-				data-bio={profileConfig.bio ?? ""}
+				data-text={JSON.stringify([profileConfig.bio ?? ""])}
+				data-speed={String(profileConfig.typewriter?.speed ?? 140)}
+				data-delete-speed={String(Math.max(50, Math.round((profileConfig.typewriter?.speed ?? 140) / 2)))}
+				data-pause-time="2200"
 			>
 				{profileConfig.bio}
 			</span>
-			<span class="profile-bio-cursor" aria-hidden="true"></span>
 		</div>
 
 		<div class="flex flex-wrap gap-2 justify-center mb-1">
@@ -113,35 +113,6 @@ import { i18n } from "../../i18n/translation";
 	</div>
 </div>
 
-<style>
-	.profile-bio-cursor {
-		display: inline-block;
-		width: 0.08em;
-		height: 1em;
-		margin-left: 0.2em;
-		vertical-align: -0.08em;
-		background: currentColor;
-		opacity: 0;
-		animation: profile-bio-cursor-blink 1.15s steps(1, end) infinite;
-	}
-
-	.profile-bio-cursor.is-active {
-		opacity: 1;
-	}
-
-	@keyframes profile-bio-cursor-blink {
-		0%,
-		45% {
-			opacity: 1;
-		}
-
-		55%,
-		100% {
-			opacity: 0;
-		}
-	}
-</style>
-
 <script
 	is:inline
 	define:vars={{
@@ -157,58 +128,88 @@ import { i18n } from "../../i18n/translation";
 		return `${profileStatsPageViews} ${pageViews} · ${profileStatsVisits} ${visits}`;
 	}
 
-	function createTypewriterController() {
-		const bioElement = document.querySelector("[data-profile-bio]");
-		if (!(bioElement instanceof HTMLElement)) {
-			return {
-				cleanup() {},
-			};
+	class ProfileTypewriter {
+		constructor(element) {
+			this.element = element;
+			const textValue = element.dataset.text || "";
+			try {
+				const parsed = JSON.parse(textValue);
+				this.texts = Array.isArray(parsed) ? parsed : [textValue];
+			} catch {
+				this.texts = [textValue];
+			}
+			this.currentTextIndex = 0;
+			this.currentIndex = 0;
+			this.isDeleting = false;
+			this.timeoutId = 0;
+			this.speed = Number.parseInt(element.dataset.speed || "140", 10);
+			this.deleteSpeed = Number.parseInt(element.dataset.deleteSpeed || "70", 10);
+			this.pauseTime = Number.parseInt(element.dataset.pauseTime || "2200", 10);
 		}
 
-		const cursor = bioElement.parentElement?.querySelector(".profile-bio-cursor");
-		const shouldAnimate = profileTypewriterEnabled && profileBio.trim().length > 0;
-
-		if (!shouldAnimate) {
-			bioElement.textContent = profileBio;
-			cursor?.classList.remove("is-active");
-			return {
-				cleanup() {},
-			};
+		isEnabled() {
+			return profileTypewriterEnabled && profileBio.trim().length > 0;
 		}
 
-		let frameId = 0;
-		let timeoutId = 0;
-		let charIndex = 0;
-		let isDisposed = false;
-		const speed = Math.max(110, Number(profileTypewriterSpeed) || 140);
+		getCurrentText() {
+			return this.texts[this.currentTextIndex] || "";
+		}
 
-		cursor?.classList.add("is-active");
-		bioElement.textContent = "";
-
-		const step = () => {
-			if (isDisposed) return;
-			charIndex += 1;
-			bioElement.textContent = profileBio.slice(0, charIndex);
-			if (charIndex >= profileBio.length) {
-				cursor?.classList.remove("is-active");
+		start() {
+			if (!this.isEnabled()) {
+				this.element.textContent = profileBio;
 				return;
 			}
-			timeoutId = window.setTimeout(() => {
-				frameId = window.requestAnimationFrame(step);
-			}, speed);
-		};
 
-		frameId = window.requestAnimationFrame(step);
+			if (this.texts.length === 0) {
+				return;
+			}
 
-		return {
-			cleanup() {
-				isDisposed = true;
-				window.cancelAnimationFrame(frameId);
-				window.clearTimeout(timeoutId);
-				bioElement.textContent = profileBio;
-				cursor?.classList.remove("is-active");
-			},
-		};
+			this.element.textContent = "";
+			this.type();
+		}
+
+		type() {
+			const currentText = this.getCurrentText();
+
+			if (this.isDeleting) {
+				if (this.currentIndex > 0) {
+					this.currentIndex -= 1;
+					this.element.textContent = currentText.substring(0, this.currentIndex);
+					this.timeoutId = window.setTimeout(() => this.type(), this.deleteSpeed);
+					return;
+				}
+
+				this.isDeleting = false;
+				this.currentTextIndex = (this.currentTextIndex + 1) % this.texts.length;
+				this.timeoutId = window.setTimeout(() => this.type(), this.speed);
+				return;
+			}
+
+			if (this.currentIndex < currentText.length) {
+				this.currentIndex += 1;
+				this.element.textContent = currentText.substring(0, this.currentIndex);
+				this.timeoutId = window.setTimeout(() => this.type(), this.speed);
+				return;
+			}
+
+			if (this.texts.length > 1) {
+				this.isDeleting = true;
+				this.timeoutId = window.setTimeout(() => this.type(), this.pauseTime);
+				return;
+			}
+
+			if (this.texts.length === 1 && this.texts[0] === "") {
+				this.element.innerHTML = "&nbsp;";
+			}
+		}
+
+		destroy() {
+			if (this.timeoutId) {
+				window.clearTimeout(this.timeoutId);
+			}
+			this.element.textContent = profileBio;
+		}
 	}
 
 	async function fetchSiteStats() {
@@ -252,7 +253,18 @@ import { i18n } from "../../i18n/translation";
 				return document.querySelector("[data-profile-bio]") !== null;
 			},
 			init() {
-				return createTypewriterController();
+				const bioElement = document.querySelector("[data-profile-bio]");
+				if (!(bioElement instanceof HTMLElement)) {
+					return;
+				}
+
+				const typewriter = new ProfileTypewriter(bioElement);
+				typewriter.start();
+				return {
+					cleanup() {
+						typewriter.destroy();
+					},
+				};
 			},
 		});
 		registerPageScript("profile-site-stats", {
