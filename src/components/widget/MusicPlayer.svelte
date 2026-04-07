@@ -1239,7 +1239,7 @@
 		.music-player {
 			max-width: 20rem;
 			user-select: none;
-			--mobile-player-width: calc(75dvw - 1rem);
+			--mobile-player-width: 75dvw;
 		}
 		.mini-player {
 			width: 17.5rem;
@@ -1395,7 +1395,7 @@
 		}
 		@media (max-width: 768px) {
 			.music-player {
-				--mobile-player-width: calc(75dvw - 1rem);
+				--mobile-player-width: 75dvw;
 				width: var(--mobile-player-width) !important;
 				max-width: var(--mobile-player-width) !important;
 				/*left: 0.5rem !important;*/
@@ -1444,7 +1444,7 @@
 		}
 		@media (max-width: 480px) {
 			.music-player {
-				--mobile-player-width: calc(75dvw - 0.75rem);
+				--mobile-player-width: 75dvw;
 				width: var(--mobile-player-width) !important;
 				max-width: var(--mobile-player-width) !important;
 			}
