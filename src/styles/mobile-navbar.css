@@ -8,7 +8,7 @@
     border-radius: 0;
     backdrop-filter: none !important;
     padding-left: 0.375rem;
-    padding-right: 0.375rem;
+    padding-right: 0.125rem;
   }
 
   .navbar-brand-text {
@@ -27,8 +27,9 @@
   }
 
   .navbar-shell {
-    grid-template-columns: auto 1fr auto !important;
-    column-gap: 0 !important;
+    display: grid !important;
+    grid-template-columns: max-content minmax(0, 1fr) max-content !important;
+    column-gap: 0.75rem !important;
   }
 
   .navbar-links {
@@ -38,13 +39,17 @@
   .navbar-brand {
     padding-left: 0.125rem !important;
     padding-right: 0 !important;
-    margin-right: 0.5rem !important;
+    margin-right: 0 !important;
   }
 
   .navbar-actions {
-    margin-left: 0 !important;
-    gap: 0.25rem !important;
+    margin-left: auto !important;
+    gap: 0.375rem !important;
+    width: max-content !important;
+    justify-content: flex-end !important;
     justify-items: end !important;
+    justify-self: end !important;
+    padding-right: 0 !important;
   }
 
   #nav-menu-panel {
