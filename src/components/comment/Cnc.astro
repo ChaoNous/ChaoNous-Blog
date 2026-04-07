@@ -171,32 +171,35 @@ const {
 	.site-comments-field textarea {
 		width: 100%;
 		border-radius: 12px;
-		border: 2px solid rgba(36, 24, 22, 0.22);
-		background: #fff;
+		border: 1px solid var(--display-panel-border);
+		background: var(--panel-bg);
+		backdrop-filter: blur(20px) saturate(160%);
+		-webkit-backdrop-filter: blur(20px) saturate(160%);
 		padding: 0.8rem 0.95rem;
 		color: rgba(36, 24, 22, 0.92);
 		outline: none;
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
-		transition: border-color 180ms ease, background-color 180ms ease;
+		transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 	}
 
 	.dark .site-comments-field input,
 	.dark .site-comments-field textarea {
-		border-color: rgba(244, 237, 231, 0.24);
-		background: rgba(24, 17, 16, 0.98);
+		border-color: var(--display-panel-border);
+		background: var(--panel-bg);
 		color: rgba(244, 237, 231, 0.92);
 	}
 
 	.site-comments-field input:focus,
 	.site-comments-field textarea:focus {
-		border-color: rgba(36, 24, 22, 0.82);
-		box-shadow: none;
+		border-color: rgba(36, 24, 22, 0.42);
+		box-shadow: 0 0 0 1px rgba(36, 24, 22, 0.08);
 	}
 
 	.dark .site-comments-field input:focus,
 	.dark .site-comments-field textarea:focus {
-		border-color: rgba(244, 237, 231, 0.88);
+		border-color: rgba(244, 237, 231, 0.34);
+		box-shadow: 0 0 0 1px rgba(244, 237, 231, 0.08);
 	}
 
 	.site-comments-actions {
