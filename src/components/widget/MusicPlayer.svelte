@@ -665,7 +665,7 @@
 
 	<div
 		bind:this={playerRoot}
-		class="music-player fixed bottom-4 right-4 z-50 transition-all duration-300 ease-in-out"
+		class="music-player fixed bottom-8 right-6 z-50 transition-all duration-300 ease-in-out"
 		class:expanded={isExpanded}
 		class:hidden-mode={isHidden}
 	>
@@ -1066,7 +1066,7 @@
 		{#if showPlaylist}
 			<div
 				bind:this={playlistPanel}
-				class="playlist-panel animate-slide-up float-panel fixed bottom-20 right-4 w-80 max-h-96 overflow-hidden z-50"
+				class="playlist-panel animate-slide-up float-panel fixed bottom-20 right-6 w-80 max-h-96 overflow-hidden z-50"
 				style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border-radius: var(--radius-large);"
 			>
 					<div class="playlist-panel-surface" style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit; overflow: hidden;">
