@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from "@iconify/svelte";
-	import { onDestroy, onMount } from "svelte";
+	import { onDestroy, onMount, tick } from "svelte";
 	import { musicPlayerConfig } from "../../config";
 	import hitoriCover from "../../assets/music/cover/hitori.jpg";
 	import Key from "../../i18n/i18nKey";
@@ -150,7 +150,34 @@
 	let progressBar: HTMLElement;
 	let volumeBar: HTMLElement;
 	let playerRoot: HTMLDivElement;
+	let miniPlayerElement: HTMLDivElement;
 	let playlistPanel: HTMLDivElement;
+	let mobilePlayerMeasuredWidth = "";
+
+	function syncMobilePlayerWidth() {
+		if (
+			typeof window === "undefined" ||
+			!playerRoot ||
+			!miniPlayerElement ||
+			!window.matchMedia("(max-width: 768px)").matches ||
+			isHidden
+		) {
+			mobilePlayerMeasuredWidth = "";
+			playerRoot?.style.removeProperty("--mobile-player-width");
+			return;
+		}
+
+		const measuredWidth = Math.round(
+			miniPlayerElement.getBoundingClientRect().width,
+		);
+		if (!Number.isFinite(measuredWidth) || measuredWidth <= 0) return;
+
+		mobilePlayerMeasuredWidth = `${measuredWidth}px`;
+		playerRoot.style.setProperty(
+			"--mobile-player-width",
+			mobilePlayerMeasuredWidth,
+		);
+	}
 
 	function restoreCachedInitialSong() {
 		if (mode !== "meting" || typeof localStorage === "undefined") return;
@@ -276,12 +303,15 @@
 		}
 	}
 
-	function toggleExpanded() {
+	async function toggleExpanded() {
 		loadMusicFont();
+		syncMobilePlayerWidth();
 		isExpanded = !isExpanded;
 		if (isExpanded) {
 			showPlaylist = false;
 			isHidden = false;
+			await tick();
+			syncMobilePlayerWidth();
 		}
 	}
 
@@ -611,6 +641,10 @@
 		});
 		document.addEventListener("click", handleDocumentClick);
 		document.addEventListener("keydown", handleDocumentKeydown);
+		if (typeof window !== "undefined") {
+			window.addEventListener("resize", syncMobilePlayerWidth);
+			setTimeout(syncMobilePlayerWidth, 0);
+		}
 
 		if (!musicPlayerConfig.enable) {
 			return;
@@ -641,6 +675,9 @@
 			});
 			document.removeEventListener("click", handleDocumentClick);
 			document.removeEventListener("keydown", handleDocumentKeydown);
+		}
+		if (typeof window !== "undefined") {
+			window.removeEventListener("resize", syncMobilePlayerWidth);
 		}
 	});
 </script>
@@ -734,6 +771,7 @@
 		</div>
 		<!-- Mini player shown when collapsed -->
 		<div
+			bind:this={miniPlayerElement}
 			class="mini-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
 			style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
 			class:opacity-0={isExpanded || isHidden}
