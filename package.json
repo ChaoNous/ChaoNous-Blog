@@ -54,7 +54,6 @@
 		"markdown-it": "^14.1.1",
 		"marked": "^17.0.5",
 		"node-html-parser": "^7.1.0",
-		"oddmisc": "^1.1.5",
 		"pagefind": "^1.4.0",
 		"photoswipe": "^5.4.4",
 		"qrcode": "^1.5.4",

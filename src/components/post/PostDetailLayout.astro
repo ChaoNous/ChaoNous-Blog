@@ -115,7 +115,9 @@ const {
 					published={entry.data.published}
 					updated={entry.data.updated}
 					category={entry.data.category || undefined}
-					id={entry.id}
+					statsSlug={canonicalUrl}
+					statsUrl={canonicalUrl}
+					statsTitle={entry.data.title}
 				/>
 				{
 					(!entry.data.image ||

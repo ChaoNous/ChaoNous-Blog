@@ -12,7 +12,9 @@ export interface Props {
 	hideUpdateDate?: boolean;
 	isHome?: boolean;
 	className?: string;
-	id?: string;
+	statsSlug?: string;
+	statsUrl?: string;
+	statsTitle?: string;
 	words?: number;
 	showWordCount?: boolean;
 }
@@ -24,7 +26,9 @@ const {
 	hideUpdateDate,
 	isHome,
 	className = "",
-	id,
+	statsSlug,
+	statsUrl,
+	statsTitle,
 	words,
 	showWordCount = false,
 } = Astro.props;
@@ -73,8 +77,13 @@ const {
     )}
 
     <!-- 访问量 -->
-    {!isHome && id && (
-        <div class="flex items-center umami-page-views hidden" data-id={id}>
+    {!isHome && statsSlug && statsUrl && (
+        <div
+            class="flex items-center site-page-views hidden"
+            data-post-slug={statsSlug}
+            data-post-url={statsUrl}
+            data-post-title={statsTitle || ""}
+        >
             <div class="meta-icon">
                 <Icon name="material-symbols:visibility-outline-rounded" class="text-xl"></Icon>
             </div>
@@ -114,42 +123,90 @@ const {
 	}
 </style>
 
-{!isHome && id && (
+{!isHome && statsSlug && statsUrl && (
 <script is:inline define:vars={{
     pageViewsText: i18n(I18nKey.profileStatsPageViews),
     visitsText: i18n(I18nKey.profileStatsVisits)
 }}>
+    const analyticsVisitorStorageKey = "chaonous:analytics-visitor-id";
+
     function generateStatsText(pageViews, visits) {
         // @ts-ignore - pageViewsText and visitsText injected via define:vars at build time
         return `${pageViewsText} ${pageViews} · ${visitsText} ${visits}`;
     }
 
-    async function fetchPageViews() {
-        const container = document.querySelector('.umami-page-views');
+    function getVisitorId() {
+        try {
+            const existing = window.localStorage.getItem(analyticsVisitorStorageKey);
+            if (existing) {
+                return existing;
+            }
 
-        if (!window.oddmisc) {
-            container?.classList.add('hidden');
+            const next = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+                ? crypto.randomUUID()
+                : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+            window.localStorage.setItem(analyticsVisitorStorageKey, next);
+            return next;
+        } catch (error) {
+            console.warn("analytics visitor id unavailable:", error);
+            return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        }
+    }
+
+    async function recordPageVisit(container) {
+        const postSlug = container?.dataset.postSlug;
+        const postUrl = container?.dataset.postUrl;
+        const postTitle = container?.dataset.postTitle || "";
+        if (!postSlug || !postUrl) {
             return;
         }
 
-        const id = container?.dataset.id;
-        if (!id) return;
+        await fetch("/api/analytics/visit", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify({
+                postSlug,
+                postUrl,
+                postTitle,
+                visitorId: getVisitorId(),
+            }),
+        });
+    }
+
+    async function readPageStats(container) {
+        const postSlug = container?.dataset.postSlug;
+        if (!postSlug) {
+            return null;
+        }
+
+        const response = await fetch(`/api/analytics/pv?postSlug=${encodeURIComponent(postSlug)}`);
+        if (!response.ok) {
+            throw new Error(`analytics status ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    async function fetchPageViews() {
+        const container = document.querySelector('.site-page-views');
+        if (!container) {
+            return;
+        }
 
         try {
-            const stats = await window.oddmisc.getStats(`/posts/${id}/`);
+            await recordPageVisit(container);
+            const stats = await readPageStats(container);
             const pageViews = stats.pageviews || 0;
             const visits = stats.visits || 0;
 
-            if (pageViews === 0 && visits === 0) {
-                container?.classList.add('hidden');
-                return;
-            }
-
-            container?.classList.remove('hidden');
+            container.classList.remove('hidden');
             container.querySelector('.page-views-display').textContent = generateStatsText(pageViews, visits);
         } catch (error) {
             console.error('Error fetching page views:', error);
-            container?.classList.add('hidden');
+            container.classList.add('hidden');
         }
     }
 
@@ -157,7 +214,7 @@ const {
         const { registerPageScript } = await import("../scripts/page-lifecycle.ts");
         registerPageScript("post-meta-page-views", {
             shouldRun() {
-                return document.querySelector(".umami-page-views") !== null;
+                return document.querySelector(".site-page-views") !== null;
             },
             init() {
                 fetchPageViews();

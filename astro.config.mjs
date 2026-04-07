@@ -7,7 +7,6 @@ import swup from "@swup/astro";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
-import { umami } from "oddmisc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components";
 import rehypeKatex from "rehype-katex";
@@ -39,9 +38,6 @@ export default defineConfig({
 	},
 
 	integrations: [
-		umami({
-			shareUrl: false,
-		}),
 		// Swup 页面过渡 - 优化配置
 		swup({
 			theme: false,

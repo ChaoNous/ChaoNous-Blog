@@ -89,9 +89,6 @@ importers:
       node-html-parser:
         specifier: ^7.1.0
         version: 7.1.0
-      oddmisc:
-        specifier: ^1.1.5
-        version: 1.1.5
       pagefind:
         specifier: ^1.4.0
         version: 1.4.0
@@ -3921,9 +3918,6 @@ packages:
 
   obug@2.1.1:
     resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
-
-  oddmisc@1.1.5:
-    resolution: {integrity: sha512-RXYv9mjAFNdew3Kkj6jfCJoroJBc+CZq4r6eroJFZjW9ctXa0BRNSrdukGBFNjDJ0aLY8ze4B6iA62H+aG/4EA==}
 
   ofetch@1.5.1:
     resolution: {integrity: sha512-2W4oUZlVaqAPAil6FUg/difl6YhqhUR7x2eZY4bQCko22UXg3hptq9KLQdqFClV+Wu85UX7hNtdGTngi/1BxcA==}
@@ -10144,8 +10138,6 @@ snapshots:
       object-keys: 1.1.1
 
   obug@2.1.1: {}
-
-  oddmisc@1.1.5: {}
 
   ofetch@1.5.1:
     dependencies:
