@@ -63,19 +63,18 @@ const {
 	}
 
 	.site-comments-shell {
-		border: 1px solid rgba(36, 24, 22, 0.08);
-		border-radius: 1.5rem;
-		background: rgba(255, 255, 255, 0.8);
-		padding: 1.25rem;
-		backdrop-filter: blur(16px);
+		border: 2px solid rgba(36, 24, 22, 0.78);
+		border-radius: 14px;
+		background: #fff;
+		padding: 1rem 1.1rem;
 		font-family: var(--site-comments-font-family) !important;
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
 	}
 
 	.dark .site-comments-shell {
-		border-color: rgba(244, 237, 231, 0.08);
-		background: rgba(35, 24, 22, 0.84);
+		border-color: rgba(244, 237, 231, 0.82);
+		background: rgba(24, 17, 16, 0.96);
 	}
 
 	.site-comments-root,
@@ -171,28 +170,33 @@ const {
 	.site-comments-field input,
 	.site-comments-field textarea {
 		width: 100%;
-		border-radius: 1rem;
-		border: 1px solid rgba(36, 24, 22, 0.12);
-		background: rgba(255, 255, 255, 0.86);
-		padding: 0.85rem 1rem;
+		border-radius: 12px;
+		border: 2px solid rgba(36, 24, 22, 0.22);
+		background: #fff;
+		padding: 0.8rem 0.95rem;
 		color: rgba(36, 24, 22, 0.92);
 		outline: none;
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
-		transition: border-color 180ms ease, box-shadow 180ms ease;
+		transition: border-color 180ms ease, background-color 180ms ease;
 	}
 
 	.dark .site-comments-field input,
 	.dark .site-comments-field textarea {
-		border-color: rgba(244, 237, 231, 0.12);
-		background: rgba(24, 17, 16, 0.84);
+		border-color: rgba(244, 237, 231, 0.24);
+		background: rgba(24, 17, 16, 0.98);
 		color: rgba(244, 237, 231, 0.92);
 	}
 
 	.site-comments-field input:focus,
 	.site-comments-field textarea:focus {
-		border-color: var(--primary);
-		box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 18%, transparent);
+		border-color: rgba(36, 24, 22, 0.82);
+		box-shadow: none;
+	}
+
+	.dark .site-comments-field input:focus,
+	.dark .site-comments-field textarea:focus {
+		border-color: rgba(244, 237, 231, 0.88);
 	}
 
 	.site-comments-actions {
@@ -203,20 +207,37 @@ const {
 	}
 
 	.site-comments-submit {
-		border: 0;
-		border-radius: 999px;
+		border: 2px solid rgba(36, 24, 22, 0.82);
+		border-radius: 12px;
 		padding: 0.75rem 1.15rem;
-		background: color-mix(in oklch, var(--primary) 88%, black 8%);
-		color: white;
+		background: #fff;
+		color: rgba(36, 24, 22, 0.92);
 		font-weight: 700;
 		cursor: pointer;
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
+		transition: background-color 180ms ease, color 180ms ease;
 	}
 
 	.site-comments-submit:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
+	}
+
+	.site-comments-submit:hover:not(:disabled) {
+		background: rgba(36, 24, 22, 0.92);
+		color: #fff;
+	}
+
+	.dark .site-comments-submit {
+		border-color: rgba(244, 237, 231, 0.84);
+		background: rgba(24, 17, 16, 0.98);
+		color: rgba(244, 237, 231, 0.92);
+	}
+
+	.dark .site-comments-submit:hover:not(:disabled) {
+		background: rgba(244, 237, 231, 0.92);
+		color: rgba(24, 17, 16, 0.96);
 	}
 
 	.site-comments-notice,
@@ -226,29 +247,34 @@ const {
 		justify-content: space-between;
 		gap: 0.75rem;
 		margin-bottom: 0.95rem;
-		border-radius: 1rem;
-		padding: 0.85rem 1rem;
+		border-radius: 12px;
+		padding: 0.75rem 0.95rem;
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
+		border: 2px solid rgba(36, 24, 22, 0.14);
 	}
 
 	.site-comments-notice.is-error {
-		background: rgba(200, 56, 44, 0.1);
+		background: rgba(200, 56, 44, 0.06);
+		border-color: rgba(200, 56, 44, 0.22);
 		color: rgba(142, 31, 21, 0.92);
 	}
 
 	.site-comments-notice.is-success {
-		background: rgba(38, 132, 78, 0.1);
+		background: rgba(38, 132, 78, 0.06);
+		border-color: rgba(38, 132, 78, 0.24);
 		color: rgba(21, 94, 57, 0.92);
 	}
 
 	.site-comments-replying {
-		background: rgba(36, 24, 22, 0.05);
+		background: rgba(36, 24, 22, 0.03);
+		border-color: rgba(36, 24, 22, 0.16);
 		color: rgba(36, 24, 22, 0.84);
 	}
 
 	.dark .site-comments-replying {
-		background: rgba(244, 237, 231, 0.06);
+		background: rgba(244, 237, 231, 0.03);
+		border-color: rgba(244, 237, 231, 0.16);
 		color: rgba(244, 237, 231, 0.86);
 	}
 
@@ -259,15 +285,15 @@ const {
 	}
 
 	.site-comment-card {
-		border-radius: 1.25rem;
-		border: 1px solid rgba(36, 24, 22, 0.08);
-		padding: 1rem;
-		background: rgba(255, 255, 255, 0.56);
+		border-radius: 12px;
+		border: 2px solid rgba(36, 24, 22, 0.14);
+		padding: 0.9rem 0.95rem;
+		background: #fff;
 	}
 
 	.dark .site-comment-card {
-		border-color: rgba(244, 237, 231, 0.08);
-		background: rgba(255, 255, 255, 0.03);
+		border-color: rgba(244, 237, 231, 0.14);
+		background: rgba(24, 17, 16, 0.98);
 	}
 
 	.site-comment-card.is-reply {
@@ -314,9 +340,13 @@ const {
 		border: 0;
 		background: transparent;
 		padding: 0;
-		color: var(--primary);
+		color: rgba(36, 24, 22, 0.88);
 		cursor: pointer;
 		text-decoration: none;
+	}
+
+	.dark .link-btn {
+		color: rgba(244, 237, 231, 0.9);
 	}
 
 	@media (max-width: 720px) {
