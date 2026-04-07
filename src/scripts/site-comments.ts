@@ -38,6 +38,13 @@ interface SiteCommentsState {
 	replyTarget: { id: number; authorName: string } | null;
 }
 
+function normalizeUrlInput(value: string): string {
+	const trimmed = value.trim();
+	if (!trimmed) return "";
+	if (/^[a-z][a-z\d+\-.]*:\/\//i.test(trimmed)) return trimmed;
+	return `https://${trimmed}`;
+}
+
 function escapeHtml(value: string): string {
 	return value
 		.replaceAll("&", "&amp;")
@@ -135,7 +142,7 @@ function renderState(
 				</div>
 				<label class="site-comments-field">
 					<span>网址</span>
-					<input name="url" type="url" maxlength="200" placeholder="https://example.com" />
+					<input name="url" type="text" inputmode="url" maxlength="200" placeholder="chaonous.com" />
 				</label>
 				<label class="site-comments-field">
 					<span>内容</span>
@@ -219,7 +226,7 @@ export function mountSiteComments(
 			postTitle: options.postTitle,
 			name: String(formData.get("name") || "").trim(),
 			email: String(formData.get("email") || "").trim(),
-			url: String(formData.get("url") || "").trim(),
+			url: normalizeUrlInput(String(formData.get("url") || "")),
 			content: String(formData.get("content") || "").trim(),
 			parentId: String(formData.get("parentId") || "").trim(),
 		};

@@ -270,9 +270,14 @@ export function validateSubmission(body: Record<string, unknown>) {
 	) {
 		return { ok: false, message: "\u8bf7\u8f93\u5165\u6709\u6548\u90ae\u7bb1\u3002" } as const;
 	}
-	if (url) {
+	const normalizedUrl = url
+		? /^[a-z][a-z\d+\-.]*:\/\//i.test(url)
+			? url
+			: `https://${url}`
+		: "";
+	if (normalizedUrl) {
 		try {
-			new URL(url);
+			new URL(normalizedUrl);
 		} catch {
 			return { ok: false, message: "\u7f51\u5740\u683c\u5f0f\u4e0d\u6b63\u786e\u3002" } as const;
 		}
@@ -296,7 +301,7 @@ export function validateSubmission(body: Record<string, unknown>) {
 			postTitle,
 			name,
 			email,
-			url: url || null,
+			url: normalizedUrl || null,
 			content,
 			parentId,
 		},
