@@ -2,7 +2,6 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { fontSplit } from "cn-font-split";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +11,7 @@ const SOURCE_FONT_PATH = path.join(ROOT_DIR, "public/assets/fonts/ZhuqueFangsong
 const OUTPUT_DIR = path.join(ROOT_DIR, "public/fonts/zhuque");
 const GENERATED_CSS_PATH = path.join(ROOT_DIR, "src/styles/generated-zhuque-font.css");
 const FALLBACK_FONT_PUBLIC_PATH = "/assets/fonts/ZhuqueFangsong-Regular.ttf";
+const SHOULD_ATTEMPT_SPLIT = process.env.ENABLE_FONT_SPLIT === "true";
 
 function writeFallbackCss(reason) {
 	const cssContent = `/* Auto fallback generated during build */
@@ -35,6 +35,11 @@ async function main() {
 		return;
 	}
 
+	if (!SHOULD_ATTEMPT_SPLIT) {
+		writeFallbackCss("font slicing disabled by default for reliable builds");
+		return;
+	}
+
 	// 1. Double check the file and clone it to temp directory to avoid any CI file access issues
 	const tempFontDir = fs.mkdtempSync(path.join(os.tmpdir(), "font-split-"));
 	const tempFontPath = path.join(tempFontDir, "font-to-split.ttf");
@@ -53,6 +58,8 @@ async function main() {
 		fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
 		try {
+			const { fontSplit } = await import("cn-font-split");
+
 			// 2. Perform splitting
 			await fontSplit({
 				FontPath: tempFontPath,
