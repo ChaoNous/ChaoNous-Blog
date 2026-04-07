@@ -1360,8 +1360,8 @@
 			.music-player {
 				max-width: min(280px, calc(100dvw - 1rem)) !important;
 				/*left: 0.5rem !important;*/
-				bottom: 0.5rem !important;
-				right: 0.5rem !important;
+				bottom: 1rem !important;
+				right: 1rem !important;
 			}
 			.music-player.hidden-mode {
 				width: 3rem;
@@ -1374,12 +1374,12 @@
 				width: calc(100dvw - 1rem);
 				max-width: none;
 				/*left: 0.5rem !important;*/
-				right: 0.5rem !important;
+				right: 1rem !important;
 			}
 			.playlist-panel {
 				width: calc(100dvw - 1rem) !important;
 				/*left: 0.5rem !important;*/
-				right: 0.5rem !important;
+				right: 1rem !important;
 				max-width: none;
 			}
 			.controls {

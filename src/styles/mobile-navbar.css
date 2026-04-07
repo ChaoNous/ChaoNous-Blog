@@ -1,4 +1,4 @@
-/* 手机端导航栏 — 宽度等于手机宽度 */
+/* Mobile navbar width equals the viewport width */
 @media (max-width: 768px) {
   #navbar > div {
     width: 100%;
@@ -11,13 +11,11 @@
     padding-right: 0.375rem;
   }
 
-  /* 放大 logo 文字 */
   .navbar-brand-text {
-    font-size: clamp(1.28rem, 4.6vw, 1.75rem) !important;
-    letter-spacing: 0.035em !important;
+    font-size: clamp(1.6rem, 5.5vw, 2.2rem) !important;
+    letter-spacing: 0.05em !important;
   }
 
-  /* 放大品牌图标 */
   .navbar-brand .h-7 {
     width: 1.5rem !important;
     height: 1.5rem !important;
@@ -28,13 +26,11 @@
     margin-right: 0.375rem !important;
   }
 
-  /* logo 与右侧图标之间的间隔 */
   .navbar-shell {
     grid-template-columns: auto 1fr auto !important;
     column-gap: 0 !important;
   }
 
-  /* 隐藏中间列后，用 margin 精确控制间隔 */
   .navbar-links {
     display: none !important;
   }
@@ -51,13 +47,6 @@
     justify-items: end !important;
   }
 
-  .navbar-actions .btn-plain,
-  .navbar-actions .btn-regular,
-  .navbar-actions button {
-    font-size: 0.94rem !important;
-  }
-
-  /* 移动端菜单面板位于导航栏下方 */
   #nav-menu-panel {
     top: 72px !important;
     left: 0 !important;
@@ -68,7 +57,6 @@
     max-height: calc(100vh - 72px) !important;
   }
 
-  /* 消除所有来源的间距 */
   #main-grid {
     gap: 0 !important;
   }
