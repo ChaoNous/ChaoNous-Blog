@@ -617,9 +617,11 @@
 		}
 
 		if (mode === "meting") {
-			// 鍦ㄧ嚎姝屽崟绔嬪嵆鎷夊彇锛岄灞忓敖蹇浛鎹㈡垚鐪熷疄绗竴棣栨瓕淇℃伅銆?			lazyLoadPlaylist();
+			// Fetch the online playlist immediately so the first real track shows up ASAP.
+			lazyLoadPlaylist();
 		} else if ("requestIdleCallback" in window) {
-			// 鏈湴妯″紡宸茬粡鑳界洿鎺ュ睍绀虹涓€棣栨瓕锛屾瓕鍗曞垵濮嬪寲缁х画寤跺悗銆?			requestIdleCallback(
+			// Local mode already has the first song ready, so defer playlist hydration.
+			requestIdleCallback(
 				() => {
 					lazyLoadPlaylist();
 				},
