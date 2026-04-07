@@ -1366,12 +1366,14 @@
 				visibility 0.18s ease;
 			z-index: 5;
 		}
-		.volume-control:hover .volume-popover,
-		.volume-control:focus-within .volume-popover {
-			opacity: 1;
-			visibility: visible;
-			transform: translateX(-50%) translateY(0);
-			pointer-events: auto;
+		@media (hover: hover) and (pointer: fine) {
+			.volume-control:hover .volume-popover,
+			.volume-control:focus-within .volume-popover {
+				opacity: 1;
+				visibility: visible;
+				transform: translateX(-50%) translateY(0);
+				pointer-events: auto;
+			}
 		}
 		.volume-popover.is-open {
 			opacity: 1;
@@ -1388,6 +1390,7 @@
 		}
 		@media (max-width: 768px) {
 			.music-player {
+				width: calc(75dvw - 1rem) !important;
 				max-width: calc(75dvw - 1rem) !important;
 				/*left: 0.5rem !important;*/
 				bottom: 1rem !important;
@@ -1398,14 +1401,17 @@
 				height: 3rem;
 			}
 			.mini-player {
-				width: calc(75dvw - 1rem);
+				width: calc(75dvw - 1rem) !important;
+				max-width: calc(75dvw - 1rem) !important;
 			}
-			.music-player.expanded {
+			.music-player.expanded,
+			.expanded-player {
 				width: calc(75dvw - 1rem);
 				max-width: calc(75dvw - 1rem);
 				/*left: 0.5rem !important;*/
 				right: 1rem !important;
 			}
+			.expanded-player,
 			.playlist-panel {
 				width: calc(75dvw - 1rem) !important;
 				/*left: 0.5rem !important;*/
@@ -1425,7 +1431,14 @@
 		}
 		@media (max-width: 480px) {
 			.music-player {
+				width: calc(75dvw - 0.75rem) !important;
 				max-width: calc(75dvw - 0.75rem);
+			}
+			.mini-player,
+			.expanded-player,
+			.playlist-panel {
+				width: calc(75dvw - 0.75rem) !important;
+				max-width: calc(75dvw - 0.75rem) !important;
 			}
 			.song-title {
 				font-size: 14px;
