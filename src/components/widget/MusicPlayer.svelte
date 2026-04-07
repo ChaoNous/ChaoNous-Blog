@@ -1239,6 +1239,7 @@
 		.music-player {
 			max-width: 20rem;
 			user-select: none;
+			--mobile-player-width: calc(75dvw - 1rem);
 		}
 		.mini-player {
 			width: 17.5rem;
@@ -1394,8 +1395,9 @@
 		}
 		@media (max-width: 768px) {
 			.music-player {
-				width: calc(75dvw - 1rem) !important;
-				max-width: calc(75dvw - 1rem) !important;
+				--mobile-player-width: calc(75dvw - 1rem);
+				width: var(--mobile-player-width) !important;
+				max-width: var(--mobile-player-width) !important;
 				/*left: 0.5rem !important;*/
 				bottom: 1rem !important;
 				right: 1rem !important;
@@ -1409,22 +1411,22 @@
 				max-height: 3rem;
 			}
 			.mini-player {
-				width: calc(75dvw - 1rem) !important;
-				max-width: calc(75dvw - 1rem) !important;
+				width: var(--mobile-player-width) !important;
+				max-width: var(--mobile-player-width) !important;
 			}
 			.music-player.expanded,
 			.expanded-player {
-				width: calc(75dvw - 1rem);
-				max-width: calc(75dvw - 1rem);
+				width: var(--mobile-player-width) !important;
+				max-width: var(--mobile-player-width) !important;
 				/*left: 0.5rem !important;*/
 				right: 1rem !important;
 			}
 			.expanded-player,
 			.playlist-panel {
-				width: calc(75dvw - 1rem) !important;
+				width: var(--mobile-player-width) !important;
 				/*left: 0.5rem !important;*/
 				right: 1rem !important;
-				max-width: calc(75dvw - 1rem);
+				max-width: var(--mobile-player-width) !important;
 			}
 			.controls {
 				gap: 8px;
@@ -1439,14 +1441,15 @@
 		}
 		@media (max-width: 480px) {
 			.music-player {
-				width: calc(75dvw - 0.75rem) !important;
-				max-width: calc(75dvw - 0.75rem);
+				--mobile-player-width: calc(75dvw - 0.75rem);
+				width: var(--mobile-player-width) !important;
+				max-width: var(--mobile-player-width) !important;
 			}
 			.mini-player,
 			.expanded-player,
 			.playlist-panel {
-				width: calc(75dvw - 0.75rem) !important;
-				max-width: calc(75dvw - 0.75rem) !important;
+				width: var(--mobile-player-width) !important;
+				max-width: var(--mobile-player-width) !important;
 			}
 			.song-title {
 				font-size: 14px;
