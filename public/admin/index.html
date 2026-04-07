@@ -177,19 +177,20 @@
 		<section class="panel stack">
 			<h1>评论后台</h1>
 			<p>后台运行在同域 API 上，不再依赖站外评论服务。</p>
+			<p>当前模式：新评论默认直接发布，无需审核。</p>
 		</section>
 
 		<section class="panel stack">
 			<div class="row">
 				<input id="admin-password" type="password" placeholder="输入评论后台密码" />
 				<select id="comment-status">
+					<option value="approved">已发布</option>
 					<option value="pending">待审核</option>
-					<option value="approved">已通过</option>
 					<option value="rejected">已拒绝</option>
 				</select>
 				<button id="load-comments">加载评论</button>
 			</div>
-			<div id="admin-notice" class="notice">输入后台密码后即可读取评论队列。</div>
+			<div id="admin-notice" class="notice">输入后台密码后即可读取评论列表，默认显示已发布评论。</div>
 		</section>
 
 		<section class="panel stack">

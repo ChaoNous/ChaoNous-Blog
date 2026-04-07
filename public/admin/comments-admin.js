@@ -101,6 +101,10 @@
 		void loadComments();
 	});
 
+	window.addEventListener("DOMContentLoaded", () => {
+		statusSelect.value = "approved";
+	});
+
 	list.addEventListener("click", (event) => {
 		const button = event.target.closest("button[data-id]");
 		if (!button) return;
