@@ -1,7 +1,6 @@
 import { storageKeys } from "./state.js";
 
 export function createSessionController({
-	state,
 	dom,
 	setMessage,
 	setTheme,
@@ -18,7 +17,7 @@ export function createSessionController({
 		dom.loginPasswordInput.value = "";
 		setMessage(
 			dom.loginMessage,
-			message || "????????????",
+			message || "\u4f1a\u8bdd\u5df2\u5931\u6548\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002",
 			"error",
 		);
 	}
@@ -26,12 +25,20 @@ export function createSessionController({
 	async function tryLogin(bootstrapApp) {
 		const password = dom.loginPasswordInput.value.trim();
 		if (!password) {
-			setMessage(dom.loginMessage, "?????????", "error");
+			setMessage(
+				dom.loginMessage,
+				"\u8bf7\u5148\u8f93\u5165\u540e\u53f0\u5bc6\u7801\u3002",
+				"error",
+			);
 			return;
 		}
 
 		dom.loginSubmit.disabled = true;
-		setMessage(dom.loginMessage, "?????????", "info");
+		setMessage(
+			dom.loginMessage,
+			"\u6b63\u5728\u521b\u5efa\u540e\u53f0\u4f1a\u8bdd\u2026",
+			"info",
+		);
 
 		try {
 			const response = await fetch("/api/admin/session", {
@@ -45,7 +52,7 @@ export function createSessionController({
 			});
 
 			if (!response.ok) {
-				let message = "?????";
+				let message = "\u767b\u5f55\u5931\u8d25\u3002";
 				try {
 					const payload = await response.json();
 					message = payload.message || message;
@@ -61,7 +68,7 @@ export function createSessionController({
 		} catch (error) {
 			setMessage(
 				dom.loginMessage,
-				error instanceof Error ? error.message : "?????",
+				error instanceof Error ? error.message : "\u767b\u5f55\u5931\u8d25\u3002",
 				"error",
 			);
 		} finally {
@@ -84,7 +91,9 @@ export function createSessionController({
 		setAuthenticated(false);
 		setMessage(
 			dom.loginMessage,
-			options && options.expired ? "????????????" : "????",
+			options && options.expired
+				? "\u4f1a\u8bdd\u5df2\u8fc7\u671f\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002"
+				: "\u5df2\u9000\u51fa\u3002",
 			options && options.expired ? "error" : "info",
 		);
 	}
@@ -102,7 +111,7 @@ export function createSessionController({
 			});
 
 			if (!response.ok) {
-				throw new Error("?????????");
+				throw new Error("\u4f1a\u8bdd\u72b6\u6001\u8bfb\u53d6\u5931\u8d25\u3002");
 			}
 
 			const payload = await response.json();

@@ -10,7 +10,7 @@ export function createJsonRequest({ onUnauthorized }) {
 		});
 
 		if (!response.ok) {
-			let message = "?????";
+			let message = "\u8bf7\u6c42\u5931\u8d25\u3002";
 			try {
 				const payload = await response.json();
 				message = payload.message || message;
@@ -38,7 +38,7 @@ export async function downloadExport(type) {
 	);
 
 	if (!response.ok) {
-		let message = "?????";
+		let message = "\u5bfc\u51fa\u5931\u8d25\u3002";
 		try {
 			const payload = await response.json();
 			message = payload.message || message;

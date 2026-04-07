@@ -15,7 +15,9 @@ export function createCommentsListController({
 	function updateSelectionUi() {
 		const selectedCount = state.selectedCommentIds.size;
 		dom.commentsSelectionCount.textContent =
-			selectedCount > 0 ? `?? ${formatNumber(selectedCount)} ?` : "?????";
+			selectedCount > 0
+				? `\u5df2\u9009 ${formatNumber(selectedCount)} \u6761`
+				: "\u672a\u9009\u62e9\u8bc4\u8bba";
 		dom.commentsBulkDelete.disabled = selectedCount === 0;
 
 		const checkboxes = Array.from(
@@ -35,7 +37,7 @@ export function createCommentsListController({
 
 		if (!items.length) {
 			dom.commentsList.innerHTML =
-				'<div class="message info">????????</div>';
+				'<div class="message info">\u6ca1\u6709\u5339\u914d\u7684\u8bc4\u8bba\u3002</div>';
 			return;
 		}
 
@@ -54,7 +56,7 @@ export function createCommentsListController({
 						<div class="comment-row-main">
 							<label class="comment-check">
 								<input data-role="comment-select" type="checkbox" value="${item.id}" />
-								<span>??</span>
+								<span>\u9009\u4e2d</span>
 							</label>
 							<div>
 								<strong>${escapeHtml(item.authorName)}</strong>
@@ -63,7 +65,7 @@ export function createCommentsListController({
 						</div>
 						<div class="inline-actions">
 							<span class="table-meta">${formatDate(item.createdAt)}</span>
-							<button class="ghost-button danger-button" data-action="delete" data-id="${item.id}" type="button">??</button>
+							<button class="ghost-button danger-button" data-action="delete" data-id="${item.id}" type="button">\u5220\u9664</button>
 						</div>
 					</div>
 					<div>${escapeHtml(item.content).replaceAll("\n", "<br />")}</div>
@@ -74,7 +76,7 @@ export function createCommentsListController({
 							: ""
 					}
 				</article>
-			`;
+				`;
 			})
 			.join("");
 
@@ -92,7 +94,7 @@ export function createCommentsListController({
 		}
 
 		dom.commentsList.innerHTML =
-			'<div class="message info">???????</div>';
+			'<div class="message info">\u6b63\u5728\u52a0\u8f7d\u8bc4\u8bba\u2026</div>';
 		const payload = await request(`/api/admin/comments?${params.toString()}`);
 		state.commentsTotalPages = Number(payload.pagination.total || 0);
 
@@ -107,7 +109,7 @@ export function createCommentsListController({
 
 		renderComments(payload.data || []);
 		dom.commentsPaginationMeta.textContent =
-			`? ${payload.pagination.page} / ${Math.max(payload.pagination.total, 1)} ??? ${formatNumber(payload.pagination.totalCount)} ???`;
+			`\u7b2c ${payload.pagination.page} / ${Math.max(payload.pagination.total, 1)} \u9875\uff0c\u5171 ${formatNumber(payload.pagination.totalCount)} \u6761\u8bc4\u8bba`;
 		dom.commentsPrev.disabled = state.commentsPage <= 1;
 		dom.commentsNext.disabled =
 			state.commentsTotalPages === 0 ||
@@ -116,16 +118,16 @@ export function createCommentsListController({
 
 	async function deleteComment(id) {
 		const confirmed = window.confirm(
-			"?????????????????????",
+			"\u786e\u8ba4\u5220\u9664\u8fd9\u6761\u8bc4\u8bba\uff1f\u5982\u679c\u6709\u56de\u590d\uff0c\u4f1a\u4e00\u5e76\u5220\u9664\u3002",
 		);
 		if (!confirmed) return;
 
-		setMessage(dom.appMessage, "???????", "info");
+		setMessage(dom.appMessage, "\u6b63\u5728\u5220\u9664\u8bc4\u8bba\u2026", "info");
 		await request(`/api/admin/comments/${id}`, {
 			method: "DELETE",
 		});
 		state.selectedCommentIds.delete(id);
-		await refreshCommentsAndOverview("??????");
+		await refreshCommentsAndOverview("\u8bc4\u8bba\u5df2\u5220\u9664\u3002");
 	}
 
 	function bindEvents() {
@@ -143,7 +145,7 @@ export function createCommentsListController({
 
 		document.getElementById("comments-refresh").addEventListener("click", async () => {
 			try {
-				await refreshCommentsAndOverview("????????");
+				await refreshCommentsAndOverview("\u8bc4\u8bba\u5217\u8868\u5df2\u5237\u65b0\u3002");
 			} catch (error) {
 				setMessage(dom.appMessage, error.message, "error");
 			}

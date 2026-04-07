@@ -45,16 +45,32 @@ const dom = {
 	analyticsPages: document.getElementById("analytics-pages"),
 };
 
+const text = {
+	switchToLight: "\u5207\u6362\u5230\u6d45\u8272",
+	switchToDark: "\u5207\u6362\u5230\u6df1\u8272",
+	noData: "\u6682\u65e0\u53ef\u7528\u6570\u636e\u3002",
+	noRecentComments: "\u6682\u65e0\u8fd1\u671f\u8bc4\u8bba\u3002",
+	noHotPosts: "\u6682\u65e0\u6587\u7ae0\u8bc4\u8bba\u6570\u636e\u3002",
+	noAnalytics: "\u6682\u65e0\u8bbf\u95ee\u7edf\u8ba1\u6570\u636e\u3002",
+	commentCountSuffix: "\u6761",
+	backendLoaded: "\u540e\u53f0\u6570\u636e\u5df2\u52a0\u8f7d\u3002",
+	refreshingDashboard: "\u6b63\u5728\u5237\u65b0\u770b\u677f\u2026",
+	dashboardRefreshed: "\u770b\u677f\u5df2\u5237\u65b0\u3002",
+	analyticsRefreshed: "\u7edf\u8ba1\u6570\u636e\u5df2\u5237\u65b0\u3002",
+	commentsExportStarted: "\u8bc4\u8bba\u6570\u636e\u5df2\u5f00\u59cb\u5bfc\u51fa\u3002",
+	analyticsExportStarted: "\u7edf\u8ba1\u6570\u636e\u5df2\u5f00\u59cb\u5bfc\u51fa\u3002",
+};
+
 function setTheme(theme) {
 	const nextTheme = theme === "dark" ? "dark" : "light";
 	state.theme = nextTheme;
 	document.documentElement.setAttribute("data-theme", nextTheme);
 	localStorage.setItem(storageKeys.theme, nextTheme);
-	dom.themeToggle.textContent = nextTheme === "dark" ? "?????" : "?????";
+	dom.themeToggle.textContent =
+		nextTheme === "dark" ? text.switchToLight : text.switchToDark;
 }
 
 const sessionController = createSessionController({
-	state,
 	dom,
 	setTheme,
 	setMessage,
@@ -67,7 +83,7 @@ const request = createJsonRequest({
 
 function renderBarChart(container, items, key) {
 	if (!items.length) {
-		container.innerHTML = `<div class="message info">???????</div>`;
+		container.innerHTML = `<div class="message info">${text.noData}</div>`;
 		return;
 	}
 
@@ -90,7 +106,7 @@ function renderBarChart(container, items, key) {
 function renderRecentComments(items) {
 	if (!items.length) {
 		dom.dashboardRecentComments.innerHTML =
-			'<div class="message info">???????</div>';
+			`<div class="message info">${text.noRecentComments}</div>`;
 		return;
 	}
 
@@ -113,7 +129,7 @@ function renderRecentComments(items) {
 function renderHotPosts(items) {
 	if (!items.length) {
 		dom.dashboardHotPosts.innerHTML =
-			'<div class="message info">?????????</div>';
+			`<div class="message info">${text.noHotPosts}</div>`;
 		return;
 	}
 
@@ -123,7 +139,7 @@ function renderHotPosts(items) {
 			<div class="info-item">
 				<div class="page-row-header">
 					<strong>${escapeHtml(item.postTitle || item.postSlug)}</strong>
-					<span>${formatNumber(item.commentCount)} ?</span>
+					<span>${formatNumber(item.commentCount)} ${text.commentCountSuffix}</span>
 				</div>
 				<div class="table-meta">${escapeHtml(item.postSlug)}</div>
 			</div>
@@ -145,7 +161,7 @@ async function loadOverview() {
 function renderAnalyticsPages(items) {
 	if (!items.length) {
 		dom.analyticsPages.innerHTML =
-			'<div class="message info">?????????</div>';
+			`<div class="message info">${text.noAnalytics}</div>`;
 		return;
 	}
 
@@ -215,7 +231,7 @@ async function bootstrapApp() {
 		loadAnalytics(),
 	]);
 	showView(state.currentView);
-	setMessage(dom.appMessage, "????????", "success");
+	setMessage(dom.appMessage, text.backendLoaded, "success");
 }
 
 dom.loginForm.addEventListener("submit", (event) => {
@@ -238,10 +254,10 @@ document.querySelectorAll(".nav-button").forEach((button) => {
 });
 
 document.getElementById("dashboard-refresh").addEventListener("click", async () => {
-	setMessage(dom.appMessage, "???????", "info");
+	setMessage(dom.appMessage, text.refreshingDashboard, "info");
 	try {
 		await loadOverview();
-		setMessage(dom.appMessage, "??????", "success");
+		setMessage(dom.appMessage, text.dashboardRefreshed, "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}
@@ -250,7 +266,7 @@ document.getElementById("dashboard-refresh").addEventListener("click", async () 
 document.getElementById("analytics-refresh").addEventListener("click", async () => {
 	try {
 		await loadAnalytics();
-		setMessage(dom.appMessage, "????????", "success");
+		setMessage(dom.appMessage, text.analyticsRefreshed, "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}
@@ -259,7 +275,7 @@ document.getElementById("analytics-refresh").addEventListener("click", async () 
 document.getElementById("export-comments").addEventListener("click", async () => {
 	try {
 		await downloadExport("comments");
-		setMessage(dom.appMessage, "??????????", "success");
+		setMessage(dom.appMessage, text.commentsExportStarted, "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}
@@ -268,7 +284,7 @@ document.getElementById("export-comments").addEventListener("click", async () =>
 document.getElementById("export-analytics").addEventListener("click", async () => {
 	try {
 		await downloadExport("analytics");
-		setMessage(dom.appMessage, "??????????", "success");
+		setMessage(dom.appMessage, text.analyticsExportStarted, "success");
 	} catch (error) {
 		setMessage(dom.appMessage, error.message, "error");
 	}
