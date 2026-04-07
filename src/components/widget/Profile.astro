@@ -116,9 +116,6 @@ import { i18n } from "../../i18n/translation";
 <script
 	is:inline
 	define:vars={{
-		profileBio: profileConfig.bio ?? "",
-		profileTypewriterEnabled: profileConfig.typewriter?.enable ?? false,
-		profileTypewriterSpeed: profileConfig.typewriter?.speed ?? 140,
 		profileStatsPageViews: i18n(I18nKey.profileStatsPageViews),
 		profileStatsVisits: i18n(I18nKey.profileStatsVisits),
 		profileStatsUnavailable: i18n(I18nKey.profileStatsUnavailable),
@@ -148,7 +145,11 @@ import { i18n } from "../../i18n/translation";
 		}
 
 		isEnabled() {
-			return profileTypewriterEnabled && profileBio.trim().length > 0;
+			return (
+				this.element.dataset.speed !== undefined ||
+				this.element.dataset.deleteSpeed !== undefined ||
+				this.element.dataset.pauseTime !== undefined
+			);
 		}
 
 		getCurrentText() {
@@ -157,7 +158,7 @@ import { i18n } from "../../i18n/translation";
 
 		start() {
 			if (!this.isEnabled()) {
-				this.element.textContent = profileBio;
+				this.element.textContent = this.getCurrentText();
 				return;
 			}
 
@@ -208,8 +209,25 @@ import { i18n } from "../../i18n/translation";
 			if (this.timeoutId) {
 				window.clearTimeout(this.timeoutId);
 			}
-			this.element.textContent = profileBio;
+			this.element.textContent = this.getCurrentText();
 		}
+	}
+
+	let activeTypewriters = [];
+
+	function destroyTypewriters() {
+		activeTypewriters.forEach((instance) => instance.destroy());
+		activeTypewriters = [];
+	}
+
+	function initTypewriters() {
+		destroyTypewriters();
+		document.querySelectorAll(".typewriter").forEach((element) => {
+			if (!(element instanceof HTMLElement)) return;
+			const instance = new ProfileTypewriter(element);
+			activeTypewriters.push(instance);
+			instance.start();
+		});
 	}
 
 	async function fetchSiteStats() {
@@ -250,19 +268,13 @@ import { i18n } from "../../i18n/translation";
 		const { registerPageScript } = await import("../../scripts/page-lifecycle.ts");
 		registerPageScript("profile-bio-typewriter", {
 			shouldRun() {
-				return document.querySelector("[data-profile-bio]") !== null;
+				return document.querySelector(".typewriter") !== null;
 			},
 			init() {
-				const bioElement = document.querySelector("[data-profile-bio]");
-				if (!(bioElement instanceof HTMLElement)) {
-					return;
-				}
-
-				const typewriter = new ProfileTypewriter(bioElement);
-				typewriter.start();
+				initTypewriters();
 				return {
 					cleanup() {
-						typewriter.destroy();
+						destroyTypewriters();
 					},
 				};
 			},
