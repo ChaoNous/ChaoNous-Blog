@@ -1301,8 +1301,10 @@
 		.music-player .player-mode-button:hover:not(:disabled),
 		.music-player .player-play-button:hover:not(:disabled),
 		.music-player .player-mode-button:focus-visible,
-		.music-player .player-play-button:focus-visible {
-			box-shadow: none;
+		.music-player .player-play-button:focus-visible,
+		.music-player .player-mode-button:active:not(:disabled),
+		.music-player .player-play-button:active:not(:disabled) {
+			box-shadow: none !important;
 		}
 
 		.music-player button:active:not(:disabled),
