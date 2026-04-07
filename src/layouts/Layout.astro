@@ -115,7 +115,6 @@ const siteLang = lang.replace("_", "-");
 		<meta name="twitter:description" content={description || pageTitle} />
 		{ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 		{ogImageUrl && <meta name="twitter:image:alt" content={pageTitle} />}
-		<meta name="generator" content={Astro.generator} />
 		{
 			favicons.map((favicon) => (
 				<link
