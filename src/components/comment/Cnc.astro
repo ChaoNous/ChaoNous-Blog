@@ -56,13 +56,17 @@ const {
 </script>
 
 <style is:global>
+	.site-comments-root {
+		--site-comments-font-family: "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif;
+	}
+
 	.site-comments-shell {
 		border: 1px solid rgba(36, 24, 22, 0.08);
 		border-radius: 1.5rem;
 		background: rgba(255, 255, 255, 0.8);
 		padding: 1.25rem;
 		backdrop-filter: blur(16px);
-		font-family: var(--font-content, "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif);
+		font-family: var(--site-comments-font-family) !important;
 	}
 
 	.dark .site-comments-shell {
@@ -76,8 +80,24 @@ const {
 	.site-comments-shell button,
 	.site-comments-shell input,
 	.site-comments-shell textarea,
-	.site-comments-shell select {
-		font-family: var(--font-content, "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif);
+	.site-comments-shell select,
+	.site-comments-shell option,
+	.site-comments-shell .site-comment-content,
+	.site-comments-shell .site-comment-author,
+	.site-comments-shell .site-comment-time,
+	.site-comments-shell .site-comments-title,
+	.site-comments-shell .site-comments-subtitle,
+	.site-comments-shell .site-comments-hint,
+	.site-comments-shell .site-comments-empty,
+	.site-comments-shell .site-comments-notice,
+	.site-comments-shell .site-comments-replying,
+	.site-comments-shell .link-btn {
+		font-family: var(--site-comments-font-family) !important;
+	}
+
+	.site-comments-root input::placeholder,
+	.site-comments-root textarea::placeholder {
+		font-family: var(--site-comments-font-family) !important;
 	}
 
 	.site-comments-head {
