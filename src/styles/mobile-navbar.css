@@ -49,11 +49,13 @@
 
   #nav-menu-panel {
     top: 72px !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    max-width: none !important;
-    border-radius: 0 !important;
+    left: 0.625rem !important;
+    right: 0.625rem !important;
+    width: auto !important;
+    max-width: min(22rem, calc(100dvw - 1.25rem)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    border-radius: 1rem !important;
     max-height: calc(100vh - 72px) !important;
   }
 

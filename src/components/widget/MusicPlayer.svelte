@@ -1356,7 +1356,7 @@
 		}
 		@media (max-width: 768px) {
 			.music-player {
-				max-width: min(280px, calc(100dvw - 1rem)) !important;
+				max-width: min(19.5rem, calc(100dvw - 2rem)) !important;
 				/*left: 0.5rem !important;*/
 				bottom: 1rem !important;
 				right: 1rem !important;
@@ -1366,19 +1366,19 @@
 				height: 3rem;
 			}
 			.mini-player {
-				width: min(280px, calc(100dvw - 1rem));
+				width: min(19.5rem, calc(100dvw - 2rem));
 			}
 			.music-player.expanded {
-				width: calc(100dvw - 1rem);
-				max-width: none;
+				width: min(21rem, calc(100dvw - 2rem));
+				max-width: min(21rem, calc(100dvw - 2rem));
 				/*left: 0.5rem !important;*/
 				right: 1rem !important;
 			}
 			.playlist-panel {
-				width: calc(100dvw - 1rem) !important;
+				width: min(21rem, calc(100dvw - 2rem)) !important;
 				/*left: 0.5rem !important;*/
 				right: 1rem !important;
-				max-width: none;
+				max-width: min(21rem, calc(100dvw - 2rem));
 			}
 			.controls {
 				gap: 8px;
@@ -1393,7 +1393,7 @@
 		}
 		@media (max-width: 480px) {
 			.music-player {
-				max-width: 260px;
+				max-width: min(18rem, calc(100dvw - 1.5rem));
 			}
 			.song-title {
 				font-size: 14px;
