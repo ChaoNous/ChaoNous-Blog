@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { fontSplit } from "cn-font-split";
@@ -13,60 +14,65 @@ const GENERATED_CSS_PATH = path.join(ROOT_DIR, "src/styles/generated-zhuque-font
 
 async function main() {
 	if (!fs.existsSync(SOURCE_FONT_PATH)) {
-		console.log(`[Font-Split] Source font not found, skip: ${SOURCE_FONT_PATH}`);
+		console.log(`[Font-Split] Source font not found: ${SOURCE_FONT_PATH}`);
 		return;
 	}
 
-	const stats = fs.statSync(SOURCE_FONT_PATH);
-	console.log(`[Font-Split] Source font file size: ${(stats.size / 1024 / 1024).toFixed(2)} MB`);
-	if (stats.size < 1024 * 1024) {
-		throw new Error(`[Font-Split] Source font file is suspiciously small (${stats.size} bytes). Slicing aborted.`);
-	}
-
-	console.log("[Font-Split] Start slicing Zhuque Fangsong font...");
-
-	// Ensure output directory exists and is clean
-	if (fs.existsSync(OUTPUT_DIR)) {
-		fs.rmSync(OUTPUT_DIR, { recursive: true, force: true });
-	}
-	fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-
+	// 1. Double check the file and clone it to temp directory to avoid any CI file access issues
+	const tempFontDir = fs.mkdtempSync(path.join(os.tmpdir(), "font-split-"));
+	const tempFontPath = path.join(tempFontDir, "font-to-split.ttf");
+	
 	try {
+		const sourceBuffer = fs.readFileSync(SOURCE_FONT_PATH);
+		console.log(`[Font-Split] Source file size checked: ${sourceBuffer.length} bytes`);
+		fs.writeFileSync(tempFontPath, sourceBuffer);
+		console.log(`[Font-Split] Cloned to temporary path: ${tempFontPath}`);
+
+		console.log("[Font-Split] Slicing started. Engine: cn-font-split/rust-core");
+
+		if (fs.existsSync(OUTPUT_DIR)) {
+			fs.rmSync(OUTPUT_DIR, { recursive: true, force: true });
+		}
+		fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+
+		// 2. Perform splitting
 		await fontSplit({
-			FontPath: SOURCE_FONT_PATH,
+			FontPath: tempFontPath,
 			destFolder: OUTPUT_DIR,
-			outDir: OUTPUT_DIR, // Ensure compatibility with newer API
+			outDir: OUTPUT_DIR, // Double protection for API variations
 			cssName: "ZhuqueFangsong",
 			targetType: "woff2",
-			chunkSize: 70 * 1024, // 70KB per slice
+			chunkSize: 70 * 1024,
 			testHTML: false,
 			reporter: false,
 			log: (msg) => console.log(`[Font-Split] ${msg}`),
 		});
 
-		// Moving result.css to src/styles to ensure Astro can bundle it
+		// 3. Sync and fix CSS
 		const tempCssPath = path.join(OUTPUT_DIR, "result.css");
 		if (fs.existsSync(tempCssPath)) {
 			let cssContent = fs.readFileSync(tempCssPath, "utf8");
-			// Correcting the font URL relative paths in CSS
-			// Since result.css assumes its in the same folder as woff2
-			// But we'll import it from src/styles
 			cssContent = cssContent.replace(/url\(['"]?([^'"]+)['"]?\)/g, (match, url) => {
 				if (!url.startsWith("http") && !url.startsWith("/")) {
 					return `url('/fonts/zhuque/${url}')`;
 				}
 				return match;
 			});
-
 			fs.writeFileSync(GENERATED_CSS_PATH, cssContent, "utf8");
-			console.log("[Font-Split] Generated and optimized: src/styles/generated-zhuque-font.css");
+			console.log("[Font-Split] All slices and optimized CSS generated.");
 		}
-
-		console.log("[Font-Split] Slicing completed successfully.");
-	} catch (error) {
-		console.error("[Font-Split] Failed:", error);
-		process.exit(1);
+	} finally {
+		// Cleanup temp font
+		try {
+			fs.rmSync(tempFontDir, { recursive: true, force: true });
+		} catch (e) {
+			// ignore
+		}
 	}
 }
 
-main();
+process.env.RUST_BACKTRACE = "1";
+main().catch((err) => {
+	console.error("[Font-Split] CRITICAL FAILURE:", err);
+	process.exit(1);
+});
