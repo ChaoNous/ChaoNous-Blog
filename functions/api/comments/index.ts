@@ -36,7 +36,7 @@ export const onRequestGet = async ({
 		}
 
 		const result = await env.COMMENTS_DB.prepare(
-			`SELECT id, parent_id, post_slug, post_url, post_title, author_name, author_email, author_url, content, status, created_at, updated_at
+			`SELECT id, parent_id, post_slug, post_url, post_title, author_name, author_email, author_url, content, created_at, updated_at
 			 FROM comments
 			 WHERE post_slug = ?1
 			 ORDER BY created_at ASC
@@ -110,8 +110,8 @@ export const onRequestPost = async ({
 			`INSERT INTO comments (
 				post_slug, post_url, post_title,
 				parent_id, author_name, author_email, author_url,
-				content, status, created_at, updated_at
-			) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, 'approved', ?9, ?10)`,
+				content, created_at, updated_at
+			) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)`,
 		)
 			.bind(
 				validated.value.postSlug,
