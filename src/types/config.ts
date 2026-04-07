@@ -150,6 +150,8 @@ export type ProfileConfig = {
   typewriter?: {
     enable: boolean;
     speed?: number;
+    deleteSpeed?: number;
+    pauseTime?: number;
   };
 };
 

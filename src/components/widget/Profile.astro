@@ -52,9 +52,9 @@ import { i18n } from "../../i18n/translation";
 				class="typewriter inline-block min-h-[3.2em]"
 				data-profile-bio
 				data-text={JSON.stringify([profileConfig.bio ?? ""])}
-				data-speed={String(profileConfig.typewriter?.speed ?? 140)}
-				data-delete-speed={String(Math.max(50, Math.round((profileConfig.typewriter?.speed ?? 140) / 2)))}
-				data-pause-time="2200"
+				data-speed={String(profileConfig.typewriter?.speed ?? 100)}
+				data-delete-speed={String(profileConfig.typewriter?.deleteSpeed ?? 50)}
+				data-pause-time={String(profileConfig.typewriter?.pauseTime ?? 2000)}
 			>
 				{profileConfig.bio}
 			</span>
@@ -140,8 +140,8 @@ import { i18n } from "../../i18n/translation";
 			this.isDeleting = false;
 			this.timeoutId = 0;
 			this.speed = Number.parseInt(element.dataset.speed || "140", 10);
-			this.deleteSpeed = Number.parseInt(element.dataset.deleteSpeed || "70", 10);
-			this.pauseTime = Number.parseInt(element.dataset.pauseTime || "2200", 10);
+			this.deleteSpeed = Number.parseInt(element.dataset.deleteSpeed || "50", 10);
+			this.pauseTime = Number.parseInt(element.dataset.pauseTime || "2000", 10);
 		}
 
 		isEnabled() {
@@ -156,7 +156,17 @@ import { i18n } from "../../i18n/translation";
 			return this.texts[this.currentTextIndex] || "";
 		}
 
+		showRandomText() {
+			const index = Math.floor(Math.random() * this.texts.length);
+			this.element.textContent = this.texts[index] || "";
+		}
+
 		start() {
+			if (this.texts.length > 1 && !this.isEnabled()) {
+				this.showRandomText();
+				return;
+			}
+
 			if (!this.isEnabled()) {
 				this.element.textContent = this.getCurrentText();
 				return;
@@ -265,6 +275,16 @@ import { i18n } from "../../i18n/translation";
 	}
 
 	(async () => {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initTypewriters, {
+				once: true,
+			});
+		} else {
+			initTypewriters();
+		}
+
+		document.addEventListener("astro:page-load", initTypewriters);
+
 		const { registerPageScript } = await import("../../scripts/page-lifecycle.ts");
 		registerPageScript("profile-bio-typewriter", {
 			shouldRun() {

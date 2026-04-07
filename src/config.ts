@@ -103,7 +103,9 @@ export const profileConfig: ProfileConfig = {
   bio: "行路难！行路难！多歧路，今安在？\n长风破浪会有时，直挂云帆济沧海。",
   typewriter: {
     enable: true,
-    speed: 140,
+    speed: 100,
+    deleteSpeed: 50,
+    pauseTime: 2000,
   },
   links: [
     {
