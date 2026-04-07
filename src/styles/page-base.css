@@ -1,21 +1,17 @@
 @reference "tailwindcss";
 
 html {
-  @apply scroll-smooth text-black;
+  @apply scroll-smooth;
   font-size: 112%;
   scrollbar-width: none;
   -ms-overflow-style: none;
   background-color: var(--page-bg);
   background: var(--page-bg);
+  color: var(--text-main);
   text-shadow: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-
-  &.dark {
-    @apply text-white;
-    background-color: var(--page-bg);
-  }
 }
 
 html.dark,
@@ -24,7 +20,6 @@ html.dark body {
 }
 
 body {
-  @apply text-black dark:text-white;
   font-family: var(--font-content);
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -32,6 +27,7 @@ body {
   position: relative;
   letter-spacing: 0.008em;
   line-height: 1.7;
+  color: var(--text-main);
   background:
     radial-gradient(circle at 12% 14%, var(--page-bg-accent-soft) 0%, transparent 30%),
     radial-gradient(circle at 82% 10%, var(--page-bg-accent) 0%, transparent 26%),

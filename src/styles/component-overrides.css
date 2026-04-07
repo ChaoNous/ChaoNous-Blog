@@ -187,12 +187,14 @@
   }
 
   .btn-card.disabled {
-    @apply pointer-events-none text-black dark:text-white;
+    @apply pointer-events-none;
+    color: var(--text-disabled);
   }
 
   .btn-plain {
-    @apply transition-colors duration-150 relative flex items-center justify-center bg-none text-black hover:text-(--primary) dark:text-white dark:hover:text-(--primary);
+    @apply transition-colors duration-150 relative flex items-center justify-center bg-none hover:text-(--primary);
     background: transparent;
+    color: var(--text-main);
     transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
   }
 
@@ -207,7 +209,8 @@
   }
 
   .btn-regular {
-    @apply transition-colors duration-150 flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) text-black dark:text-white;
+    @apply transition-colors duration-150 flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active);
+    color: var(--text-main);
   }
 
   .link-underline {
@@ -235,11 +238,12 @@
   .text-50,
   .text-30,
   .text-25 {
-    @apply text-black dark:text-white;
+    color: var(--text-main);
   }
 
   .floating-toc-item {
-    @apply flex items-center gap-2 py-2 px-2 rounded-lg leading-relaxed text-black/88 dark:text-white/88 hover:bg-(--btn-plain-bg-hover) hover:text-(--primary) transition-all duration-150;
+    @apply flex items-center gap-2 py-2 px-2 rounded-lg leading-relaxed hover:bg-(--btn-plain-bg-hover) hover:text-(--primary) transition-all duration-150;
+    color: color-mix(in oklch, var(--text-main) 88%, transparent);
     text-decoration: none;
   }
 
@@ -289,7 +293,8 @@
   }
 
   .dropdown-item {
-    @apply flex items-center justify-between px-4 py-2.5 text-black/92 dark:text-white/92 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium;
+    @apply flex items-center justify-between px-4 py-2.5 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) transition-colors duration-150 font-medium;
+    color: var(--text-main);
   }
 
   .dropdown-item:first-child {

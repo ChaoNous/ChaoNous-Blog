@@ -117,7 +117,7 @@ const hasChildren = children.length > 0;
 				{link.external && (
 					<Icon
 						name="fa7-solid:arrow-up-right-from-square"
-						class="text-[1rem] transition -translate-y-px ml-1 text-black/20 dark:text-white/20 shrink-0 hidden lg:inline"
+						class="text-[1rem] transition -translate-y-px ml-1 shrink-0 hidden lg:inline dropdown-external-icon"
 					/>
 				)}
 			</a>
@@ -152,6 +152,10 @@ const hasChildren = children.length > 0;
 		.dropdown-container {
 			@apply hidden;
 		}
+	}
+
+	.dropdown-external-icon {
+		color: var(--text-disabled);
 	}
 </style>
 

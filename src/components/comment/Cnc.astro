@@ -25,7 +25,7 @@ const {
 	data-post-title={postTitle}
 	class="site-comments-root mt-8 mb-6 relative w-full"
 >
-	<div class="site-comments-boot px-0 py-0 text-sm text-[rgba(36,24,22,0.72)] dark:text-[rgba(244,237,231,0.72)]">
+	<div class="site-comments-boot px-0 py-0 text-sm">
 		站内评论系统正在加载…
 	</div>
 	</div>
@@ -60,6 +60,10 @@ const {
 		--site-comments-font-family: "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif;
 		--site-comments-font-size: 1rem;
 		--site-comments-line-height: 1.85;
+		--site-comments-text: var(--text-main);
+		--site-comments-secondary: var(--text-secondary);
+		--site-comments-muted: var(--text-tertiary);
+		--site-comments-disabled: var(--text-disabled);
 	}
 
 	.site-comments-shell {
@@ -118,18 +122,18 @@ const {
 		font-size: var(--site-comments-font-size);
 		font-weight: 700;
 		line-height: var(--site-comments-line-height);
-		color: rgba(36, 24, 22, 0.92);
+		color: var(--site-comments-text);
 	}
 
 	.dark .site-comments-title {
-		color: rgba(244, 237, 231, 0.92);
+		color: var(--site-comments-text);
 	}
 
 	.site-comments-subtitle,
 	.site-comments-hint,
 	.site-comments-empty,
 	.site-comment-time {
-		color: rgba(36, 24, 22, 0.64);
+		color: var(--site-comments-muted);
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
 	}
@@ -138,7 +142,7 @@ const {
 	.dark .site-comments-hint,
 	.dark .site-comments-empty,
 	.dark .site-comment-time {
-		color: rgba(244, 237, 231, 0.66);
+		color: var(--site-comments-muted);
 	}
 
 	.site-comments-form {
@@ -160,11 +164,11 @@ const {
 		gap: 0.35rem;
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
-		color: rgba(36, 24, 22, 0.78);
+		color: var(--site-comments-secondary);
 	}
 
 	.dark .site-comments-field {
-		color: rgba(244, 237, 231, 0.8);
+		color: var(--site-comments-secondary);
 	}
 
 	.site-comments-field input,
@@ -176,7 +180,7 @@ const {
 		backdrop-filter: blur(20px) saturate(160%);
 		-webkit-backdrop-filter: blur(20px) saturate(160%);
 		padding: 0.8rem 0.95rem;
-		color: rgba(36, 24, 22, 0.92);
+		color: var(--site-comments-text);
 		outline: none;
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
@@ -187,7 +191,7 @@ const {
 	.dark .site-comments-field textarea {
 		border-color: var(--display-panel-border);
 		background: var(--panel-bg);
-		color: rgba(244, 237, 231, 0.92);
+		color: var(--site-comments-text);
 	}
 
 	.site-comments-field input:focus,
@@ -206,8 +210,8 @@ const {
 	.site-comments-field input:-webkit-autofill:hover,
 	.site-comments-field input:-webkit-autofill:focus,
 	.site-comments-field input:-webkit-autofill:active {
-		-webkit-text-fill-color: rgba(36, 24, 22, 0.92);
-		caret-color: rgba(36, 24, 22, 0.92);
+		-webkit-text-fill-color: var(--site-comments-text);
+		caret-color: var(--site-comments-text);
 		-webkit-box-shadow:
 			0 0 0 1000px var(--panel-bg) inset,
 			0 0 0 1px var(--display-panel-border);
@@ -224,8 +228,8 @@ const {
 	.dark .site-comments-field input:-webkit-autofill:hover,
 	.dark .site-comments-field input:-webkit-autofill:focus,
 	.dark .site-comments-field input:-webkit-autofill:active {
-		-webkit-text-fill-color: rgba(244, 237, 231, 0.92);
-		caret-color: rgba(244, 237, 231, 0.92);
+		-webkit-text-fill-color: var(--site-comments-text);
+		caret-color: var(--site-comments-text);
 		-webkit-box-shadow:
 			0 0 0 1000px var(--panel-bg) inset,
 			0 0 0 1px var(--display-panel-border);
@@ -248,7 +252,7 @@ const {
 		background: var(--panel-bg);
 		backdrop-filter: blur(20px) saturate(160%);
 		-webkit-backdrop-filter: blur(20px) saturate(160%);
-		color: rgba(36, 24, 22, 0.92);
+		color: var(--site-comments-text);
 		font-weight: 700;
 		cursor: pointer;
 		font-size: var(--site-comments-font-size);
@@ -282,7 +286,7 @@ const {
 	.dark .site-comments-submit {
 		border-color: var(--display-panel-border);
 		background: var(--panel-bg);
-		color: rgba(244, 237, 231, 0.92);
+		color: var(--site-comments-text);
 	}
 
 	.dark .site-comments-submit:hover:not(:disabled) {
@@ -336,13 +340,13 @@ const {
 	.site-comments-replying {
 		background: rgba(36, 24, 22, 0.03);
 		border-color: rgba(36, 24, 22, 0.16);
-		color: rgba(36, 24, 22, 0.84);
+		color: color-mix(in oklch, var(--site-comments-text) 90%, transparent);
 	}
 
 	.dark .site-comments-replying {
 		background: rgba(244, 237, 231, 0.03);
 		border-color: rgba(244, 237, 231, 0.16);
-		color: rgba(244, 237, 231, 0.86);
+		color: color-mix(in oklch, var(--site-comments-text) 92%, transparent);
 	}
 
 	.site-comments-list {
@@ -388,35 +392,35 @@ const {
 
 	.site-comment-author {
 		font-weight: 700;
-		color: rgba(36, 24, 22, 0.92);
+		color: var(--site-comments-text);
 	}
 
 	.dark .site-comment-author {
-		color: rgba(244, 237, 231, 0.92);
+		color: var(--site-comments-text);
 	}
 
 	.site-comment-content {
 		font-size: var(--site-comments-font-size);
 		line-height: var(--site-comments-line-height);
-		color: rgba(36, 24, 22, 0.86);
+		color: color-mix(in oklch, var(--site-comments-text) 92%, transparent);
 		word-break: break-word;
 	}
 
 	.dark .site-comment-content {
-		color: rgba(244, 237, 231, 0.84);
+		color: color-mix(in oklch, var(--site-comments-text) 90%, transparent);
 	}
 
 	.link-btn {
 		border: 0;
 		background: transparent;
 		padding: 0;
-		color: rgba(36, 24, 22, 0.88);
+		color: color-mix(in oklch, var(--site-comments-text) 94%, transparent);
 		cursor: pointer;
 		text-decoration: none;
 	}
 
 	.dark .link-btn {
-		color: rgba(244, 237, 231, 0.9);
+		color: color-mix(in oklch, var(--site-comments-text) 96%, transparent);
 	}
 
 	.site-comment-reply-btn {
@@ -467,11 +471,11 @@ const {
 
 	.site-comment-deleted-text {
 		font-style: italic;
-		color: rgba(36, 24, 22, 0.52) !important;
+		color: var(--site-comments-disabled) !important;
 	}
 
 	.dark .site-comment-deleted-text {
-		color: rgba(244, 237, 231, 0.44) !important;
+		color: var(--site-comments-disabled) !important;
 	}
 
 	@media (max-width: 720px) {

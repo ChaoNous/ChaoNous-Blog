@@ -162,15 +162,15 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 	}
 
 	.nav-item-text {
-		@apply text-black/75 dark:text-white/75;
+		color: color-mix(in oklch, var(--text-main) 75%, transparent);
 	}
 
 	.nav-subitem-text {
-		@apply text-black/60 dark:text-white/60;
+		color: color-mix(in oklch, var(--text-main) 60%, transparent);
 	}
 
 	.nav-arrow {
-		@apply text-black/25 dark:text-white/25;
+		color: var(--text-disabled);
 	}
 </style>
 
