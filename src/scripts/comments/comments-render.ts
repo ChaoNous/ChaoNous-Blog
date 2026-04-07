@@ -157,7 +157,7 @@ export function renderCommentsState(
 	container.innerHTML = `
 		<section class="site-comments-shell">
 			${noticeHtml}
-			${renderCommentForm(state, null, state.submitting && !state.replyTarget)}
+			${state.replyTarget ? "" : renderCommentForm(state, null, state.submitting)}
 			<div class="site-comments-list">${commentsHtml}</div>
 		</section>
 	`;
