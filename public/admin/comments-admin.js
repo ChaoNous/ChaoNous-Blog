@@ -1,4 +1,6 @@
 (function () {
+	const storageKey = "chaonous-comment-admin-password";
+	const form = document.getElementById("admin-form");
 	const notice = document.getElementById("admin-notice");
 	const list = document.getElementById("comment-list");
 	const passwordInput = document.getElementById("admin-password");
@@ -21,6 +23,13 @@
 
 	function getPassword() {
 		return passwordInput.value.trim();
+	}
+
+	function setLoading(isLoading) {
+		loadButton.disabled = isLoading;
+		loadButton.textContent = isLoading
+			? "\u52a0\u8f7d\u4e2d\u2026"
+			: "\u52a0\u8f7d\u8bc4\u8bba";
 	}
 
 	function renderComments(items) {
@@ -54,24 +63,36 @@
 			return;
 		}
 
+		setLoading(true);
 		setNotice("\u6b63\u5728\u8bfb\u53d6\u8bc4\u8bba\u2026");
 		list.innerHTML = "";
 
-		const response = await fetch(`/api/admin/comments?status=${encodeURIComponent(statusSelect.value)}`, {
-			headers: {
-				"x-comment-admin-password": password,
-				Accept: "application/json"
+		try {
+			const response = await fetch(`/api/admin/comments?status=${encodeURIComponent(statusSelect.value)}`, {
+				headers: {
+					"x-comment-admin-password": password,
+					Accept: "application/json"
+				}
+			});
+
+			const payload = await response.json();
+			if (!response.ok) {
+				if (response.status === 401) {
+					sessionStorage.removeItem(storageKey);
+				}
+				setNotice(payload.message || "\u8bc4\u8bba\u8bfb\u53d6\u5931\u8d25\u3002", "error");
+				return;
 			}
-		});
 
-		const payload = await response.json();
-		if (!response.ok) {
-			setNotice(payload.message || "\u8bc4\u8bba\u8bfb\u53d6\u5931\u8d25\u3002", "error");
-			return;
+			sessionStorage.setItem(storageKey, password);
+			setNotice(`\u5df2\u52a0\u8f7d ${payload.data.length} \u6761\u8bc4\u8bba\u3002`);
+			renderComments(payload.data);
+		} catch (error) {
+			console.error("admin:loadComments", error);
+			setNotice("\u8bc4\u8bba\u540e\u53f0\u6682\u65f6\u4e0d\u53ef\u7528\u3002", "error");
+		} finally {
+			setLoading(false);
 		}
-
-		setNotice(`\u5df2\u52a0\u8f7d ${payload.data.length} \u6761\u8bc4\u8bba\u3002`);
-		renderComments(payload.data);
 	}
 
 	async function updateStatus(id, status) {
@@ -81,32 +102,47 @@
 			return;
 		}
 
-		const response = await fetch(`/api/admin/comments/${id}`, {
-			method: "PATCH",
-			headers: {
-				"content-type": "application/json",
-				"x-comment-admin-password": password,
-				Accept: "application/json"
-			},
-			body: JSON.stringify({ status })
-		});
+		try {
+			const response = await fetch(`/api/admin/comments/${id}`, {
+				method: "PATCH",
+				headers: {
+					"content-type": "application/json",
+					"x-comment-admin-password": password,
+					Accept: "application/json"
+				},
+				body: JSON.stringify({ status })
+			});
 
-		const payload = await response.json();
-		if (!response.ok) {
-			setNotice(payload.message || "\u8bc4\u8bba\u72b6\u6001\u66f4\u65b0\u5931\u8d25\u3002", "error");
-			return;
+			const payload = await response.json();
+			if (!response.ok) {
+				if (response.status === 401) {
+					sessionStorage.removeItem(storageKey);
+				}
+				setNotice(payload.message || "\u8bc4\u8bba\u72b6\u6001\u66f4\u65b0\u5931\u8d25\u3002", "error");
+				return;
+			}
+
+			sessionStorage.setItem(storageKey, password);
+			setNotice(`\u8bc4\u8bba #${id} \u5df2\u66f4\u65b0\u4e3a ${status}\u3002`);
+			await loadComments();
+		} catch (error) {
+			console.error("admin:updateStatus", error);
+			setNotice("\u8bc4\u8bba\u72b6\u6001\u66f4\u65b0\u5931\u8d25\u3002", "error");
 		}
-
-		setNotice(`\u8bc4\u8bba #${id} \u5df2\u66f4\u65b0\u4e3a ${status}\u3002`);
-		await loadComments();
 	}
 
-	loadButton.addEventListener("click", () => {
+	form.addEventListener("submit", (event) => {
+		event.preventDefault();
 		void loadComments();
 	});
 
 	window.addEventListener("DOMContentLoaded", () => {
 		statusSelect.value = "approved";
+		const rememberedPassword = sessionStorage.getItem(storageKey);
+		if (rememberedPassword) {
+			passwordInput.value = rememberedPassword;
+			void loadComments();
+		}
 	});
 
 	list.addEventListener("click", (event) => {
