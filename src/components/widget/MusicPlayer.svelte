@@ -85,6 +85,7 @@
 	let showError = false;
 	// Whether the full music font has been loaded
 	let musicFontLoaded = false;
+	let isMobileViewport = false;
 
 	// Lazy load the full music font only when needed (saves ~4.8MB)
 	function loadMusicFont() {
@@ -267,6 +268,9 @@
 	}
 
 	function togglePlay() {
+		if (!playlistLoaded) {
+			lazyLoadPlaylist();
+		}
 		if (!audio || !currentSong.url) return;
 		loadMusicFont();
 		if (isPlaying) {
@@ -277,6 +281,9 @@
 	}
 
 	function toggleExpanded() {
+		if (!playlistLoaded) {
+			lazyLoadPlaylist();
+		}
 		loadMusicFont();
 		isExpanded = !isExpanded;
 		if (isExpanded) {
@@ -295,6 +302,9 @@
 	}
 
 	function togglePlaylist() {
+		if (!playlistLoaded) {
+			lazyLoadPlaylist();
+		}
 		showMobileVolumePopover = false;
 		showPlaylist = !showPlaylist;
 	}
@@ -599,11 +609,16 @@
 	}
 
 	onMount(() => {
-		if (typeof window !== "undefined" && window.innerWidth < 768) {
+		if (typeof window !== "undefined") {
+			isMobileViewport = window.innerWidth < 768;
+		}
+		if (isMobileViewport) {
 			isHidden = true;
 		}
 		loadVolumeSettings();
-		restoreCachedInitialSong();
+		if (!(isMobileViewport && mode === "meting")) {
+			restoreCachedInitialSong();
+		}
 		interactionEvents.forEach((event) => {
 			document.addEventListener(event, handleUserInteraction, {
 				capture: true,
@@ -616,7 +631,7 @@
 			return;
 		}
 
-		if (mode === "meting") {
+		if (mode === "meting" && !isMobileViewport) {
 			// Fetch the online playlist immediately so the first real track shows up ASAP.
 			lazyLoadPlaylist();
 		} else if ("requestIdleCallback" in window) {

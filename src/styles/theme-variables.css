@@ -3,18 +3,13 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Crimson Pro", "ZhuqueFangsong";
-  --font-serif: "Crimson Pro", "ZhuqueFangsong";
-  --font-mono: "Crimson Pro", "ZhuqueFangsong";
+  --font-sans: "Crimson Pro", "Zhuque Fangsong UI";
+  --font-serif: "Crimson Pro", "Zhuque Fangsong UI";
+  --font-mono: "Crimson Pro", "Zhuque Fangsong UI";
   --font-latin: "Crimson Pro";
-  --font-cjk: "ZhuqueFangsong";
-  --font-content: "ZhuqueFangsong", "Crimson Pro";
-}
-
-body.is-home {
   --font-sans: "Crimson Pro", "Zhuque Fangsong UI";
   --font-cjk: "Zhuque Fangsong UI";
-  --font-content: "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro";
+  --font-content: "Zhuque Fangsong UI", "Crimson Pro";
 }
 
 :root {

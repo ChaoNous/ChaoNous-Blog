@@ -358,7 +358,9 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 					});
 				}
 
-				timerId = window.setTimeout(initPagefind, 5000);
+				if (window.matchMedia("(min-width: 1024px)").matches) {
+					timerId = window.setTimeout(initPagefind, 5000);
+				}
 
 				return () => {
 					cancelled = true;
