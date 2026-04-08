@@ -31,33 +31,7 @@ const logoSrc = rawLogo;
 const rawIcon = siteConfig.navbarTitle?.icon || "assets/home/home.webp";
 const iconSrc = rawIcon;
 const hasNavbarIcon = Boolean(siteConfig.navbarTitle?.icon);
-
-function toMathSansBoldItalic(text: string): string {
-  return Array.from(text)
-    .map((char) => {
-      const code = char.codePointAt(0);
-      if (!code) return char;
-
-      if (code >= 0x41 && code <= 0x5a) {
-        return String.fromCodePoint(0x1d63c + (code - 0x41));
-      }
-
-      if (code >= 0x61 && code <= 0x7a) {
-        return String.fromCodePoint(0x1d656 + (code - 0x61));
-      }
-
-      if (code >= 0x30 && code <= 0x39) {
-        return String.fromCodePoint(0x1d7ec + (code - 0x30));
-      }
-
-      return char;
-    })
-    .join("");
-}
-
-const navbarBrandText = siteConfig.navbarTitle?.text
-  ? toMathSansBoldItalic(siteConfig.navbarTitle.text)
-  : siteConfig.title;
+const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
 ---
 
 <div

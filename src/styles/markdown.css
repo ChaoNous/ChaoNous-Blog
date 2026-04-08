@@ -1,7 +1,7 @@
 @reference "tailwindcss";
 
 .custom-md {
-  font-family: "ZhuqueFangsong", "Zhuque Fangsong UI", "Crimson Pro", serif;
+  font-family: var(--font-content);
   font-size: 0.98rem;
   line-height: 1.86;
   letter-spacing: 0.005em;

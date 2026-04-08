@@ -1,6 +1,5 @@
 .site-comments-root {
-  --site-comments-font-family:
-    "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif;
+  --site-comments-font-family: var(--font-content);
   --site-comments-font-size: 1rem;
   --site-comments-line-height: 1.85;
   --site-comments-text: var(--text-main);

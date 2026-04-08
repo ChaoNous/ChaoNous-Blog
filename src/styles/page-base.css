@@ -48,6 +48,48 @@ body {
   transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
 }
 
+body :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a,
+  span,
+  strong,
+  em,
+  small,
+  blockquote,
+  cite,
+  li,
+  dt,
+  dd,
+  figcaption,
+  label,
+  button,
+  input,
+  textarea,
+  select,
+  option,
+  summary,
+  legend,
+  table,
+  thead,
+  tbody,
+  tfoot,
+  tr,
+  th,
+  td,
+  code,
+  pre,
+  kbd,
+  samp
+) {
+  font-family: var(--font-content);
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   width: 0;

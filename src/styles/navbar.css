@@ -57,7 +57,7 @@
 }
 
 #navbar .navbar-brand-text {
-  font-family: "Crimson Pro";
+  font-family: var(--font-content);
   font-size: clamp(2.2rem, 2.35vw, 2.9rem);
   line-height: 1;
   letter-spacing: 0.08em;
