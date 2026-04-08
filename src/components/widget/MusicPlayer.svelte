@@ -1,11 +1,15 @@
 <script lang="ts">
 	import Icon from "@iconify/svelte";
-	import { onDestroy, onMount } from "svelte";
+	import { onMount } from "svelte";
 	import { musicPlayerConfig } from "../../config";
 	import hitoriCover from "../../assets/music/cover/hitori.jpg";
 	import Key from "../../i18n/i18nKey";
 	import { i18n } from "../../i18n/translation";
 	import { fetchMetingPlaylistSongs } from "../../scripts/music-player/player-meting";
+	import {
+		getLoadingSong as getInitialLoadingSong,
+		buildLocalPlaylist,
+	} from "../../scripts/music-player/player-local";
 	import {
 		cacheInitialSong,
 		loadStoredVolume,
@@ -13,10 +17,11 @@
 		saveStoredVolume,
 	} from "../../scripts/music-player/player-storage";
 	import {
-		createSong,
-		getAssetPath,
-		type Song,
-	} from "../../scripts/music-player/player-types";
+		bindAutoplayRecovery,
+		bindPlayerDocumentEvents,
+		scheduleInitialPlaylistLoad,
+	} from "../../scripts/music-player/player-runtime";
+	import { getAssetPath, type Song } from "../../scripts/music-player/player-types";
 
 	// Music player mode: local playlist or Meting API
 	let mode = musicPlayerConfig.mode ?? "meting";
@@ -83,42 +88,15 @@
 		});
 	}
 
-	const localPlaylist: Song[] = [
-		createSong({
-			id: 1,
-			title: "Hitori no Uta",
-			artist: "Kaya",
-			cover: hitoriCover,
-			url: "assets/music/url/hitori.mp3",
-			duration: 240,
-		}),
-		createSong({
-			id: 2,
-			title: "Xing Ri Yu Xing",
-			artist: "Stereo Dive Foundation",
-			cover: "assets/music/cover/xryx.webp",
-			url: "assets/music/url/xryx.mp3",
-			duration: 180,
-		}),
-		createSong({
-			id: 3,
-			title: "Chun Lei",
-			artist: "22/7",
-			cover: "assets/music/cover/cl.webp",
-			url: "assets/music/url/cl.mp3",
-			duration: 200,
-		}),
-	];
+	const localPlaylist: Song[] = buildLocalPlaylist(hitoriCover);
 
 	function getLoadingSong(): Song {
-		if (mode === "local" && localPlaylist.length > 0) {
-			return { ...localPlaylist[0] };
-		}
-
-		return createSong({
-			title: i18n(Key.musicPlayerLoading),
-			artist: i18n(Key.unknownArtist),
-		});
+		return getInitialLoadingSong(
+			mode,
+			localPlaylist,
+			i18n(Key.musicPlayerLoading),
+			i18n(Key.unknownArtist),
+		);
 	}
 
 	let currentSong: Song = getLoadingSong();
@@ -315,38 +293,6 @@
 		}
 	}
 
-	function handleUserInteraction() {
-		if (autoplayFailed && audio) {
-			const playPromise = audio.play();
-			if (playPromise !== undefined) {
-				playPromise
-					.then(() => {
-						autoplayFailed = false;
-					})
-					.catch(() => {});
-			}
-		}
-	}
-
-	function handleDocumentClick(event: MouseEvent) {
-		const target = event.target;
-		if (target instanceof Node && !playerRoot?.contains(target)) {
-			showMobileVolumePopover = false;
-		}
-
-		if (!showPlaylist) return;
-		if (!(target instanceof Node)) return;
-		if (playlistPanel?.contains(target) || playerRoot?.contains(target))
-			return;
-		closePlaylist();
-	}
-
-	function handleDocumentKeydown(event: KeyboardEvent) {
-		if (event.key === "Escape" && showPlaylist) {
-			closePlaylist();
-		}
-	}
-
 	function handleLoadError(_event: Event) {
 		console.error(
 			"[MusicPlayer] Load error for song:",
@@ -480,8 +426,6 @@
 		return `${mins}:${secs.toString().padStart(2, "0")}`;
 	}
 
-	const interactionEvents = ["click", "keydown", "touchstart"];
-
 	// Track whether the playlist has been loaded
 	let playlistLoaded = false;
 
@@ -504,6 +448,8 @@
 	}
 
 	onMount(() => {
+		const cleanups: Array<() => void> = [];
+
 		if (typeof window !== "undefined") {
 			isMobileViewport = window.innerWidth < 768;
 		}
@@ -515,44 +461,38 @@
 		if (!(isMobileViewport && mode === "meting")) {
 			restoreCachedInitialSongState();
 		}
-		interactionEvents.forEach((event) => {
-			document.addEventListener(event, handleUserInteraction, {
-				capture: true,
-			});
-		});
-		document.addEventListener("click", handleDocumentClick);
-		document.addEventListener("keydown", handleDocumentKeydown);
 
-		if (!musicPlayerConfig.enable) {
-			return;
-		}
-
-		if (mode === "meting" && !isMobileViewport) {
-			// Fetch the online playlist immediately so the first real track shows up ASAP.
-			lazyLoadPlaylist();
-		} else if (mode !== "meting" && "requestIdleCallback" in window) {
-			// Local mode already has the first song ready, so defer playlist hydration.
-			requestIdleCallback(
-				() => {
-					lazyLoadPlaylist();
+		cleanups.push(
+			bindAutoplayRecovery({
+				getAudio: () => audio,
+				shouldRecover: () => autoplayFailed,
+				onRecovered: () => {
+					autoplayFailed = false;
 				},
-				{ timeout: 5000 },
-			);
-		} else if (mode !== "meting") {
-			setTimeout(lazyLoadPlaylist, 3000);
-		}
-	});
+			}),
+		);
+		cleanups.push(
+			bindPlayerDocumentEvents({
+				getPlayerRoot: () => playerRoot,
+				getPlaylistPanel: () => playlistPanel,
+				isPlaylistOpen: () => showPlaylist,
+				closePlaylist,
+				hideMobileVolumePopover: () => {
+					showMobileVolumePopover = false;
+				},
+			}),
+		);
 
-	onDestroy(() => {
-		if (typeof document !== "undefined") {
-			interactionEvents.forEach((event) => {
-				document.removeEventListener(event, handleUserInteraction, {
-					capture: true,
-				});
-			});
-			document.removeEventListener("click", handleDocumentClick);
-			document.removeEventListener("keydown", handleDocumentKeydown);
-		}
+		scheduleInitialPlaylistLoad({
+			enabled: musicPlayerConfig.enable,
+			mode,
+			isMobileViewport,
+			lazyLoadPlaylist,
+		});
+
+		return () => {
+			cleanups.forEach((cleanup) => cleanup());
+		};
 	});
 </script>
 
