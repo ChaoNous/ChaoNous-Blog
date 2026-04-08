@@ -233,7 +233,7 @@ const hasChildren = children.length > 0;
 				);
 			});
 
-			// 鐐瑰嚮澶栭儴鍏抽棴
+  // Close the menu when clicking outside.
 			const handleDocumentClick = (e: MouseEvent) => {
 				if (!dropdown.contains(e.target as Node)) {
 					closeMenu();

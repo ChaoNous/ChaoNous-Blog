@@ -1,30 +1,22 @@
 /**
- * 统一的浮窗管理器
- * 确保同一时间只有一个浮窗处于打开状态，并提供统一的动画效果
+ * Shared floating panel manager.
+ * Ensures that only one overlay panel stays open at a time.
  */
 
-export type PanelId =
-  | "display-setting"
-  | "nav-menu-panel"
-  | "search-panel";
+export type PanelId = "display-setting" | "nav-menu-panel" | "search-panel";
 
 class PanelManager {
   private activePanels: Set<PanelId> = new Set();
   private panelStack: PanelId[] = [];
-  private readonly duration: number = 100;
+  private readonly duration = 100;
 
-  /**
-   * 应用动画打开浮窗
-   */
   private animateIn(panel: HTMLElement): Promise<void> {
     return new Promise((resolve) => {
-      // 检查是否正在主题切换，如果是则跳过动画
       const isThemeTransitioning = document.documentElement.classList.contains(
         "is-theme-transitioning",
       );
 
       if (isThemeTransitioning) {
-        // 主题切换期间，直接显示面板，不设置pointer-events: none
         panel.classList.remove("float-panel-closed");
         panel.style.opacity = "1";
         panel.style.transform = "scale(1) translateY(0)";
@@ -37,8 +29,7 @@ class PanelManager {
       panel.style.transform = "scale(0.95) translateY(-10px)";
       panel.style.pointerEvents = "none";
 
-      panel.offsetHeight; // 强制重排
-
+      panel.offsetHeight;
       panel.style.transition = `all ${this.duration}ms ease-out`;
 
       requestAnimationFrame(() => {
@@ -54,18 +45,13 @@ class PanelManager {
     });
   }
 
-  /**
-   * 应用动画关闭浮窗
-   */
   private animateOut(panel: HTMLElement): Promise<void> {
     return new Promise((resolve) => {
-      // 检查是否正在主题切换
       const isThemeTransitioning = document.documentElement.classList.contains(
         "is-theme-transitioning",
       );
 
       if (isThemeTransitioning) {
-        // 主题切换期间，直接关闭面板，不设置pointer-events: none
         panel.classList.add("float-panel-closed");
         panel.style.opacity = "";
         panel.style.transform = "";
@@ -89,12 +75,6 @@ class PanelManager {
     });
   }
 
-  /**
-   * 切换指定浮窗的开关状态
-   * @param panelId 浮窗ID
-   * @param forceState 强制设置状态 (可选)
-   * @returns 浮窗最终状态 (true: 打开, false: 关闭)
-   */
   async togglePanel(panelId: PanelId, forceState?: boolean): Promise<boolean> {
     const panel = document.getElementById(panelId);
     if (!panel) {
@@ -113,14 +93,11 @@ class PanelManager {
       this.panelStack.push(panelId);
       return true;
     }
+
     await this.closePanel(panelId);
     return false;
   }
 
-  /**
-   * 关闭指定浮窗
-   * @param panelId 浮窗ID
-   */
   async closePanel(panelId: PanelId): Promise<void> {
     const panel = document.getElementById(panelId);
     if (panel && !panel.classList.contains("float-panel-closed")) {
@@ -130,10 +107,6 @@ class PanelManager {
     }
   }
 
-  /**
-   * 关闭指定浮窗外的所有浮窗
-   * @param exceptPanelId 要保持打开的浮窗ID
-   */
   async closeAllPanelsExcept(exceptPanelId?: PanelId): Promise<void> {
     const closingPromises = Array.from(this.activePanels)
       .filter((panelId) => panelId !== exceptPanelId)
@@ -143,10 +116,8 @@ class PanelManager {
   }
 }
 
-// 创建全局浮窗管理器实例
-export const panelManager: PanelManager = new PanelManager();
+export const panelManager = new PanelManager();
 
-// 将浮窗管理器暴露到全局，方便在其他地方使用
 declare global {
   interface Window {
     panelManager?: PanelManager;
