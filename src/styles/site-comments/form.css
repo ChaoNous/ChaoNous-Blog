@@ -1,0 +1,168 @@
+.site-comments-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.2rem;
+}
+
+.site-comments-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.site-comments-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: var(--site-comments-font-size);
+  line-height: var(--site-comments-line-height);
+  color: var(--site-comments-secondary);
+}
+
+.dark .site-comments-field {
+  color: var(--site-comments-secondary);
+}
+
+.site-comments-field input,
+.site-comments-field textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--display-panel-border);
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  padding: 0.8rem 0.95rem;
+  color: var(--site-comments-text);
+  outline: none;
+  font-size: var(--site-comments-font-size);
+  line-height: var(--site-comments-line-height);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.dark .site-comments-field input,
+.dark .site-comments-field textarea {
+  border-color: var(--display-panel-border);
+  background: var(--panel-bg);
+  color: var(--site-comments-text);
+}
+
+.site-comments-field input:focus,
+.site-comments-field textarea:focus {
+  border-color: rgba(36, 24, 22, 0.42);
+  box-shadow: 0 0 0 1px rgba(36, 24, 22, 0.08);
+}
+
+.dark .site-comments-field input:focus,
+.dark .site-comments-field textarea:focus {
+  border-color: rgba(244, 237, 231, 0.34);
+  box-shadow: 0 0 0 1px rgba(244, 237, 231, 0.08);
+}
+
+.site-comments-field input:-webkit-autofill,
+.site-comments-field input:-webkit-autofill:hover,
+.site-comments-field input:-webkit-autofill:focus,
+.site-comments-field input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--site-comments-text);
+  caret-color: var(--site-comments-text);
+  -webkit-box-shadow:
+    0 0 0 1000px var(--panel-bg) inset,
+    0 0 0 1px var(--display-panel-border);
+  box-shadow:
+    0 0 0 1000px var(--panel-bg) inset,
+    0 0 0 1px var(--display-panel-border);
+  transition: background-color 9999s ease-out 0s;
+  background-clip: padding-box;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+.dark .site-comments-field input:-webkit-autofill,
+.dark .site-comments-field input:-webkit-autofill:hover,
+.dark .site-comments-field input:-webkit-autofill:focus,
+.dark .site-comments-field input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--site-comments-text);
+  caret-color: var(--site-comments-text);
+  -webkit-box-shadow:
+    0 0 0 1000px var(--panel-bg) inset,
+    0 0 0 1px var(--display-panel-border);
+  box-shadow:
+    0 0 0 1000px var(--panel-bg) inset,
+    0 0 0 1px var(--display-panel-border);
+}
+
+.site-comments-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+}
+
+.site-comments-submit {
+  border: 1px solid var(--display-panel-border);
+  border-radius: 12px;
+  padding: 0.75rem 1.15rem;
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  color: var(--site-comments-text);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: var(--site-comments-font-size);
+  line-height: var(--site-comments-line-height);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.site-comments-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.site-comments-submit:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.03);
+  background-color: color-mix(
+    in oklab,
+    var(--primary) 16%,
+    var(--btn-plain-bg)
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 42%, transparent),
+    inset 0 0 0 999px color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
+.dark .site-comments-submit {
+  border-color: var(--display-panel-border);
+  background: var(--panel-bg);
+  color: var(--site-comments-text);
+}
+
+.dark .site-comments-submit:hover:not(:disabled) {
+  color: var(--primary);
+}
+
+.site-comments-submit:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  background-color: color-mix(
+    in oklab,
+    var(--primary) 16%,
+    var(--btn-plain-bg)
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 42%, transparent),
+    inset 0 0 0 999px color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
+.site-comments-submit:active:not(:disabled) {
+  transform: scale(0.96);
+}

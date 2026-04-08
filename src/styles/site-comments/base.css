@@ -1,0 +1,131 @@
+.site-comments-root {
+  --site-comments-font-family:
+    "Zhuque Fangsong UI", "Zhuque Fangsong", "Crimson Pro", serif;
+  --site-comments-font-size: 1rem;
+  --site-comments-line-height: 1.85;
+  --site-comments-text: var(--text-main);
+  --site-comments-secondary: var(--text-secondary);
+  --site-comments-muted: var(--text-tertiary);
+  --site-comments-disabled: var(--text-disabled);
+}
+
+.site-comments-shell {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  font-family: var(--site-comments-font-family) !important;
+  font-size: var(--site-comments-font-size);
+  line-height: var(--site-comments-line-height);
+}
+
+.dark .site-comments-shell {
+  border-color: transparent;
+  background: transparent;
+}
+
+.site-comments-root,
+.site-comments-root *,
+.site-comments-shell,
+.site-comments-shell button,
+.site-comments-shell input,
+.site-comments-shell textarea,
+.site-comments-shell select,
+.site-comments-shell option,
+.site-comments-shell .site-comment-content,
+.site-comments-shell .site-comment-author,
+.site-comments-shell .site-comment-time,
+.site-comments-shell .site-comments-title,
+.site-comments-shell .site-comments-subtitle,
+.site-comments-shell .site-comments-hint,
+.site-comments-shell .site-comments-empty,
+.site-comments-shell .site-comments-notice,
+.site-comments-shell .site-comments-replying,
+.site-comments-shell .link-btn {
+  font-family: var(--site-comments-font-family) !important;
+  font-size: var(--site-comments-font-size) !important;
+  line-height: var(--site-comments-line-height) !important;
+}
+
+.site-comments-root input::placeholder,
+.site-comments-root textarea::placeholder {
+  font-family: var(--site-comments-font-family) !important;
+  font-size: var(--site-comments-font-size) !important;
+}
+
+.site-comments-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.site-comments-title {
+  margin: 0;
+  font-size: var(--site-comments-font-size);
+  font-weight: 700;
+  line-height: var(--site-comments-line-height);
+  color: var(--site-comments-text);
+}
+
+.dark .site-comments-title {
+  color: var(--site-comments-text);
+}
+
+.site-comments-subtitle,
+.site-comments-hint,
+.site-comments-empty,
+.site-comment-time {
+  color: var(--site-comments-muted);
+  font-size: var(--site-comments-font-size);
+  line-height: var(--site-comments-line-height);
+}
+
+.dark .site-comments-subtitle,
+.dark .site-comments-hint,
+.dark .site-comments-empty,
+.dark .site-comment-time {
+  color: var(--site-comments-muted);
+}
+
+.site-comments-notice,
+.site-comments-replying {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.95rem;
+  border-radius: 12px;
+  padding: 0.75rem 0.95rem;
+  font-size: var(--site-comments-font-size);
+  line-height: var(--site-comments-line-height);
+  border: 2px solid rgba(36, 24, 22, 0.14);
+}
+
+.site-comments-notice.is-error {
+  background: rgba(200, 56, 44, 0.06);
+  border-color: rgba(200, 56, 44, 0.22);
+  color: rgba(142, 31, 21, 0.92);
+}
+
+.site-comments-notice.is-success {
+  background: rgba(38, 132, 78, 0.06);
+  border-color: rgba(38, 132, 78, 0.24);
+  color: rgba(21, 94, 57, 0.92);
+}
+
+.site-comments-replying {
+  background: rgba(36, 24, 22, 0.03);
+  border-color: rgba(36, 24, 22, 0.16);
+  color: color-mix(in oklch, var(--site-comments-text) 90%, transparent);
+}
+
+.dark .site-comments-replying {
+  background: rgba(244, 237, 231, 0.03);
+  border-color: rgba(244, 237, 231, 0.16);
+  color: color-mix(in oklch, var(--site-comments-text) 92%, transparent);
+}
+
+.site-comments-replying.is-inline {
+  margin-bottom: 0.75rem;
+}
