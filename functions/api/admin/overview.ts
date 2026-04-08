@@ -1,8 +1,8 @@
 import {
+	COMMENT_MESSAGES,
 	json,
-	isAdminAuthorized,
+	requireAdminSession,
 	serverError,
-	unauthorized,
 	type Env,
 } from "../../_lib/comments";
 
@@ -37,8 +37,13 @@ export const onRequestGet = async ({
 	env: Env;
 	request: Request;
 }) => {
-	if (!(await isAdminAuthorized(request, env))) {
-		return unauthorized("\u540e\u53f0\u5bc6\u7801\u4e0d\u6b63\u786e\u3002");
+	const authResponse = await requireAdminSession(
+		request,
+		env,
+		COMMENT_MESSAGES.adminUnauthorized,
+	);
+	if (authResponse) {
+		return authResponse;
 	}
 
 	try {
@@ -108,6 +113,6 @@ export const onRequestGet = async ({
 		});
 	} catch (error) {
 		console.error("admin:overview", error);
-		return serverError("\u540e\u53f0\u6982\u89c8\u8bfb\u53d6\u5931\u8d25\u3002");
+		return serverError(COMMENT_MESSAGES.adminOverviewError);
 	}
 };

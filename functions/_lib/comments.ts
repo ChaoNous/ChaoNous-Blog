@@ -30,6 +30,44 @@ export interface CommentRecord {
 	updated_at: number;
 }
 
+export interface PaginationMeta {
+	page: number;
+	limit: number;
+	total: number;
+	totalCount: number;
+}
+
+export interface AdminCommentView {
+	id: number;
+	parentId: number | null;
+	postSlug: string;
+	postUrl: string;
+	postTitle: string;
+	authorName: string;
+	authorEmail: string;
+	authorUrl: string | null;
+	content: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface NormalizedComment {
+	id: number;
+	parentId: number | null;
+	postSlug: string;
+	postUrl: string;
+	postTitle: string;
+	authorName: string;
+	authorUrl: string | null;
+	content: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export type NestedComment = NormalizedComment & {
+	replies: NestedComment[];
+};
+
 export type CommentApiErrorCode =
 	| "BAD_REQUEST"
 	| "INVALID_JSON"
@@ -48,6 +86,44 @@ export interface ApiSuccessPayload<T = Record<string, never>> {
 	data?: T;
 	message?: string;
 }
+
+export const COMMENT_MESSAGES = {
+	invalidJson: "请求体不是有效的 JSON。",
+	unauthorized: "未授权。",
+	adminUnauthorized: "后台密码不正确。",
+	adminSessionExpired: "后台会话已失效，请重新登录。",
+	notFound: "资源不存在。",
+	serverError: "服务暂时不可用。",
+	missingPostSlug: "缺少文章标识。",
+	missingPostUrl: "缺少文章链接。",
+	invalidCommentId: "无效的评论 ID。",
+	missingDeleteToken: "缺少删除凭证。",
+	invalidDeleteToken: "删除凭证不正确。",
+	commentNotFound: "评论不存在。",
+	replyTargetMissing: "回复目标不存在。",
+	replyTargetInvalid: "回复目标无效。",
+	unsupportedBulkAction: "不支持的批量操作。",
+	missingBulkSelection: "请先选择要处理的评论。",
+	invalidName: "昵称必填，且不能超过 50 个字符。",
+	invalidEmail: "请输入有效邮箱。",
+	invalidUrl: "网址格式不正确。",
+	invalidContent: "评论内容必填，且不能超过 2000 个字符。",
+	commentReadError: "评论读取失败，请稍后再试。",
+	commentSubmitError: "评论提交失败，请稍后再试。",
+	commentDeleteError: "评论删除失败，请稍后再试。",
+	commentPublished: "评论已发布。",
+	commentDeleted: "评论已删除。",
+	loginSuccess: "登录成功。",
+	loginError: "登录失败。",
+	logoutSuccess: "已退出。",
+	logoutError: "退出失败。",
+	sessionReadError: "会话状态读取失败。",
+	exportError: "数据导出失败。",
+	adminOverviewError: "后台概览读取失败。",
+	adminCommentsError: "评论后台读取失败。",
+	adminAnalyticsError: "访问统计读取失败。",
+	bulkDeleteInProgress: "正在执行批量删除…",
+} as const;
 
 const ADMIN_SESSION_COOKIE = "cnc_admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
@@ -125,6 +201,21 @@ function createSessionId(): string {
 			.slice(0, 10),
 	).join("");
 	return `${timePart}${randomPart}`;
+}
+
+function normalizeOptionalUrl(value: string): string | null {
+	const trimmed = value.trim();
+	if (!trimmed) return null;
+
+	const normalized = /^[a-z][a-z\d+\-.]*:\/\//i.test(trimmed)
+		? trimmed
+		: `https://${trimmed}`;
+
+	try {
+		return new URL(normalized).toString();
+	} catch {
+		return null;
+	}
 }
 
 export function createDeleteToken(): string {
@@ -215,19 +306,6 @@ export function toIso(timestamp: number): string {
 	return new Date(timestamp).toISOString();
 }
 
-export interface NormalizedComment {
-	id: number;
-	parentId: number | null;
-	postSlug: string;
-	postUrl: string;
-	postTitle: string;
-	authorName: string;
-	authorUrl: string | null;
-	content: string;
-	createdAt: string;
-	updatedAt: string;
-}
-
 export function normalizeComment(record: CommentRecord): NormalizedComment {
 	return {
 		id: record.id,
@@ -243,18 +321,25 @@ export function normalizeComment(record: CommentRecord): NormalizedComment {
 	};
 }
 
-export function nestComments(records: NormalizedComment[]) {
-	const map = new Map<
-		number,
-		NormalizedComment & {
-			replies: NormalizedComment[];
-		}
-	>();
-	const roots: Array<
-		NormalizedComment & {
-			replies: NormalizedComment[];
-		}
-	> = [];
+export function toAdminComment(record: CommentRecord): AdminCommentView {
+	return {
+		id: record.id,
+		parentId: record.parent_id,
+		postSlug: record.post_slug,
+		postUrl: record.post_url,
+		postTitle: record.post_title,
+		authorName: record.author_name,
+		authorEmail: record.author_email,
+		authorUrl: record.author_url,
+		content: record.content,
+		createdAt: toIso(record.created_at),
+		updatedAt: toIso(record.updated_at),
+	};
+}
+
+export function nestComments(records: NormalizedComment[]): NestedComment[] {
+	const map = new Map<number, NestedComment>();
+	const roots: NestedComment[] = [];
 
 	for (const record of records) {
 		map.set(record.id, {
@@ -274,20 +359,35 @@ export function nestComments(records: NormalizedComment[]) {
 	return roots;
 }
 
+export function createPagination(
+	page: number,
+	limit: number,
+	totalCount: number,
+): PaginationMeta {
+	return {
+		page,
+		limit,
+		total: totalCount > 0 ? Math.ceil(totalCount / limit) : 0,
+		totalCount,
+	};
+}
+
 export function badRequest(message: string): Response {
 	return errorResponse("BAD_REQUEST", message, 400);
 }
 
-export function unauthorized(message = "\u672a\u6388\u6743\u3002"): Response {
+export function unauthorized(
+	message = COMMENT_MESSAGES.unauthorized,
+): Response {
 	return errorResponse("UNAUTHORIZED", message, 401);
 }
 
-export function notFound(message = "\u8d44\u6e90\u4e0d\u5b58\u5728\u3002"): Response {
+export function notFound(message = COMMENT_MESSAGES.notFound): Response {
 	return errorResponse("NOT_FOUND", message, 404);
 }
 
 export function serverError(
-	message = "\u670d\u52a1\u6682\u65f6\u4e0d\u53ef\u7528\u3002",
+	message = COMMENT_MESSAGES.serverError,
 ): Response {
 	return errorResponse("SERVER_ERROR", message, 500);
 }
@@ -304,9 +404,25 @@ export async function readJsonBody(
 	} catch {
 		return {
 			ok: false,
-			response: errorResponse("INVALID_JSON", "请求体不是有效的 JSON。", 400),
+			response: errorResponse(
+				"INVALID_JSON",
+				COMMENT_MESSAGES.invalidJson,
+				400,
+			),
 		};
 	}
+}
+
+export async function requireAdminSession(
+	request: Request,
+	env: Env,
+	message = COMMENT_MESSAGES.adminUnauthorized,
+): Promise<Response | null> {
+	if (await isAdminAuthorized(request, env)) {
+		return null;
+	}
+
+	return unauthorized(message);
 }
 
 export function parsePaginationParams(
@@ -353,51 +469,42 @@ export function validateSubmission(body: Record<string, unknown>) {
 	const postTitle = String(body.postTitle || "").trim();
 	const name = String(body.name || "").trim();
 	const email = String(body.email || "").trim();
-	const url = String(body.url || "").trim();
+	const rawUrl = String(body.url || "").trim();
 	const content = String(body.content || "").trim();
 	const parentIdRaw = String(body.parentId || "").trim();
 	const parentId = parentIdRaw ? Number.parseInt(parentIdRaw, 10) : null;
 
 	if (!postSlug) {
-		return { ok: false, message: "\u7f3a\u5c11\u6587\u7ae0\u6807\u8bc6\u3002" } as const;
+		return { ok: false, message: COMMENT_MESSAGES.missingPostSlug } as const;
 	}
 	if (!postUrl) {
-		return { ok: false, message: "\u7f3a\u5c11\u6587\u7ae0\u94fe\u63a5\u3002" } as const;
+		return { ok: false, message: COMMENT_MESSAGES.missingPostUrl } as const;
 	}
 	if (!name || name.length > 50) {
-		return {
-			ok: false,
-			message: "\u6635\u79f0\u5fc5\u586b\uff0c\u4e14\u4e0d\u80fd\u8d85\u8fc7 50 \u4e2a\u5b57\u7b26\u3002",
-		} as const;
+		return { ok: false, message: COMMENT_MESSAGES.invalidName } as const;
 	}
 	if (
 		!email ||
 		email.length > 120 ||
 		!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 	) {
-		return { ok: false, message: "\u8bf7\u8f93\u5165\u6709\u6548\u90ae\u7bb1\u3002" } as const;
+		return { ok: false, message: COMMENT_MESSAGES.invalidEmail } as const;
 	}
-	const normalizedUrl = url
-		? /^[a-z][a-z\d+\-.]*:\/\//i.test(url)
-			? url
-			: `https://${url}`
-		: "";
-	if (normalizedUrl) {
-		try {
-			new URL(normalizedUrl);
-		} catch {
-			return { ok: false, message: "\u7f51\u5740\u683c\u5f0f\u4e0d\u6b63\u786e\u3002" } as const;
-		}
+
+	const normalizedUrl = normalizeOptionalUrl(rawUrl);
+	if (rawUrl && !normalizedUrl) {
+		return { ok: false, message: COMMENT_MESSAGES.invalidUrl } as const;
 	}
+
 	if (!content || content.length > 2000) {
+		return { ok: false, message: COMMENT_MESSAGES.invalidContent } as const;
+	}
+
+	if (parentIdRaw && (!Number.isFinite(parentId) || (parentId ?? 0) <= 0)) {
 		return {
 			ok: false,
-			message:
-				"\u8bc4\u8bba\u5185\u5bb9\u5fc5\u586b\uff0c\u4e14\u4e0d\u80fd\u8d85\u8fc7 2000 \u4e2a\u5b57\u7b26\u3002",
+			message: COMMENT_MESSAGES.replyTargetInvalid,
 		} as const;
-	}
-	if (parentIdRaw && (!Number.isFinite(parentId) || (parentId ?? 0) <= 0)) {
-		return { ok: false, message: "\u56de\u590d\u76ee\u6807\u65e0\u6548\u3002" } as const;
 	}
 
 	return {
@@ -408,7 +515,7 @@ export function validateSubmission(body: Record<string, unknown>) {
 			postTitle,
 			name,
 			email,
-			url: normalizedUrl || null,
+			url: normalizedUrl,
 			content,
 			parentId,
 		},
@@ -429,7 +536,9 @@ export async function deleteCommentsByIds(
 	env: Env,
 	ids: number[],
 ): Promise<number> {
-	const uniqueIds = Array.from(new Set(ids.filter((id) => Number.isFinite(id) && id > 0)));
+	const uniqueIds = Array.from(
+		new Set(ids.filter((id) => Number.isFinite(id) && id > 0)),
+	);
 	if (!uniqueIds.length) return 0;
 
 	const placeholders = uniqueIds.map((_, index) => `?${index + 1}`).join(", ");

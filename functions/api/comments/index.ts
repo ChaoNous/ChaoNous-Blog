@@ -1,5 +1,7 @@
 import {
 	badRequest,
+	COMMENT_MESSAGES,
+	createPagination,
 	createDeleteToken,
 	json,
 	nestComments,
@@ -28,7 +30,7 @@ export const onRequestGet = async ({
 		const postSlug = url.searchParams.get("postSlug")?.trim();
 
 		if (!postSlug) {
-			return badRequest("\u7f3a\u5c11\u6587\u7ae0\u6807\u8bc6\u3002");
+			return badRequest(COMMENT_MESSAGES.missingPostSlug);
 		}
 
 		const result = await env.COMMENTS_DB.prepare(
@@ -57,18 +59,11 @@ export const onRequestGet = async ({
 
 		return json({
 			data,
-			pagination: {
-				page,
-				limit,
-				total: totalCount > 0 ? Math.ceil(totalCount / limit) : 0,
-				totalCount,
-			},
+			pagination: createPagination(page, limit, totalCount),
 		});
 	} catch (error) {
 		console.error("comments:get", error);
-		return serverError(
-			"\u8bc4\u8bba\u8bfb\u53d6\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5\u3002",
-		);
+		return serverError(COMMENT_MESSAGES.commentReadError);
 	}
 };
 
@@ -104,7 +99,7 @@ export const onRequestPost = async ({
 				.first<{ id: number; post_slug: string }>();
 
 			if (!parent || parent.post_slug !== validated.value.postSlug) {
-				return badRequest("\u56de\u590d\u76ee\u6807\u4e0d\u5b58\u5728\u3002");
+				return badRequest(COMMENT_MESSAGES.replyTargetMissing);
 			}
 		}
 
@@ -135,14 +130,12 @@ export const onRequestPost = async ({
 				ok: true,
 				id: inserted.meta.last_row_id,
 				deleteToken,
-				message: "\u8bc4\u8bba\u5df2\u53d1\u5e03\u3002",
+				message: COMMENT_MESSAGES.commentPublished,
 			},
 			201,
 		);
 	} catch (error) {
 		console.error("comments:post", error);
-		return serverError(
-			"\u8bc4\u8bba\u63d0\u4ea4\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5\u3002",
-		);
+		return serverError(COMMENT_MESSAGES.commentSubmitError);
 	}
 };

@@ -1,0 +1,28 @@
+.content-panel-shell {
+  max-width: 100%;
+}
+
+.content-panel-card {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.content-panel-title {
+  width: 100%;
+  display: block;
+}
+
+.content-panel-meta {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .content-panel-card {
+    max-width: 100%;
+  }
+
+  .content-panel-title {
+    width: 100%;
+    max-width: none;
+  }
+}

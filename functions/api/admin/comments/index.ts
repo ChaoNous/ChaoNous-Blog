@@ -1,9 +1,11 @@
 import {
+	COMMENT_MESSAGES,
+	createPagination,
 	json,
-	isAdminAuthorized,
 	parsePaginationParams,
 	serverError,
-	unauthorized,
+	requireAdminSession,
+	toAdminComment,
 	type CommentRecord,
 	type Env,
 } from "../../../_lib/comments";
@@ -15,8 +17,13 @@ export const onRequestGet = async ({
 	env: Env;
 	request: Request;
 }) => {
-	if (!(await isAdminAuthorized(request, env))) {
-		return unauthorized("\u540e\u53f0\u5bc6\u7801\u4e0d\u6b63\u786e\u3002");
+	const authResponse = await requireAdminSession(
+		request,
+		env,
+		COMMENT_MESSAGES.adminUnauthorized,
+	);
+	if (authResponse) {
+		return authResponse;
 	}
 
 	try {
@@ -67,28 +74,11 @@ export const onRequestGet = async ({
 		const totalCount = Number(total?.total_count || 0);
 
 		return json({
-			data: (rows.results || []).map((record) => ({
-				id: record.id,
-				parentId: record.parent_id,
-				postSlug: record.post_slug,
-				postUrl: record.post_url,
-				postTitle: record.post_title,
-				authorName: record.author_name,
-				authorEmail: record.author_email,
-				authorUrl: record.author_url,
-				content: record.content,
-				createdAt: new Date(record.created_at).toISOString(),
-				updatedAt: new Date(record.updated_at).toISOString(),
-			})),
-			pagination: {
-				page,
-				limit,
-				totalCount,
-				total: totalCount > 0 ? Math.ceil(totalCount / limit) : 0,
-			},
+			data: (rows.results || []).map(toAdminComment),
+			pagination: createPagination(page, limit, totalCount),
 		});
 	} catch (error) {
 		console.error("admin:comments:list", error);
-		return serverError("\u8bc4\u8bba\u540e\u53f0\u8bfb\u53d6\u5931\u8d25\u3002");
+		return serverError(COMMENT_MESSAGES.adminCommentsError);
 	}
 };

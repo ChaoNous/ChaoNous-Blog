@@ -1,5 +1,6 @@
 import {
 	badRequest,
+	COMMENT_MESSAGES,
 	deleteCommentsByIds,
 	json,
 	notFound,
@@ -21,14 +22,14 @@ export const onRequestDelete = async ({
 	try {
 		const id = parsePositiveId(params.id);
 		if (!id) {
-			return badRequest("\u65e0\u6548\u7684\u8bc4\u8bba ID\u3002");
+			return badRequest(COMMENT_MESSAGES.invalidCommentId);
 		}
 
 		const url = new URL(request.url);
 		const deleteToken = url.searchParams.get("token")?.trim();
 
 		if (!deleteToken) {
-			return unauthorized("\u7f3a\u5c11\u5220\u9664\u51ed\u8bc1\u3002");
+			return unauthorized(COMMENT_MESSAGES.missingDeleteToken);
 		}
 
 		const comment = await env.COMMENTS_DB.prepare(
@@ -40,26 +41,24 @@ export const onRequestDelete = async ({
 			.first<{ id: number; delete_token: string | null }>();
 
 		if (!comment) {
-			return notFound("\u8bc4\u8bba\u4e0d\u5b58\u5728\u3002");
+			return notFound(COMMENT_MESSAGES.commentNotFound);
 		}
 
 		if (!comment.delete_token || comment.delete_token !== deleteToken) {
-			return unauthorized("\u5220\u9664\u51ed\u8bc1\u4e0d\u6b63\u786e\u3002");
+			return unauthorized(COMMENT_MESSAGES.invalidDeleteToken);
 		}
 
 		const deletedCount = await deleteCommentsByIds(env, [id]);
 		if (!deletedCount) {
-			return notFound("\u8bc4\u8bba\u4e0d\u5b58\u5728\u3002");
+			return notFound(COMMENT_MESSAGES.commentNotFound);
 		}
 
 		return json({
 			ok: true,
-			message: "\u8bc4\u8bba\u5df2\u5220\u9664\u3002",
+			message: COMMENT_MESSAGES.commentDeleted,
 		});
 	} catch (error) {
 		console.error("comments:delete", error);
-		return serverError(
-			"\u8bc4\u8bba\u5220\u9664\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5\u3002",
-		);
+		return serverError(COMMENT_MESSAGES.commentDeleteError);
 	}
 };

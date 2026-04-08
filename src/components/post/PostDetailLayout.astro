@@ -49,17 +49,17 @@ const {
 		import("../../scripts/right-sidebar-layout.ts");
 	</script>
 	<div
-		class="post-article-shell flex w-full rounded-(--radius-large) overflow-hidden relative mb-4"
+		class="post-article-shell content-panel-shell flex w-full rounded-(--radius-large) overflow-hidden relative mb-4"
 	>
 		<div
 			id="post-container"
 			class:list={[
-				"card-base post-article-card z-10 px-4 md:px-12 pt-8 md:pt-10 pb-8 md:pb-10 relative w-full ",
+				"card-base content-panel-card post-article-card z-10 px-4 md:px-12 pt-8 md:pt-10 pb-8 md:pb-10 relative w-full ",
 				{},
 			]}
 		>
 			<div
-				class="post-reading-meta flex flex-row text-50 gap-5 md:gap-6 mb-4 md:mb-5 transition onload-animation"
+				class="post-reading-meta content-panel-meta flex flex-row text-50 gap-5 md:gap-6 mb-4 md:mb-5 transition onload-animation"
 			>
 				<div class="flex flex-row items-center">
 					<div
@@ -99,7 +99,7 @@ const {
 					data-pagefind-body
 					data-pagefind-weight="10"
 					data-pagefind-meta="title"
-					class="post-article-title transition w-full block font-bold mb-4 md:mb-5
+					class="content-panel-title post-article-title transition w-full block font-bold mb-4 md:mb-5
                     text-3xl md:text-[2.25rem]/[2.75rem]
                     text-90
                     md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
@@ -157,47 +157,6 @@ const {
 	/>
 </MainGridLayout>
 
-<style>
-	.post-article-shell {
-		max-width: 100%;
-	}
-
-	.post-article-card {
-		max-width: 100%;
-		margin-inline: auto;
-	}
-
-	.post-reading-meta {
-		font-size: 1rem;
-		letter-spacing: 0.01em;
-		opacity: 0.86;
-	}
-
-	.post-article-title {
-		font-size: clamp(2.35rem, 4.6vw, 4.55rem);
-		line-height: 1.02;
-		letter-spacing: -0.04em;
-		text-wrap: balance;
-	}
-
-	@media (max-width: 767px) {
-		.post-article-card {
-			max-width: 100%;
-		}
-
-		.post-reading-meta {
-			flex-wrap: wrap;
-			gap: 0.65rem 1rem;
-			font-size: 0.94rem;
-		}
-
-		.post-article-title {
-			font-size: 1.95rem;
-			line-height: 1.16;
-			letter-spacing: -0.025em;
-			width: 100%;
-			max-width: none;
-			text-wrap: wrap;
-		}
-	}
+<style is:global>
+	@import "../../styles/post-detail-layout.css";
 </style>

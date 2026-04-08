@@ -1,6 +1,7 @@
 import {
 	authenticateAdminPassword,
 	clearAdminSessionCookie,
+	COMMENT_MESSAGES,
 	createAdminSessionCookie,
 	deleteAdminSession,
 	getAdminSessionToken,
@@ -26,7 +27,7 @@ export const onRequestGet = async ({
 		});
 	} catch (error) {
 		console.error("admin:session:get", error);
-		return serverError("\u4f1a\u8bdd\u72b6\u6001\u8bfb\u53d6\u5931\u8d25\u3002");
+		return serverError(COMMENT_MESSAGES.sessionReadError);
 	}
 };
 
@@ -47,13 +48,13 @@ export const onRequestPost = async ({
 		const password = String(body.password || "").trim();
 
 		if (!(await authenticateAdminPassword(password, env))) {
-			return unauthorized("\u540e\u53f0\u5bc6\u7801\u4e0d\u6b63\u786e\u3002");
+			return unauthorized(COMMENT_MESSAGES.adminUnauthorized);
 		}
 
 		return json(
 			{
 				ok: true,
-				message: "\u767b\u5f55\u6210\u529f\u3002",
+				message: COMMENT_MESSAGES.loginSuccess,
 			},
 			200,
 			{
@@ -62,7 +63,7 @@ export const onRequestPost = async ({
 		);
 	} catch (error) {
 		console.error("admin:session:post", error);
-		return serverError("\u767b\u5f55\u5931\u8d25\u3002");
+		return serverError(COMMENT_MESSAGES.loginError);
 	}
 };
 
@@ -78,7 +79,7 @@ export const onRequestDelete = async ({
 		return json(
 			{
 				ok: true,
-				message: "\u5df2\u9000\u51fa\u3002",
+				message: COMMENT_MESSAGES.logoutSuccess,
 			},
 			200,
 			{
@@ -87,6 +88,6 @@ export const onRequestDelete = async ({
 		);
 	} catch (error) {
 		console.error("admin:session:delete", error);
-		return serverError("\u9000\u51fa\u5931\u8d25\u3002");
+		return serverError(COMMENT_MESSAGES.logoutError);
 	}
 };

@@ -1,12 +1,12 @@
 import {
 	badRequest,
+	COMMENT_MESSAGES,
 	deleteCommentsByIds,
 	json,
-	isAdminAuthorized,
 	readJsonBody,
+	requireAdminSession,
 	sanitizeCommentIds,
 	serverError,
-	unauthorized,
 	type Env,
 } from "../../../_lib/comments";
 
@@ -17,8 +17,13 @@ export const onRequestPost = async ({
 	env: Env;
 	request: Request;
 }) => {
-	if (!(await isAdminAuthorized(request, env))) {
-		return unauthorized("\u540e\u53f0\u4f1a\u8bdd\u5df2\u5931\u6548\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002");
+	const authResponse = await requireAdminSession(
+		request,
+		env,
+		COMMENT_MESSAGES.adminSessionExpired,
+	);
+	if (authResponse) {
+		return authResponse;
 	}
 
 	try {
@@ -32,10 +37,10 @@ export const onRequestPost = async ({
 		const ids = sanitizeCommentIds(body.ids);
 
 		if (action !== "delete") {
-			return badRequest("\u4e0d\u652f\u6301\u7684\u6279\u91cf\u64cd\u4f5c\u3002");
+			return badRequest(COMMENT_MESSAGES.unsupportedBulkAction);
 		}
 		if (!ids.length) {
-			return badRequest("\u8bf7\u5148\u9009\u62e9\u8981\u5904\u7406\u7684\u8bc4\u8bba\u3002");
+			return badRequest(COMMENT_MESSAGES.missingBulkSelection);
 		}
 
 		const deletedCount = await deleteCommentsByIds(env, ids);
@@ -46,6 +51,6 @@ export const onRequestPost = async ({
 		});
 	} catch (error) {
 		console.error("admin:comments:bulk", error);
-		return serverError("\u6279\u91cf\u64cd\u4f5c\u5931\u8d25\u3002");
+		return serverError("批量操作失败。");
 	}
 };
