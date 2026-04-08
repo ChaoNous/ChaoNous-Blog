@@ -126,7 +126,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
       }
     </div>
     <div class="navbar-actions flex items-center gap-1">
-      <!-- 搜索：桌面端用 Search 组件，移动端用图标按钮 -->
+      <!-- Search: use the full Search component on desktop and an icon button on mobile. -->
       <div id="search-container" class="hidden lg:block">
         <Search client:media="(min-width: 1024px)" />
       </div>
@@ -137,7 +137,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
       >
         <Icon name="material-symbols:search" class="text-[1.25rem]" />
       </button>
-      <!-- 主题色切换 -->
+      <!-- Theme color settings -->
       {
         !siteConfig.themeColor.fixed && (
           <button
@@ -152,11 +152,11 @@ const navbarBrandText = siteConfig.navbarTitle?.text
           </button>
         )
       }
-      <!-- 深浅色切换 -->
+      <!-- Light and dark mode toggle -->
       <div class="w-9 h-9 flex items-center justify-center">
         <LightDarkSwitch client:idle />
       </div>
-      <!-- 移动端菜单按钮 -->
+      <!-- Mobile menu button -->
       <button
         aria-label="Mobile Controls"
         name="Mobile Controls"
@@ -266,7 +266,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
       wirePanelButton("display-settings-switch", "display-setting");
       wirePanelButton("nav-menu-switch", "nav-menu-panel");
 
-      // Mobile search button — directly toggle search panel
+      // Mobile search button: directly toggle the search panel.
       const mobileSearchBtn = document.getElementById("mobile-search-switch");
       if (mobileSearchBtn instanceof HTMLElement) {
         const handleMobileSearch = async (event: MouseEvent) => {
