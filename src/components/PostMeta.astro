@@ -6,243 +6,164 @@ import { formatDateToYYYYMMDD } from "../utils/date-utils";
 import { getCategoryUrl } from "../utils/url-utils";
 
 export interface Props {
-	published: Date;
-	updated?: Date;
-	category?: string;
-	hideUpdateDate?: boolean;
-	isHome?: boolean;
-	className?: string;
-	statsSlug?: string;
-	statsUrl?: string;
-	statsTitle?: string;
-	words?: number;
-	showWordCount?: boolean;
+  published: Date;
+  updated?: Date;
+  category?: string;
+  hideUpdateDate?: boolean;
+  isHome?: boolean;
+  className?: string;
+  statsSlug?: string;
+  statsUrl?: string;
+  statsTitle?: string;
+  words?: number;
+  showWordCount?: boolean;
 }
 
 const {
-	published,
-	updated,
-	category,
-	hideUpdateDate,
-	isHome,
-	className = "",
-	statsSlug,
-	statsUrl,
-	statsTitle,
-	words,
-	showWordCount = false,
+  published,
+  updated,
+  category,
+  hideUpdateDate,
+  isHome,
+  className = "",
+  statsSlug,
+  statsUrl,
+  statsTitle,
+  words,
+  showWordCount = false,
 } = Astro.props;
 const pageViewsLabel = i18n(I18nKey.profileStatsPageViews);
 const visitsLabel = i18n(I18nKey.profileStatsVisits);
 ---
 
-<div class:list={["post-meta-group flex flex-wrap text-50 leading-6 items-center gap-4 gap-x-4 gap-y-2", className]}>
-    <!-- publish date -->
-    <div class="flex items-center">
-        <div class="meta-icon">
-            <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl"></Icon>
-        </div>
-        <span class="text-50 font-medium">{formatDateToYYYYMMDD(published)}</span>
+<div
+  class:list={[
+    "post-meta-group flex flex-wrap text-50 leading-6 items-center gap-4 gap-x-4 gap-y-2",
+    className,
+  ]}
+>
+  <!-- publish date -->
+  <div class="flex items-center">
+    <div class="meta-icon">
+      <Icon
+        name="material-symbols:calendar-today-outline-rounded"
+        class="text-xl"
+      />
     </div>
+    <span class="text-50 font-medium">{formatDateToYYYYMMDD(published)}</span>
+  </div>
 
-    <!-- update date -->
-    {!hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
-        <div class="flex items-center">
-            <div class="meta-icon">
-                <Icon name="material-symbols:edit-calendar-outline-rounded" class="text-xl"></Icon>
-            </div>
-            <span class="text-50 font-medium">{formatDateToYYYYMMDD(updated)}</span>
-        </div>
-    )}
-
-    <!-- categories -->
-    <div class="flex items-center">
+  <!-- update date -->
+  {
+    !hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
+      <div class="flex items-center">
         <div class="meta-icon">
-            <Icon name="material-symbols:book-2-outline-rounded" class="text-xl"></Icon>
+          <Icon
+            name="material-symbols:edit-calendar-outline-rounded"
+            class="text-xl"
+          />
         </div>
-        <a href={getCategoryUrl(category || "")}
-           class="category-pill transition text-50 font-medium whitespace-nowrap">
-            {category || i18n(I18nKey.uncategorized)}
-        </a>
+        <span class="text-50 font-medium">{formatDateToYYYYMMDD(updated)}</span>
+      </div>
+    )
+  }
+
+  <!-- categories -->
+  <div class="flex items-center">
+    <div class="meta-icon">
+      <Icon name="material-symbols:book-2-outline-rounded" class="text-xl" />
     </div>
+    <a
+      href={getCategoryUrl(category || "")}
+      class="category-pill transition text-50 font-medium whitespace-nowrap"
+    >
+      {category || i18n(I18nKey.uncategorized)}
+    </a>
+  </div>
 
-    <!-- word count -->
-    {showWordCount && words && (
-        <div class="flex items-center">
-            <div class="meta-icon">
-                <Icon name="material-symbols:article-outline-rounded" class="text-xl"></Icon>
-            </div>
-            <span class="text-50 text-sm font-medium">
-                {words} {words > 1 ? i18n(I18nKey.wordsCount) : i18n(I18nKey.wordCount)}
-            </span>
+  <!-- word count -->
+  {
+    showWordCount && words && (
+      <div class="flex items-center">
+        <div class="meta-icon">
+          <Icon
+            name="material-symbols:article-outline-rounded"
+            class="text-xl"
+          />
         </div>
-    )}
+        <span class="text-50 text-sm font-medium">
+          {words}{" "}
+          {words > 1 ? i18n(I18nKey.wordsCount) : i18n(I18nKey.wordCount)}
+        </span>
+      </div>
+    )
+  }
 
-    <!-- 访问量 -->
-    {!isHome && statsSlug && statsUrl && (
-        <div
-            class="flex items-center site-page-views hidden"
-            data-post-slug={statsSlug}
-            data-post-url={statsUrl}
-            data-post-title={statsTitle || ""}
-            data-page-views-label={pageViewsLabel}
-            data-visits-label={visitsLabel}
-        >
-            <div class="meta-icon">
-                <Icon name="material-symbols:visibility-outline-rounded" class="text-xl"></Icon>
-            </div>
-            <span class="text-50 font-medium page-views-display">{i18n(I18nKey.pageViewsLoading)}</span>
+  <!-- page views -->
+  {
+    !isHome && statsSlug && statsUrl && (
+      <div
+        class="flex items-center site-page-views hidden"
+        data-post-slug={statsSlug}
+        data-post-url={statsUrl}
+        data-post-title={statsTitle || ""}
+        data-page-views-label={pageViewsLabel}
+        data-visits-label={visitsLabel}
+      >
+        <div class="meta-icon">
+          <Icon
+            name="material-symbols:visibility-outline-rounded"
+            class="text-xl"
+          />
         </div>
-    )}
+        <span class="text-50 font-medium page-views-display">
+          {i18n(I18nKey.pageViewsLoading)}
+        </span>
+      </div>
+    )
+  }
 </div>
 
 <style>
-	.post-meta-group {
-		font-size: 1rem;
-		letter-spacing: 0.015em;
-		row-gap: 0.45rem;
-	}
+  .post-meta-group {
+    font-size: 1rem;
+    letter-spacing: 0.015em;
+    row-gap: 0.45rem;
+  }
 
-	.post-meta-group a,
-	.post-meta-group span {
-		opacity: 0.9;
-	}
+  .post-meta-group a,
+  .post-meta-group span {
+    opacity: 0.9;
+  }
 
-	.category-pill {
-		padding: 0.15em 0.6em;
-		border-radius: 0.375rem;
-		transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
-	}
+  .category-pill {
+    padding: 0.15em 0.6em;
+    border-radius: 0.375rem;
+    transition:
+      color 300ms ease-in-out,
+      background-color 300ms ease-in-out;
+  }
 
-	.category-pill:hover {
-		color: var(--primary);
-		background-color: color-mix(in oklch, var(--primary) 6%, transparent);
-	}
+  .category-pill:hover {
+    color: var(--primary);
+    background-color: color-mix(in oklch, var(--primary) 6%, transparent);
+  }
 
-	@media (max-width: 767px) {
-		.post-meta-group {
-			font-size: 0.94rem;
-			gap: 0.65rem 0.9rem;
-		}
+  @media (max-width: 767px) {
+    .post-meta-group {
+      font-size: 0.94rem;
+      gap: 0.65rem 0.9rem;
+    }
 
-		.post-meta-group .meta-icon :global(svg) {
-			width: 1.05rem;
-			height: 1.05rem;
-		}
-	}
+    .post-meta-group .meta-icon :global(svg) {
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+  }
 </style>
 
-{!isHome && statsSlug && statsUrl && (
-<script is:inline>
-    const analyticsVisitorStorageKey = "chaonous:analytics-visitor-id";
-
-    function generateStatsText(container, pageViews, visits) {
-        const pageViewsText = container?.dataset.pageViewsLabel || "浏览";
-        const visitsText = container?.dataset.visitsLabel || "访客";
-        return `${pageViewsText} ${pageViews} · ${visitsText} ${visits}`;
-    }
-
-    function getVisitorId() {
-        try {
-            const existing = window.localStorage.getItem(analyticsVisitorStorageKey);
-            if (existing) {
-                return existing;
-            }
-
-            const next = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-                ? crypto.randomUUID()
-                : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-
-            window.localStorage.setItem(analyticsVisitorStorageKey, next);
-            return next;
-        } catch (error) {
-            console.warn("analytics visitor id unavailable:", error);
-            return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-        }
-    }
-
-    async function recordPageVisit(container) {
-        const postSlug = container?.dataset.postSlug;
-        const postUrl = container?.dataset.postUrl;
-        const postTitle = container?.dataset.postTitle || "";
-        if (!postSlug || !postUrl) {
-            return;
-        }
-
-        await fetch("/api/analytics/visit", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json",
-            },
-            body: JSON.stringify({
-                postSlug,
-                postUrl,
-                postTitle,
-                visitorId: getVisitorId(),
-            }),
-        });
-    }
-
-    async function readPageStats(container) {
-        const postSlug = container?.dataset.postSlug;
-        if (!postSlug) {
-            return null;
-        }
-
-        const response = await fetch(`/api/analytics/pv?postSlug=${encodeURIComponent(postSlug)}`);
-        if (!response.ok) {
-            throw new Error(`analytics status ${response.status}`);
-        }
-
-        return response.json();
-    }
-
-    async function fetchPageViews() {
-        const container = document.querySelector('.site-page-views');
-        if (!container) {
-            return;
-        }
-
-        try {
-            await recordPageVisit(container);
-            const stats = await readPageStats(container);
-            const pageViews = stats.pageviews || 0;
-            const visits = stats.visits || 0;
-
-            container.classList.remove('hidden');
-            container.querySelector('.page-views-display').textContent = generateStatsText(container, pageViews, visits);
-        } catch (error) {
-            console.error('Error fetching page views:', error);
-            container.classList.add('hidden');
-        }
-    }
-
-    function withPageLifecycle(callback) {
-        if (typeof window.registerPageScript === "function") {
-            callback(window.registerPageScript);
-            return;
-        }
-
-        const handleReady = () => {
-            if (typeof window.registerPageScript === "function") {
-                callback(window.registerPageScript);
-            }
-        };
-
-        window.addEventListener("page-lifecycle:ready", handleReady, { once: true });
-    }
-
-    (() => {
-        withPageLifecycle((registerPageScript) => {
-        registerPageScript("post-meta-page-views", {
-            shouldRun() {
-                return document.querySelector(".site-page-views") !== null;
-            },
-            init() {
-                fetchPageViews();
-            },
-        });
-        });
-    })();
-</script>
-)}
+{
+  !isHome && statsSlug && statsUrl && (
+    <script>import "../scripts/post-meta-stats.ts";</script>
+  )
+}

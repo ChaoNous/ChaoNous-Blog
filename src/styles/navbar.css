@@ -1,0 +1,90 @@
+#navbar .navbar-shell {
+  position: relative;
+  column-gap: 1rem;
+}
+
+#navbar .navbar-links {
+  justify-self: center;
+  min-width: 0;
+}
+
+#navbar .navbar-brand {
+  min-width: fit-content;
+}
+
+#navbar .navbar-actions {
+  margin-left: 0.75rem;
+  justify-self: end;
+  flex-shrink: 0;
+}
+
+#navbar.is-searching .navbar-links {
+  opacity: 0;
+  transform: translateY(-0.35rem);
+  pointer-events: none;
+}
+
+#navbar .dropdown-item,
+#navbar .dropdown-container > a,
+#navbar .dropdown-container > button {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+#navbar .dropdown-item {
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-size: 1rem;
+}
+
+#navbar .navbar-brand-text {
+  font-family: "Crimson Pro";
+  font-size: clamp(2.2rem, 2.35vw, 2.9rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  background: linear-gradient(
+    135deg,
+    #6d1f4f 0%,
+    #a11f2f 24%,
+    #d7a437 48%,
+    #f0c84e 63%,
+    #f2b22d 78%,
+    #a02a2d 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-transform: none;
+  text-shadow:
+    0 1px 0 rgba(255, 236, 178, 0.22),
+    0 2px 8px rgba(83, 17, 33, 0.35),
+    0 0 18px rgba(166, 41, 45, 0.2);
+}
+
+#navbar.group.scrolled .navbar-brand-text {
+  background: linear-gradient(
+    135deg,
+    #5e1a45 0%,
+    #92202c 24%,
+    #c9952f 48%,
+    #e7bd47 63%,
+    #e1a42a 78%,
+    #8e2429 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (max-width: 1279px) {
+  #navbar .navbar-shell {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  #navbar .navbar-brand {
+    padding-inline: 0.5rem;
+  }
+}
