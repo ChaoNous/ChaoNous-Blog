@@ -34,7 +34,7 @@
 		>
 			<Icon
 				icon="material-symbols:wb-sunny-outline-rounded"
-				class="text-[1.25rem]"
+				class="theme-switch-glyph text-[1.25rem]"
 			/>
 		</div>
 		<div
@@ -42,7 +42,7 @@
 		>
 			<Icon
 				icon="material-symbols:dark-mode-outline-rounded"
-				class="text-[1.25rem]"
+				class="theme-switch-glyph text-[1.25rem]"
 			/>
 		</div>
 	</button>

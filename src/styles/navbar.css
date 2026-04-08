@@ -18,6 +18,23 @@
   flex-shrink: 0;
 }
 
+#navbar :is(.navbar-action-icon, .navbar-link-icon, .theme-switch-glyph) {
+  color: inherit;
+  transition: none !important;
+}
+
+#navbar .navbar-arrow {
+  transition:
+    transform 300ms ease-in-out,
+    opacity 300ms ease-in-out;
+}
+
+#navbar .theme-icon {
+  transition:
+    transform 300ms ease-in-out,
+    opacity 300ms ease-in-out;
+}
+
 #navbar.is-searching .navbar-links {
   opacity: 0;
   transform: translateY(-0.35rem);

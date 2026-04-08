@@ -135,7 +135,10 @@ const navbarBrandText = siteConfig.navbarTitle?.text
         class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90 lg:hidden"
         id="mobile-search-switch"
       >
-        <Icon name="material-symbols:search" class="text-[1.25rem]" />
+        <Icon
+          name="material-symbols:search"
+          class="navbar-action-icon text-[1.25rem]"
+        />
       </button>
       <!-- Theme color settings -->
       {
@@ -147,7 +150,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
           >
             <Icon
               name="material-symbols:palette-outline"
-              class="text-[1.25rem]"
+              class="navbar-action-icon text-[1.25rem]"
             />
           </button>
         )
@@ -163,7 +166,10 @@ const navbarBrandText = siteConfig.navbarTitle?.text
         class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90 lg:hidden"
         id="nav-menu-switch"
       >
-        <Icon name="material-symbols:unfold-more" class="text-[1.25rem]" />
+        <Icon
+          name="material-symbols:unfold-more"
+          class="navbar-action-icon text-[1.25rem]"
+        />
       </button>
     </div>
     <NavMenuPanel links={links} />

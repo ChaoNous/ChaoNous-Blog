@@ -241,7 +241,7 @@
 			icon="material-symbols:search"
 			class="absolute text-[1.25rem] pointer-events-none {isDesktopSearchExpanded
 				? 'left-3'
-				: 'left-1/2 -translate-x-1/2'} transition top-1/2 -translate-y-1/2 {isDesktopSearchExpanded
+				: 'left-1/2 -translate-x-1/2'} navbar-action-icon top-1/2 -translate-y-1/2 {isDesktopSearchExpanded
 				? 'search-icon-color'
 				: ''}"
 		></Icon>
