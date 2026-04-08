@@ -42,13 +42,13 @@ enum I18nKey {
   friendsCopySuccess = "friendsCopySuccess",
   friendsTags = "friendsTags",
 
-  // 404页面
+  // 404 page
   notFound = "notFound",
   notFoundTitle = "notFoundTitle",
   notFoundDescription = "notFoundDescription",
   backToHome = "backToHome",
 
-  // 音乐播放器
+  // Music player
   musicPlayer = "musicPlayer",
   musicPlayerShow = "musicPlayerShow",
   musicPlayerHide = "musicPlayerHide",
@@ -72,7 +72,7 @@ enum I18nKey {
   unknownSong = "unknownSong",
   unknownArtist = "unknownArtist",
 
-  // 相册页面
+  // Albums page
   albums = "albums",
   albumsSubtitle = "albumsSubtitle",
   albumsEmpty = "albumsEmpty",
@@ -81,7 +81,7 @@ enum I18nKey {
   albumsPhotoCount = "albumsPhotoCount",
   albumsPhotosCount = "albumsPhotosCount",
 
-  // 站点统计
+  // Site stats
   siteStats = "siteStats",
   siteStatsPostCount = "siteStatsPostCount",
   siteStatsCategoryCount = "siteStatsCategoryCount",
@@ -91,7 +91,7 @@ enum I18nKey {
   siteStatsDaysAgo = "siteStatsDaysAgo",
   siteStatsDays = "siteStatsDays",
 
-  // 分享功能
+  // Share
   shareArticle = "shareArticle",
   generatingPoster = "generatingPoster",
   copied = "copied",
@@ -101,17 +101,17 @@ enum I18nKey {
   shareOnSocial = "shareOnSocial",
   shareOnSocialDescription = "shareOnSocialDescription",
 
-  // 个人资料统计
+  // Profile stats
   profileStatsLoading = "profileStatsLoading",
   profileStatsPageViews = "profileStatsPageViews",
   profileStatsVisits = "profileStatsVisits",
   profileStatsUnavailable = "profileStatsUnavailable",
 
-  // 页面访问量统计
+  // Page views
   pageViewsLoading = "pageViewsLoading",
   pageViewsUnavailable = "pageViewsUnavailable",
 
-  // 导航栏
+  // Navigation
   navLinks = "navLinks",
   navMy = "navMy",
   navAbout = "navAbout",

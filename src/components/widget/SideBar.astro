@@ -4,296 +4,221 @@ import WidgetGroup from "@components/layout/WidgetGroup.astro";
 import { widgetManager } from "../../utils/widget-manager";
 
 interface Props {
-	class?: string;
-	headings?: MarkdownHeading[];
-	isPostPage?: boolean;
+  class?: string;
+  headings?: MarkdownHeading[];
+  isPostPage?: boolean;
 }
 
 const { class: className, headings, isPostPage = false } = Astro.props;
 
 const mobileTopComponents = widgetManager.getComponentsByPosition(
-	"top",
-	"drawer",
-	"mobile",
+  "top",
+  "drawer",
+  "mobile",
 );
 const mobileStickyComponents = widgetManager.getComponentsByPosition(
-	"sticky",
-	"drawer",
-	"mobile",
+  "sticky",
+  "drawer",
+  "mobile",
 );
 
 const tabletTopComponents = widgetManager.getComponentsByPosition(
-	"top",
-	"left",
-	"tablet",
+  "top",
+  "left",
+  "tablet",
 );
 const tabletStickyComponents = widgetManager.getComponentsByPosition(
-	"sticky",
-	"left",
-	"tablet",
+  "sticky",
+  "left",
+  "tablet",
 );
 
-// 桌面端组件
 const desktopTopComponents = widgetManager.getComponentsByPosition(
-	"top",
-	"left",
-	"desktop",
+  "top",
+  "left",
+  "desktop",
 );
 const desktopStickyComponents = widgetManager.getComponentsByPosition(
-	"sticky",
-	"left",
-	"desktop",
+  "sticky",
+  "left",
+  "desktop",
 );
 
 type RenderGroup = {
-	components: typeof mobileTopComponents;
-	wrapperClass: string;
+  components: typeof mobileTopComponents;
+  wrapperClass: string;
 };
 
-function normalizeComponentsForPage(
-	components: typeof mobileTopComponents,
-) {
-	return components.filter((component) => {
-		if (
-			component.type === "profile" ||
-			component.type === "categories" ||
-			component.type === "site-stats"
-		) {
-			return !isPostPage;
-		}
+function normalizeComponentsForPage(components: typeof mobileTopComponents) {
+  return components.filter((component) => {
+    if (
+      component.type === "profile" ||
+      component.type === "categories" ||
+      component.type === "site-stats"
+    ) {
+      return !isPostPage;
+    }
 
-		if (component.type === "card-toc") {
-			return isPostPage;
-		}
+    if (component.type === "card-toc") {
+      return isPostPage;
+    }
 
-		return true;
-	});
+    return true;
+  });
 }
 
 function sameComponents(
-	left: typeof mobileTopComponents,
-	right: typeof mobileTopComponents,
+  left: typeof mobileTopComponents,
+  right: typeof mobileTopComponents,
 ) {
-	return (
-		JSON.stringify(normalizeComponentsForPage(left)) ===
-		JSON.stringify(normalizeComponentsForPage(right))
-	);
+  return (
+    JSON.stringify(normalizeComponentsForPage(left)) ===
+    JSON.stringify(normalizeComponentsForPage(right))
+  );
 }
 
 function buildResponsiveGroups(
-	mobileComponents: typeof mobileTopComponents,
-	tabletComponents: typeof mobileTopComponents,
-	desktopComponents: typeof mobileTopComponents,
+  mobileComponents: typeof mobileTopComponents,
+  tabletComponents: typeof mobileTopComponents,
+  desktopComponents: typeof mobileTopComponents,
 ): RenderGroup[] {
-	const normalizedMobileComponents = normalizeComponentsForPage(mobileComponents);
-	const normalizedTabletComponents = normalizeComponentsForPage(tabletComponents);
-	const normalizedDesktopComponents = normalizeComponentsForPage(desktopComponents);
+  const normalizedMobileComponents =
+    normalizeComponentsForPage(mobileComponents);
+  const normalizedTabletComponents =
+    normalizeComponentsForPage(tabletComponents);
+  const normalizedDesktopComponents =
+    normalizeComponentsForPage(desktopComponents);
 
-	if (
-		normalizedMobileComponents.length > 0 &&
-		sameComponents(normalizedMobileComponents, normalizedTabletComponents) &&
-		sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
-	) {
-		return [
-			{
-				components: normalizedMobileComponents,
-				wrapperClass: "flex flex-col w-full gap-3",
-			},
-		];
-	}
+  if (
+    normalizedMobileComponents.length > 0 &&
+    sameComponents(normalizedMobileComponents, normalizedTabletComponents) &&
+    sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
+  ) {
+    return [
+      {
+        components: normalizedMobileComponents,
+        wrapperClass: "flex flex-col w-full gap-3",
+      },
+    ];
+  }
 
-	const groups: RenderGroup[] = [];
+  const groups: RenderGroup[] = [];
 
-	if (normalizedMobileComponents.length > 0) {
-		groups.push({
-			components: normalizedMobileComponents,
-			wrapperClass: "flex flex-col w-full gap-3 lg:hidden",
-		});
-	}
+  if (normalizedMobileComponents.length > 0) {
+    groups.push({
+      components: normalizedMobileComponents,
+      wrapperClass: "flex flex-col w-full gap-3 lg:hidden",
+    });
+  }
 
-	if (
-		normalizedTabletComponents.length > 0 &&
-		sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
-	) {
-		groups.push({
-			components: normalizedTabletComponents,
-			wrapperClass: "hidden lg:flex flex-col w-full gap-3",
-		});
-		return groups;
-	}
+  if (
+    normalizedTabletComponents.length > 0 &&
+    sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
+  ) {
+    groups.push({
+      components: normalizedTabletComponents,
+      wrapperClass: "hidden lg:flex flex-col w-full gap-3",
+    });
+    return groups;
+  }
 
-	if (normalizedTabletComponents.length > 0) {
-		groups.push({
-			components: normalizedTabletComponents,
-			wrapperClass:
-				"sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-3",
-		});
-	}
+  if (normalizedTabletComponents.length > 0) {
+    groups.push({
+      components: normalizedTabletComponents,
+      wrapperClass:
+        "sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-3",
+    });
+  }
 
-	if (normalizedDesktopComponents.length > 0) {
-		groups.push({
-			components: normalizedDesktopComponents,
-			wrapperClass: "sidebar-content hidden xl:flex flex-col w-full gap-3",
-		});
-	}
+  if (normalizedDesktopComponents.length > 0) {
+    groups.push({
+      components: normalizedDesktopComponents,
+      wrapperClass: "sidebar-content hidden xl:flex flex-col w-full gap-3",
+    });
+  }
 
-	return groups;
+  return groups;
 }
 
 const topGroups = buildResponsiveGroups(
-	mobileTopComponents,
-	tabletTopComponents,
-	desktopTopComponents,
+  mobileTopComponents,
+  tabletTopComponents,
+  desktopTopComponents,
 );
 
 const stickyGroups = buildResponsiveGroups(
-	mobileStickyComponents,
-	tabletStickyComponents,
-	desktopStickyComponents,
+  mobileStickyComponents,
+  tabletStickyComponents,
+  desktopStickyComponents,
 );
 ---
 
 <div
-	id="sidebar"
-	class:list={[
-		className,
-		"sidebar-root flex flex-col w-full pt-0",
-	]}
+  id="sidebar"
+  class:list={[className, "sidebar-root flex flex-col w-full pt-0"]}
+  data-breakpoint-mobile={String(widgetManager.getBreakpoints().mobile)}
+  data-breakpoint-tablet={String(widgetManager.getBreakpoints().tablet)}
+  data-show-mobile={widgetManager.shouldShowSidebar("mobile") ? "true" : "false"}
+  data-show-tablet={widgetManager.shouldShowSidebar("tablet") ? "true" : "false"}
+  data-show-desktop={widgetManager.shouldShowSidebar("desktop") ? "true" : "false"}
+  data-has-mobile={mobileTopComponents.length > 0 || mobileStickyComponents.length > 0
+    ? "true"
+    : "false"}
+  data-has-tablet={tabletTopComponents.length > 0 || tabletStickyComponents.length > 0
+    ? "true"
+    : "false"}
+  data-has-desktop={desktopTopComponents.length > 0 || desktopStickyComponents.length > 0
+    ? "true"
+    : "false"}
 >
-	<div
-		id="sidebar-sticky"
-		class="transition-all duration-700 flex flex-col w-full mt-0 gap-3"
-	>
-		{
-			topGroups.map((group) => (
-				<WidgetGroup
-					components={group.components}
-					headings={headings}
-					isPostPage={isPostPage}
-					wrapperClass={group.wrapperClass}
-				/>
-			))
-		}
+  <div
+    id="sidebar-sticky"
+    class="transition-all duration-700 flex flex-col w-full mt-0 gap-3"
+  >
+    {
+      topGroups.map((group) => (
+        <WidgetGroup
+          components={group.components}
+          headings={headings}
+          isPostPage={isPostPage}
+          wrapperClass={group.wrapperClass}
+        />
+      ))
+    }
 
-		{
-			stickyGroups.map((group) => (
-				<WidgetGroup
-					components={group.components}
-					headings={headings}
-					isPostPage={isPostPage}
-					wrapperClass={group.wrapperClass}
-				/>
-			))
-		}
-	</div>
+    {
+      stickyGroups.map((group) => (
+        <WidgetGroup
+          components={group.components}
+          headings={headings}
+          isPostPage={isPostPage}
+          wrapperClass={group.wrapperClass}
+        />
+      ))
+    }
+  </div>
 </div>
 
 <style>
-	@media (max-width: 1023px) {
-		#sidebar {
-			display: var(--sidebar-mobile-display, block);
-		}
-	}
+  @media (max-width: 1023px) {
+    #sidebar {
+      display: var(--sidebar-mobile-display, block);
+    }
+  }
 
-	@media (min-width: 1024px) and (max-width: 1279px) {
-		#sidebar {
-			display: var(--sidebar-tablet-display, block);
-		}
-	}
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    #sidebar {
+      display: var(--sidebar-tablet-display, block);
+    }
+  }
 
-	@media (min-width: 1280px) {
-		#sidebar {
-			display: var(--sidebar-desktop-display, block);
-		}
-	}
-
+  @media (min-width: 1280px) {
+    #sidebar {
+      display: var(--sidebar-desktop-display, block);
+    }
+  }
 </style>
 
-<script
-	is:inline
-	define:vars={{
-		breakpoints: widgetManager.getBreakpoints(),
-		mobileShowSidebar: widgetManager.shouldShowSidebar("mobile"),
-		tabletShowSidebar: widgetManager.shouldShowSidebar("tablet"),
-		desktopShowSidebar: widgetManager.shouldShowSidebar("desktop"),
-		hasMobileComponents:
-			mobileTopComponents.length > 0 || mobileStickyComponents.length > 0,
-		hasTabletComponents:
-			tabletTopComponents.length > 0 || tabletStickyComponents.length > 0,
-		hasDesktopComponents:
-			desktopTopComponents.length > 0 || desktopStickyComponents.length > 0,
-	}}
->
-	class SidebarManager {
-		handleResize = () => this.updateResponsiveDisplay();
-
-		constructor() {
-			this.init();
-		}
-
-		init() {
-			this.updateResponsiveDisplay();
-			window.addEventListener("resize", this.handleResize);
-		}
-
-		updateResponsiveDisplay() {
-			const width = window.innerWidth;
-
-			let deviceType;
-			let hasComponents = false;
-			let showConfig = false;
-
-			if (width < breakpoints.mobile) {
-				deviceType = "mobile";
-				hasComponents = hasMobileComponents;
-				showConfig = mobileShowSidebar;
-			} else if (width < breakpoints.tablet) {
-				deviceType = "tablet";
-				hasComponents = hasTabletComponents;
-				showConfig = tabletShowSidebar;
-		} else {
-			deviceType = "desktop";
-			hasComponents = hasDesktopComponents;
-			showConfig = desktopShowSidebar;
-		}
-
-			const shouldShow = showConfig && hasComponents;
-			const sidebar = document.getElementById("sidebar");
-
-			if (sidebar) {
-				sidebar.style.setProperty(
-					`--sidebar-${deviceType}-display`,
-					shouldShow ? "block" : "none",
-				);
-			}
-		}
-
-		destroy() {
-			window.removeEventListener("resize", this.handleResize);
-		}
-	}
-
-	function registerSidebarManager() {
-		if (typeof window.registerPageScript !== "function") {
-			setTimeout(registerSidebarManager, 0);
-			return;
-		}
-
-		window.registerPageScript("sidebar-manager", {
-			shouldRun() {
-				return document.getElementById("sidebar") !== null;
-			},
-			init() {
-				const sidebarWindow = window;
-				sidebarWindow.__sidebarManager?.destroy();
-				sidebarWindow.__sidebarManager = new SidebarManager();
-				return () => {
-					sidebarWindow.__sidebarManager?.destroy();
-					sidebarWindow.__sidebarManager = null;
-				};
-			},
-		});
-	}
-
-	registerSidebarManager();
+<script>
+  import "../../scripts/sidebar-runtime.ts";
 </script>

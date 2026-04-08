@@ -1,7 +1,6 @@
 /**
  * Layout runtime entry point.
- * Thin orchestrator — imports sub-modules, registers Swup hooks,
- * wires up global scroll/resize handlers.
+ * Thin orchestrator that wires page-level visual behavior after the shell loads.
  */
 
 import { SCROLL_THROTTLE_MS } from "../constants/constants";
@@ -35,11 +34,11 @@ function runOnDocumentReady(callback: () => void | Promise<void>) {
   void callback();
 }
 
-// ── One-time initialization ──
+// One-time initialization
 void initializePanelManager();
 scheduleIdleTask(initCustomScrollbar);
 
-// ── Swup hooks ──
+// Swup hooks
 if (window?.swup?.hooks) {
   scheduleIdleTask(() => {
     void initFancybox();
@@ -56,19 +55,21 @@ if (window?.swup?.hooks) {
   });
 }
 
-// ── Global viewport handlers ──
+// Global viewport handlers
 function throttle(
   func: (...args: unknown[]) => void,
   limit: number,
 ): (...args: unknown[]) => void {
-  let inThrottle: boolean;
+  let inThrottle = false;
   return function (this: unknown) {
     const args = arguments;
     const context = this;
     if (!inThrottle) {
       func.apply(context, [...args]);
       inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
     }
   };
 }
@@ -77,6 +78,7 @@ const throttledScrollFunction = throttle(
   syncDesktopViewportState,
   SCROLL_THROTTLE_MS,
 );
+
 window.addEventListener("scroll", throttledScrollFunction, {
   passive: true,
 });
@@ -92,7 +94,7 @@ window.addEventListener("resize", handleResize);
 handleResize();
 syncDesktopViewportState();
 
-// ── Initial page load ──
+// Initial page load
 runOnDocumentReady(async () => {
   revealBanner();
   applyLayout();

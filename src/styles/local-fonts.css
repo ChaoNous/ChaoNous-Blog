@@ -1,6 +1,6 @@
 @import "./generated-zhuque-ui-font.css";
 
-/* Crimson Pro 字体配置：英文和数字默认字体 */
+/* Crimson Pro is used for Latin text and numeric glyphs. */
 @font-face {
   font-family: "Crimson Pro";
   src: url("/assets/fonts/CrimsonPro-Regular.woff2") format("woff2");

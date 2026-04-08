@@ -47,14 +47,14 @@ export const zh_CN: Translation = {
 
   [Key.notFound]: "404",
   [Key.notFoundTitle]: "页面未找到",
-  [Key.notFoundDescription]: "抱歉，你访问的页面不存在或已被移动。",
+  [Key.notFoundDescription]: "抱歉，你访问的页面不存在或已经被移动。",
   [Key.backToHome]: "返回首页",
 
   [Key.musicPlayer]: "音乐播放器",
   [Key.musicPlayerShow]: "显示音乐播放器",
   [Key.musicPlayerHide]: "隐藏音乐播放器",
   [Key.musicPlayerExpand]: "展开音乐播放器",
-  [Key.musicPlayerCollapse]: "收起播放器",
+  [Key.musicPlayerCollapse]: "收起音乐播放器",
   [Key.musicPlayerPause]: "暂停",
   [Key.musicPlayerPlay]: "播放",
   [Key.musicPlayerPrevious]: "上一首",
@@ -67,7 +67,7 @@ export const zh_CN: Translation = {
   [Key.musicPlayerCover]: "封面",
   [Key.musicPlayerPlaylist]: "播放列表",
   [Key.musicPlayerLoading]: "加载中...",
-  [Key.musicPlayerErrorPlaylist]: "播放列表获取失败",
+  [Key.musicPlayerErrorPlaylist]: "获取播放列表失败",
   [Key.musicPlayerErrorSong]: "当前歌曲加载失败，正在尝试下一首",
   [Key.musicPlayerErrorEmpty]: "播放列表中没有可用歌曲",
   [Key.unknownSong]: "未知歌曲",
@@ -107,7 +107,6 @@ export const zh_CN: Translation = {
   [Key.pageViewsLoading]: "统计加载中...",
   [Key.pageViewsUnavailable]: "统计不可用",
 
-  // 导航栏
   [Key.navLinks]: "链接",
   [Key.navMy]: "我的",
   [Key.navAbout]: "关于",
