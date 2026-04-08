@@ -5,6 +5,18 @@
 	import hitoriCover from "../../assets/music/cover/hitori.jpg";
 	import Key from "../../i18n/i18nKey";
 	import { i18n } from "../../i18n/translation";
+	import { fetchMetingPlaylistSongs } from "../../scripts/music-player/player-meting";
+	import {
+		cacheInitialSong,
+		loadStoredVolume,
+		restoreCachedInitialSong,
+		saveStoredVolume,
+	} from "../../scripts/music-player/player-storage";
+	import {
+		createSong,
+		getAssetPath,
+		type Song,
+	} from "../../scripts/music-player/player-types";
 
 	// Music player mode: local playlist or Meting API
 	let mode = musicPlayerConfig.mode ?? "meting";
@@ -33,41 +45,6 @@
 	let currentTime = 0;
 	// Current track duration in seconds
 	let duration = 0;
-
-	// localStorage key for persisted volume
-	const STORAGE_KEY_VOLUME = "music-player-volume";
-	const STORAGE_KEY_INITIAL_SONG = "music-player-initial-song";
-
-	type Song = {
-		id: number;
-		title: string;
-		artist: string;
-		cover: string;
-		url: string;
-		duration: number;
-	};
-
-	function normalizeCover(cover: unknown): string {
-		if (typeof cover === "string") return cover;
-		if (cover && typeof cover === "object" && "src" in cover) {
-			const src = (cover as { src?: unknown }).src;
-			return typeof src === "string" ? src : "";
-		}
-		return "";
-	}
-
-	function createSong(
-		data: Partial<Song> & { title: string; artist: string },
-	): Song {
-		return {
-			id: data.id ?? 0,
-			title: data.title,
-			artist: data.artist,
-			cover: normalizeCover(data.cover),
-			url: data.url ?? "",
-			duration: data.duration ?? 0,
-		};
-	}
 
 	// Current volume
 	let volume = 0.7;
@@ -154,111 +131,36 @@
 	let playerRoot: HTMLDivElement;
 	let playlistPanel: HTMLDivElement;
 
-	function restoreCachedInitialSong() {
-		if (mode !== "meting" || typeof localStorage === "undefined") return;
-
-		try {
-			const cached = localStorage.getItem(STORAGE_KEY_INITIAL_SONG);
-			if (!cached) return;
-
-			const parsed = JSON.parse(cached) as Partial<Song>;
-			if (
-				typeof parsed.title !== "string" ||
-				typeof parsed.artist !== "string"
-			) {
-				return;
-			}
-
-			currentSong = createSong({
-				id: parsed.id,
-				title: parsed.title,
-				artist: parsed.artist,
-				cover: parsed.cover,
-				url: parsed.url,
-				duration: parsed.duration,
-			});
-		} catch (error) {
-			console.warn("Failed to restore cached initial song:", error);
+	function restoreCachedInitialSongState() {
+		const cachedSong = restoreCachedInitialSong(mode);
+		if (cachedSong) {
+			currentSong = cachedSong;
 		}
 	}
 
-	function cacheInitialSong(song: Song) {
-		if (mode !== "meting" || typeof localStorage === "undefined") return;
-
-		try {
-			localStorage.setItem(
-				STORAGE_KEY_INITIAL_SONG,
-				JSON.stringify({
-					id: song.id,
-					title: song.title,
-					artist: song.artist,
-					cover: song.cover,
-					url: song.url,
-					duration: song.duration,
-				}),
-			);
-		} catch (error) {
-			console.warn("Failed to cache initial song:", error);
-		}
-	}
 	// Load volume settings from localStorage
 	function loadVolumeSettings() {
-		try {
-			if (typeof localStorage !== "undefined") {
-				const savedVolume = localStorage.getItem(STORAGE_KEY_VOLUME);
-				if (savedVolume !== null && !isNaN(parseFloat(savedVolume))) {
-					volume = parseFloat(savedVolume);
-				}
-			}
-		} catch (e) {
-			console.warn(
-				"Failed to load volume settings from localStorage:",
-				e,
-			);
-		}
+		volume = loadStoredVolume(volume);
 	}
 	// Persist volume settings to localStorage
 	function saveVolumeSettings() {
-		try {
-			if (typeof localStorage !== "undefined") {
-				localStorage.setItem(STORAGE_KEY_VOLUME, volume.toString());
-			}
-		} catch (e) {
-			console.warn("Failed to save volume settings to localStorage:", e);
-		}
+		saveStoredVolume(volume);
 	}
 
 	async function fetchMetingPlaylist() {
 		if (!meting_api || !meting_id) return;
 		isLoading = true;
-		const apiUrl = meting_api
-			.replace(":server", meting_server)
-			.replace(":type", meting_type)
-			.replace(":id", meting_id)
-			.replace(":auth", "")
-			.replace(":r", Date.now().toString());
 		try {
-			const res = await fetch(apiUrl);
-			if (!res.ok) throw new Error("meting api error");
-			const list = await res.json();
-			playlist = list.map((song: any) => {
-				let title = song.name ?? song.title ?? i18n(Key.unknownSong);
-				let artist =
-					song.artist ?? song.author ?? i18n(Key.unknownArtist);
-				let dur = song.duration ?? 0;
-				if (dur > 10000) dur = Math.floor(dur / 1000);
-				if (!Number.isFinite(dur) || dur <= 0) dur = 0;
-				return createSong({
-					id: song.id,
-					title,
-					artist,
-					cover: song.pic ?? "",
-					url: song.url ?? "",
-					duration: dur,
-				});
+			playlist = await fetchMetingPlaylistSongs({
+				apiTemplate: meting_api,
+				id: meting_id,
+				server: meting_server,
+				type: meting_type,
+				unknownSongLabel: i18n(Key.unknownSong),
+				unknownArtistLabel: i18n(Key.unknownArtist),
 			});
 			if (playlist.length > 0) {
-				cacheInitialSong(playlist[0]);
+				cacheInitialSong(mode, playlist[0]);
 				loadSong(playlist[0]);
 			}
 			isLoading = false;
@@ -361,14 +263,6 @@
 		willAutoPlay = autoPlay;
 		currentIndex = index;
 		loadSong(playlist[currentIndex]);
-	}
-
-	function getAssetPath(path: string | undefined | null): string {
-		if (!path || typeof path !== "string") return "";
-		if (path.startsWith("http://") || path.startsWith("https://"))
-			return path;
-		if (path.startsWith("/")) return path;
-		return `/${path}`;
 	}
 
 	function loadSong(song: typeof currentSong) {
@@ -619,7 +513,7 @@
 		hasMounted = true;
 		loadVolumeSettings();
 		if (!(isMobileViewport && mode === "meting")) {
-			restoreCachedInitialSong();
+			restoreCachedInitialSongState();
 		}
 		interactionEvents.forEach((event) => {
 			document.addEventListener(event, handleUserInteraction, {

@@ -1,0 +1,198 @@
+.floating-toc-wrapper {
+  position: fixed;
+  right: 4rem;
+  bottom: 10rem;
+  z-index: 50;
+  pointer-events: auto;
+  transform: translateX(5rem);
+  display: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.floating-toc-wrapper.active-toc {
+  display: block;
+}
+
+.floating-toc-btn {
+  width: 3.35rem;
+  height: 3.35rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  position: relative;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.floating-toc-btn.active {
+  background: transparent;
+}
+
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.progress-ring-circle {
+  stroke: var(--primary);
+  stroke-width: 5;
+  stroke-dasharray: 251.2;
+  stroke-dashoffset: 251.2;
+  transition: stroke-dashoffset 0.1s linear;
+  stroke-linecap: round;
+}
+
+.btn-icon {
+  z-index: 1;
+  position: relative;
+}
+
+.floating-toc-panel {
+  position: absolute;
+  bottom: 4.5rem;
+  right: 0;
+  width: 20rem;
+  max-height: 60vh;
+  background: transparent;
+  border: none;
+  border-radius: 1.25rem;
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.floating-toc-panel.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.floating-toc-panel-content {
+  padding: 0.4rem 0.5rem 0.55rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.floating-toc-panel-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.floating-toc-panel-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.floating-toc-panel-content::-webkit-scrollbar-thumb {
+  background: var(--line-color);
+  border-radius: 2px;
+}
+
+@media (max-width: 1920px) {
+  .floating-toc-btn {
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .floating-toc-wrapper {
+    transform: none;
+    right: 1rem;
+    bottom: 5.5rem;
+    opacity: 0.72;
+  }
+
+  .floating-toc-wrapper:active,
+  .floating-toc-wrapper.active {
+    opacity: 1;
+  }
+
+  .floating-toc-panel {
+    width: 85vw;
+    max-width: 20rem;
+    right: 0;
+    bottom: 4.5rem;
+  }
+}
+
+.floating-toc-item {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.7rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1rem;
+  line-height: 1.45;
+  border-radius: 0.85rem;
+  transition: all 0.2s;
+}
+
+.floating-toc-item:hover {
+  color: var(--primary);
+}
+
+.floating-toc-item.active {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.floating-toc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: transparent;
+  color: var(--primary);
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.floating-toc-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--line-divider);
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  margin-left: 0.375rem;
+  flex-shrink: 0;
+}
+
+.floating-toc-dot-small {
+  width: 0.35rem;
+  height: 0.35rem;
+  background: var(--line-divider);
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  margin-left: 0.45rem;
+  flex-shrink: 0;
+}
+
+.floating-toc-item.active .floating-toc-dot,
+.floating-toc-item.active .floating-toc-dot-small {
+  background: var(--primary);
+}
+
+.floating-toc-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

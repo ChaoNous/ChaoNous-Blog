@@ -1,36 +1,40 @@
 /**
- * TOC 共享工具模块
- * 提供三个 TOC 组件（FloatingTOC、CardTOC、TOC）的共享逻辑
+ * Shared table-of-contents helpers.
+ * Reused by FloatingTOC, CardTOC, and the inline TOC component.
  */
 
-/**
- * 获取页面中的所有标题元素
- */
+/** Collect all heading elements within a content container. */
 export function getHeadingsFromContainer(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return [];
 
   return Array.from(
-    container.querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]")
+    container.querySelectorAll(
+      "h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]",
+    ),
   );
 }
 
-/**
- * 计算最小标题级别
- */
+/** Find the smallest heading level present in the current TOC set. */
 export function getMinLevel(headings) {
   let minLevel = 6;
-  headings.forEach((h) => {
-    const level = typeof h.depth === "number" ? h.depth : parseInt(h.tagName[1]);
+  headings.forEach((heading) => {
+    const level =
+      typeof heading.depth === "number"
+        ? heading.depth
+        : parseInt(heading.tagName[1]);
     if (level < minLevel) minLevel = level;
   });
   return minLevel;
 }
 
-/**
- * 根据滚动位置更新激活标题
- */
-export function updateActiveHeading(headings, tocItems, scrollY, offsetTop = 150) {
+/** Update the active heading based on the current scroll position. */
+export function updateActiveHeading(
+  headings,
+  tocItems,
+  scrollY,
+  offsetTop = 150,
+) {
   let activeIndex = -1;
 
   for (let i = 0; i < headings.length; i++) {
@@ -49,13 +53,11 @@ export function updateActiveHeading(headings, tocItems, scrollY, offsetTop = 150
   return activeIndex;
 }
 
-/**
- * 将 DOM 标题转换为数据数组
- */
+/** Convert heading DOM nodes into a lightweight data array. */
 export function headingsToData(headings) {
-  return headings.map((h) => ({
-    depth: parseInt(h.tagName[1]),
-    slug: h.id,
-    text: (h.textContent || "").replace(/#+\s*$/, ""),
+  return headings.map((heading) => ({
+    depth: parseInt(heading.tagName[1]),
+    slug: heading.id,
+    text: (heading.textContent || "").replace(/#+\s*$/, ""),
   }));
 }
