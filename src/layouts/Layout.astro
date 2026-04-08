@@ -73,13 +73,7 @@ const siteLang = lang.replace("_", "-");
 		<!-- DNS prefetch 与 preconnect -->
 		<link rel="preconnect" href="https://api.i-meto.com" crossorigin />
 		<!-- DNS prefetch ? preconnect -->
-		{isHomePage && (
-			<>
 		<!-- 首页关键页面预取 -->
-				<link rel="prefetch" href={url("/about/")} />
-				<link rel="prefetch" href={url("/friends/")} />
-			</>
-		)}
 
 		{
 			siteConfig.keywords && siteConfig.keywords.length > 0 && (

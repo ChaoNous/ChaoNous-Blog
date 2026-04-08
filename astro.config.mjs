@@ -46,7 +46,7 @@ export default defineConfig({
 			animationSelector: "[data-swup-transition]",
 			smoothScrolling: false,
 			cache: true,
-			preload: true,
+			preload: false,
 			accessibility: true,
 			updateHead: true,
 			updateBodyClass: true,
