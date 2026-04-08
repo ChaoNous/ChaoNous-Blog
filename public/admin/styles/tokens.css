@@ -1,3 +1,5 @@
+@import "/fonts/zhuque/result.css";
+
 @font-face {
   font-family: "Zhuque Fangsong UI";
   src: url("/assets/fonts/ZhuqueFangsong-Regular-UI.woff2") format("woff2");
@@ -53,7 +55,7 @@
   --success: #1f7a4d;
   --danger: #b64435;
   --shadow: 0 1.25rem 3rem rgba(36, 24, 22, 0.08);
-  --font-content: "Zhuque Fangsong UI", "Crimson Pro", serif;
+  --font-content: "Crimson Pro", "Zhuque Fangsong UI", "ZhuqueFangsong";
   font-family: var(--font-content);
 }
 

@@ -24,7 +24,7 @@
 	const WIDTH = 425 * SCALE;
 	const PADDING = 24 * SCALE;
 	const CONTENT_WIDTH = WIDTH - PADDING * 2;
-	const FONT_FAMILY = "'Crimson Pro', 'Zhuque Fangsong UI', Georgia, serif";
+	const FONT_FAMILY = "'Crimson Pro', 'Zhuque Fangsong UI', 'ZhuqueFangsong'";
 
 	function getLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
 		const lines: string[] = [];
