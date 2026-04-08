@@ -3,9 +3,9 @@ import { initSemifullScrollDetection } from "./navbar-scroll";
 
 type NavbarPanelId = "display-setting" | "nav-menu-panel";
 
-async function togglePanel(panelId: NavbarPanelId, forceCloseOthers = false) {
+async function togglePanel(panelId: NavbarPanelId) {
 	const { panelManager } = await import("../../utils/panel-manager");
-	await panelManager.togglePanel(panelId, forceCloseOthers);
+	await panelManager.togglePanel(panelId);
 }
 
 function wirePanelButton(
