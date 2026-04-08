@@ -4,7 +4,6 @@ import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
-import IconifyLoader from "../components/misc/IconifyLoader.astro";
 import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
 import { widgetManager } from "../utils/widget-manager";
@@ -110,7 +109,6 @@ const mainContentClass = `
 	</script>
 
 	<!-- Iconify 图标加载器 -->
-	<IconifyLoader />
 
 	<!-- Navbar -->
 	<slot slot="head" name="head" />

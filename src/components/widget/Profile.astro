@@ -230,6 +230,15 @@ import { i18n } from "../../i18n/translation";
 		activeTypewriters = [];
 	}
 
+	function scheduleIdleTask(callback, timeout = 1200) {
+		if ("requestIdleCallback" in window) {
+			window.requestIdleCallback(() => callback(), { timeout });
+			return;
+		}
+
+		window.setTimeout(callback, Math.min(timeout, 300));
+	}
+
 	function initTypewriters() {
 		destroyTypewriters();
 		document.querySelectorAll(".typewriter").forEach((element) => {
@@ -274,16 +283,58 @@ import { i18n } from "../../i18n/translation";
 		}
 	}
 
+	function initTypewritersWhenIdle() {
+		scheduleIdleTask(() => {
+			if (document.querySelector(".typewriter")) {
+				initTypewriters();
+			}
+		}, 1800);
+	}
+
+	function fetchSiteStatsWhenVisible() {
+		const container = document.querySelector(".site-stats-container");
+		if (!(container instanceof HTMLElement)) {
+			return () => {};
+		}
+
+		let fetched = false;
+		const runFetch = () => {
+			if (fetched) return;
+			fetched = true;
+			scheduleIdleTask(() => {
+				fetchSiteStats();
+			}, 2500);
+		};
+
+		if (!("IntersectionObserver" in window)) {
+			runFetch();
+			return () => {};
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					runFetch();
+					observer.disconnect();
+				}
+			},
+			{ rootMargin: "160px 0px" },
+		);
+
+		observer.observe(container);
+		return () => observer.disconnect();
+	}
+
 	(async () => {
 		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", initTypewriters, {
+			document.addEventListener("DOMContentLoaded", initTypewritersWhenIdle, {
 				once: true,
 			});
 		} else {
-			initTypewriters();
+			initTypewritersWhenIdle();
 		}
 
-		document.addEventListener("astro:page-load", initTypewriters);
+		document.addEventListener("astro:page-load", initTypewritersWhenIdle);
 
 		const { registerPageScript } = await import("../../scripts/page-lifecycle.ts");
 		registerPageScript("profile-bio-typewriter", {
@@ -291,7 +342,7 @@ import { i18n } from "../../i18n/translation";
 				return document.querySelector(".typewriter") !== null;
 			},
 			init() {
-				initTypewriters();
+				initTypewritersWhenIdle();
 				return {
 					cleanup() {
 						destroyTypewriters();
@@ -304,7 +355,7 @@ import { i18n } from "../../i18n/translation";
 				return document.querySelector(".site-stats-container") !== null;
 			},
 			init() {
-				fetchSiteStats();
+				return fetchSiteStatsWhenVisible();
 			},
 		});
 	})();

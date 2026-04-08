@@ -44,6 +44,113 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 	"left",
 	"desktop",
 );
+
+type RenderGroup = {
+	components: typeof mobileTopComponents;
+	wrapperClass: string;
+};
+
+function normalizeComponentsForPage(
+	components: typeof mobileTopComponents,
+) {
+	return components.filter((component) => {
+		if (
+			component.type === "profile" ||
+			component.type === "categories" ||
+			component.type === "site-stats"
+		) {
+			return !isPostPage;
+		}
+
+		if (component.type === "card-toc") {
+			return isPostPage;
+		}
+
+		return true;
+	});
+}
+
+function sameComponents(
+	left: typeof mobileTopComponents,
+	right: typeof mobileTopComponents,
+) {
+	return (
+		JSON.stringify(normalizeComponentsForPage(left)) ===
+		JSON.stringify(normalizeComponentsForPage(right))
+	);
+}
+
+function buildResponsiveGroups(
+	mobileComponents: typeof mobileTopComponents,
+	tabletComponents: typeof mobileTopComponents,
+	desktopComponents: typeof mobileTopComponents,
+): RenderGroup[] {
+	const normalizedMobileComponents = normalizeComponentsForPage(mobileComponents);
+	const normalizedTabletComponents = normalizeComponentsForPage(tabletComponents);
+	const normalizedDesktopComponents = normalizeComponentsForPage(desktopComponents);
+
+	if (
+		normalizedMobileComponents.length > 0 &&
+		sameComponents(normalizedMobileComponents, normalizedTabletComponents) &&
+		sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
+	) {
+		return [
+			{
+				components: normalizedMobileComponents,
+				wrapperClass: "flex flex-col w-full gap-3",
+			},
+		];
+	}
+
+	const groups: RenderGroup[] = [];
+
+	if (normalizedMobileComponents.length > 0) {
+		groups.push({
+			components: normalizedMobileComponents,
+			wrapperClass: "flex flex-col w-full gap-3 lg:hidden",
+		});
+	}
+
+	if (
+		normalizedTabletComponents.length > 0 &&
+		sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
+	) {
+		groups.push({
+			components: normalizedTabletComponents,
+			wrapperClass: "hidden lg:flex flex-col w-full gap-3",
+		});
+		return groups;
+	}
+
+	if (normalizedTabletComponents.length > 0) {
+		groups.push({
+			components: normalizedTabletComponents,
+			wrapperClass:
+				"sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-3",
+		});
+	}
+
+	if (normalizedDesktopComponents.length > 0) {
+		groups.push({
+			components: normalizedDesktopComponents,
+			wrapperClass: "sidebar-content hidden xl:flex flex-col w-full gap-3",
+		});
+	}
+
+	return groups;
+}
+
+const topGroups = buildResponsiveGroups(
+	mobileTopComponents,
+	tabletTopComponents,
+	desktopTopComponents,
+);
+
+const stickyGroups = buildResponsiveGroups(
+	mobileStickyComponents,
+	tabletStickyComponents,
+	desktopStickyComponents,
+);
 ---
 
 <div
@@ -58,69 +165,25 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
 		class="transition-all duration-700 flex flex-col w-full mt-0 gap-3"
 	>
 		{
-			mobileTopComponents.length > 0 && (
+			topGroups.map((group) => (
 				<WidgetGroup
-					components={mobileTopComponents}
+					components={group.components}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="flex flex-col w-full gap-3 lg:hidden"
+					wrapperClass={group.wrapperClass}
 				/>
-			)
+			))
 		}
 
 		{
-			tabletTopComponents.length > 0 && (
+			stickyGroups.map((group) => (
 				<WidgetGroup
-					components={tabletTopComponents}
+					components={group.components}
 					headings={headings}
 					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-3"
+					wrapperClass={group.wrapperClass}
 				/>
-			)
-		}
-
-		{
-			desktopTopComponents.length > 0 && (
-				<WidgetGroup
-					components={desktopTopComponents}
-					headings={headings}
-					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden xl:flex flex-col w-full gap-3"
-				/>
-			)
-		}
-
-		{
-			mobileStickyComponents.length > 0 && (
-				<WidgetGroup
-					components={mobileStickyComponents}
-					headings={headings}
-					isPostPage={isPostPage}
-					wrapperClass="flex flex-col w-full gap-3 lg:hidden"
-				/>
-			)
-		}
-
-		{
-			tabletStickyComponents.length > 0 && (
-				<WidgetGroup
-					components={tabletStickyComponents}
-					headings={headings}
-					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-3"
-				/>
-			)
-		}
-
-		{
-			desktopStickyComponents.length > 0 && (
-				<WidgetGroup
-					components={desktopStickyComponents}
-					headings={headings}
-					isPostPage={isPostPage}
-					wrapperClass="sidebar-content hidden xl:flex flex-col w-full gap-3"
-				/>
-			)
+			))
 		}
 	</div>
 </div>
