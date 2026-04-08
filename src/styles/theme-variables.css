@@ -115,10 +115,10 @@
 
 @media (max-width: 767px) {
   body.is-home-page {
-    --font-sans: "Crimson Pro", "Songti SC", "STSong", serif;
-    --font-serif: "Crimson Pro", "Songti SC", "STSong", serif;
-    --font-mono: "Crimson Pro", "Songti SC", "STSong", serif;
-    --font-cjk: "Songti SC", "STSong", serif;
-    --font-content: "Crimson Pro", "Songti SC", "STSong", serif;
+    --font-sans: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    --font-serif: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    --font-mono: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    --font-cjk: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    --font-content: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
   }
 }
