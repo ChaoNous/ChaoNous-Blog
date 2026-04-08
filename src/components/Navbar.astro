@@ -128,7 +128,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		<div class="navbar-actions flex items-center gap-1">
 			<!-- 搜索：桌面端用 Search 组件，移动端用图标按钮 -->
 			<div id="search-container" class="hidden lg:block">
-				<Search client:only="svelte"></Search>
+				<Search client:media="(min-width: 1024px)"></Search>
 			</div>
 			<button
 				aria-label="Search"
@@ -157,7 +157,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 			}
 			<!-- 深浅色切换 -->
 			<div class="w-9 h-9 flex items-center justify-center">
-				<LightDarkSwitch client:only="svelte"></LightDarkSwitch>
+				<LightDarkSwitch client:idle></LightDarkSwitch>
 			</div>
 			<!-- 移动端菜单按钮 -->
 			<button
@@ -175,7 +175,7 @@ const navbarBrandText = siteConfig.navbarTitle?.text
 		<NavMenuPanel
 			links={links}
 		></NavMenuPanel>
-		<DisplaySettings client:only="svelte"></DisplaySettings>
+		<DisplaySettings client:idle></DisplaySettings>
 	</div>
 </div>
 

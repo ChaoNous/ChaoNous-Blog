@@ -634,7 +634,7 @@
 		if (mode === "meting" && !isMobileViewport) {
 			// Fetch the online playlist immediately so the first real track shows up ASAP.
 			lazyLoadPlaylist();
-		} else if ("requestIdleCallback" in window) {
+		} else if (mode !== "meting" && "requestIdleCallback" in window) {
 			// Local mode already has the first song ready, so defer playlist hydration.
 			requestIdleCallback(
 				() => {
@@ -642,7 +642,7 @@
 				},
 				{ timeout: 5000 },
 			);
-		} else {
+		} else if (mode !== "meting") {
 			setTimeout(lazyLoadPlaylist, 3000);
 		}
 	});

@@ -22,6 +22,7 @@ const { page } = Astro.props;
 				{index > 0 && <div class="post-divider"></div>}
 				<PostCard
 					entry={entry}
+					priority={index === 0}
 					class:list="onload-animation"
 					style={`--i: ${index}; --interval: 50ms;`}
 				/>
@@ -105,6 +106,19 @@ const { page } = Astro.props;
 		to {
 			opacity: 1;
 			transform: translateX(0);
+		}
+	}
+
+	@media (max-width: 767px) {
+		#post-list-container > :global(:first-child) {
+			content-visibility: visible;
+			contain-intrinsic-size: auto;
+		}
+
+		#post-list-container > :global(*) {
+			animation: none !important;
+			opacity: 1 !important;
+			transform: none !important;
 		}
 	}
 </style>

@@ -10,9 +10,10 @@ interface Props {
 	class?: string;
 	entry: CollectionEntry<"posts">;
 	style?: string;
+	priority?: boolean;
 }
 
-const { entry, style } = Astro.props;
+const { entry, style, priority = false } = Astro.props;
 const className = Astro.props.class;
 
 const { title, published, updated, category, image, description, pinned } =
@@ -109,7 +110,10 @@ const { remarkPluginFrontmatter } = await render(entry);
 						basePath={getFileDirFromPath(entry.filePath || "")}
 						alt="Cover Image of the Post"
 						class="w-full h-full"
-						blur={true}
+						blur={!priority}
+						loading={priority ? "eager" : "lazy"}
+						fetchpriority={priority ? "high" : "auto"}
+						decoding={priority ? "sync" : "async"}
 						sizes="(max-width: 1023px) 65vw, 20vw"
 					/>
 				</a>

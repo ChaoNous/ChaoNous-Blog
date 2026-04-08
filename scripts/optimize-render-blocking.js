@@ -23,6 +23,17 @@ const REMOVABLE_CSS = new Set([
   "fancybox-custom",
 ]);
 
+const HOMEPAGE_UNUSED_CSS = new Set([
+  "Cnc",
+  "markdown",
+  "markdown-extend",
+  "expressive-code",
+  "Share",
+  "SharePoster",
+  "PostDetailLayout",
+  "generated-zhuque-font",
+]);
+
 /**
  * Extract the CSS prefix (name before hash) from a filename.
  */
@@ -97,6 +108,8 @@ async function optimizeHtmlFile(htmlPath, cssManifest) {
   const root = parse(html);
   const head = root.querySelector("head");
   if (!head) return;
+  const relativeHtmlPath = path.relative(distDir, htmlPath).replace(/\\/g, "/");
+  const isHomepage = relativeHtmlPath === "index.html";
 
   let modified = false;
   const toRemove = [];
@@ -111,6 +124,14 @@ async function optimizeHtmlFile(htmlPath, cssManifest) {
     if (!href) continue;
 
     const filename = path.posix.basename(href);
+    const prefix = cssPrefix(filename);
+
+    if (isHomepage && HOMEPAGE_UNUSED_CSS.has(prefix)) {
+      toRemove.push(link);
+      modified = true;
+      continue;
+    }
+
     const classification = classifyCss(filename);
 
     // Remove entirely

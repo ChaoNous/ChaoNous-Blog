@@ -14,8 +14,6 @@ import {
 import { defaultFavicons } from "../constants/icon";
 import type { Favicon } from "../types/config";
 import { pathsEqual, url } from "../utils/url-utils";
-import "../styles/mobile-navbar.css";
-import "../styles/panel-animations.css";
 
 interface Props {
 	title?: string;
@@ -270,7 +268,12 @@ const siteLang = lang.replace("_", "-");
 		<JsonLd type={setOGTypeArticle ? "article" : "website"} />
 	</head>
 	<body
-		class="min-h-screen"
+		class:list={[
+			"min-h-screen",
+			{
+				"is-home-page": isHomePage,
+			},
+		]}
 	>
 		<!-- SVG filter definitions for silk texture -->
 		<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
