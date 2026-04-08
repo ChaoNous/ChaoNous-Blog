@@ -86,6 +86,7 @@
 	// Whether the full music font has been loaded
 	let musicFontLoaded = false;
 	let isMobileViewport = false;
+	let hasMounted = false;
 
 	// Lazy load the full music font only when needed (saves ~4.8MB)
 	function loadMusicFont() {
@@ -615,6 +616,7 @@
 		if (isMobileViewport) {
 			isHidden = true;
 		}
+		hasMounted = true;
 		loadVolumeSettings();
 		if (!(isMobileViewport && mode === "meting")) {
 			restoreCachedInitialSong();
@@ -703,6 +705,7 @@
 		class="music-player fixed bottom-8 right-6 z-50 transition-all duration-300 ease-in-out"
 		class:expanded={isExpanded}
 		class:hidden-mode={isHidden}
+		class:hydrated={hasMounted}
 	>
 		<!-- Orb trigger shown when the player is hidden -->
 		<div
@@ -1416,6 +1419,33 @@
 			min-height: 0.25rem;
 		}
 		@media (max-width: 768px) {
+			.music-player:not(.hydrated) {
+				width: 3rem !important;
+				height: 3rem !important;
+				min-width: 3rem !important;
+				max-width: 3rem !important;
+				min-height: 3rem !important;
+				max-height: 3rem !important;
+				bottom: 1rem !important;
+				right: 1rem !important;
+			}
+			.music-player:not(.hydrated),
+			.music-player:not(.hydrated) * {
+				transition: none !important;
+				animation: none !important;
+			}
+			.music-player:not(.hydrated) .orb-player {
+				opacity: 1 !important;
+				transform: none !important;
+				pointer-events: auto !important;
+			}
+			.music-player:not(.hydrated) .mini-player,
+			.music-player:not(.hydrated) .expanded-player,
+			.music-player:not(.hydrated) .playlist-panel {
+				opacity: 0 !important;
+				transform: scale(0.95) !important;
+				pointer-events: none !important;
+			}
 			.music-player {
 				--mobile-player-width: 75dvw;
 				width: var(--mobile-player-width) !important;
