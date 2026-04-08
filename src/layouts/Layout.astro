@@ -65,9 +65,6 @@ const siteLang = lang.replace("_", "-");
     <meta name="google" content="notranslate" />
     <meta name="googlebot" content="notranslate" />
 
-    <!-- Preconnect to third-party APIs used on demand -->
-    <link rel="preconnect" href="https://api.i-meto.com" crossorigin />
-
     {
       siteConfig.keywords && siteConfig.keywords.length > 0 && (
         <meta name="keywords" content={siteConfig.keywords.join(", ")} />
@@ -199,14 +196,10 @@ const siteLang = lang.replace("_", "-");
           }
 
           adjustPageScale();
-
-          // Keep scaling in sync after viewport changes and swup navigation.
-          window.addEventListener("resize", adjustPageScale);
-          document.addEventListener("swup:page:view", adjustPageScale);
-          window.addEventListener("orientationchange", adjustPageScale);
+          window.__cncApplyDesktopScale = adjustPageScale;
         }
 
-        window.addEventListener("orientationchange", updateViewportHeightVar);
+        window.__cncUpdateViewportHeight = updateViewportHeightVar;
       })();
     </script>
     <style
@@ -320,6 +313,23 @@ const siteLang = lang.replace("_", "-");
 
 <script>
   import "../scripts/layout-runtime.ts";
+</script>
+
+<script is:inline>
+  (function () {
+    const applyDesktopScale = window.__cncApplyDesktopScale;
+    const updateViewportHeight = window.__cncUpdateViewportHeight;
+
+    if (typeof applyDesktopScale === "function") {
+      window.addEventListener("resize", applyDesktopScale);
+      document.addEventListener("swup:page:view", applyDesktopScale);
+      window.addEventListener("orientationchange", applyDesktopScale);
+    }
+
+    if (typeof updateViewportHeight === "function") {
+      window.addEventListener("orientationchange", updateViewportHeight);
+    }
+  })();
 </script>
 
 <!-- Defer non-critical scripts until the browser is idle. -->

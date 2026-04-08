@@ -31,6 +31,10 @@ const HOMEPAGE_UNUSED_CSS = new Set([
   "Share",
   "SharePoster",
   "PostDetailLayout",
+  "post-detail-layout",
+  "site-comments",
+  "floating-toc",
+  "post-navigation",
   "generated-zhuque-font",
 ]);
 

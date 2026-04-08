@@ -9,7 +9,6 @@ if (pagefindScriptUrl) {
 		},
 		init() {
 			let cancelled = false;
-			let timerId: number | undefined;
 			let pagefindLoaded = false;
 			const searchContainer = document.getElementById("search-container");
 
@@ -49,15 +48,8 @@ if (pagefindScriptUrl) {
 				});
 			}
 
-			if (window.matchMedia("(min-width: 1024px)").matches) {
-				timerId = window.setTimeout(initPagefind, 5000);
-			}
-
 			return () => {
 				cancelled = true;
-				if (timerId !== undefined) {
-					window.clearTimeout(timerId);
-				}
 			};
 		},
 	});
