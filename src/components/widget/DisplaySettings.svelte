@@ -13,29 +13,29 @@
   let defaultHueUI = 10;
   let isMounted = false;
 
-  function selectHue(hue: number) {
+  function applyHue(hue: number) {
     hueUI = hue;
+    if (isMounted) {
+      setHueUI(hue);
+    }
   }
 
   function resetHue() {
-    hueUI = defaultHueUI;
+    applyHue(defaultHueUI);
   }
 
   onMount(() => {
     isMounted = true;
     defaultHueUI = getDefaultHue();
     const stored = getHueUI();
+
     if (colorOptions.some((option) => option.hue === stored)) {
       hueUI = stored;
-    } else {
-      hueUI = defaultHueUI;
-      setHueUI(defaultHueUI);
+      return;
     }
-  });
 
-  $: if (isMounted && (hueUI || hueUI === 0)) {
-    setHueUI(hueUI);
-  }
+    applyHue(defaultHueUI);
+  });
 </script>
 
 <div
@@ -77,10 +77,11 @@
           <button
             class="color-segment"
             class:selected={hueUI === option.hue}
-            style="background: {option.color};"
-            on:click={() => selectHue(option.hue)}
+            style={`background: ${option.color};`}
+            on:click={() => applyHue(option.hue)}
             aria-label={option.name}
             title={option.name}
+            type="button"
           >
             <span class="color-name">{option.name}</span>
             {#if hueUI === option.hue}
