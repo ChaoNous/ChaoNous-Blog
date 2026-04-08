@@ -217,8 +217,23 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
         }
     }
 
-    (async () => {
-        const { registerPageScript } = await import("../scripts/page-lifecycle.ts");
+    function withPageLifecycle(callback) {
+        if (typeof window.registerPageScript === "function") {
+            callback(window.registerPageScript);
+            return;
+        }
+
+        const handleReady = () => {
+            if (typeof window.registerPageScript === "function") {
+                callback(window.registerPageScript);
+            }
+        };
+
+        window.addEventListener("page-lifecycle:ready", handleReady, { once: true });
+    }
+
+    (() => {
+        withPageLifecycle((registerPageScript) => {
         registerPageScript("post-meta-page-views", {
             shouldRun() {
                 return document.querySelector(".site-page-views") !== null;
@@ -226,6 +241,7 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
             init() {
                 fetchPageViews();
             },
+        });
         });
     })();
 </script>

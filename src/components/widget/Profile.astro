@@ -325,6 +325,21 @@ import { i18n } from "../../i18n/translation";
 		return () => observer.disconnect();
 	}
 
+	function withPageLifecycle(callback) {
+		if (typeof window.registerPageScript === "function") {
+			callback(window.registerPageScript);
+			return;
+		}
+
+		const handleReady = () => {
+			if (typeof window.registerPageScript === "function") {
+				callback(window.registerPageScript);
+			}
+		};
+
+		window.addEventListener("page-lifecycle:ready", handleReady, { once: true });
+	}
+
 	(async () => {
 		if (document.readyState === "loading") {
 			document.addEventListener("DOMContentLoaded", initTypewritersWhenIdle, {
@@ -336,27 +351,28 @@ import { i18n } from "../../i18n/translation";
 
 		document.addEventListener("astro:page-load", initTypewritersWhenIdle);
 
-		const { registerPageScript } = await import("../../scripts/page-lifecycle.ts");
-		registerPageScript("profile-bio-typewriter", {
-			shouldRun() {
-				return document.querySelector(".typewriter") !== null;
-			},
-			init() {
-				initTypewritersWhenIdle();
-				return {
-					cleanup() {
-						destroyTypewriters();
-					},
-				};
-			},
-		});
-		registerPageScript("profile-site-stats", {
-			shouldRun() {
-				return document.querySelector(".site-stats-container") !== null;
-			},
-			init() {
-				return fetchSiteStatsWhenVisible();
-			},
+		withPageLifecycle((registerPageScript) => {
+			registerPageScript("profile-bio-typewriter", {
+				shouldRun() {
+					return document.querySelector(".typewriter") !== null;
+				},
+				init() {
+					initTypewritersWhenIdle();
+					return {
+						cleanup() {
+							destroyTypewriters();
+						},
+					};
+				},
+			});
+			registerPageScript("profile-site-stats", {
+				shouldRun() {
+					return document.querySelector(".site-stats-container") !== null;
+				},
+				init() {
+					return fetchSiteStatsWhenVisible();
+				},
+			});
 		});
 	})();
 </script>

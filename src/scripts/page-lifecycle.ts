@@ -15,6 +15,8 @@ export interface PageLifecycleState {
 declare global {
   interface Window {
     __pageLifecycleState?: PageLifecycleState;
+    registerPageScript?: typeof registerPageScript;
+    cleanupPageScripts?: typeof cleanupPageScripts;
   }
 }
 
@@ -146,3 +148,4 @@ export function cleanupPageScripts(): void {
 
 window.registerPageScript = registerPageScript;
 window.cleanupPageScripts = cleanupPageScripts;
+window.dispatchEvent(new CustomEvent("page-lifecycle:ready"));
