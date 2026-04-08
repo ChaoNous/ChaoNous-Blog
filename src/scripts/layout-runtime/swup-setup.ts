@@ -1,7 +1,5 @@
 import { pathsEqual, url } from "../../utils/url-utils";
 import {
-  DARK_MODE,
-  DEFAULT_THEME,
   TOC_CLEAR_DELAY_MS,
 } from "../../constants/constants";
 import {
@@ -26,6 +24,10 @@ import {
 import { initFancybox, cleanupFancybox, checkKatex } from "./fancybox-runtime";
 import { initCustomScrollbar } from "./katex-scrollbar";
 import { removePostPageActionButtons } from "./post-page-cleanup";
+import {
+  applyThemeToDocument,
+  resolveThemePreference,
+} from "../../utils/theme-utils";
 
 function scheduleIdleTask(task: () => void, timeout = 3000): void {
   if ("requestIdleCallback" in window) {
@@ -102,25 +104,12 @@ export function setup(): void {
       behavior: "instant",
     });
 
-    const storedTheme = localStorage.getItem("theme") || DEFAULT_THEME;
-    const isDark = storedTheme === DARK_MODE;
-    const expectedTheme = isDark ? "github-dark" : "github-light";
-
+    const expectedTheme = resolveThemePreference();
     const currentTheme = document.documentElement.getAttribute("data-theme");
-    const hasDarkClass = document.documentElement.classList.contains("dark");
 
-    if (currentTheme !== expectedTheme || hasDarkClass !== isDark) {
+    if (currentTheme !== expectedTheme) {
       requestAnimationFrame(() => {
-        if (currentTheme !== expectedTheme) {
-          document.documentElement.setAttribute("data-theme", expectedTheme);
-        }
-        if (hasDarkClass !== isDark) {
-          if (isDark) {
-            document.documentElement.classList.add("dark");
-          } else {
-            document.documentElement.classList.remove("dark");
-          }
-        }
+        applyThemeToDocument(expectedTheme);
       });
     }
 

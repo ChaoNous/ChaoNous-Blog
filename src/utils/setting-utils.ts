@@ -1,7 +1,14 @@
-import { DARK_MODE } from "@constants/constants";
 import type { LIGHT_DARK_MODE } from "@/types/config";
+import { setThemePreference } from "./theme-utils";
 
 const UI_TO_HUE_MULTIPLIER = 1;
+const DEFAULT_HUE = 10;
+const HUE_STORAGE_KEY = "hue";
+
+function parseHue(value: string | null | undefined, fallback: number): number {
+  const parsed = Number.parseInt(value || "", 10);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
 
 function uiToHue(uiValue: number): number {
   return Math.round(uiValue * UI_TO_HUE_MULTIPLIER);
@@ -12,46 +19,27 @@ export function hueToUi(hue: number): number {
 }
 
 export function getDefaultHue(): number {
-  const fallback = "60";
   const configCarrier = document.getElementById("config-carrier");
   if (!configCarrier) {
-    return Number.parseInt(fallback, 10);
+    return DEFAULT_HUE;
   }
-  return Number.parseInt(configCarrier.dataset.hue || fallback, 10);
+  return parseHue(configCarrier.dataset.hue, DEFAULT_HUE);
 }
 
 export function getHueUI(): number {
-  const stored = localStorage.getItem("hue");
-  const actualHue = stored ? Number.parseInt(stored, 10) : getDefaultHue();
+  const stored = localStorage.getItem(HUE_STORAGE_KEY);
+  const actualHue = parseHue(stored, getDefaultHue());
   return hueToUi(actualHue);
 }
 
 export function setHueUI(uiValue: number): void {
   const actualHue = uiToHue(uiValue);
-  localStorage.setItem("hue", String(actualHue));
+  localStorage.setItem(HUE_STORAGE_KEY, String(actualHue));
   document.documentElement.style.setProperty("--hue", String(actualHue));
 
   document.documentElement.setAttribute("data-theme-material", "silk");
 }
 
-function applyThemeToDocument(theme: LIGHT_DARK_MODE): void {
-  const isDark = theme === DARK_MODE;
-  document.documentElement.classList.toggle("dark", isDark);
-  document.documentElement.setAttribute(
-    "data-theme",
-    isDark ? "github-dark" : "github-light",
-  );
-
-  const body = document.body;
-  if (body) {
-    const bgColor = window.getComputedStyle(body).backgroundColor;
-    document
-      .querySelector("meta[name='theme-color']")
-      ?.setAttribute("content", bgColor);
-  }
-}
-
 export function setTheme(theme: LIGHT_DARK_MODE): void {
-  localStorage.setItem("theme", theme);
-  applyThemeToDocument(theme);
+  setThemePreference(theme);
 }
