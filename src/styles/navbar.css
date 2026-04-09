@@ -21,28 +21,76 @@
 #navbar :is(
   .navbar-action-icon,
   .navbar-link-icon,
-  .navbar-arrow,
   .theme-switch-glyph,
+  .navbar-arrow,
   .theme-icon
 ) {
-  color: inherit;
+  color: inherit !important;
 }
 
 #navbar :is(
   .navbar-action-icon,
   .navbar-link-icon,
-  .navbar-arrow,
   .theme-switch-glyph,
-  .theme-icon,
+  .navbar-action-icon svg,
+  .navbar-link-icon svg,
+  .theme-switch-glyph svg,
+  .navbar-arrow svg,
+  .theme-icon svg,
+  .navbar-action-icon use,
+  .navbar-link-icon use,
+  .theme-switch-glyph use,
+  .navbar-arrow use,
+  .theme-icon use,
+  .navbar-action-icon path,
+  .navbar-link-icon path,
+  .theme-switch-glyph path,
+  .navbar-arrow path,
+  .theme-icon path,
+  .navbar-action-icon circle,
+  .navbar-link-icon circle,
+  .theme-switch-glyph circle,
+  .navbar-arrow circle,
+  .theme-icon circle,
+  .navbar-action-icon rect,
+  .navbar-link-icon rect,
+  .theme-switch-glyph rect,
+  .navbar-arrow rect,
+  .theme-icon rect,
+  .navbar-action-icon ellipse,
+  .navbar-link-icon ellipse,
+  .theme-switch-glyph ellipse,
+  .navbar-arrow ellipse,
+  .theme-icon ellipse,
+  .navbar-action-icon line,
+  .navbar-link-icon line,
+  .theme-switch-glyph line,
+  .navbar-arrow line,
+  .theme-icon line,
+  .navbar-action-icon polyline,
+  .navbar-link-icon polyline,
+  .theme-switch-glyph polyline,
+  .navbar-arrow polyline,
+  .theme-icon polyline,
+  .navbar-action-icon polygon,
+  .navbar-link-icon polygon,
+  .theme-switch-glyph polygon,
+  .navbar-arrow polygon,
+  .theme-icon polygon,
+  .navbar-action-icon g,
+  .navbar-link-icon g,
+  .theme-switch-glyph g,
+  .navbar-arrow g,
+  .theme-icon g,
   .navbar-action-icon *,
   .navbar-link-icon *,
-  .navbar-arrow *,
   .theme-switch-glyph *,
+  .navbar-arrow *,
   .theme-icon *
 ) {
-  transition-property: none !important;
-  transition-duration: 0s !important;
-  transition-delay: 0s !important;
+  color: inherit !important;
+  transition: none !important;
+  animation: none !important;
 }
 
 #navbar :is(
@@ -59,13 +107,13 @@
 #navbar .navbar-arrow {
   transition:
     transform 300ms ease-in-out,
-    opacity 300ms ease-in-out;
+    opacity 300ms ease-in-out !important;
 }
 
 #navbar .theme-icon {
   transition:
     transform 300ms ease-in-out,
-    opacity 300ms ease-in-out;
+    opacity 300ms ease-in-out !important;
 }
 
 #navbar.is-searching .navbar-links {
