@@ -79,12 +79,6 @@
   transform: scale(0.96);
 }
 
-.music-cover-shell:hover {
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 14px 26px rgba(0, 0, 0, 0.22);
-}
-
 .progress-section div:hover {
   transition: transform 0.2s ease;
 }

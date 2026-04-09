@@ -38,12 +38,12 @@
   }
 }
 
-@keyframes musicCoverSpin {
+@keyframes spin-continuous {
   from {
-    transform: scale(1.02) rotate(0deg);
+    transform: rotate(0deg);
   }
   to {
-    transform: scale(1.02) rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -94,65 +94,19 @@
   box-sizing: border-box;
 }
 
-.music-cover-shell {
-  isolation: isolate;
-  border: 1px solid color-mix(in oklab, var(--primary) 26%, transparent);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 10px 22px rgba(0, 0, 0, 0.18);
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 42%),
-    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.26) 0%, transparent 24%),
-    color-mix(in oklab, var(--primary) 10%, var(--card-bg));
-}
-
-.music-cover-shell::before {
-  content: "";
-  position: absolute;
-  inset: 7%;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow:
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
-    inset 0 0 28px rgba(0, 0, 0, 0.12);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.music-cover-art {
-  animation: musicCoverSpin 14s linear infinite;
+.cover-container img {
+  animation: spin-continuous 3s linear infinite paused;
   animation-play-state: paused;
-  filter: saturate(1.04) contrast(1.02);
-  transform: scale(1.02);
-  transform-origin: center;
-  will-change: transform;
+  transform-origin: center center;
 }
 
-.music-cover-art.is-playing {
+.cover-container img.spinning {
   animation-play-state: running;
 }
 
-.music-cover-center {
-  position: absolute;
-  inset: 38%;
-  z-index: 3;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.58) 32%, rgba(73, 50, 45, 0.95) 33%, rgba(20, 14, 14, 0.98) 68%, rgba(255, 255, 255, 0.14) 100%);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 2px 10px rgba(0, 0, 0, 0.28);
-  pointer-events: none;
-}
-
-.music-cover-overlay {
-  z-index: 4;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .music-cover-art {
+  .cover-container img {
     animation: none !important;
-    transform: none !important;
   }
 }
 
