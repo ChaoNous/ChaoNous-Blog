@@ -29,6 +29,24 @@
 }
 
 #navbar :is(
+  .dropdown-container > a,
+  .dropdown-container > button,
+  .navbar-actions .btn-plain
+) :is(
+  span,
+  .navbar-action-icon,
+  .navbar-link-icon,
+  .theme-switch-glyph,
+  .navbar-action-icon *,
+  .navbar-link-icon *,
+  .theme-switch-glyph *
+) {
+  color: inherit !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+#navbar :is(
   .navbar-action-icon,
   .navbar-link-icon,
   .theme-switch-glyph,
