@@ -73,6 +73,7 @@ export type CommentApiErrorCode =
   | "INVALID_JSON"
   | "UNAUTHORIZED"
   | "NOT_FOUND"
+  | "TOO_MANY_REQUESTS"
   | "SERVER_ERROR";
 
 export interface ApiErrorPayload {

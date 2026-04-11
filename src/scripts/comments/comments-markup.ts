@@ -70,6 +70,7 @@ export function renderCommentFormMarkup(
 				<span>${COMMENT_MESSAGES.contentLabel}</span>
 				<textarea name="content" rows="${replyTarget ? 4 : 5}" maxlength="2000" required placeholder="${COMMENT_MESSAGES.contentPlaceholder}"></textarea>
 			</label>
+			<input name="formLoadedAt" type="hidden" value="${Date.now()}" />
 			<input name="parentId" type="hidden" value="${replyTarget?.id ?? ""}" />
 			<div class="site-comments-actions">
 				<button type="submit" class="site-comments-submit"${submitting ? " disabled" : ""}>

@@ -67,6 +67,7 @@ export interface CommentSubmissionPayload {
 	url: string;
 	content: string;
 	website: string;
+	formLoadedAt: string;
 	parentId: string;
 }
 

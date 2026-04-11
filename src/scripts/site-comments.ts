@@ -103,6 +103,7 @@ export function mountSiteComments(
 			url: normalizeUrlInput(String(formData.get("url") || "")),
 			content: String(formData.get("content") || "").trim(),
 			website: String(formData.get("website") || "").trim(),
+			formLoadedAt: String(formData.get("formLoadedAt") || "").trim(),
 			parentId: String(formData.get("parentId") || "").trim(),
 		};
 

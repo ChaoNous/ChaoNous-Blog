@@ -3,6 +3,7 @@ import {
   COMMENT_MESSAGES,
   createPagination,
   createDeleteToken,
+  enforceSubmissionRateLimit,
   ensureSameOrigin,
   json,
   nestComments,
@@ -10,9 +11,11 @@ import {
   parsePaginationParams,
   readJsonBody,
   serverError,
+  tooManyRequests,
   type CommentRecord,
   type Env,
   validateSubmission,
+  validateSubmissionMetadata,
 } from "../../_lib/comments";
 
 export const onRequestGet = async ({
@@ -97,16 +100,21 @@ export const onRequestPost = async ({
   env: Env;
   request: Request;
 }) => {
-  try {
-    const sameOriginResponse = ensureSameOrigin(request);
-    if (sameOriginResponse) {
-      return sameOriginResponse;
-    }
+	try {
+		const sameOriginResponse = ensureSameOrigin(request);
+		if (sameOriginResponse) {
+			return sameOriginResponse;
+		}
 
-    const parsedBody = await readJsonBody(request);
-    if (!parsedBody.ok) {
-      return parsedBody.response;
-    }
+		const contentType = request.headers.get("content-type") || "";
+		if (!contentType.toLowerCase().includes("application/json")) {
+			return badRequest(COMMENT_MESSAGES.invalidContentType);
+		}
+
+		const parsedBody = await readJsonBody(request);
+		if (!parsedBody.ok) {
+			return parsedBody.response;
+		}
 
     const body = parsedBody.value;
     const validated = validateSubmission(body);
@@ -114,8 +122,25 @@ export const onRequestPost = async ({
       return badRequest(validated.message);
     }
 
+    const metadata = validateSubmissionMetadata(body);
+    if (!metadata.ok) {
+      return metadata.shouldRateLimit
+        ? tooManyRequests(metadata.message)
+        : badRequest(metadata.message);
+    }
+
     const now = Date.now();
     const deleteToken = createDeleteToken();
+
+    const rateLimit = await enforceSubmissionRateLimit(env, {
+      postSlug: validated.value.postSlug,
+      email: validated.value.email,
+      content: validated.value.content,
+      now,
+    });
+    if (!rateLimit.ok) {
+      return tooManyRequests(rateLimit.message);
+    }
 
     if (validated.value.parentId) {
       const parent = await env.COMMENTS_DB.prepare(

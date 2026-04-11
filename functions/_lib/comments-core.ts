@@ -1,4 +1,10 @@
 import { isAdminAuthorized } from "./comments-auth";
+import {
+  COMMENT_SUBMISSION_POLICY,
+  evaluateSubmissionContentPolicy,
+  evaluateSubmissionRateLimit,
+  parseFormLoadedAt,
+} from "./comments-antiabuse.js";
 import { COMMENT_MESSAGES } from "./comments-messages";
 import {
   buildNestedComments,
@@ -152,6 +158,10 @@ export function unauthorized(
   return errorResponse("UNAUTHORIZED", message, 401);
 }
 
+export function tooManyRequests(message: string): Response {
+  return errorResponse("TOO_MANY_REQUESTS", message, 429);
+}
+
 export function ensureSameOrigin(
   request: Request,
   message: string = COMMENT_MESSAGES.invalidOrigin,
@@ -257,9 +267,8 @@ export function validateSubmission(body: Record<string, unknown>) {
   const postUrl = normalizeRequiredUrl(String(body.postUrl || ""));
   const postTitle = String(body.postTitle || "").trim();
   const name = String(body.name || "").trim();
-  const email = String(body.email || "").trim();
+  const email = String(body.email || "").trim().toLowerCase();
   const rawUrl = String(body.url || "").trim();
-  const website = String(body.website || "").trim();
   const content = String(body.content || "").trim();
   const parentIdRaw = String(body.parentId || "").trim();
   const parentId = parentIdRaw ? Number.parseInt(parentIdRaw, 10) : null;
@@ -269,12 +278,6 @@ export function validateSubmission(body: Record<string, unknown>) {
   }
   if (!postUrl) {
     return { ok: false, message: COMMENT_MESSAGES.invalidPostUrl } as const;
-  }
-  if (website) {
-    return {
-      ok: false,
-      message: COMMENT_MESSAGES.invalidSubmission,
-    } as const;
   }
   if (!postTitle || postTitle.length > 160) {
     return {
@@ -321,6 +324,119 @@ export function validateSubmission(body: Record<string, unknown>) {
       content,
       parentId,
     },
+  } as const;
+}
+
+export function validateSubmissionMetadata(body: Record<string, unknown>) {
+  const formLoadedAt = parseFormLoadedAt(body.formLoadedAt);
+  const contentPolicy = evaluateSubmissionContentPolicy({
+    website: String(body.website || ""),
+    content: String(body.content || ""),
+    formLoadedAt,
+  });
+
+  if (!contentPolicy.ok) {
+    switch (contentPolicy.reason) {
+      case "submitted_too_fast":
+        return {
+          ok: false,
+          message: COMMENT_MESSAGES.submissionTooFast,
+          shouldRateLimit: true,
+        } as const;
+      case "too_many_links":
+        return {
+          ok: false,
+          message: COMMENT_MESSAGES.commentTooManyLinks,
+          shouldRateLimit: false,
+        } as const;
+      default:
+        return {
+          ok: false,
+          message: COMMENT_MESSAGES.invalidSubmission,
+          shouldRateLimit: false,
+        } as const;
+    }
+  }
+
+  return {
+    ok: true,
+    value: {
+      formLoadedAt,
+    },
+  } as const;
+}
+
+export async function enforceSubmissionRateLimit(
+  env: Env,
+  input: {
+    postSlug: string;
+    email: string;
+    content: string;
+    now?: number;
+  },
+) {
+  const now = input.now ?? Date.now();
+
+  const [postWindowRow, globalWindowRow, duplicateRow] = await Promise.all([
+    env.COMMENTS_DB.prepare(
+      `SELECT COUNT(*) AS recent_count, MAX(created_at) AS last_created_at
+       FROM comments
+       WHERE post_slug = ?1
+         AND author_email = ?2
+         AND created_at >= ?3`,
+    )
+      .bind(
+        input.postSlug,
+        input.email,
+        now - COMMENT_SUBMISSION_POLICY.recentPostWindowMs,
+      )
+      .first<{ recent_count: number; last_created_at: number | null }>(),
+    env.COMMENTS_DB.prepare(
+      `SELECT COUNT(*) AS recent_count
+       FROM comments
+       WHERE author_email = ?1
+         AND created_at >= ?2`,
+    )
+      .bind(
+        input.email,
+        now - COMMENT_SUBMISSION_POLICY.recentGlobalWindowMs,
+      )
+      .first<{ recent_count: number }>(),
+    env.COMMENTS_DB.prepare(
+      `SELECT MAX(created_at) AS last_created_at
+       FROM comments
+       WHERE post_slug = ?1
+         AND author_email = ?2
+         AND content = ?3
+         AND created_at >= ?4`,
+    )
+      .bind(
+        input.postSlug,
+        input.email,
+        input.content,
+        now - COMMENT_SUBMISSION_POLICY.duplicateWindowMs,
+      )
+      .first<{ last_created_at: number | null }>(),
+  ]);
+
+  const decision = evaluateSubmissionRateLimit({
+    now,
+    recentPostCount: Number(postWindowRow?.recent_count || 0),
+    recentGlobalCount: Number(globalWindowRow?.recent_count || 0),
+    lastPostCreatedAt: postWindowRow?.last_created_at ?? null,
+    lastDuplicateCreatedAt: duplicateRow?.last_created_at ?? null,
+  });
+
+  if (decision.ok) {
+    return { ok: true } as const;
+  }
+
+  return {
+    ok: false,
+    message:
+      decision.reason === "duplicate_content"
+        ? COMMENT_MESSAGES.duplicateComment
+        : COMMENT_MESSAGES.commentRateLimited,
   } as const;
 }
 
