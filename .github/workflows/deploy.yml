@@ -39,12 +39,6 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Apply D1 migrations
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: da23ef8209c693719b684dcc5403eb38
-        run: pnpm dlx wrangler@4 d1 migrations apply COMMENTS_DB --remote
-
       - name: Deploy to Cloudflare Pages with Functions
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
