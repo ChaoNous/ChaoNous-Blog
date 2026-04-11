@@ -7,7 +7,13 @@ export const COMMENT_SUBMISSION_POLICY = {
   maxLinksPerComment: 3,
   maxRecentPerPost: 3,
   maxRecentPerEmail: 6,
+  anonymousRecentPostWindowMs: 10 * 60 * 1000,
+  anonymousRecentGlobalWindowMs: 60 * 60 * 1000,
+  maxRecentPerFingerprintPerPost: 4,
+  maxRecentPerFingerprintGlobal: 10,
 };
+
+const anonymousSubmissionStore = new Map();
 
 export function countUrlsInText(value) {
   const matches = value.match(
@@ -77,6 +83,82 @@ export function evaluateSubmissionRateLimit({
   if (recentGlobalCount >= policy.maxRecentPerEmail) {
     return { ok: false, reason: "rate_limited" };
   }
+
+  return { ok: true };
+}
+
+function pruneTimestamps(timestamps, minTimestamp) {
+  return timestamps.filter((timestamp) => timestamp >= minTimestamp);
+}
+
+function getClientIp(request) {
+  const cfIp = request.headers.get("cf-connecting-ip")?.trim();
+  if (cfIp) return cfIp;
+
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+
+  const forwardedFor = request.headers.get("x-forwarded-for")?.trim();
+  if (!forwardedFor) return "";
+  return forwardedFor.split(",")[0]?.trim() || "";
+}
+
+export function getRequestFingerprint(request) {
+  const ip = getClientIp(request);
+  const userAgent = request.headers.get("user-agent")?.trim() || "";
+  const acceptLanguage =
+    request.headers.get("accept-language")?.trim().slice(0, 64) || "";
+
+  if (!ip && !userAgent) {
+    return null;
+  }
+
+  return `${ip}|${userAgent.slice(0, 160)}|${acceptLanguage}`;
+}
+
+export function resetAnonymousSubmissionThrottle() {
+  anonymousSubmissionStore.clear();
+}
+
+export function enforceAnonymousSubmissionThrottle({
+  request,
+  postSlug,
+  now = Date.now(),
+  policy = COMMENT_SUBMISSION_POLICY,
+}) {
+  const fingerprint = getRequestFingerprint(request);
+  if (!fingerprint) {
+    return { ok: true };
+  }
+
+  const globalKey = `global:${fingerprint}`;
+  const postKey = `post:${postSlug}:${fingerprint}`;
+
+  const nextGlobalTimestamps = pruneTimestamps(
+    anonymousSubmissionStore.get(globalKey) || [],
+    now - policy.anonymousRecentGlobalWindowMs,
+  );
+  const nextPostTimestamps = pruneTimestamps(
+    anonymousSubmissionStore.get(postKey) || [],
+    now - policy.anonymousRecentPostWindowMs,
+  );
+
+  if (nextPostTimestamps.length >= policy.maxRecentPerFingerprintPerPost) {
+    anonymousSubmissionStore.set(globalKey, nextGlobalTimestamps);
+    anonymousSubmissionStore.set(postKey, nextPostTimestamps);
+    return { ok: false, reason: "anonymous_rate_limited" };
+  }
+
+  if (nextGlobalTimestamps.length >= policy.maxRecentPerFingerprintGlobal) {
+    anonymousSubmissionStore.set(globalKey, nextGlobalTimestamps);
+    anonymousSubmissionStore.set(postKey, nextPostTimestamps);
+    return { ok: false, reason: "anonymous_rate_limited" };
+  }
+
+  nextGlobalTimestamps.push(now);
+  nextPostTimestamps.push(now);
+  anonymousSubmissionStore.set(globalKey, nextGlobalTimestamps);
+  anonymousSubmissionStore.set(postKey, nextPostTimestamps);
 
   return { ok: true };
 }

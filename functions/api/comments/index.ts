@@ -3,6 +3,7 @@ import {
   COMMENT_MESSAGES,
   createPagination,
   createDeleteToken,
+  enforceAnonymousSubmissionThrottle,
   enforceSubmissionRateLimit,
   ensureSameOrigin,
   json,
@@ -140,6 +141,15 @@ export const onRequestPost = async ({
     });
     if (!rateLimit.ok) {
       return tooManyRequests(rateLimit.message);
+    }
+
+    const anonymousRateLimit = enforceAnonymousSubmissionThrottle({
+      request,
+      postSlug: validated.value.postSlug,
+      now,
+    });
+    if (!anonymousRateLimit.ok) {
+      return tooManyRequests(COMMENT_MESSAGES.commentRateLimited);
     }
 
     if (validated.value.parentId) {

@@ -3,9 +3,12 @@ import test from "node:test";
 import {
   COMMENT_SUBMISSION_POLICY,
   countUrlsInText,
+  enforceAnonymousSubmissionThrottle,
   evaluateSubmissionContentPolicy,
   evaluateSubmissionRateLimit,
+  getRequestFingerprint,
   parseFormLoadedAt,
+  resetAnonymousSubmissionThrottle,
 } from "../functions/_lib/comments-antiabuse.js";
 
 test("countUrlsInText counts both absolute and www links", () => {
@@ -100,5 +103,42 @@ test("evaluateSubmissionRateLimit blocks duplicate and burst submissions", () =>
         now - COMMENT_SUBMISSION_POLICY.minSubmitIntervalMs,
     }),
     { ok: true },
+  );
+});
+
+test("request fingerprint and anonymous throttle are deterministic", () => {
+  resetAnonymousSubmissionThrottle();
+  const now = 2_000_000;
+  const request = new Request("https://chaonous.com/api/comments", {
+    headers: {
+      "cf-connecting-ip": "198.51.100.10",
+      "user-agent": "CodexTest/1.0",
+      "accept-language": "zh-CN",
+    },
+  });
+
+  assert.equal(
+    getRequestFingerprint(request),
+    "198.51.100.10|CodexTest/1.0|zh-CN",
+  );
+
+  for (let index = 0; index < COMMENT_SUBMISSION_POLICY.maxRecentPerFingerprintPerPost; index += 1) {
+    assert.deepEqual(
+      enforceAnonymousSubmissionThrottle({
+        request,
+        postSlug: "https://chaonous.com/posts/test/",
+        now,
+      }),
+      { ok: true },
+    );
+  }
+
+  assert.deepEqual(
+    enforceAnonymousSubmissionThrottle({
+      request,
+      postSlug: "https://chaonous.com/posts/test/",
+      now,
+    }),
+    { ok: false, reason: "anonymous_rate_limited" },
   );
 });

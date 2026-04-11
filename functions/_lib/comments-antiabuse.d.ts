@@ -7,6 +7,10 @@ export declare const COMMENT_SUBMISSION_POLICY: {
   maxLinksPerComment: number;
   maxRecentPerPost: number;
   maxRecentPerEmail: number;
+  anonymousRecentPostWindowMs: number;
+  anonymousRecentGlobalWindowMs: number;
+  maxRecentPerFingerprintPerPost: number;
+  maxRecentPerFingerprintGlobal: number;
 };
 
 export declare function countUrlsInText(value: string): number;
@@ -43,4 +47,20 @@ export declare function evaluateSubmissionRateLimit(input: {
   | {
       ok: false;
       reason: "duplicate_content" | "rate_limited";
+    };
+
+export declare function getRequestFingerprint(request: Request): string | null;
+
+export declare function resetAnonymousSubmissionThrottle(): void;
+
+export declare function enforceAnonymousSubmissionThrottle(input: {
+  request: Request;
+  postSlug: string;
+  now?: number;
+  policy?: typeof COMMENT_SUBMISSION_POLICY;
+}):
+  | { ok: true }
+  | {
+      ok: false;
+      reason: "anonymous_rate_limited";
     };
