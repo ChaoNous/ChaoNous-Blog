@@ -31,7 +31,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   );
 
   return publishedPosts.map((post: CollectionEntry<"posts">) => {
-    // ? id ??? slug(?????)???????
+    // Convert the collection id into the default post slug used by OG routes.
     const slug = getDefaultPostSlug(post.id);
     return {
       params: { slug },

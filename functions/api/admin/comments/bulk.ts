@@ -53,10 +53,10 @@ export const onRequestPost = async ({
     return json({
       ok: true,
       deletedCount,
-      message: `????? ${deletedCount} ????`,
+      message: `\u5DF2\u5220\u9664 ${deletedCount} \u6761\u8BC4\u8BBA\u3002`,
     });
   } catch (error) {
     console.error("admin:comments:bulk", error);
-    return serverError("???????");
+    return serverError("\u6279\u91CF\u5220\u9664\u5931\u8D25\u3002");
   }
 };

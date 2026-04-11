@@ -18,7 +18,7 @@ export const siteConfig: SiteConfig = {
   subtitle: "",
   siteURL: "https://chaonous.com/",
   siteStartDate: "2026-03-03",
-  keywords: ["??", "??", "??", "??", "Astro"],
+  keywords: ["\u535A\u5BA2", "\u6280\u672F", "\u7F16\u7A0B", "\u524D\u7AEF", "Astro"],
   timeZone: SITE_TIMEZONE,
   lang: SITE_LANG,
 
@@ -89,7 +89,7 @@ export const navBarConfig: NavBarConfig = {
     LinkPreset.Home,
     LinkPreset.Archive,
     {
-      name: "??",
+      name: "\u76F8\u518C",
       url: "/albums/",
       icon: "material-symbols:photo-library",
     },
@@ -100,7 +100,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
   avatar: "assets/images/avatar.webp",
   name: "ChaoNous",
-  bio: "???!???!???,????\n???????,????????",
+  bio: "\u884C\u8DEF\u96BE\uFF01\u884C\u8DEF\u96BE\uFF01\u591A\u6B67\u8DEF\uFF0C\u4ECA\u5B89\u5728\uFF1F\n\u957F\u98CE\u7834\u6D6A\u4F1A\u6709\u65F6\uFF0C\u76F4\u6302\u4E91\u5E06\u6D4E\u6CA7\u6D77\u3002",
   typewriter: {
     enable: true,
     speed: 100,
@@ -114,7 +114,7 @@ export const profileConfig: ProfileConfig = {
       url: "https://space.bilibili.com/432268688",
     },
     {
-      name: "??",
+      name: "\u77E5\u4E4E",
       icon: "simple-icons:zhihu",
       url: "https://www.zhihu.com/people/80-57-6-25",
     },
