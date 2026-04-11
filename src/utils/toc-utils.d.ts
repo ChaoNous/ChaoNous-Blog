@@ -12,8 +12,10 @@ export type HeadingData = {
   text: string;
 };
 
+export type HeadingLike = HeadingElement | HeadingData;
+
 export function getHeadingsFromContainer(containerId: string): HeadingElement[];
-export function getMinLevel(headings: HeadingElement[]): number;
+export function getMinLevel(headings: HeadingLike[]): number;
 export function updateActiveHeading(
   headings: HeadingElement[],
   tocItems: HTMLElement[],
