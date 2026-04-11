@@ -364,14 +364,22 @@ const siteLang = lang.replace("_", "-");
   ];
 
   const loadedPageScripts = new Map<string, Promise<unknown>>();
+  type IdleWindow = Window & {
+    requestIdleCallback?: (
+      callback: () => void,
+      options?: { timeout: number },
+    ) => number;
+  };
 
   function scheduleIdleTask(callback: () => void, timeout = 3000) {
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(callback, { timeout });
+    const idleWindow = window as IdleWindow;
+
+    if (typeof idleWindow.requestIdleCallback === "function") {
+      idleWindow.requestIdleCallback(callback, { timeout });
       return;
     }
 
-    window.setTimeout(callback, timeout);
+    globalThis.setTimeout(callback, timeout);
   }
 
   function loadDeferredPageScripts() {
