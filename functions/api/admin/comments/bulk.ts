@@ -2,6 +2,7 @@ import {
   badRequest,
   COMMENT_MESSAGES,
   deleteCommentsByIds,
+  ensureSameOrigin,
   json,
   readJsonBody,
   requireAdminSession,
@@ -17,6 +18,11 @@ export const onRequestPost = async ({
   env: Env;
   request: Request;
 }) => {
+  const sameOriginResponse = ensureSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
   const authResponse = await requireAdminSession(
     request,
     env,

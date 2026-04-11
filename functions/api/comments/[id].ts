@@ -2,6 +2,7 @@ import {
 	badRequest,
 	COMMENT_MESSAGES,
 	deleteCommentsByIds,
+	ensureSameOrigin,
 	json,
 	notFound,
 	parsePositiveId,
@@ -20,6 +21,11 @@ export const onRequestDelete = async ({
 	request: Request;
 }) => {
 	try {
+		const sameOriginResponse = ensureSameOrigin(request);
+		if (sameOriginResponse) {
+			return sameOriginResponse;
+		}
+
 		const id = parsePositiveId(params.id);
 		if (!id) {
 			return badRequest(COMMENT_MESSAGES.invalidCommentId);

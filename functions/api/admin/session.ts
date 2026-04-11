@@ -4,6 +4,7 @@ import {
 	COMMENT_MESSAGES,
 	createAdminSessionCookie,
 	deleteAdminSession,
+	ensureSameOrigin,
 	getAdminSessionToken,
 	json,
 	isAdminAuthorized,
@@ -39,6 +40,11 @@ export const onRequestPost = async ({
 	request: Request;
 }) => {
 	try {
+		const sameOriginResponse = ensureSameOrigin(request);
+		if (sameOriginResponse) {
+			return sameOriginResponse;
+		}
+
 		const parsedBody = await readJsonBody(request);
 		if (!parsedBody.ok) {
 			return parsedBody.response;
@@ -75,6 +81,11 @@ export const onRequestDelete = async ({
 	request: Request;
 }) => {
 	try {
+		const sameOriginResponse = ensureSameOrigin(request);
+		if (sameOriginResponse) {
+			return sameOriginResponse;
+		}
+
 		await deleteAdminSession(env, getAdminSessionToken(request));
 		return json(
 			{

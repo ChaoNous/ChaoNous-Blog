@@ -137,6 +137,23 @@ export function unauthorized(
   return errorResponse("UNAUTHORIZED", message, 401);
 }
 
+export function ensureSameOrigin(
+  request: Request,
+  message = COMMENT_MESSAGES.invalidOrigin,
+): Response | null {
+  const origin = request.headers.get("origin")?.trim();
+  if (!origin) {
+    return null;
+  }
+
+  const requestOrigin = new URL(request.url).origin;
+  if (origin === requestOrigin) {
+    return null;
+  }
+
+  return unauthorized(message);
+}
+
 export function notFound(message = COMMENT_MESSAGES.notFound): Response {
   return errorResponse("NOT_FOUND", message, 404);
 }

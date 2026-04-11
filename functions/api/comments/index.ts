@@ -3,9 +3,10 @@ import {
   COMMENT_MESSAGES,
   createPagination,
   createDeleteToken,
+  ensureSameOrigin,
   json,
+  nestComments,
   normalizeComment,
-  paginateNestedComments,
   parsePaginationParams,
   readJsonBody,
   serverError,
@@ -22,33 +23,65 @@ export const onRequestGet = async ({
   request: Request;
 }) => {
   try {
-    const { url, page, limit } = parsePaginationParams(request.url, 50, 100);
+    const { url, page, limit, offset } = parsePaginationParams(
+      request.url,
+      50,
+      100,
+    );
     const postSlug = url.searchParams.get("postSlug")?.trim();
 
     if (!postSlug) {
       return badRequest(COMMENT_MESSAGES.missingPostSlug);
     }
 
-    const result = await env.COMMENTS_DB.prepare(
-      `SELECT id, parent_id, post_slug, post_url, post_title, author_name, author_email, author_url, content, created_at, updated_at
-       FROM comments
-       WHERE post_slug = ?1
-       ORDER BY created_at ASC, id ASC`,
+    const totalRoots = await env.COMMENTS_DB.prepare(
+      `SELECT COUNT(*) AS total_count
+       FROM comments AS current
+       LEFT JOIN comments AS parent
+         ON parent.id = current.parent_id
+        AND parent.post_slug = current.post_slug
+       WHERE current.post_slug = ?1
+         AND (current.parent_id IS NULL OR parent.id IS NULL)`,
     )
       .bind(postSlug)
+      .first<{ total_count: number }>();
+
+    const result = await env.COMMENTS_DB.prepare(
+      `WITH root_threads AS (
+         SELECT current.id
+         FROM comments AS current
+         LEFT JOIN comments AS parent
+           ON parent.id = current.parent_id
+          AND parent.post_slug = current.post_slug
+         WHERE current.post_slug = ?1
+           AND (current.parent_id IS NULL OR parent.id IS NULL)
+         ORDER BY current.created_at ASC, current.id ASC
+         LIMIT ?2 OFFSET ?3
+       ),
+       thread_comments AS (
+         SELECT id, parent_id, post_slug, post_url, post_title, author_name, author_email, author_url, content, created_at, updated_at
+         FROM comments
+         WHERE id IN (SELECT id FROM root_threads)
+         UNION ALL
+         SELECT child.id, child.parent_id, child.post_slug, child.post_url, child.post_title, child.author_name, child.author_email, child.author_url, child.content, child.created_at, child.updated_at
+         FROM comments AS child
+         INNER JOIN thread_comments AS parent_thread
+           ON child.parent_id = parent_thread.id
+       )
+       SELECT DISTINCT id, parent_id, post_slug, post_url, post_title, author_name, author_email, author_url, content, created_at, updated_at
+       FROM thread_comments
+       ORDER BY created_at ASC, id ASC`,
+    )
+      .bind(postSlug, limit, offset)
       .all<CommentRecord>();
 
     const normalized = (result.results || []).map((record) =>
       normalizeComment(record),
     );
-    const { data, totalCount } = paginateNestedComments(
-      normalized,
-      page,
-      limit,
-    );
+    const totalCount = Number(totalRoots?.total_count || 0);
 
     return json({
-      data,
+      data: nestComments(normalized),
       pagination: createPagination(page, limit, totalCount),
     });
   } catch (error) {
@@ -65,6 +98,11 @@ export const onRequestPost = async ({
   request: Request;
 }) => {
   try {
+    const sameOriginResponse = ensureSameOrigin(request);
+    if (sameOriginResponse) {
+      return sameOriginResponse;
+    }
+
     const parsedBody = await readJsonBody(request);
     if (!parsedBody.ok) {
       return parsedBody.response;
