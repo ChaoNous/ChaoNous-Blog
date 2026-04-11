@@ -14,7 +14,7 @@ export function renderCommentsState(
 	options: MountSiteCommentsOptions,
 ): void {
 	container.innerHTML = `
-		<section class="site-comments-shell">
+		<section class="site-comments-shell" aria-live="polite">
 			${renderCommentsNoticeMarkup(state)}
 			${state.replyTarget ? "" : renderCommentFormMarkup(state, null, state.submitting)}
 			<div class="site-comments-list">${renderCommentsListMarkup(state, options)}</div>

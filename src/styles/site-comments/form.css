@@ -101,6 +101,14 @@
   align-items: center;
 }
 
+.site-comments-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .site-comments-submit {
   border: 1px solid var(--display-panel-border);
   border-radius: 12px;

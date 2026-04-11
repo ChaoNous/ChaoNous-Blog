@@ -49,17 +49,23 @@ export function renderCommentFormMarkup(
 			<div class="site-comments-grid">
 				<label class="site-comments-field">
 					<span>${COMMENT_MESSAGES.nameLabel}</span>
-					<input name="name" type="text" maxlength="50" required placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.name)}" />
+					<input name="name" type="text" maxlength="50" required autocomplete="name" placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.name)}" />
 				</label>
 				<label class="site-comments-field">
 					<span>${COMMENT_MESSAGES.emailLabel}</span>
-					<input name="email" type="email" maxlength="120" required placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.email)}" />
+					<input name="email" type="email" maxlength="120" required autocomplete="email" placeholder="${COMMENT_MESSAGES.requiredPlaceholder}" value="${escapeHtml(state.visitorInfo.email)}" />
 				</label>
 			</div>
 			<label class="site-comments-field">
 				<span>${COMMENT_MESSAGES.urlLabel}</span>
-				<input name="url" type="text" inputmode="url" maxlength="200" placeholder="${COMMENT_MESSAGES.optionalPlaceholder}" value="${escapeHtml(state.visitorInfo.url)}" />
+				<input name="url" type="text" inputmode="url" maxlength="200" autocomplete="url" placeholder="${COMMENT_MESSAGES.optionalPlaceholder}" value="${escapeHtml(state.visitorInfo.url)}" />
 			</label>
+			<div class="site-comments-honeypot" aria-hidden="true">
+				<label class="site-comments-field" tabindex="-1">
+					<span>Website</span>
+					<input name="website" type="text" tabindex="-1" autocomplete="off" />
+				</label>
+			</div>
 			<label class="site-comments-field">
 				<span>${COMMENT_MESSAGES.contentLabel}</span>
 				<textarea name="content" rows="${replyTarget ? 4 : 5}" maxlength="2000" required placeholder="${COMMENT_MESSAGES.contentPlaceholder}"></textarea>
@@ -154,11 +160,11 @@ export function renderCommentsListMarkup(
 
 export function renderCommentsNoticeMarkup(state: SiteCommentsState): string {
 	if (state.error) {
-		return `<div class="site-comments-notice is-error">${escapeHtml(state.error)}</div>`;
+		return `<div class="site-comments-notice is-error" role="alert">${escapeHtml(state.error)}</div>`;
 	}
 
 	if (state.success) {
-		return `<div class="site-comments-notice is-success">${escapeHtml(state.success)}</div>`;
+		return `<div class="site-comments-notice is-success" role="status">${escapeHtml(state.success)}</div>`;
 	}
 
 	return "";

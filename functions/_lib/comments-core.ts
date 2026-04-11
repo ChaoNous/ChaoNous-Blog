@@ -45,6 +45,21 @@ function normalizeOptionalUrl(value: string): string | null {
   }
 }
 
+function normalizeRequiredUrl(value: string): string | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+    return parsed.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function json(
   data: unknown,
   status = 200,
@@ -238,21 +253,34 @@ export function parsePositiveId(value: unknown): number | null {
 }
 
 export function validateSubmission(body: Record<string, unknown>) {
-  const postSlug = String(body.postSlug || "").trim();
-  const postUrl = String(body.postUrl || "").trim();
+  const postSlug = normalizeRequiredUrl(String(body.postSlug || ""));
+  const postUrl = normalizeRequiredUrl(String(body.postUrl || ""));
   const postTitle = String(body.postTitle || "").trim();
   const name = String(body.name || "").trim();
   const email = String(body.email || "").trim();
   const rawUrl = String(body.url || "").trim();
+  const website = String(body.website || "").trim();
   const content = String(body.content || "").trim();
   const parentIdRaw = String(body.parentId || "").trim();
   const parentId = parentIdRaw ? Number.parseInt(parentIdRaw, 10) : null;
 
   if (!postSlug) {
-    return { ok: false, message: COMMENT_MESSAGES.missingPostSlug } as const;
+    return { ok: false, message: COMMENT_MESSAGES.invalidPostSlug } as const;
   }
   if (!postUrl) {
-    return { ok: false, message: COMMENT_MESSAGES.missingPostUrl } as const;
+    return { ok: false, message: COMMENT_MESSAGES.invalidPostUrl } as const;
+  }
+  if (website) {
+    return {
+      ok: false,
+      message: COMMENT_MESSAGES.invalidSubmission,
+    } as const;
+  }
+  if (!postTitle || postTitle.length > 160) {
+    return {
+      ok: false,
+      message: COMMENT_MESSAGES.invalidSubmission,
+    } as const;
   }
   if (!name || name.length > 50) {
     return { ok: false, message: COMMENT_MESSAGES.invalidName } as const;
