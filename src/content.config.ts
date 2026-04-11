@@ -21,23 +21,25 @@ const postsCollection = defineCollection({
     licenseName: z.string().optional().default(""),
     licenseUrl: z.string().optional().default(""),
 
-    /* Posts alias */
+    // Posts alias.
     alias: z.string().optional(),
 
-    /* Custom permalink - 自定义固定链接，优先级高于 alias */
+    // Custom permalink. When both are set, permalink takes precedence.
     permalink: z.string().optional(),
 
-    /* For internal use */
+    // Internal adjacency metadata used by the post navigation UI.
     prevTitle: z.string().default(""),
     prevSlug: z.string().default(""),
     nextTitle: z.string().default(""),
     nextSlug: z.string().default(""),
   }),
 });
+
 const specCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/spec" }),
   schema: z.object({}),
 });
+
 export const collections = {
   posts: postsCollection,
   spec: specCollection,

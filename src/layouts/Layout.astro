@@ -334,31 +334,80 @@ const siteLang = lang.replace("_", "-");
 
 <!-- Defer non-critical scripts until the browser is idle. -->
 <script>
-  // Prefer requestIdleCallback when available to keep the main thread free.
+  type DeferredPageScript = {
+    key: string;
+    selector: string;
+    load: () => Promise<unknown>;
+  };
+
+  const deferredPageScripts: DeferredPageScript[] = [
+    {
+      key: "asset-demystification-calculator",
+      selector: ".property-calculator",
+      load: () => import("../scripts/asset-demystification-calculator.ts"),
+    },
+    {
+      key: "btc-analysis-chart",
+      selector: "#btc-main-chart, #btc-mini-chart, #btc-table-wrap",
+      load: () => import("../scripts/btc-analysis-chart.ts"),
+    },
+    {
+      key: "code-collapse",
+      selector: ".expressive-code",
+      load: () => import("../scripts/code-collapse.ts"),
+    },
+    {
+      key: "copy-code-buttons",
+      selector: ".copy-btn",
+      load: () => import("../scripts/copy-code-buttons.ts"),
+    },
+  ];
+
+  const loadedPageScripts = new Map<string, Promise<unknown>>();
+
   function scheduleIdleTask(callback: () => void, timeout = 3000) {
     if ("requestIdleCallback" in window) {
       window.requestIdleCallback(callback, { timeout });
-    } else {
-      setTimeout(callback, timeout);
+      return;
+    }
+
+    window.setTimeout(callback, timeout);
+  }
+
+  function loadDeferredPageScripts() {
+    for (const deferredScript of deferredPageScripts) {
+      if (loadedPageScripts.has(deferredScript.key)) {
+        continue;
+      }
+
+      if (!document.querySelector(deferredScript.selector)) {
+        continue;
+      }
+
+      const promise = deferredScript.load().catch((error) => {
+        loadedPageScripts.delete(deferredScript.key);
+        console.warn(
+          `[deferred-page-script] Failed to load ${deferredScript.key}`,
+          error,
+        );
+      });
+
+      loadedPageScripts.set(deferredScript.key, promise);
     }
   }
 
-  // Schedule non-critical scripts after initial content is ready.
+  function scheduleDeferredPageScripts() {
+    scheduleIdleTask(loadDeferredPageScripts);
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      scheduleIdleTask(() => {
-        import("../scripts/asset-demystification-calculator.ts");
-        import("../scripts/btc-analysis-chart.ts");
-        import("../scripts/code-collapse.ts");
-        import("../scripts/copy-code-buttons.ts");
-      });
+    document.addEventListener("DOMContentLoaded", scheduleDeferredPageScripts, {
+      once: true,
     });
   } else {
-    scheduleIdleTask(() => {
-      import("../scripts/asset-demystification-calculator.ts");
-      import("../scripts/btc-analysis-chart.ts");
-      import("../scripts/code-collapse.ts");
-      import("../scripts/copy-code-buttons.ts");
-    });
+    scheduleDeferredPageScripts();
   }
+
+  document.addEventListener("astro:page-load", scheduleDeferredPageScripts);
+  document.addEventListener("swup:page:view", scheduleDeferredPageScripts);
 </script>

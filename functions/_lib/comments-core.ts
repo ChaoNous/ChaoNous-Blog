@@ -1,5 +1,9 @@
 import { isAdminAuthorized } from "./comments-auth";
 import { COMMENT_MESSAGES } from "./comments-messages";
+import {
+  buildNestedComments,
+  paginateNestedComments as paginateNestedCommentsHelper,
+} from "./comments-threading.js";
 import type {
   AdminCommentView,
   ApiErrorPayload,
@@ -96,25 +100,18 @@ export function toAdminComment(record: CommentRecord): AdminCommentView {
 }
 
 export function nestComments(records: NormalizedComment[]): NestedComment[] {
-  const map = new Map<number, NestedComment>();
-  const roots: NestedComment[] = [];
+  return buildNestedComments(records) as NestedComment[];
+}
 
-  for (const record of records) {
-    map.set(record.id, {
-      ...record,
-      replies: [],
-    });
-  }
-
-  for (const record of map.values()) {
-    if (record.parentId && map.has(record.parentId)) {
-      map.get(record.parentId)!.replies.push(record);
-      continue;
-    }
-    roots.push(record);
-  }
-
-  return roots;
+export function paginateNestedComments(
+  records: NormalizedComment[],
+  page: number,
+  limit: number,
+): { data: NestedComment[]; totalCount: number } {
+  return paginateNestedCommentsHelper(records, page, limit) as {
+    data: NestedComment[];
+    totalCount: number;
+  };
 }
 
 export function createPagination(

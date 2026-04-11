@@ -39,13 +39,15 @@ function createSessionCookie(token: string, maxAgeSeconds: number): string {
 }
 
 function createSessionId(): string {
-  const timePart = Date.now().toString(36);
-  const randomPart = Array.from({ length: 4 }, () =>
-    Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-      .toString(36)
-      .slice(0, 10),
-  ).join("");
-  return `${timePart}${randomPart}`;
+  if (typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
+    "",
+  );
 }
 
 async function deleteExpiredAdminSessions(env: Env): Promise<void> {

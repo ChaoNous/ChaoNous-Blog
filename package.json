@@ -22,6 +22,8 @@
 		"preview": "astro preview",
 		"astro": "astro",
 		"type-check": "tsc --noEmit",
+		"test": "node --test ./tests/comments-threading.test.mjs ./tests/post-sort.test.mjs",
+		"verify": "pnpm run test",
 		"github:commit-files": "node scripts/github-commit-files.mjs",
 		"format": "prettier --write ./src",
 		"preinstall": "npx only-allow pnpm",
