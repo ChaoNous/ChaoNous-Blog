@@ -132,14 +132,14 @@ export function badRequest(message: string): Response {
 }
 
 export function unauthorized(
-  message = COMMENT_MESSAGES.unauthorized,
+  message: string = COMMENT_MESSAGES.unauthorized,
 ): Response {
   return errorResponse("UNAUTHORIZED", message, 401);
 }
 
 export function ensureSameOrigin(
   request: Request,
-  message = COMMENT_MESSAGES.invalidOrigin,
+  message: string = COMMENT_MESSAGES.invalidOrigin,
 ): Response | null {
   const origin = request.headers.get("origin")?.trim();
   if (!origin) {
@@ -154,12 +154,14 @@ export function ensureSameOrigin(
   return unauthorized(message);
 }
 
-export function notFound(message = COMMENT_MESSAGES.notFound): Response {
+export function notFound(
+  message: string = COMMENT_MESSAGES.notFound,
+): Response {
   return errorResponse("NOT_FOUND", message, 404);
 }
 
 export function serverError(
-  message = COMMENT_MESSAGES.serverError,
+  message: string = COMMENT_MESSAGES.serverError,
 ): Response {
   return errorResponse("SERVER_ERROR", message, 500);
 }
@@ -188,7 +190,7 @@ export async function readJsonBody(
 export async function requireAdminSession(
   request: Request,
   env: Env,
-  message = COMMENT_MESSAGES.adminUnauthorized,
+  message: string = COMMENT_MESSAGES.adminUnauthorized,
 ): Promise<Response | null> {
   if (await isAdminAuthorized(request, env)) {
     return null;

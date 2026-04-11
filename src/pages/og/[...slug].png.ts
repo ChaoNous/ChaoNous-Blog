@@ -5,7 +5,7 @@ import path from "node:path";
 import type { APIContext, GetStaticPaths } from "astro";
 import satori from "satori";
 import sharp from "sharp";
-import { removeFileExtension } from "@/utils/url-utils";
+import { getDefaultPostSlug } from "@/utils/post-routes.js";
 
 import { profileConfig, siteConfig } from "../../config";
 
@@ -26,11 +26,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 
   const allPosts = await getCollection("posts");
-  const publishedPosts = allPosts.filter((post) => !post.data.draft);
+  const publishedPosts = allPosts.filter(
+    (post: CollectionEntry<"posts">) => !post.data.draft,
+  );
 
-  return publishedPosts.map((post) => {
-    // 将 id 转换为 slug（移除扩展名）以匹配路由参数
-    const slug = removeFileExtension(post.id);
+  return publishedPosts.map((post: CollectionEntry<"posts">) => {
+    // ? id ??? slug(?????)???????
+    const slug = getDefaultPostSlug(post.id);
     return {
       params: { slug },
       props: { post },

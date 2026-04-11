@@ -6,8 +6,8 @@ import { assignAdjacentPosts, sortPosts } from "./post-sort.js";
 
 // Retrieve posts and sort them by pinned state, priority, and publish date.
 async function getRawSortedPosts(): Promise<CollectionEntry<"posts">[]> {
-  const allBlogPosts = await getCollection("posts", ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
+  const allBlogPosts = await getCollection("posts", (entry) => {
+    return import.meta.env.PROD ? entry.data.draft !== true : true;
   });
 
   return sortPosts(allBlogPosts);
@@ -40,12 +40,12 @@ export type Category = {
 };
 
 export async function getCategoryList(): Promise<Category[]> {
-  const allBlogPosts = await getCollection<"posts">("posts", ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
+  const allBlogPosts = await getCollection("posts", (entry) => {
+    return import.meta.env.PROD ? entry.data.draft !== true : true;
   });
   const count: { [key: string]: number } = {};
 
-  allBlogPosts.forEach((post: { data: { category: string | null } }) => {
+  allBlogPosts.forEach((post) => {
     if (!post.data.category) {
       const uncategorizedKey = i18n(I18nKey.uncategorized);
       count[uncategorizedKey] = count[uncategorizedKey]
