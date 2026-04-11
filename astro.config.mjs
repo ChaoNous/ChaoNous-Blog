@@ -38,7 +38,8 @@ export default defineConfig({
 	},
 
 	integrations: [
-		// Swup 页面过渡 - 优化配置
+		// Swup ???? - ????
+		// Swup page transition configuration tuned for partial navigation.
 		swup({
 			theme: false,
 			animationClass: "transition-swup-",
@@ -168,28 +169,36 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 		build: {
-			// 静态资源处理优化，防止小图片转 base64 导致 HTML 体积过大
+			// ????????,?????? base64 ?? HTML ????
+			// Keep small assets out of HTML to avoid oversized static documents.
 			assetsInlineLimit: 4096,
-			// 启用 CSS 代码分割
+			// ?? CSS ????
+			// Preserve CSS code splitting for route-level loading.
 			cssCodeSplit: true,
-			// 启用压缩
+			// ????
+			// Minify production bundles.
 			minify: "esbuild",
-			// esbuild 压缩选项
+			// esbuild ????
+			// Trim production JavaScript noise.
 			esbuildOptions: {
-				// 降低打包体积
+				// ??????
+				// Prefer smaller bundles over function name preservation.
 				keepNames: false,
-				// 移除 console.log (生产环境)
+				// ?? console.log (????)
+				// Drop debug output in production.
 				drop:
 					process.env.NODE_ENV === "production"
 						? ["console", "debugger"]
 						: [],
 			},
-			// 分块大小警告限制 (KB)
+			// ???????? (KB)
+			// Keep chunk size warnings visible during local tuning.
 			chunkSizeWarningLimit: 500,
 
 			rollupOptions: {
 				output: {
-					// 优化分块策略
+					// ??????
+					// Split large vendor groups into more stable cache buckets.
 					manualChunks(id) {
 						if (id.includes("node_modules")) {
 							if (id.includes("svelte")) return "vendor-svelte";
@@ -202,7 +211,8 @@ export default defineConfig({
 							if (id.includes("iconify")) return "vendor-iconify";
 						}
 					},
-					// 优化 chunk 命名
+					// ?? chunk ??
+					// Use deterministic asset names for long-term caching.
 					entryFileNames: "assets/[name].[hash].js",
 					chunkFileNames: "assets/[name].[hash].js",
 					assetFileNames: "assets/[name].[hash][extname]",
@@ -222,10 +232,12 @@ export default defineConfig({
 				},
 			},
 		},
-		// 优化依赖预构建
+		// ???????
+		// Pre-bundle the dependencies that improve dev startup most.
 		optimizeDeps: {
 			include: ["@fancyapps/ui", "svelte"],
-			// 排除大型依赖
+			// ??????
+			// Keep large optional libraries out of eager optimization.
 			exclude: ["katex"],
 		},
 	},

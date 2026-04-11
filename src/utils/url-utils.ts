@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import { getCanonicalPostSlug } from "@utils/post-routes.js";
 
 export function removeFileExtension(id: string): string {
   return id.replace(/\.(md|mdx|markdown)$/i, "");
@@ -22,27 +23,14 @@ export function getPostUrlBySlug(slug: string): string {
   return url(`/posts/${slugWithoutExt}/`);
 }
 
-function getPostUrlByAlias(alias: string): string {
-  const cleanAlias = alias.replace(/^\/+/, "");
-  return url(`/posts/${cleanAlias}/`);
-}
-
 export function getPostUrl(post: CollectionEntry<"posts">): string;
 export function getPostUrl(post: {
   id: string;
   data: { alias?: string; permalink?: string };
 }): string;
 export function getPostUrl(post: any): string {
-  if (post.data.permalink) {
-    const slug = post.data.permalink.replace(/^\/+/, "").replace(/\/+$/, "");
-    return url(`/${slug}/`);
-  }
-
-  if (post.data.alias) {
-    return getPostUrlByAlias(post.data.alias);
-  }
-
-  return getPostUrlBySlug(post.id);
+  const canonicalSlug = getCanonicalPostSlug(post);
+  return getPostUrlBySlug(canonicalSlug);
 }
 
 export function getCategoryUrl(category: string | null): string {

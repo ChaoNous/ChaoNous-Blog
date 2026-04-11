@@ -5,33 +5,33 @@ import { z } from "astro/zod";
 const postsCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/posts" }),
   schema: z.object({
-    title: z.string(),
+    title: z.string().trim(),
     published: z.date(),
     updated: z.date().optional(),
     draft: z.boolean().optional().default(false),
-    description: z.string().optional().default(""),
-    image: z.string().optional().default(""),
-    tags: z.array(z.string()).optional().default([]),
-    category: z.string().optional().nullable().default(""),
-    lang: z.string().optional().default(""),
+    description: z.string().trim().optional().default(""),
+    image: z.string().trim().optional().default(""),
+    tags: z.array(z.string().trim()).optional().default([]),
+    category: z.string().trim().optional().nullable().default(""),
+    lang: z.string().trim().optional().default(""),
     pinned: z.boolean().optional().default(false),
     priority: z.number().optional(),
-    author: z.string().optional().default(""),
-    sourceLink: z.string().optional().default(""),
-    licenseName: z.string().optional().default(""),
-    licenseUrl: z.string().optional().default(""),
+    author: z.string().trim().optional().default(""),
+    sourceLink: z.string().trim().optional().default(""),
+    licenseName: z.string().trim().optional().default(""),
+    licenseUrl: z.string().trim().optional().default(""),
 
-    // Posts alias.
-    alias: z.string().optional(),
+    // Legacy route slug under /posts/.
+    alias: z.string().trim().optional(),
 
-    // Custom permalink. When both are set, permalink takes precedence.
-    permalink: z.string().optional(),
+    // Preferred route slug under /posts/. When both are set, permalink wins.
+    permalink: z.string().trim().optional(),
 
     // Internal adjacency metadata used by the post navigation UI.
-    prevTitle: z.string().default(""),
-    prevSlug: z.string().default(""),
-    nextTitle: z.string().default(""),
-    nextSlug: z.string().default(""),
+    prevTitle: z.string().trim().default(""),
+    prevSlug: z.string().trim().default(""),
+    nextTitle: z.string().trim().default(""),
+    nextSlug: z.string().trim().default(""),
   }),
 });
 

@@ -9,8 +9,8 @@ import { getSortedPosts } from "@utils/content-utils";
 import {
 	getFileDirFromPath,
 	getPostUrl,
-	removeFileExtension,
 } from "@utils/url-utils";
+import { getAllPostSlugs } from "@utils/post-routes.js";
 import { commentConfig, licenseConfig } from "src/config";
 import { profileConfig, siteConfig } from "../../config";
 import { buildBlogPostingJsonLd } from "../../utils/blog-schema";
@@ -25,20 +25,9 @@ export async function getStaticPaths() {
 	}[] = [];
 
 	for (const entry of blogEntries) {
-		const defaultSlug = removeFileExtension(entry.id);
-
-		paths.push({
-			params: { slug: defaultSlug },
-			props: { entry },
-		});
-
-		if (entry.data.alias) {
-			let alias = entry.data.alias.replace(/^\/+/, "").replace(/\/+$/, "");
-			if (alias.startsWith("posts/")) {
-				alias = alias.replace(/^posts\//, "");
-			}
+		for (const slug of getAllPostSlugs(entry)) {
 			paths.push({
-				params: { slug: alias },
+				params: { slug },
 				props: { entry },
 			});
 		}
