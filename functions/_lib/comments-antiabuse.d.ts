@@ -51,6 +51,8 @@ export declare function evaluateSubmissionRateLimit(input: {
 
 export declare function getRequestFingerprint(request: Request): string | null;
 
+export declare function hashFingerprint(value: string): Promise<string>;
+
 export declare function resetAnonymousSubmissionThrottle(): void;
 
 export declare function enforceAnonymousSubmissionThrottle(input: {
@@ -63,4 +65,28 @@ export declare function enforceAnonymousSubmissionThrottle(input: {
   | {
       ok: false;
       reason: "anonymous_rate_limited";
+      retryAfterSeconds: number;
     };
+
+export declare function enforceAnonymousSubmissionThrottleWithStore(input: {
+  env: {
+    COMMENTS_DB: {
+      prepare(query: string): {
+        bind(...values: unknown[]): {
+          first<T>(): Promise<T | null>;
+          run(): Promise<{ meta: { last_row_id?: number; changes?: number } }>;
+        };
+      };
+    };
+  };
+  request: Request;
+  postSlug: string;
+  now?: number;
+  policy?: typeof COMMENT_SUBMISSION_POLICY;
+}):
+  | Promise<{ ok: true }>
+  | Promise<{
+      ok: false;
+      reason: "anonymous_rate_limited";
+      retryAfterSeconds: number;
+    }>;

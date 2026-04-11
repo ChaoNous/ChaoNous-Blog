@@ -25,9 +25,18 @@ type CommentRow = {
   updated_at: number;
 };
 
+type CommentSubmissionEventRow = {
+  id: number;
+  fingerprint_hash: string;
+  post_slug: string;
+  created_at: number;
+};
+
 class MockD1Database {
   comments: CommentRow[] = [];
+  commentSubmissionEvents: CommentSubmissionEventRow[] = [];
   nextId = 1;
+  nextEventId = 1;
 
   prepare(query: string) {
     return new MockD1PreparedStatement(this, query);
@@ -158,6 +167,42 @@ class MockD1PreparedStatement {
     }
 
     if (
+      sql.includes(
+        "SELECT COUNT(*) AS recent_count FROM comment_submission_events",
+      ) &&
+      sql.includes("created_at >= ?2") &&
+      !sql.includes("post_slug = ?2")
+    ) {
+      const [fingerprintHash, minCreatedAt] = values as [string, number];
+      const recentCount = this.database.commentSubmissionEvents.filter(
+        (event) =>
+          event.fingerprint_hash === fingerprintHash &&
+          event.created_at >= minCreatedAt,
+      ).length;
+      return { recent_count: recentCount } as T;
+    }
+
+    if (
+      sql.includes(
+        "SELECT COUNT(*) AS recent_count FROM comment_submission_events",
+      ) &&
+      sql.includes("post_slug = ?2")
+    ) {
+      const [fingerprintHash, postSlug, minCreatedAt] = values as [
+        string,
+        string,
+        number,
+      ];
+      const recentCount = this.database.commentSubmissionEvents.filter(
+        (event) =>
+          event.fingerprint_hash === fingerprintHash &&
+          event.post_slug === postSlug &&
+          event.created_at >= minCreatedAt,
+      ).length;
+      return { recent_count: recentCount } as T;
+    }
+
+    if (
       sql.includes("SELECT COUNT(*) AS total_count FROM comments AS current")
     ) {
       const [postSlug] = values as [string];
@@ -278,6 +323,42 @@ class MockD1PreparedStatement {
       return { meta: { last_row_id: id, changes: 1 } };
     }
 
+    if (sql.startsWith("DELETE FROM comment_submission_events")) {
+      const [fingerprintHash, minCreatedAt] = values as [string, number];
+      const before = this.database.commentSubmissionEvents.length;
+      this.database.commentSubmissionEvents =
+        this.database.commentSubmissionEvents.filter(
+          (event) =>
+            !(
+              event.fingerprint_hash === fingerprintHash &&
+              event.created_at < minCreatedAt
+            ),
+        );
+      return {
+        meta: {
+          changes: before - this.database.commentSubmissionEvents.length,
+        },
+      };
+    }
+
+    if (sql.startsWith("INSERT INTO comment_submission_events")) {
+      const [fingerprintHash, postSlug, createdAt] = values as [
+        string,
+        string,
+        number,
+      ];
+
+      const id = this.database.nextEventId++;
+      this.database.commentSubmissionEvents.push({
+        id,
+        fingerprint_hash: fingerprintHash,
+        post_slug: postSlug,
+        created_at: createdAt,
+      });
+
+      return { meta: { last_row_id: id, changes: 1 } };
+    }
+
     if (
       sql.includes("WITH RECURSIVE subtree") &&
       sql.includes("DELETE FROM comments")
@@ -305,6 +386,7 @@ function createEnv(seedComments: CommentRow[] = []) {
   database.nextId =
     database.comments.reduce((maxId, comment) => Math.max(maxId, comment.id), 0) +
     1;
+  database.nextEventId = 1;
 
   return {
     COMMENTS_DB: database,
@@ -451,10 +533,13 @@ test("comments API applies anonymous fingerprint throttling across different ema
   assert.equal(blockedResponse.status, 429);
   assert.equal(
     blockedResponse.headers.get("retry-after"),
-    String(Math.ceil(COMMENT_SUBMISSION_POLICY.minSubmitIntervalMs / 1000)),
+    String(
+      Math.ceil(COMMENT_SUBMISSION_POLICY.anonymousRecentPostWindowMs / 1000),
+    ),
   );
   const payload = await blockedResponse.json();
   assert.equal(payload.code, "TOO_MANY_REQUESTS");
+  assert.equal(env.COMMENTS_DB.commentSubmissionEvents.length, 4);
 });
 
 test("comments GET API returns nested comments with root-thread pagination", async () => {

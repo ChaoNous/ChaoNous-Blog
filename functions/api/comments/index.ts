@@ -1,10 +1,10 @@
 import {
   badRequest,
-  COMMENT_SUBMISSION_POLICY,
   COMMENT_MESSAGES,
   createPagination,
   createDeleteToken,
   enforceAnonymousSubmissionThrottle,
+  enforceAnonymousSubmissionThrottleWithStore,
   enforceSubmissionRateLimit,
   ensureSameOrigin,
   json,
@@ -150,18 +150,34 @@ export const onRequestPost = async ({
       );
     }
 
-    const anonymousRateLimit = enforceAnonymousSubmissionThrottle({
-      request,
-      postSlug: validated.value.postSlug,
-      now,
-    });
-    if (!anonymousRateLimit.ok) {
-      return tooManyRequests(
-        COMMENT_MESSAGES.commentRateLimited,
-        Math.ceil(
-          COMMENT_SUBMISSION_POLICY.minSubmitIntervalMs / 1000,
-        ),
-      );
+    try {
+      const persistedAnonymousRateLimit =
+        await enforceAnonymousSubmissionThrottleWithStore({
+          env,
+          request,
+          postSlug: validated.value.postSlug,
+          now,
+        });
+
+      if (!persistedAnonymousRateLimit.ok) {
+        return tooManyRequests(
+          COMMENT_MESSAGES.commentRateLimited,
+          persistedAnonymousRateLimit.retryAfterSeconds,
+        );
+      }
+    } catch {
+      const anonymousRateLimit = enforceAnonymousSubmissionThrottle({
+        request,
+        postSlug: validated.value.postSlug,
+        now,
+      });
+
+      if (!anonymousRateLimit.ok) {
+        return tooManyRequests(
+          COMMENT_MESSAGES.commentRateLimited,
+          anonymousRateLimit.retryAfterSeconds,
+        );
+      }
     }
 
     if (validated.value.parentId) {

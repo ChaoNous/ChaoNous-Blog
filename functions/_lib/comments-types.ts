@@ -15,6 +15,13 @@ export interface Env {
   COMMENT_SESSION_SECRET?: string;
 }
 
+export type CommentSubmissionEventRecord = {
+  id: number;
+  fingerprint_hash: string;
+  post_slug: string;
+  created_at: number;
+};
+
 export interface CommentRecord {
   id: number;
   parent_id: number | null;
