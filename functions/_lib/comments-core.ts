@@ -25,6 +25,7 @@ function errorResponse(
   code: CommentApiErrorCode,
   message: string,
   status: number,
+  headers?: HeadersInit,
 ): Response {
   return json(
     {
@@ -33,6 +34,7 @@ function errorResponse(
       message,
     } satisfies ApiErrorPayload,
     status,
+    headers,
   );
 }
 
@@ -158,8 +160,13 @@ export function unauthorized(
   return errorResponse("UNAUTHORIZED", message, 401);
 }
 
-export function tooManyRequests(message: string): Response {
-  return errorResponse("TOO_MANY_REQUESTS", message, 429);
+export function tooManyRequests(
+  message: string,
+  retryAfterSeconds = 60,
+): Response {
+  return errorResponse("TOO_MANY_REQUESTS", message, 429, {
+    "retry-after": String(retryAfterSeconds),
+  });
 }
 
 export function ensureSameOrigin(
@@ -342,18 +349,23 @@ export function validateSubmissionMetadata(body: Record<string, unknown>) {
           ok: false,
           message: COMMENT_MESSAGES.submissionTooFast,
           shouldRateLimit: true,
+          retryAfterSeconds: Math.ceil(
+            COMMENT_SUBMISSION_POLICY.minFormFillMs / 1000,
+          ),
         } as const;
       case "too_many_links":
         return {
           ok: false,
           message: COMMENT_MESSAGES.commentTooManyLinks,
           shouldRateLimit: false,
+          retryAfterSeconds: null,
         } as const;
       default:
         return {
           ok: false,
           message: COMMENT_MESSAGES.invalidSubmission,
           shouldRateLimit: false,
+          retryAfterSeconds: null,
         } as const;
     }
   }
@@ -437,6 +449,10 @@ export async function enforceSubmissionRateLimit(
       decision.reason === "duplicate_content"
         ? COMMENT_MESSAGES.duplicateComment
         : COMMENT_MESSAGES.commentRateLimited,
+    retryAfterSeconds:
+      decision.reason === "duplicate_content"
+        ? Math.ceil(COMMENT_SUBMISSION_POLICY.duplicateWindowMs / 1000)
+        : Math.ceil(COMMENT_SUBMISSION_POLICY.minSubmitIntervalMs / 1000),
   } as const;
 }
 

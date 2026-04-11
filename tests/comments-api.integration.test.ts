@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { onRequestDelete } from "../functions/api/comments/[id].ts";
-import { onRequestPost } from "../functions/api/comments/index.ts";
-import { resetAnonymousSubmissionThrottle } from "../functions/_lib/comments-antiabuse.js";
+import {
+  onRequestGet,
+  onRequestPost,
+} from "../functions/api/comments/index.ts";
+import {
+  COMMENT_SUBMISSION_POLICY,
+  resetAnonymousSubmissionThrottle,
+} from "../functions/_lib/comments-antiabuse.js";
 
 type CommentRow = {
   id: number;
@@ -61,6 +67,55 @@ class MockD1PreparedStatement {
   }
 
   async all<T>() {
+    const sql = this.query.replace(/\s+/g, " ").trim();
+    const values = this.boundValues;
+
+    if (sql.includes("WITH root_threads AS (")) {
+      const [postSlug, limit, offset] = values as [string, number, number];
+      const postComments = this.database.comments.filter(
+        (comment) => comment.post_slug === postSlug,
+      );
+      const commentMap = new Map(
+        postComments.map((comment) => [comment.id, comment]),
+      );
+      const roots = postComments
+        .filter((comment) => {
+          if (comment.parent_id === null) return true;
+          const parent = commentMap.get(comment.parent_id);
+          return !parent || parent.post_slug !== comment.post_slug;
+        })
+        .sort(
+          (left, right) =>
+            left.created_at - right.created_at || left.id - right.id,
+        );
+
+      const selectedRootIds = new Set(
+        roots.slice(offset, offset + limit).map((comment) => comment.id),
+      );
+      const selectedIds = new Set<number>();
+      const stack = [...selectedRootIds];
+
+      while (stack.length > 0) {
+        const currentId = stack.pop();
+        if (!currentId || selectedIds.has(currentId)) continue;
+        selectedIds.add(currentId);
+
+        for (const comment of postComments) {
+          if (comment.parent_id === currentId) {
+            stack.push(comment.id);
+          }
+        }
+      }
+
+      const results = postComments
+        .filter((comment) => selectedIds.has(comment.id))
+        .sort(
+          (left, right) =>
+            left.created_at - right.created_at || left.id - right.id,
+        );
+      return { results: results as T[] };
+    }
+
     return { results: [] as T[] };
   }
 
@@ -100,6 +155,24 @@ class MockD1PreparedStatement {
           comment.author_email === email && comment.created_at >= minCreatedAt,
       ).length;
       return { recent_count: recentCount } as T;
+    }
+
+    if (
+      sql.includes("SELECT COUNT(*) AS total_count FROM comments AS current")
+    ) {
+      const [postSlug] = values as [string];
+      const postComments = this.database.comments.filter(
+        (comment) => comment.post_slug === postSlug,
+      );
+      const commentMap = new Map(
+        postComments.map((comment) => [comment.id, comment]),
+      );
+      const totalCount = postComments.filter((comment) => {
+        if (comment.parent_id === null) return true;
+        const parent = commentMap.get(comment.parent_id);
+        return !parent || parent.post_slug !== comment.post_slug;
+      }).length;
+      return { total_count: totalCount } as T;
     }
 
     if (
@@ -301,6 +374,10 @@ test("comments API returns 429 for submissions that are too fast", async (t) => 
   });
 
   assert.equal(response.status, 429);
+  assert.equal(
+    response.headers.get("retry-after"),
+    String(Math.ceil(COMMENT_SUBMISSION_POLICY.minFormFillMs / 1000)),
+  );
   const payload = await response.json();
   assert.equal(payload.code, "TOO_MANY_REQUESTS");
 });
@@ -332,6 +409,10 @@ test("comments API blocks duplicate comments within the duplicate window", async
   });
 
   assert.equal(response.status, 429);
+  assert.equal(
+    response.headers.get("retry-after"),
+    String(Math.ceil(COMMENT_SUBMISSION_POLICY.duplicateWindowMs / 1000)),
+  );
   const payload = await response.json();
   assert.equal(payload.code, "TOO_MANY_REQUESTS");
 });
@@ -368,8 +449,106 @@ test("comments API applies anonymous fingerprint throttling across different ema
   });
 
   assert.equal(blockedResponse.status, 429);
+  assert.equal(
+    blockedResponse.headers.get("retry-after"),
+    String(Math.ceil(COMMENT_SUBMISSION_POLICY.minSubmitIntervalMs / 1000)),
+  );
   const payload = await blockedResponse.json();
   assert.equal(payload.code, "TOO_MANY_REQUESTS");
+});
+
+test("comments GET API returns nested comments with root-thread pagination", async () => {
+  resetAnonymousSubmissionThrottle();
+
+  const env = createEnv([
+    {
+      id: 1,
+      parent_id: null,
+      post_slug: "https://chaonous.com/posts/test/",
+      post_url: "https://chaonous.com/posts/test/",
+      post_title: "Test Post",
+      author_name: "Alice",
+      author_email: "alice@example.com",
+      author_url: null,
+      content: "Root 1",
+      delete_token: "token-1",
+      created_at: 1,
+      updated_at: 1,
+    },
+    {
+      id: 2,
+      parent_id: 1,
+      post_slug: "https://chaonous.com/posts/test/",
+      post_url: "https://chaonous.com/posts/test/",
+      post_title: "Test Post",
+      author_name: "Bob",
+      author_email: "bob@example.com",
+      author_url: null,
+      content: "Reply 1",
+      delete_token: "token-2",
+      created_at: 2,
+      updated_at: 2,
+    },
+    {
+      id: 3,
+      parent_id: null,
+      post_slug: "https://chaonous.com/posts/test/",
+      post_url: "https://chaonous.com/posts/test/",
+      post_title: "Test Post",
+      author_name: "Carol",
+      author_email: "carol@example.com",
+      author_url: null,
+      content: "Root 2",
+      delete_token: "token-3",
+      created_at: 3,
+      updated_at: 3,
+    },
+    {
+      id: 4,
+      parent_id: 3,
+      post_slug: "https://chaonous.com/posts/test/",
+      post_url: "https://chaonous.com/posts/test/",
+      post_title: "Test Post",
+      author_name: "Dave",
+      author_email: "dave@example.com",
+      author_url: null,
+      content: "Reply 2",
+      delete_token: "token-4",
+      created_at: 4,
+      updated_at: 4,
+    },
+  ]);
+
+  const response = await onRequestGet({
+    env,
+    request: new Request(
+      "https://chaonous.com/api/comments?postSlug=https%3A%2F%2Fchaonous.com%2Fposts%2Ftest%2F&limit=1&page=2",
+    ),
+  });
+
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.equal(payload.pagination.page, 2);
+  assert.equal(payload.pagination.limit, 1);
+  assert.equal(payload.pagination.totalCount, 2);
+  assert.equal(payload.data.length, 1);
+  assert.equal(payload.data[0].id, 3);
+  assert.equal(payload.data[0].replies.length, 1);
+  assert.equal(payload.data[0].replies[0].id, 4);
+});
+
+test("comments GET API rejects missing postSlug", async () => {
+  resetAnonymousSubmissionThrottle();
+
+  const env = createEnv();
+  const response = await onRequestGet({
+    env,
+    request: new Request("https://chaonous.com/api/comments"),
+  });
+
+  assert.equal(response.status, 400);
+  const payload = await response.json();
+  assert.equal(payload.code, "BAD_REQUEST");
 });
 
 test("comments delete API removes a comment subtree when the token is valid", async () => {

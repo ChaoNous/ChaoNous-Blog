@@ -1,5 +1,6 @@
 import {
   badRequest,
+  COMMENT_SUBMISSION_POLICY,
   COMMENT_MESSAGES,
   createPagination,
   createDeleteToken,
@@ -126,7 +127,10 @@ export const onRequestPost = async ({
     const metadata = validateSubmissionMetadata(body);
     if (!metadata.ok) {
       return metadata.shouldRateLimit
-        ? tooManyRequests(metadata.message)
+        ? tooManyRequests(
+            metadata.message,
+            metadata.retryAfterSeconds ?? 60,
+          )
         : badRequest(metadata.message);
     }
 
@@ -140,7 +144,10 @@ export const onRequestPost = async ({
       now,
     });
     if (!rateLimit.ok) {
-      return tooManyRequests(rateLimit.message);
+      return tooManyRequests(
+        rateLimit.message,
+        rateLimit.retryAfterSeconds ?? 60,
+      );
     }
 
     const anonymousRateLimit = enforceAnonymousSubmissionThrottle({
@@ -149,7 +156,12 @@ export const onRequestPost = async ({
       now,
     });
     if (!anonymousRateLimit.ok) {
-      return tooManyRequests(COMMENT_MESSAGES.commentRateLimited);
+      return tooManyRequests(
+        COMMENT_MESSAGES.commentRateLimited,
+        Math.ceil(
+          COMMENT_SUBMISSION_POLICY.minSubmitIntervalMs / 1000,
+        ),
+      );
     }
 
     if (validated.value.parentId) {
