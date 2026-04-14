@@ -46,6 +46,7 @@ const {
       if (!root) return;
 
       const { mountSiteComments } = await import("@/scripts/site-comments.ts");
+      if (!root.isConnected) return;
 
       return mountSiteComments(root, {
         apiBasePath: root.getAttribute("data-api-base-path") || "/api/comments",
