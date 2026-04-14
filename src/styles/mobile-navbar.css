@@ -1,4 +1,4 @@
-/* Mobile navbar width equals the viewport width */
+
 @media (max-width: 768px) {
   #navbar > div {
     width: 100%;

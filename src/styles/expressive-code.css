@@ -11,7 +11,7 @@
     font-family: var(--font-content) !important;
   }
 
-  /* Copy button */
+  
   .copy-btn {
     all: initial;
     @apply opacity-0 absolute active:scale-90 h-8 w-8 top-3 right-3 rounded-lg transition-all ease-in-out z-20 cursor-pointer;
@@ -31,19 +31,19 @@
     fill: var(--btn-content);
   }
 
-  /* Default copy icon */
+  
   .copy-btn .copy-icon {
     @apply opacity-100;
     fill: var(--btn-content);
   }
 
-  /* Success icon */
+  
   .copy-btn .success-icon {
     @apply opacity-0;
     fill: var(--btn-content);
   }
 
-  /* Swap icons when copy succeeds */
+  
   .copy-btn.success .copy-icon {
     @apply opacity-0 fill-[var(--deep-text)];
   }
@@ -52,25 +52,25 @@
     @apply opacity-100;
   }
 
-  /* Show the copy button on frame hover */
+  
   .frame:hover .copy-btn {
     opacity: 1;
   }
 }
 
-/* Collapsible code blocks */
+
 .expressive-code.collapsible .frame {
   transition: background-color 0.2s ease;
   position: relative;
 }
 
-/* Allow code text selection */
+
 .expressive-code .frame pre,
 .expressive-code .frame code {
   user-select: text;
 }
 
-/* Keep line numbers unselectable while code remains selectable */
+
 .expressive-code code span.line::before {
   user-select: none;
 }
@@ -79,7 +79,7 @@
   background-color: rgba(var(--primary-rgb, 59, 130, 246), 0.03);
 }
 
-/* Collapse toggle button */
+
 .expressive-code.collapsible .collapse-toggle-btn {
   all: initial;
   opacity: 0;
@@ -100,22 +100,22 @@
   transition: all 0.15s ease-in-out;
 }
 
-/* Hover state */
+
 .expressive-code.collapsible .collapse-toggle-btn:hover {
   background: var(--btn-regular-bg-hover);
 }
 
-/* Active state with a subtle press effect */
+
 .expressive-code.collapsible .collapse-toggle-btn:active {
   transform: scale(0.9);
 }
 
-/* Show the toggle button on frame hover */
+
 .expressive-code.collapsible .frame:hover .collapse-toggle-btn {
   opacity: 1;
 }
 
-/* Toggle icon */
+
 .expressive-code.collapsible .collapse-toggle-btn svg {
   width: 1rem;
   height: 1rem;
@@ -124,12 +124,12 @@
   pointer-events: none;
 }
 
-/* Rotate the icon when collapsed */
+
 .expressive-code.collapsed .collapse-toggle-btn svg {
   transform: rotate(180deg);
 }
 
-/* Collapsed code content */
+
 .expressive-code.collapsed .frame pre {
   max-height: 5rem;
   overflow: hidden;
@@ -150,7 +150,7 @@
   pointer-events: none;
 }
 
-/* Expanded state */
+
 .expressive-code.expanded .frame pre {
   max-height: none;
 }
@@ -160,9 +160,9 @@
   position: relative;
 }
 
-/* Mobile */
+
 @media (max-width: 768px) {
-  /* Resize and reposition the copy button */
+  
   .expressive-code .copy-btn {
     width: 1.75rem;
     height: 1.75rem;
@@ -175,7 +175,7 @@
     height: 0.875rem;
   }
 
-  /* Resize and reposition the collapse toggle */
+  
   .expressive-code.collapsible .collapse-toggle-btn {
     width: 1.75rem;
     height: 1.75rem;
@@ -188,18 +188,18 @@
     height: 0.875rem;
   }
 
-  /* Reduce collapsed height slightly on small screens */
+  
   .expressive-code.collapsed .frame pre {
     max-height: 4.5rem;
   }
 
-  /* Hide language tags to save space */
+  
   .expressive-code [data-language]::before {
     display: none !important;
   }
 }
 
-/* Theme support */
+
 @media (prefers-color-scheme: light) {
   .expressive-code.collapsible .collapse-toggle-btn,
   .expressive-code .copy-btn {
@@ -209,7 +209,7 @@
   }
 }
 
-/* Support Astro theme switching outside dark mode */
+
 :root:not(.dark) .expressive-code.collapsible .collapse-toggle-btn,
 :root:not(.dark) .expressive-code .copy-btn {
   box-shadow:

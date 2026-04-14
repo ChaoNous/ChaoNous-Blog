@@ -5,33 +5,24 @@ import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
 import type { NavBarLink } from "../../types/config";
 import { url } from "../../utils/url-utils";
-
 interface Props {
-	link: NavBarLink;
-	class?: string;
+    link: NavBarLink;
+    class?: string;
 }
-
 const { link, class: className } = Astro.props;
-
 const navTitleMap: Record<string, I18nKey> = {
-	Links: I18nKey.navLinks,
-	My: I18nKey.navMy,
-	About: I18nKey.navAbout,
-	Others: I18nKey.navOthers,
-	Diary: I18nKey.diary,
-	Gallery: I18nKey.albums,
-	Friends: I18nKey.friends,
+    Links: I18nKey.navLinks,
+    My: I18nKey.navMy,
+    About: I18nKey.navAbout,
+    Others: I18nKey.navOthers,
+    Diary: I18nKey.diary,
+    Gallery: I18nKey.albums,
+    Friends: I18nKey.friends,
 };
-
 const getLocalizedName = (name: string): string => {
-	return name in navTitleMap ? i18n(navTitleMap[name]) : name;
+    return name in navTitleMap ? i18n(navTitleMap[name]) : name;
 };
-
-const children =
-	link.children?.map((child) =>
-		typeof child === "number" ? LinkPresets[child] : child,
-	) ?? [];
-
+const children = link.children?.map((child) => typeof child === "number" ? LinkPresets[child] : child) ?? [];
 const hasChildren = children.length > 0;
 ---
 
@@ -160,94 +151,74 @@ const hasChildren = children.length > 0;
 </style>
 
 <script>
-    // Keyboard navigation support
-	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
-
-	registerPageScript("dropdown-menu", {
-		shouldRun() {
-			return document.querySelector("[data-dropdown]") !== null;
-		},
-		init() {
-			const dropdowns = document.querySelectorAll("[data-dropdown]");
-			const cleanups: Array<() => void> = [];
-
-		dropdowns.forEach((dropdown) => {
-			const trigger = dropdown.querySelector(
-				"[data-dropdown-trigger]",
-			) as HTMLElement;
-			const menu = dropdown.querySelector(
-				"[data-dropdown-menu]",
-			) as HTMLElement;
-			const items = dropdown.querySelectorAll(
-				".dropdown-item",
-			) as NodeListOf<HTMLElement>;
-
-			if (!trigger || !menu) return;
-
-			const closeMenu = () => {
-				trigger.setAttribute("aria-expanded", "false");
-			};
-
-			const toggleMenu = () => {
-				const isExpanded =
-					trigger.getAttribute("aria-expanded") === "true";
-				trigger.setAttribute("aria-expanded", String(!isExpanded));
-			};
-
-			const handleTriggerKeydown = (e: KeyboardEvent) => {
-				if (e.key === "Enter" || e.key === " ") {
-					e.preventDefault();
-					toggleMenu();
-				} else if (e.key === "ArrowDown") {
-					e.preventDefault();
-					trigger.setAttribute("aria-expanded", "true");
-					if (items.length > 0) items[0].focus();
-				} else if (e.key === "Escape") {
-					closeMenu();
-				}
-			};
-			trigger.addEventListener("keydown", handleTriggerKeydown);
-			cleanups.push(() =>
-				trigger.removeEventListener("keydown", handleTriggerKeydown),
-			);
-
-			items.forEach((item, index) => {
-				const handleItemKeydown = (e: KeyboardEvent) => {
-					if (e.key === "ArrowDown") {
-						e.preventDefault();
-						items[(index + 1) % items.length].focus();
-					} else if (e.key === "ArrowUp") {
-						e.preventDefault();
-						items[
-							(index - 1 + items.length) % items.length
-						].focus();
-					} else if (e.key === "Escape") {
-						e.preventDefault();
-						closeMenu();
-						trigger.focus();
-					}
-				};
-				item.addEventListener("keydown", handleItemKeydown);
-				cleanups.push(() =>
-					item.removeEventListener("keydown", handleItemKeydown),
-				);
-			});
-
-  // Close the menu when clicking outside.
-			const handleDocumentClick = (e: MouseEvent) => {
-				if (!dropdown.contains(e.target as Node)) {
-					closeMenu();
-				}
-			};
-			document.addEventListener("click", handleDocumentClick);
-			cleanups.push(() =>
-				document.removeEventListener("click", handleDocumentClick),
-			);
-		});
-
-			return () => {
-				cleanups.forEach((cleanup) => cleanup());
-			};
-		},
-	});
+    import { registerPageScript } from "../../scripts/page-lifecycle.ts";
+    registerPageScript("dropdown-menu", {
+        shouldRun() {
+            return document.querySelector("[data-dropdown]") !== null;
+        },
+        init() {
+            const dropdowns = document.querySelectorAll("[data-dropdown]");
+            const cleanups: Array<() => void> = [];
+            dropdowns.forEach((dropdown) => {
+                const trigger = dropdown.querySelector("[data-dropdown-trigger]") as HTMLElement;
+                const menu = dropdown.querySelector("[data-dropdown-menu]") as HTMLElement;
+                const items = dropdown.querySelectorAll(".dropdown-item") as NodeListOf<HTMLElement>;
+                if (!trigger || !menu)
+                    return;
+                const closeMenu = () => {
+                    trigger.setAttribute("aria-expanded", "false");
+                };
+                const toggleMenu = () => {
+                    const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+                    trigger.setAttribute("aria-expanded", String(!isExpanded));
+                };
+                const handleTriggerKeydown = (e: KeyboardEvent) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleMenu();
+                    }
+                    else if (e.key === "ArrowDown") {
+                        e.preventDefault();
+                        trigger.setAttribute("aria-expanded", "true");
+                        if (items.length > 0)
+                            items[0].focus();
+                    }
+                    else if (e.key === "Escape") {
+                        closeMenu();
+                    }
+                };
+                trigger.addEventListener("keydown", handleTriggerKeydown);
+                cleanups.push(() => trigger.removeEventListener("keydown", handleTriggerKeydown));
+                items.forEach((item, index) => {
+                    const handleItemKeydown = (e: KeyboardEvent) => {
+                        if (e.key === "ArrowDown") {
+                            e.preventDefault();
+                            items[(index + 1) % items.length].focus();
+                        }
+                        else if (e.key === "ArrowUp") {
+                            e.preventDefault();
+                            items[(index - 1 + items.length) % items.length].focus();
+                        }
+                        else if (e.key === "Escape") {
+                            e.preventDefault();
+                            closeMenu();
+                            trigger.focus();
+                        }
+                    };
+                    item.addEventListener("keydown", handleItemKeydown);
+                    cleanups.push(() => item.removeEventListener("keydown", handleItemKeydown));
+                });
+                const handleDocumentClick = (e: MouseEvent) => {
+                    if (!dropdown.contains(e.target as Node)) {
+                        closeMenu();
+                    }
+                };
+                document.addEventListener("click", handleDocumentClick);
+                cleanups.push(() => document.removeEventListener("click", handleDocumentClick));
+            });
+            return () => {
+                cleanups.forEach((cleanup) => cleanup());
+            };
+        },
+    });
 </script>

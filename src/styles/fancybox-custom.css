@@ -1,4 +1,4 @@
-/* Fancybox 自定义样式 */
+
 .fancybox__container {
   --fancybox-bg: rgba(0, 0, 0, 0.9);
   --fancybox-thumbs-width: 64px;
@@ -55,7 +55,7 @@
   border-color: #fff;
 }
 
-/* 按钮样式 */
+
 .fancybox__button {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
@@ -82,7 +82,7 @@
   padding: 0 8px;
 }
 
-/* 响应式设计 */
+
 @media (max-width: 768px) {
   .fancybox__toolbar {
     padding: 4px;

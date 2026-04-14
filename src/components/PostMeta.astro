@@ -4,34 +4,20 @@ import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import { formatDateToYYYYMMDD } from "../utils/date-utils";
 import { getCategoryUrl } from "../utils/url-utils";
-
 export interface Props {
-  published: Date;
-  updated?: Date;
-  category?: string;
-  hideUpdateDate?: boolean;
-  isHome?: boolean;
-  className?: string;
-  statsSlug?: string;
-  statsUrl?: string;
-  statsTitle?: string;
-  words?: number;
-  showWordCount?: boolean;
+    published: Date;
+    updated?: Date;
+    category?: string;
+    hideUpdateDate?: boolean;
+    isHome?: boolean;
+    className?: string;
+    statsSlug?: string;
+    statsUrl?: string;
+    statsTitle?: string;
+    words?: number;
+    showWordCount?: boolean;
 }
-
-const {
-  published,
-  updated,
-  category,
-  hideUpdateDate,
-  isHome,
-  className = "",
-  statsSlug,
-  statsUrl,
-  statsTitle,
-  words,
-  showWordCount = false,
-} = Astro.props;
+const { published, updated, category, hideUpdateDate, isHome, className = "", statsSlug, statsUrl, statsTitle, words, showWordCount = false, } = Astro.props;
 const pageViewsLabel = i18n(I18nKey.profileStatsPageViews);
 const visitsLabel = i18n(I18nKey.profileStatsVisits);
 ---
@@ -42,7 +28,7 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     className,
   ]}
 >
-  <!-- publish date -->
+  
   <div class="flex items-center">
     <div class="meta-icon">
       <Icon
@@ -53,7 +39,7 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     <span class="text-50 font-medium">{formatDateToYYYYMMDD(published)}</span>
   </div>
 
-  <!-- update date -->
+  
   {
     !hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
       <div class="flex items-center">
@@ -68,7 +54,7 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     )
   }
 
-  <!-- categories -->
+  
   <div class="flex items-center">
     <div class="meta-icon">
       <Icon name="material-symbols:book-2-outline-rounded" class="text-xl" />
@@ -81,7 +67,7 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     </a>
   </div>
 
-  <!-- word count -->
+  
   {
     showWordCount && words && (
       <div class="flex items-center">
@@ -99,7 +85,7 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     )
   }
 
-  <!-- page views -->
+  
   {
     !isHome && statsSlug && statsUrl && (
       <div

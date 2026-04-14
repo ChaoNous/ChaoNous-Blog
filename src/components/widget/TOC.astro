@@ -80,11 +80,14 @@ const className = Astro.props.class;
 				const activeIndicator = this.activeIndicator;
 				const minEntry = this.tocEntries[min];
 				const maxEntry = this.tocEntries[max];
-				// Read all layout values before writing anything
 				const parentOffset = tocEl?.getBoundingClientRect().top ?? 0;
 				const scrollOffset = tocEl?.scrollTop ?? 0;
-				const top = minEntry ? minEntry.getBoundingClientRect().top - parentOffset + scrollOffset : 0;
-				const bottom = maxEntry ? maxEntry.getBoundingClientRect().bottom - parentOffset + scrollOffset : 0;
+				const top = minEntry
+					? minEntry.getBoundingClientRect().top - parentOffset + scrollOffset
+					: 0;
+				const bottom = maxEntry
+					? maxEntry.getBoundingClientRect().bottom - parentOffset + scrollOffset
+					: 0;
 				activeIndicator?.setAttribute(
 					"style",
 					`top: ${top}px; height: ${bottom - top}px`,
@@ -118,7 +121,10 @@ const className = Astro.props.class;
 				return;
 			}
 
-			if (targetBottom > lowerBound || targetBottom > currentBottom - this.scrollPadding) {
+			if (
+				targetBottom > lowerBound ||
+				targetBottom > currentBottom - this.scrollPadding
+			) {
 				this.tocEl.scrollTo({
 					top: preferredTop,
 					left: 0,

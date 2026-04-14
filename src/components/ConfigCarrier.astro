@@ -2,7 +2,7 @@
 import { expressiveCodeConfig, siteConfig } from "../config";
 ---
 
-<!-- Global runtime configuration carrier -->
+
 <div
   id="config-carrier"
   data-hue={siteConfig.themeColor.hue}
@@ -19,10 +19,9 @@ import { expressiveCodeConfig, siteConfig } from "../config";
     tocDepth: siteConfig.toc.depth,
   }}
 >
-  // Expose TOC settings to lightweight runtime scripts.
   window.siteConfig = window.siteConfig || {};
   window.siteConfig.toc = {
-    enable: tocEnable,
-    depth: tocDepth,
+      enable: tocEnable,
+      depth: tocDepth,
   };
 </script>

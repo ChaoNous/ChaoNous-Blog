@@ -4,52 +4,38 @@ import BackToTop from "@components/control/BackToTop.astro";
 import JsonLd from "@components/seo/JsonLd.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import { musicPlayerConfig, profileConfig, siteConfig } from "@/config";
-
-import {
-  DARK_MODE,
-  DEFAULT_THEME,
-  LIGHT_MODE,
-  PAGE_WIDTH,
-} from "../constants/constants";
+import { DARK_MODE, DEFAULT_THEME, LIGHT_MODE, PAGE_WIDTH, } from "../constants/constants";
 import { defaultFavicons } from "../constants/icon";
 import type { Favicon } from "../types/config";
 import { pathsEqual, url } from "../utils/url-utils";
-
 interface Props {
-  title?: string;
-  description?: string;
-  lang?: string;
-  setOGTypeArticle?: boolean;
-  postSlug?: string;
-  canonicalUrl?: string;
+    title?: string;
+    description?: string;
+    lang?: string;
+    setOGTypeArticle?: boolean;
+    postSlug?: string;
+    canonicalUrl?: string;
 }
-
 let { title, description, lang, setOGTypeArticle, postSlug } = Astro.props;
 const canonicalUrl = Astro.props.canonicalUrl || Astro.url.toString();
-
 const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
-
 const configHue = siteConfig.themeColor.hue;
-
 let pageTitle: string;
 if (title) {
-  pageTitle = `${title} - ${siteConfig.title}`;
-} else {
-  pageTitle = siteConfig.subtitle
-    ? `${siteConfig.title} - ${siteConfig.subtitle}`
-    : siteConfig.title;
+    pageTitle = `${title} - ${siteConfig.title}`;
 }
-
+else {
+    pageTitle = siteConfig.subtitle
+        ? `${siteConfig.title} - ${siteConfig.subtitle}`
+        : siteConfig.title;
+}
 let ogImageUrl: string | undefined;
 if (siteConfig.generateOgImages && postSlug) {
-  ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
+    ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
 }
-
-const favicons: Favicon[] =
-  siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
-
+const favicons: Favicon[] = siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 if (!lang) {
-  lang = `${siteConfig.lang}`;
+    lang = `${siteConfig.lang}`;
 }
 const siteLang = lang.replace("_", "-");
 ---
@@ -103,7 +89,7 @@ const siteLang = lang.replace("_", "-");
       ))
     }
 
-    <!-- Set the theme before the page is rendered to avoid a flash -->
+    
     <script
       is:inline
       define:vars={{
@@ -116,90 +102,66 @@ const siteLang = lang.replace("_", "-");
       }}
     >
       const storedTheme = localStorage.getItem("theme");
-      const initialColorScheme =
-        DEFAULT_THEME === LIGHT_MODE || DEFAULT_THEME === DARK_MODE
+      const initialColorScheme = DEFAULT_THEME === LIGHT_MODE || DEFAULT_THEME === DARK_MODE
           ? DEFAULT_THEME
           : "";
-
       function getPreferredTheme() {
-        if (storedTheme === LIGHT_MODE || storedTheme === DARK_MODE) {
-          return storedTheme;
-        }
-        if (initialColorScheme) {
-          return initialColorScheme;
-        }
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? DARK_MODE
-          : LIGHT_MODE;
+          if (storedTheme === LIGHT_MODE || storedTheme === DARK_MODE) {
+              return storedTheme;
+          }
+          if (initialColorScheme) {
+              return initialColorScheme;
+          }
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? DARK_MODE
+              : LIGHT_MODE;
       }
-
       const themeValue = getPreferredTheme();
       const isDark = themeValue === DARK_MODE;
-      document.documentElement.setAttribute(
-        "data-theme",
-        isDark ? DARK_MODE : LIGHT_MODE,
-      );
-      document.documentElement.setAttribute(
-        "data-color-scheme",
-        isDark ? "dark" : "light",
-      );
-      document.documentElement.setAttribute(
-        "data-shiki-theme",
-        isDark ? "github-dark" : "github-light",
-      );
-
+      document.documentElement.setAttribute("data-theme", isDark ? DARK_MODE : LIGHT_MODE);
+      document.documentElement.setAttribute("data-color-scheme", isDark ? "dark" : "light");
+      document.documentElement.setAttribute("data-shiki-theme", isDark ? "github-dark" : "github-light");
       window.theme = {
-        themeValue,
-        getTheme: () => window.theme.themeValue,
-        setTheme: (value) => {
-          window.theme.themeValue = value;
-        },
+          themeValue,
+          getTheme: () => window.theme.themeValue,
+          setTheme: (value) => {
+              window.theme.themeValue = value;
+          },
       };
-      // Load the hue from local storage.
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
-
       document.documentElement.setAttribute("data-theme-material", "silk");
-
-      // Apply desktop page scaling early to avoid a visible relayout flash.
       (function () {
-        function updateViewportHeightVar() {
-          document.documentElement.style.setProperty(
-            "--vh",
-            `${window.innerHeight * 0.01}px`,
-          );
-        }
-
-        updateViewportHeightVar();
-
-        if (pageScaling && pageScaling.enable) {
-          function adjustPageScale() {
-            const isTouch =
-              (window.matchMedia &&
-                (window.matchMedia("(pointer:coarse)").matches ||
-                  window.matchMedia("(hover: none)").matches)) ||
-              "ontouchstart" in window;
-            const isPortrait =
-              window.matchMedia &&
-              window.matchMedia("(orientation: portrait)").matches;
-            const isTabletLike = isTouch || window.innerWidth <= 1280;
-            if (isTabletLike || isPortrait) {
-              document.documentElement.style.fontSize = "";
-              return;
-            }
-            const targetWidth = pageScaling.targetWidth || 2000;
-            const currentWidth = document.documentElement.clientWidth;
-            let scale = currentWidth / targetWidth;
-            if (scale > 1) scale = 1;
-            if (scale < 0.85) scale = 0.85;
-            document.documentElement.style.fontSize = `${scale * 100}%`;
+          function updateViewportHeightVar() {
+              document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
           }
-
-          adjustPageScale();
-          window.__cncApplyDesktopScale = adjustPageScale;
-        }
-
-        window.__cncUpdateViewportHeight = updateViewportHeightVar;
+          updateViewportHeightVar();
+          if (pageScaling && pageScaling.enable) {
+              function adjustPageScale() {
+                  const isTouch = (window.matchMedia &&
+                      (window.matchMedia("(pointer:coarse)").matches ||
+                          window.matchMedia("(hover: none)").matches)) ||
+                      "ontouchstart" in window;
+                  const isPortrait = window.matchMedia &&
+                      window.matchMedia("(orientation: portrait)").matches;
+                  const isTabletLike = isTouch || window.innerWidth <= 1280;
+                  if (isTabletLike || isPortrait) {
+                      document.documentElement.style.fontSize = "";
+                      return;
+                  }
+                  const targetWidth = pageScaling.targetWidth || 2000;
+                  const currentWidth = document.documentElement.clientWidth;
+                  let scale = currentWidth / targetWidth;
+                  if (scale > 1)
+                      scale = 1;
+                  if (scale < 0.85)
+                      scale = 0.85;
+                  document.documentElement.style.fontSize = `${scale * 100}%`;
+              }
+              adjustPageScale();
+              window.__cncApplyDesktopScale = adjustPageScale;
+          }
+          window.__cncUpdateViewportHeight = updateViewportHeightVar;
       })();
     </script>
     <style
@@ -208,7 +170,7 @@ const siteLang = lang.replace("_", "-");
         "page-width": `${PAGE_WIDTH}rem`,
       }}
     ></style>
-    <!-- defines global css variables -->
+    
     <slot name="head" />
 
     <link
@@ -218,7 +180,7 @@ const siteLang = lang.replace("_", "-");
       href={`${Astro.site}rss.xml`}
     />
 
-    <!-- Structured data -->
+    
     <JsonLd type={setOGTypeArticle ? "article" : "website"} />
   </head>
   <body
@@ -232,30 +194,30 @@ const siteLang = lang.replace("_", "-");
     <script>
       import "../scripts/page-lifecycle.ts";
     </script>
-    <!-- SVG filter definitions for silk texture -->
+    
     <svg
       style="position: absolute; width: 0; height: 0; overflow: hidden;"
       aria-hidden="true"
     >
       <defs>
         <filter id="silk-weave" color-interpolation-filters="sRGB">
-          <!-- Warp threads -->
+          
           <feTurbulence
             type="fractalNoise"
             baseFrequency="0.5 0.02"
             numOctaves="3"
             seed="1"
             result="warp"></feTurbulence>
-          <!-- Weft threads -->
+          
           <feTurbulence
             type="fractalNoise"
             baseFrequency="0.02 0.5"
             numOctaves="3"
             seed="2"
             result="weft"></feTurbulence>
-          <!-- Blend the two thread directions -->
+          
           <feBlend mode="screen" in="warp" in2="weft" result="fabric"></feBlend>
-          <!-- Lower opacity for a subtle silk texture -->
+          
           <feColorMatrix
             type="matrix"
             values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
@@ -270,10 +232,10 @@ const siteLang = lang.replace("_", "-");
       import "../scripts/theme.ts";
     </script>
 
-    <!-- Load the music player when the browser is idle to keep TBT low. -->
+    
     {musicPlayerConfig.enable && <MusicPlayer client:idle />}
 
-    <!-- Increase page height during transitions to prevent scroll jumpiness. -->
+    
     <div id="page-height-extend" class="hidden h-[300vh]"></div>
   </body>
 </html>
@@ -290,7 +252,7 @@ const siteLang = lang.replace("_", "-");
     --hue: var(--hue, ${configHue});
   }
 
-  /* Hide Google Translate UI overlays if injected by the browser or extensions */
+  
   .goog-te-banner-frame,
   .goog-te-menu-frame,
   .goog-te-balloon-frame,
@@ -317,22 +279,20 @@ const siteLang = lang.replace("_", "-");
 
 <script is:inline>
   (function () {
-    const applyDesktopScale = window.__cncApplyDesktopScale;
-    const updateViewportHeight = window.__cncUpdateViewportHeight;
-
-    if (typeof applyDesktopScale === "function") {
-      window.addEventListener("resize", applyDesktopScale);
-      document.addEventListener("swup:page:view", applyDesktopScale);
-      window.addEventListener("orientationchange", applyDesktopScale);
-    }
-
-    if (typeof updateViewportHeight === "function") {
-      window.addEventListener("orientationchange", updateViewportHeight);
-    }
+      const applyDesktopScale = window.__cncApplyDesktopScale;
+      const updateViewportHeight = window.__cncUpdateViewportHeight;
+      if (typeof applyDesktopScale === "function") {
+          window.addEventListener("resize", applyDesktopScale);
+          document.addEventListener("swup:page:view", applyDesktopScale);
+          window.addEventListener("orientationchange", applyDesktopScale);
+      }
+      if (typeof updateViewportHeight === "function") {
+          window.addEventListener("orientationchange", updateViewportHeight);
+      }
   })();
 </script>
 
-<!-- Defer non-critical scripts until the browser is idle. -->
+
 <script>
   import "../scripts/deferred-page-scripts.ts";
 </script>

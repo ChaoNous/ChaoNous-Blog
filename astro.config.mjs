@@ -24,221 +24,187 @@ import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkContent } from "./src/plugins/remark-content.mjs";
 import rehypeExternalLinks from "rehype-external-links";
 import { remarkFixGithubAdmonitions } from "./src/plugins/remark-fix-github-admonitions.js";
-
-// https://astro.build/config
 export default defineConfig({
-	site: siteConfig.siteURL,
-	base: "/",
-	trailingSlash: "always",
-
-	output: "static",
-	build: {
-		inlineStylesheets: "never",
-		concurrency: 4,
-	},
-
-	integrations: [
-		// Swup ???? - ????
-		// Swup page transition configuration tuned for partial navigation.
-		swup({
-			theme: false,
-			animationClass: "transition-swup-",
-			containers: ["#main-grid"],
-			animationSelector: "[data-swup-transition]",
-			smoothScrolling: false,
-			cache: true,
-			preload: false,
-			accessibility: true,
-			updateHead: true,
-			updateBodyClass: true,
-			globalInstance: true,
-			resolveUrl: (url) => url,
-			animateHistoryBrowsing: false,
-			skipPopStateHandling: (event) => {
-				return event.state?.url?.includes("#");
-			},
-		}),
-		icon(),
-		expressiveCode({
-			themes: ["github-light", "github-dark"],
-			plugins: [
-				pluginCollapsibleSections(),
-				pluginLineNumbers(),
-				pluginLanguageBadge(),
-				pluginCustomCopyButton(),
-			],
-			defaultProps: {
-				wrap: true,
-				overridesByLang: {
-					shellsession: { showLineNumbers: false },
-					bash: { frame: "code" },
-					shell: { frame: "code" },
-					sh: { frame: "code" },
-					zsh: { frame: "code" },
-				},
-			},
-			styleOverrides: {
-				codeBackground: "var(--codeblock-bg)",
-				borderRadius: "0.75rem",
-				borderColor: "none",
-				codeFontSize: "0.875rem",
-				codeFontFamily:
-					"'Crimson Pro', 'Zhuque Fangsong UI', 'ZhuqueFangsong'",
-				codeLineHeight: "1.5rem",
-				frames: {
-					editorBackground: "var(--codeblock-bg)",
-					terminalBackground: "var(--codeblock-bg)",
-					terminalTitlebarBackground: "var(--codeblock-bg)",
-					editorTabBarBackground: "var(--codeblock-bg)",
-					editorActiveTabBackground: "none",
-					editorActiveTabIndicatorBottomColor: "var(--primary)",
-					editorActiveTabIndicatorTopColor: "none",
-					editorTabBarBorderBottomColor: "var(--codeblock-bg)",
-					terminalTitlebarBorderBottomColor: "none",
-				},
-				textMarkers: {
-					delHue: 0,
-					insHue: 180,
-					markHue: 250,
-				},
-			},
-			frames: {
-				showCopyToClipboardButton: false,
-			},
-		}),
-		svelte({
-			preprocess: vitePreprocess(),
-		}),
-		sitemap(),
-	],
-	markdown: {
-		remarkPlugins: [
-			remarkMath,
-			remarkContent,
-			remarkFixGithubAdmonitions,
-			remarkDirective,
-			remarkSectionize,
-			parseDirectiveNode,
-		],
-		rehypePlugins: [
-			rehypeKatex,
-			[
-				rehypeExternalLinks,
-				{
-					target: "_blank",
-					rel: ["nofollow", "noopener", "noreferrer"],
-				},
-			],
-			rehypeSlug,
-			rehypeWrapTable,
-			rehypeImageWidth,
-			[
-				rehypeComponents,
-				{
-					components: {
-						github: GithubCardComponent,
-						note: (x, y) => AdmonitionComponent(x, y, "note"),
-						tip: (x, y) => AdmonitionComponent(x, y, "tip"),
-						important: (x, y) =>
-							AdmonitionComponent(x, y, "important"),
-						caution: (x, y) => AdmonitionComponent(x, y, "caution"),
-						warning: (x, y) => AdmonitionComponent(x, y, "warning"),
-					},
-				},
-			],
-			[
-				rehypeAutolinkHeadings,
-				{
-					behavior: "append",
-					properties: {
-						className: ["anchor"],
-					},
-					content: {
-						type: "element",
-						tagName: "span",
-						properties: {
-							className: ["anchor-icon"],
-							"data-pagefind-ignore": true,
-						},
-						children: [{ type: "text", value: "#" }],
-					},
-				},
-			],
-		],
-	},
-	vite: {
-		plugins: [tailwindcss()],
-		build: {
-			// ????????,?????? base64 ?? HTML ????
-			// Keep small assets out of HTML to avoid oversized static documents.
-			assetsInlineLimit: 4096,
-			// ?? CSS ????
-			// Preserve CSS code splitting for route-level loading.
-			cssCodeSplit: true,
-			// ????
-			// Minify production bundles.
-			minify: "esbuild",
-			// esbuild ????
-			// Trim production JavaScript noise.
-			esbuildOptions: {
-				// ??????
-				// Prefer smaller bundles over function name preservation.
-				keepNames: false,
-				// ?? console.log (????)
-				// Drop debug output in production.
-				drop:
-					process.env.NODE_ENV === "production"
-						? ["console", "debugger"]
-						: [],
-			},
-			// ???????? (KB)
-			// Keep chunk size warnings visible during local tuning.
-			chunkSizeWarningLimit: 500,
-
-			rollupOptions: {
-				output: {
-					// ??????
-					// Split large vendor groups into more stable cache buckets.
-					manualChunks(id) {
-						if (id.includes("node_modules")) {
-							if (id.includes("svelte")) return "vendor-svelte";
-							if (id.includes("swup")) return "vendor-swup";
-							if (id.includes("fancyapps"))
-								return "vendor-fancybox";
-							if (id.includes("katex")) return "vendor-katex";
-							if (id.includes("expressive-code"))
-								return "vendor-ec";
-							if (id.includes("iconify")) return "vendor-iconify";
-						}
-					},
-					// ?? chunk ??
-					// Use deterministic asset names for long-term caching.
-					entryFileNames: "assets/[name].[hash].js",
-					chunkFileNames: "assets/[name].[hash].js",
-					assetFileNames: "assets/[name].[hash][extname]",
-				},
-				onwarn(warning, warn) {
-					if (
-						warning.message.includes(
-							"is dynamically imported by",
-						) &&
-						warning.message.includes(
-							"but also statically imported by",
-						)
-					) {
-						return;
-					}
-					warn(warning);
-				},
-			},
-		},
-		// ???????
-		// Pre-bundle the dependencies that improve dev startup most.
-		optimizeDeps: {
-			include: ["@fancyapps/ui", "svelte"],
-			// ??????
-			// Keep large optional libraries out of eager optimization.
-			exclude: ["katex"],
-		},
-	},
+    site: siteConfig.siteURL,
+    base: "/",
+    trailingSlash: "always",
+    output: "static",
+    build: {
+        inlineStylesheets: "never",
+        concurrency: 4,
+    },
+    integrations: [
+        swup({
+            theme: false,
+            animationClass: "transition-swup-",
+            containers: ["#main-grid"],
+            animationSelector: "[data-swup-transition]",
+            smoothScrolling: false,
+            cache: true,
+            preload: false,
+            accessibility: true,
+            updateHead: true,
+            updateBodyClass: true,
+            globalInstance: true,
+            resolveUrl: (url) => url,
+            animateHistoryBrowsing: false,
+            skipPopStateHandling: (event) => {
+                return event.state?.url?.includes("#");
+            },
+        }),
+        icon(),
+        expressiveCode({
+            themes: ["github-light", "github-dark"],
+            plugins: [
+                pluginCollapsibleSections(),
+                pluginLineNumbers(),
+                pluginLanguageBadge(),
+                pluginCustomCopyButton(),
+            ],
+            defaultProps: {
+                wrap: true,
+                overridesByLang: {
+                    shellsession: { showLineNumbers: false },
+                    bash: { frame: "code" },
+                    shell: { frame: "code" },
+                    sh: { frame: "code" },
+                    zsh: { frame: "code" },
+                },
+            },
+            styleOverrides: {
+                codeBackground: "var(--codeblock-bg)",
+                borderRadius: "0.75rem",
+                borderColor: "none",
+                codeFontSize: "0.875rem",
+                codeFontFamily: "'Crimson Pro', 'Zhuque Fangsong UI', 'ZhuqueFangsong'",
+                codeLineHeight: "1.5rem",
+                frames: {
+                    editorBackground: "var(--codeblock-bg)",
+                    terminalBackground: "var(--codeblock-bg)",
+                    terminalTitlebarBackground: "var(--codeblock-bg)",
+                    editorTabBarBackground: "var(--codeblock-bg)",
+                    editorActiveTabBackground: "none",
+                    editorActiveTabIndicatorBottomColor: "var(--primary)",
+                    editorActiveTabIndicatorTopColor: "none",
+                    editorTabBarBorderBottomColor: "var(--codeblock-bg)",
+                    terminalTitlebarBorderBottomColor: "none",
+                },
+                textMarkers: {
+                    delHue: 0,
+                    insHue: 180,
+                    markHue: 250,
+                },
+            },
+            frames: {
+                showCopyToClipboardButton: false,
+            },
+        }),
+        svelte({
+            preprocess: vitePreprocess(),
+        }),
+        sitemap(),
+    ],
+    markdown: {
+        remarkPlugins: [
+            remarkMath,
+            remarkContent,
+            remarkFixGithubAdmonitions,
+            remarkDirective,
+            remarkSectionize,
+            parseDirectiveNode,
+        ],
+        rehypePlugins: [
+            rehypeKatex,
+            [
+                rehypeExternalLinks,
+                {
+                    target: "_blank",
+                    rel: ["nofollow", "noopener", "noreferrer"],
+                },
+            ],
+            rehypeSlug,
+            rehypeWrapTable,
+            rehypeImageWidth,
+            [
+                rehypeComponents,
+                {
+                    components: {
+                        github: GithubCardComponent,
+                        note: (x, y) => AdmonitionComponent(x, y, "note"),
+                        tip: (x, y) => AdmonitionComponent(x, y, "tip"),
+                        important: (x, y) => AdmonitionComponent(x, y, "important"),
+                        caution: (x, y) => AdmonitionComponent(x, y, "caution"),
+                        warning: (x, y) => AdmonitionComponent(x, y, "warning"),
+                    },
+                },
+            ],
+            [
+                rehypeAutolinkHeadings,
+                {
+                    behavior: "append",
+                    properties: {
+                        className: ["anchor"],
+                    },
+                    content: {
+                        type: "element",
+                        tagName: "span",
+                        properties: {
+                            className: ["anchor-icon"],
+                            "data-pagefind-ignore": true,
+                        },
+                        children: [{ type: "text", value: "#" }],
+                    },
+                },
+            ],
+        ],
+    },
+    vite: {
+        plugins: [tailwindcss()],
+        build: {
+            assetsInlineLimit: 4096,
+            cssCodeSplit: true,
+            minify: "esbuild",
+            esbuildOptions: {
+                keepNames: false,
+                drop: process.env.NODE_ENV === "production"
+                    ? ["console", "debugger"]
+                    : [],
+            },
+            chunkSizeWarningLimit: 500,
+            rollupOptions: {
+                output: {
+                    manualChunks(id) {
+                        if (id.includes("node_modules")) {
+                            if (id.includes("svelte"))
+                                return "vendor-svelte";
+                            if (id.includes("swup"))
+                                return "vendor-swup";
+                            if (id.includes("fancyapps"))
+                                return "vendor-fancybox";
+                            if (id.includes("katex"))
+                                return "vendor-katex";
+                            if (id.includes("expressive-code"))
+                                return "vendor-ec";
+                            if (id.includes("iconify"))
+                                return "vendor-iconify";
+                        }
+                    },
+                    entryFileNames: "assets/[name].[hash].js",
+                    chunkFileNames: "assets/[name].[hash].js",
+                    assetFileNames: "assets/[name].[hash][extname]",
+                },
+                onwarn(warning, warn) {
+                    if (warning.message.includes("is dynamically imported by") &&
+                        warning.message.includes("but also statically imported by")) {
+                        return;
+                    }
+                    warn(warning);
+                },
+            },
+        },
+        optimizeDeps: {
+            include: ["@fancyapps/ui", "svelte"],
+            exclude: ["katex"],
+        },
+    },
 });

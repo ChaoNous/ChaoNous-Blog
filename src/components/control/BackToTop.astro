@@ -48,7 +48,7 @@ import { Icon } from "astro-icon/components";
 		}
 	}
 
-	/* 减少动画的用户偏好设置 */
+	
 	@media (prefers-reduced-motion: reduce) {
 		.back-to-top-btn {
 			transition-duration: 0.01ms !important;
@@ -58,34 +58,29 @@ import { Icon } from "astro-icon/components";
 
 <script>
 	import { registerPageScript } from "../../scripts/page-lifecycle.ts";
-
 	class BackToTop {
-		private btn: HTMLElement | null;
-		private handleClick = () => {
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		};
-
-		constructor() {
-			this.btn = document.getElementById("back-to-top-btn");
-			this.init();
-		}
-
-		private init() {
-			this.btn?.addEventListener("click", this.handleClick);
-		}
-
-		destroy() {
-			this.btn?.removeEventListener("click", this.handleClick);
-		}
+	    private btn: HTMLElement | null;
+	    private handleClick = () => {
+	        window.scrollTo({ top: 0, behavior: "smooth" });
+	    };
+	    constructor() {
+	        this.btn = document.getElementById("back-to-top-btn");
+	        this.init();
+	    }
+	    private init() {
+	        this.btn?.addEventListener("click", this.handleClick);
+	    }
+	    destroy() {
+	        this.btn?.removeEventListener("click", this.handleClick);
+	    }
 	}
-
 	registerPageScript("back-to-top", {
-		shouldRun() {
-			return document.getElementById("back-to-top-btn") !== null;
-		},
-		init() {
-			const instance = new BackToTop();
-			return () => instance.destroy();
-		},
+	    shouldRun() {
+	        return document.getElementById("back-to-top-btn") !== null;
+	    },
+	    init() {
+	        const instance = new BackToTop();
+	        return () => instance.destroy();
+	    },
 	});
 </script>

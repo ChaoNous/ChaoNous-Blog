@@ -5,24 +5,18 @@ import { Icon } from "astro-icon/components";
 import { getFileDirFromPath, getPostUrl } from "@/utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
 import PostMetadata from "./PostMeta.astro";
-
 interface Props {
-	class?: string;
-	entry: CollectionEntry<"posts">;
-	style?: string;
-	priority?: boolean;
+    class?: string;
+    entry: CollectionEntry<"posts">;
+    style?: string;
+    priority?: boolean;
 }
-
 const { entry, style, priority = false } = Astro.props;
 const className = Astro.props.class;
-
-const { title, published, updated, category, image, description, pinned } =
-	entry.data;
-
+const { title, published, updated, category, image, description, pinned } = entry.data;
 const url = getPostUrl(entry);
 const hasCover = image !== undefined && image !== null && image !== "";
 const coverWidth = "28%";
-
 const { remarkPluginFrontmatter } = await render(entry);
 ---
 

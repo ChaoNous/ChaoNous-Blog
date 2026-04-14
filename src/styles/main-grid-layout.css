@@ -1,9 +1,6 @@
-/* ============================================================
- * MainGridLayout 样式
- * Banner 已移除
- * ============================================================ */
 
-/* 主网格布局 */
+
+
 #main-grid {
   align-items: start;
   gap: clamp(1.4rem, 2vw, 2.2rem);
@@ -13,13 +10,13 @@
   gap: 1rem;
 }
 
-/* 主内容定位 */
+
 .main-content-desktop {
   top: 5.5rem;
 }
 
 @media (min-width: 1280px) {
-  /* Carousel 过渡 — 保留以防其他组件使用 */
+  
   .carousel-item img,
   #banner img {
     transition: transform 1s ease-out;
@@ -45,7 +42,7 @@
   }
 }
 
-/* 移动端无侧边栏布局修正（< 1024px） */
+
 @media (max-width: 1023px) {
   #main-grid,
   #main-grid > * {
@@ -88,7 +85,7 @@
   }
 }
 
-/* 非桌面端 carousel 样式 */
+
 @media (max-width: 1279px) {
   .carousel-item img,
   #banner img {
@@ -130,7 +127,7 @@
   }
 }
 
-/* 全局无 banner 布局修正 */
+
 .no-banner-layout {
   top: 5.5rem !important;
   min-height: calc(100vh - 5.5rem) !important;

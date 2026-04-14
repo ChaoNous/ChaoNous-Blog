@@ -91,7 +91,7 @@
     }
   }
 
-  /* --- Links --- */
+  
   a:not(.no-styling) {
     @apply relative bg-none font-medium text-(--primary)
         underline decoration-(--link-underline) decoration-1 decoration-dashed underline-offset-4;
@@ -107,7 +107,7 @@
     }
   }
 
-  /* --- Inline code and code blocks --- */
+  
   code {
     @apply bg-(--inline-code-bg) text-(--inline-code-color) px-1 py-0.5 rounded-md overflow-hidden;
 
@@ -133,7 +133,7 @@
     }
   }
 
-  /* --- Lists --- */
+  
   ul,
   ol {
     li::marker {
@@ -141,7 +141,7 @@
     }
   }
 
-  /* --- Blockquotes --- */
+  
   blockquote {
     @apply not-italic border-transparent relative;
     font-weight: inherit;
@@ -158,12 +158,12 @@
     }
   }
 
-  /* --- Tables --- */
+  
   .table-wrapper {
     @apply w-full overflow-x-auto m-0 rounded-(--radius-large);
     -webkit-overflow-scrolling: touch;
 
-    /* --- Scrollbar styling --- */
+    
     &::-webkit-scrollbar {
       height: 6px;
       width: 6px;
@@ -224,7 +224,7 @@
     transition: none;
   }
 
-  /* --- Display math --- */
+  
   .katex-display {
     @apply w-full overflow-x-auto overflow-y-hidden box-border my-4;
     padding-bottom: 6px;
@@ -268,7 +268,7 @@
   }
 }
 
-/* External override styles */
+
 .custom-md .expressive-code :is(ul, ol) li::marker {
   @apply text-inherit;
 }
