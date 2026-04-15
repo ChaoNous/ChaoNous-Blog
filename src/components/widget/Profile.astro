@@ -5,6 +5,10 @@ import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
 import { url } from "../../utils/url-utils";
 import ImageWrapper from "../misc/ImageWrapper.astro";
+
+const profilePageViewsLabel = i18n(I18nKey.profileStatsPageViews);
+const profileVisitsLabel = i18n(I18nKey.profileStatsVisits);
+const profileStatsPlaceholder = `${profilePageViewsLabel} -- · ${profileVisitsLabel} --`;
 ---
 
 <div class="card-base content-panel-card p-3">
@@ -90,10 +94,11 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
     </div>
 
     <div
-      class="site-stats-container hidden"
-      data-page-views-label={i18n(I18nKey.profileStatsPageViews)}
-      data-visits-label={i18n(I18nKey.profileStatsVisits)}
+      class="site-stats-container"
+      data-page-views-label={profilePageViewsLabel}
+      data-visits-label={profileVisitsLabel}
       data-unavailable-label={i18n(I18nKey.profileStatsUnavailable)}
+      aria-live="polite"
     >
       <hr class="my-2 border-none transition-colors duration-150" />
       <div
@@ -103,8 +108,9 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
           name="fa7-solid:eye"
           class="inline-block mr-1 text-50 text-base align-middle"
         />
-        <span class="site-stats-display"
-          >{i18n(I18nKey.profileStatsLoading)}</span
+        <span
+          class="site-stats-display inline-flex min-w-[14rem] justify-center tabular-nums"
+          >{profileStatsPlaceholder}</span
         >
       </div>
     </div>

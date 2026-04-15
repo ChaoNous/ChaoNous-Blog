@@ -136,6 +136,8 @@ async function fetchSiteStats(container: HTMLElement): Promise<void> {
   const unavailableLabel = container.dataset.unavailableLabel || "Unavailable";
   const pageViewsLabel = container.dataset.pageViewsLabel || "Views";
   const visitsLabel = container.dataset.visitsLabel || "Visits";
+  const summaryText = (pageViews: number, visits: number) =>
+    `${pageViewsLabel} ${pageViews} · ${visitsLabel} ${visits}`;
 
   try {
     const response = await fetch("/api/analytics/site");
@@ -147,19 +149,12 @@ async function fetchSiteStats(container: HTMLElement): Promise<void> {
     const pageViews = stats.pageviews || 0;
     const visits = stats.visits || 0;
 
-    if (pageViews === 0 && visits === 0) {
-      container.classList.add("hidden");
-      return;
-    }
-
-    container.classList.remove("hidden");
-    document.querySelectorAll(".site-stats-display").forEach((element) => {
-      element.textContent = `${pageViewsLabel} ${pageViews} · ${visitsLabel} ${visits}`;
+    container.querySelectorAll(".site-stats-display").forEach((element) => {
+      element.textContent = summaryText(pageViews, visits);
     });
   } catch (error) {
-    console.error("Error fetching site stats:", error);
-    container.classList.remove("hidden");
-    document.querySelectorAll(".site-stats-display").forEach((element) => {
+    console.warn("Error fetching site stats:", error);
+    container.querySelectorAll(".site-stats-display").forEach((element) => {
       element.textContent = unavailableLabel;
     });
   }
@@ -177,7 +172,7 @@ function fetchSiteStatsWhenVisible(): () => void {
     fetched = true;
     scheduleIdleTask(() => {
       void fetchSiteStats(container);
-    }, 2500);
+    }, 600);
   };
 
   if (!("IntersectionObserver" in window)) {
@@ -210,15 +205,15 @@ if (document.readyState === "loading") {
 document.addEventListener("astro:page-load", initTypewritersWhenIdle);
 
 registerPageScript("profile-bio-typewriter", {
-	shouldRun() {
-		return document.querySelector(".typewriter") !== null;
-	},
-	init() {
-		initTypewritersWhenIdle();
-		return () => {
-			destroyTypewriters();
-		};
-	},
+  shouldRun() {
+    return document.querySelector(".typewriter") !== null;
+  },
+  init() {
+    initTypewritersWhenIdle();
+    return () => {
+      destroyTypewriters();
+    };
+  },
 });
 
 registerPageScript("profile-site-stats", {

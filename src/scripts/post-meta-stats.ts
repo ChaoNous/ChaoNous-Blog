@@ -32,6 +32,12 @@ function generateStatsText(
   return `${pageViewsText} ${pageViews} · ${visitsText} ${visits}`;
 }
 
+function setPageStatsText(container: HTMLElement, text: string): void {
+  container.querySelectorAll(".page-views-display").forEach((element) => {
+    element.textContent = text;
+  });
+}
+
 async function recordPageVisit(container: HTMLElement): Promise<void> {
   const postSlug = container.dataset.postSlug;
   const postUrl = container.dataset.postUrl;
@@ -84,13 +90,16 @@ async function fetchPageViews(): Promise<void> {
     const pageViews = stats?.pageviews || 0;
     const visits = stats?.visits || 0;
 
-    container.classList.remove("hidden");
-    container.querySelectorAll(".page-views-display").forEach((element) => {
-      element.textContent = generateStatsText(container, pageViews, visits);
-    });
+    setPageStatsText(
+      container,
+      generateStatsText(container, pageViews, visits),
+    );
   } catch (error) {
-    console.error("Error fetching page views:", error);
-    container.classList.add("hidden");
+    console.warn("Error fetching page views:", error);
+    setPageStatsText(
+      container,
+      container.dataset.unavailableLabel || "Unavailable",
+    );
   }
 }
 

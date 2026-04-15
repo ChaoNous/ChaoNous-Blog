@@ -5,21 +5,35 @@ import { i18n } from "../i18n/translation";
 import { formatDateToYYYYMMDD } from "../utils/date-utils";
 import { getCategoryUrl } from "../utils/url-utils";
 export interface Props {
-    published: Date;
-    updated?: Date;
-    category?: string;
-    hideUpdateDate?: boolean;
-    isHome?: boolean;
-    className?: string;
-    statsSlug?: string;
-    statsUrl?: string;
-    statsTitle?: string;
-    words?: number;
-    showWordCount?: boolean;
+  published: Date;
+  updated?: Date;
+  category?: string;
+  hideUpdateDate?: boolean;
+  isHome?: boolean;
+  className?: string;
+  statsSlug?: string;
+  statsUrl?: string;
+  statsTitle?: string;
+  words?: number;
+  showWordCount?: boolean;
 }
-const { published, updated, category, hideUpdateDate, isHome, className = "", statsSlug, statsUrl, statsTitle, words, showWordCount = false, } = Astro.props;
+const {
+  published,
+  updated,
+  category,
+  hideUpdateDate,
+  isHome,
+  className = "",
+  statsSlug,
+  statsUrl,
+  statsTitle,
+  words,
+  showWordCount = false,
+} = Astro.props;
 const pageViewsLabel = i18n(I18nKey.profileStatsPageViews);
 const visitsLabel = i18n(I18nKey.profileStatsVisits);
+const pageViewsUnavailableLabel = i18n(I18nKey.pageViewsUnavailable);
+const pageViewsPlaceholder = `${pageViewsLabel} -- · ${visitsLabel} --`;
 ---
 
 <div
@@ -28,7 +42,6 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     className,
   ]}
 >
-  
   <div class="flex items-center">
     <div class="meta-icon">
       <Icon
@@ -39,7 +52,6 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     <span class="text-50 font-medium">{formatDateToYYYYMMDD(published)}</span>
   </div>
 
-  
   {
     !hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
       <div class="flex items-center">
@@ -54,7 +66,6 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     )
   }
 
-  
   <div class="flex items-center">
     <div class="meta-icon">
       <Icon name="material-symbols:book-2-outline-rounded" class="text-xl" />
@@ -67,7 +78,6 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     </a>
   </div>
 
-  
   {
     showWordCount && words && (
       <div class="flex items-center">
@@ -85,16 +95,17 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
     )
   }
 
-  
   {
     !isHome && statsSlug && statsUrl && (
       <div
-        class="flex items-center site-page-views hidden"
+        class="flex items-center site-page-views"
         data-post-slug={statsSlug}
         data-post-url={statsUrl}
         data-post-title={statsTitle || ""}
         data-page-views-label={pageViewsLabel}
         data-visits-label={visitsLabel}
+        data-unavailable-label={pageViewsUnavailableLabel}
+        aria-live="polite"
       >
         <div class="meta-icon">
           <Icon
@@ -102,8 +113,8 @@ const visitsLabel = i18n(I18nKey.profileStatsVisits);
             class="text-xl"
           />
         </div>
-        <span class="text-50 font-medium page-views-display">
-          {i18n(I18nKey.pageViewsLoading)}
+        <span class="text-50 font-medium page-views-display inline-block min-w-[12.5rem] tabular-nums">
+          {pageViewsPlaceholder}
         </span>
       </div>
     )
