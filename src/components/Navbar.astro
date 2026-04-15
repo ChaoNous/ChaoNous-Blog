@@ -2,6 +2,8 @@
 import { Icon } from "astro-icon/components";
 import { navBarConfig, siteConfig } from "../config";
 import { LinkPresets } from "../constants/link-presets";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
 import { LinkPreset, type NavBarLink } from "../types/config";
 import { url } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
@@ -25,13 +27,25 @@ const rawIcon = siteConfig.navbarTitle?.icon || "assets/home/home.webp";
 const iconSrc = rawIcon;
 const hasNavbarIcon = Boolean(siteConfig.navbarTitle?.icon);
 const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
+const isChineseSite = (siteConfig.lang || "").toLowerCase().startsWith("zh");
+const searchLabel = i18n(I18nKey.search);
+const primaryNavigationLabel = isChineseSite
+    ? "\u4e3b\u5bfc\u822a"
+    : "Primary navigation";
+const displaySettingsLabel = isChineseSite
+    ? "\u663e\u793a\u8bbe\u7f6e"
+    : "Display settings";
+const mobileControlsLabel = isChineseSite
+    ? "\u79fb\u52a8\u83dc\u5355"
+    : "Mobile menu";
 ---
 
-<div
+<nav
   id="navbar"
   class="z-50 onload-animation group"
   data-transparent-mode={navbarTransparentMode}
   data-is-home={isHomePage}
+  aria-label={primaryNavigationLabel}
 >
   <div class="absolute h-8 left-0 right-0 -top-8 bg-transparent transition">
   </div>
@@ -98,7 +112,9 @@ const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
         <Search client:media="(min-width: 1024px)" />
       </div>
       <button
-        aria-label="Search"
+        type="button"
+        aria-label={searchLabel}
+        aria-controls="search-panel"
         class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90 lg:hidden"
         id="mobile-search-switch"
       >
@@ -111,7 +127,10 @@ const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
       {
         !siteConfig.themeColor.fixed && (
           <button
-            aria-label="Display Settings"
+            type="button"
+            aria-label={displaySettingsLabel}
+            aria-controls="display-setting"
+            aria-haspopup="dialog"
             class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90"
             id="display-settings-switch"
           >
@@ -128,8 +147,10 @@ const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
       </div>
       
       <button
-        aria-label="Mobile Controls"
-        name="Mobile Controls"
+        type="button"
+        aria-label={mobileControlsLabel}
+        aria-controls="nav-menu-panel"
+        aria-haspopup="menu"
         class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90 lg:hidden"
         id="nav-menu-switch"
       >
@@ -140,9 +161,9 @@ const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
       </button>
     </div>
     <NavMenuPanel links={links} />
-    <DisplaySettings client:load />
+    <DisplaySettings client:idle />
   </div>
-</div>
+</nav>
 
 <script>
   import "../scripts/navbar/index.ts";

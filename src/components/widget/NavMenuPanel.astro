@@ -59,7 +59,8 @@ const processedLinks: ProcessedNavBarLink[] = Astro.props.links.map(
 			<div class="mobile-menu-item">
 				{link.children && link.children.length > 0 ? (
 					<div class="mobile-dropdown" data-mobile-dropdown>
-				<button
+						<button
+							type="button"
 							class="group flex justify-between items-center py-2.5 pl-3 pr-2 rounded-xl gap-4 w-full text-left
                             hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) transition"
 							data-mobile-dropdown-trigger

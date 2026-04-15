@@ -157,7 +157,8 @@ const mainContentClass = `
           id="swup-container"
           data-is-post-page={isPostPage ? "true" : "false"}
           data-swup-transition
-          class={`${mainContentClass}`}
+          tabindex="-1"
+          class={`${mainContentClass} scroll-mt-24 focus:outline-none`}
         >
           <div id="content-wrapper" class="onload-animation">
             <slot />

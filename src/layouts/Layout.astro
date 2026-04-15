@@ -38,6 +38,10 @@ if (!lang) {
     lang = `${siteConfig.lang}`;
 }
 const siteLang = lang.replace("_", "-");
+const isChineseSite = siteLang.toLowerCase().startsWith("zh");
+const skipToContentLabel = isChineseSite
+    ? "\u8df3\u8f6c\u5230\u6b63\u6587"
+    : "Skip to content";
 ---
 
 <!doctype html>
@@ -191,6 +195,7 @@ const siteLang = lang.replace("_", "-");
       },
     ]}
   >
+    <a href="#swup-container" class="skip-to-content">{skipToContentLabel}</a>
     <script>
       import "../scripts/page-lifecycle.ts";
     </script>
@@ -264,6 +269,27 @@ const siteLang = lang.replace("_", "-");
 
   body {
     top: 0 !important;
+  }
+
+  .skip-to-content {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 70;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklch, var(--primary) 20%, transparent);
+    background: color-mix(in oklch, var(--card-bg) 92%, white);
+    color: var(--text-main);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-180%);
+    transition: transform 180ms ease;
+  }
+
+  .skip-to-content:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
   }
 
   @layer components {

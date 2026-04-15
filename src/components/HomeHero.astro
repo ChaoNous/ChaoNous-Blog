@@ -1,0 +1,204 @@
+---
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "../config";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+import { url } from "../utils/url-utils";
+
+const isChineseSite = (siteConfig.lang || "").toLowerCase().startsWith("zh");
+const keywords = siteConfig.keywords?.slice(0, 4) ?? [];
+const keywordSummary = keywords.join(" / ") || siteConfig.title;
+const heroDescription =
+	siteConfig.subtitle?.trim() ||
+	(keywords.length > 0
+		? isChineseSite
+			? `\u5206\u4eab\u5173\u4e8e${keywords.join("\u3001")}\u7684\u5b66\u4e60\u8bb0\u5f55\u3001\u4f5c\u54c1\u4e0e\u601d\u8003\u3002`
+			: `Notes and projects about ${keywords.join(", ")}.`
+		: isChineseSite
+			? "\u5206\u4eab\u5b66\u4e60\u8bb0\u5f55\u3001\u4f5c\u54c1\u4e0e\u601d\u8003\u3002"
+			: "Notes, projects, and things worth keeping.");
+const primaryLinks = [
+	{
+		href: "#post-list-container",
+		label: i18n(I18nKey.recentPosts),
+		icon: "material-symbols:article-outline-rounded",
+		primary: true,
+	},
+	{
+		href: url("/archive/"),
+		label: i18n(I18nKey.archive),
+		icon: "material-symbols:archive-outline-rounded",
+	},
+	{
+		href: url("/albums/"),
+		label: i18n(I18nKey.albums),
+		icon: "material-symbols:photo-library-outline-rounded",
+	},
+];
+---
+
+<section class="home-hero card-base onload-animation mb-6" aria-labelledby="home-hero-title">
+	<div class="home-hero__backdrop"></div>
+	<div class="home-hero__content">
+		<div class="home-hero__eyebrow">{keywordSummary}</div>
+		<h1 id="home-hero-title" class="home-hero__title">{siteConfig.title}</h1>
+		<p class="home-hero__description">{heroDescription}</p>
+
+		{
+			keywords.length > 0 && (
+				<div class="home-hero__chips" aria-hidden="true">
+					{
+						keywords.map((keyword) => (
+							<span class="home-hero__chip">{keyword}</span>
+						))
+					}
+				</div>
+			)
+		}
+
+		<div class="home-hero__actions">
+			{
+				primaryLinks.map((link) => (
+					<a
+						href={link.href}
+						class:list={[
+							"home-hero__action",
+							{
+								"home-hero__action--primary": link.primary,
+							},
+						]}
+					>
+						<Icon name={link.icon} class="text-[1.15rem]" />
+						<span>{link.label}</span>
+					</a>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.home-hero {
+		position: relative;
+		overflow: hidden;
+		padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.5rem);
+		border: 1px solid color-mix(in oklch, var(--primary) 14%, transparent);
+		background:
+			linear-gradient(
+				135deg,
+				color-mix(in oklch, var(--card-bg) 90%, white),
+				color-mix(in oklch, var(--card-bg) 96%, var(--primary) 4%)
+			);
+		box-shadow: var(--shadow-md);
+	}
+
+	.home-hero__backdrop {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background:
+			radial-gradient(
+				circle at top right,
+				color-mix(in oklch, var(--primary) 18%, transparent),
+				transparent 42%
+			),
+			radial-gradient(
+				circle at bottom left,
+				color-mix(in oklch, var(--primary) 10%, transparent),
+				transparent 50%
+			);
+		opacity: 0.9;
+	}
+
+	.home-hero__content {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.home-hero__eyebrow {
+		font-size: 0.88rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: color-mix(in oklch, var(--text-main) 58%, transparent);
+	}
+
+	.home-hero__title {
+		font-size: clamp(2.5rem, 2.1rem + 1.4vw, 3.6rem);
+		line-height: 0.98;
+		font-weight: 850;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+	}
+
+	.home-hero__description {
+		max-width: 42rem;
+		font-size: clamp(1rem, 0.98rem + 0.22vw, 1.18rem);
+		line-height: 1.85;
+		color: color-mix(in oklch, var(--text-main) 76%, transparent);
+		text-wrap: pretty;
+	}
+
+	.home-hero__chips,
+	.home-hero__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.home-hero__chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.45rem 0.8rem;
+		border-radius: 999px;
+		font-size: 0.92rem;
+		font-weight: 700;
+		background: color-mix(in oklch, var(--card-bg) 88%, var(--primary) 12%);
+		color: color-mix(in oklch, var(--text-main) 76%, transparent);
+		border: 1px solid color-mix(in oklch, var(--primary) 10%, transparent);
+	}
+
+	.home-hero__action {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.8rem 1rem;
+		border-radius: 999px;
+		font-weight: 700;
+		color: var(--text-main);
+		background: color-mix(in oklch, var(--card-bg) 86%, transparent);
+		border: 1px solid color-mix(in oklch, var(--primary) 10%, transparent);
+		transition:
+			transform 180ms ease,
+			background-color 180ms ease,
+			border-color 180ms ease;
+	}
+
+	.home-hero__action:hover {
+		transform: translateY(-1px);
+		border-color: color-mix(in oklch, var(--primary) 18%, transparent);
+		background: color-mix(in oklch, var(--card-bg) 82%, var(--primary) 8%);
+	}
+
+	.home-hero__action--primary {
+		background: color-mix(in oklch, var(--primary) 14%, var(--card-bg));
+		color: var(--primary);
+	}
+
+	@media (max-width: 767px) {
+		.home-hero {
+			padding: 1.4rem;
+		}
+
+		.home-hero__actions {
+			gap: 0.6rem;
+		}
+
+		.home-hero__action {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+</style>

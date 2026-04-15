@@ -7,42 +7,43 @@ interface Props {
 const { badge, url, label } = Astro.props;
 ---
 
-<a href={url}>
-	<button
+<a href={url} aria-label={label} class="block">
+	<span
 		class:list={`
-            w-full
-            h-10
-            rounded-lg
-            bg-none
-            hover:bg-(--btn-plain-bg-hover)
-            active:bg-(--btn-plain-bg-active)
-            transition-all
-            pl-2
-            hover:pl-3
-            
-            text-75
-            hover:text-(--primary)
-        `}
-		aria-label={label}
+			flex
+			w-full
+			h-10
+			items-center
+			rounded-lg
+			bg-none
+			hover:bg-(--btn-plain-bg-hover)
+			active:bg-(--btn-plain-bg-active)
+			transition-all
+			pl-2
+			pr-2
+			hover:pl-3
+			text-75
+			hover:text-(--primary)
+		`}
 	>
-		<div class="flex items-center justify-between relative mr-2">
-			<div
+		<span class="flex w-full items-center justify-between relative">
+			<span
 				class="overflow-hidden text-left whitespace-nowrap text-ellipsis"
 			>
 				<slot />
-			</div>
+			</span>
 			{
 				badge !== undefined && badge !== null && badge !== "" && (
-					<div
-            class="transition px-2 h-7 ml-4 min-w-8 rounded-lg text-[13px] font-bold
+					<span
+						class="transition px-2 h-7 ml-4 min-w-8 rounded-lg text-[13px] font-bold
                     text-(--btn-content) dark:text-(--deep-text)!
                     bg-(--btn-plain-bg-hover) dark:bg-(--primary)!
                     flex items-center justify-center"
 					>
 						{badge}
-					</div>
+					</span>
 				)
 			}
-		</div>
-	</button>
+		</span>
+	</span>
 </a>
