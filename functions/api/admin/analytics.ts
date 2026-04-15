@@ -1,6 +1,7 @@
 import {
   buildRecentDayKeys,
   COMMENT_MESSAGES,
+  isMissingPageDailyStatsTableError,
   json,
   requireAdminSession,
   serverError,
@@ -50,7 +51,7 @@ export const onRequestGet = async ({
     const recentDays = buildRecentDayKeys(14);
     const firstDay = recentDays[0];
 
-    const [summary, pages, recentTrend] = await Promise.all([
+    const [summary, pages] = await Promise.all([
       env.COMMENTS_DB.prepare(
         `SELECT
 					COALESCE(SUM(pageviews), 0) AS pageviews,
@@ -66,7 +67,12 @@ export const onRequestGet = async ({
       )
         .bind(limit)
         .all<AnalyticsRow>(),
-      env.COMMENTS_DB.prepare(
+    ]);
+
+    let recentTrendResults: DailyRow[] = [];
+
+    try {
+      const recentTrend = await env.COMMENTS_DB.prepare(
         `SELECT
 					day,
 					SUM(pageviews) AS total_pv,
@@ -77,10 +83,21 @@ export const onRequestGet = async ({
 				 ORDER BY day ASC`,
       )
         .bind(firstDay)
-        .all<DailyRow>(),
-    ]);
+        .all<DailyRow>();
+      recentTrendResults = recentTrend.results || [];
+    } catch (error) {
+      if (!isMissingPageDailyStatsTableError(error)) {
+        throw error;
+      }
+
+      console.warn(
+        "admin:analytics missing page_daily_stats table, returning zero-filled trend",
+        error,
+      );
+    }
+
     const trendMap = new Map(
-      (recentTrend.results || []).map((item) => [
+      recentTrendResults.map((item) => [
         item.day,
         {
           pageviews: Number(item.total_pv || 0),

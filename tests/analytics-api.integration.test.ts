@@ -40,6 +40,7 @@ class MockD1Database {
   pageVisitors: PageVisitorRow[] = [];
   pageDailyStats: PageDailyStatsRow[] = [];
   adminSessions: AdminSessionRow[] = [];
+  missingPageDailyStatsTable = false;
 
   prepare(query: string) {
     return new MockD1PreparedStatement(this, query);
@@ -134,6 +135,10 @@ class MockD1PreparedStatement {
       ) &&
       sql.includes("FROM page_daily_stats")
     ) {
+      if (this.database.missingPageDailyStatsTable) {
+        throw new Error("no such table: page_daily_stats");
+      }
+
       const [firstDay] = values as [string];
       const grouped = new Map<
         string,
@@ -256,6 +261,10 @@ class MockD1PreparedStatement {
     }
 
     if (sql.startsWith("INSERT INTO page_daily_stats")) {
+      if (this.database.missingPageDailyStatsTable) {
+        throw new Error("no such table: page_daily_stats");
+      }
+
       const [postSlug, day, visitsToAdd, updatedAt] = values as [
         string,
         string,
@@ -399,6 +408,34 @@ test("visit analytics rejects mismatched referers", async () => {
   assert.equal(database.pageVisitors.length, 0);
 });
 
+test("visit analytics still succeeds when page_daily_stats is unavailable", async () => {
+  const database = new MockD1Database();
+  database.missingPageDailyStatsTable = true;
+  const env = createEnv(database);
+  const postUrl = "https://chaonous.com/posts/btc-analysis/";
+
+  const response = await onVisitPost({
+    env,
+    request: createVisitRequest(postUrl, "visitor-1"),
+  });
+  const statsResponse = await onPageStatsGet({
+    env,
+    request: new Request(
+      `https://chaonous.com/api/analytics/pv?postSlug=${encodeURIComponent(postUrl)}`,
+    ),
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(statsResponse.status, 200);
+
+  const statsPayload = await statsResponse.json();
+  assert.equal(statsPayload.pageviews, 1);
+  assert.equal(statsPayload.visits, 1);
+  assert.equal(database.pageStats[0]?.pageviews, 1);
+  assert.equal(database.pageStats[0]?.visits, 1);
+  assert.equal(database.pageDailyStats.length, 0);
+});
+
 test("page stats endpoint rejects cross-origin post slugs", async () => {
   const database = new MockD1Database();
   const response = await onPageStatsGet({
@@ -508,5 +545,50 @@ test("admin analytics trend reads from page_daily_stats and zero-fills missing d
       pageviews: 0,
       visits: 0,
     },
+  );
+});
+
+test("admin analytics still returns zero-filled trend when page_daily_stats is unavailable", async () => {
+  const database = new MockD1Database();
+  database.missingPageDailyStatsTable = true;
+  const env = createEnv(database);
+
+  database.pageStats.push({
+    post_slug: "https://chaonous.com/posts/btc-analysis/",
+    post_url: "https://chaonous.com/posts/btc-analysis/",
+    post_title: "BTC",
+    pageviews: 12,
+    visits: 7,
+    updated_at: Date.now(),
+  });
+  database.adminSessions.push({
+    id: "valid-session",
+    created_at: Date.now(),
+    expires_at: Date.now() + 60_000,
+  });
+
+  const response = await onAdminAnalyticsGet({
+    env,
+    request: new Request("https://chaonous.com/api/admin/analytics", {
+      headers: {
+        cookie: "cnc_admin_session=valid-session",
+      },
+    }),
+  });
+
+  assert.equal(response.status, 200);
+
+  const payload = await response.json();
+  assert.deepEqual(payload.summary, {
+    pageviews: 12,
+    visits: 7,
+    pageCount: 1,
+  });
+  assert.equal(payload.recentTrend.length, 14);
+  assert.ok(
+    payload.recentTrend.every(
+      (entry: { pageviews: number; visits: number }) =>
+        entry.pageviews === 0 && entry.visits === 0,
+    ),
   );
 });

@@ -3,6 +3,7 @@ import {
   buildAnalyticsDayKey,
   COMMENT_MESSAGES,
   ensureSameOrigin,
+  isMissingPageDailyStatsTableError,
   json,
   readJsonBody,
   serverError,
@@ -60,20 +61,21 @@ export const onRequestPost = async ({
         .run();
     }
 
-    await Promise.all([
-      env.COMMENTS_DB.prepare(
-        `INSERT INTO page_stats (post_slug, post_url, post_title, pageviews, visits, updated_at)
-				 VALUES (?1, ?2, ?3, 1, ?4, ?5)
-				 ON CONFLICT(post_slug) DO UPDATE SET
-				   post_url = excluded.post_url,
-				   post_title = excluded.post_title,
-				   pageviews = page_stats.pageviews + 1,
-				   visits = page_stats.visits + excluded.visits,
-				   updated_at = excluded.updated_at`,
-      )
-        .bind(postSlug, postUrl, postTitle, isNewVisitor ? 1 : 0, now)
-        .run(),
-      env.COMMENTS_DB.prepare(
+    await env.COMMENTS_DB.prepare(
+      `INSERT INTO page_stats (post_slug, post_url, post_title, pageviews, visits, updated_at)
+			 VALUES (?1, ?2, ?3, 1, ?4, ?5)
+			 ON CONFLICT(post_slug) DO UPDATE SET
+			   post_url = excluded.post_url,
+			   post_title = excluded.post_title,
+			   pageviews = page_stats.pageviews + 1,
+			   visits = page_stats.visits + excluded.visits,
+			   updated_at = excluded.updated_at`,
+    )
+      .bind(postSlug, postUrl, postTitle, isNewVisitor ? 1 : 0, now)
+      .run();
+
+    try {
+      await env.COMMENTS_DB.prepare(
         `INSERT INTO page_daily_stats (post_slug, day, pageviews, visits, updated_at)
 				 VALUES (?1, ?2, 1, ?3, ?4)
 				 ON CONFLICT(post_slug, day) DO UPDATE SET
@@ -82,8 +84,17 @@ export const onRequestPost = async ({
 				   updated_at = excluded.updated_at`,
       )
         .bind(postSlug, day, isNewVisitor ? 1 : 0, now)
-        .run(),
-    ]);
+        .run();
+    } catch (error) {
+      if (!isMissingPageDailyStatsTableError(error)) {
+        throw error;
+      }
+
+      console.warn(
+        "analytics:visit missing page_daily_stats table, skipping trend update",
+        error,
+      );
+    }
 
     return json({ ok: true });
   } catch (error) {

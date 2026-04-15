@@ -22,6 +22,8 @@ const { album } = Astro.props;
 if (!album) {
 	return Astro.redirect("/404/");
 }
+
+const galleryName = `album-${album.id}`;
 ---
 
 <MainGridLayout
@@ -105,13 +107,15 @@ if (!album) {
 				data-columns={album.columns || 3}
 			>
 				{
-					album.photos.map((photo: Photo, _index: number) => (
+					album.photos.map((photo: Photo, index: number) => (
 						<figure class="photo-item group relative overflow-hidden rounded-lg">
 							<a
-								href="javascript:void(0)"
+								href={photo.src}
 								data-src={photo.src}
-								data-fancybox={`gallery-${_index}`}
+								data-fancybox={galleryName}
+								data-caption={photo.alt || album.title}
 								class="block"
+								aria-label={photo.alt || `${album.title} ${index + 1}`}
 							>
 								<img
 									src={photo.src}

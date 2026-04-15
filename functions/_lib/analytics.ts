@@ -7,6 +7,8 @@ export type AnalyticsVisitPayload = {
   visitorId: string;
 };
 
+const PAGE_DAILY_STATS_TABLE = "page_daily_stats";
+
 function normalizeRequiredHttpUrl(value: string): string | null {
   const trimmed = value.trim();
   if (!trimmed) {
@@ -163,4 +165,27 @@ export function buildRecentDayKeys(
   }
 
   return days;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
+  return String(error || "");
+}
+
+export function isMissingPageDailyStatsTableError(error: unknown): boolean {
+  return getErrorMessage(error)
+    .toLowerCase()
+    .includes(`no such table: ${PAGE_DAILY_STATS_TABLE}`);
 }
