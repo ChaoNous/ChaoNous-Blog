@@ -1,8 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { onRequestGet as onAdminAnalyticsGet } from "../functions/api/admin/analytics.ts";
-import { onRequestGet as onPageStatsGet } from "../functions/api/analytics/pv.ts";
-import { onRequestPost as onVisitPost } from "../functions/api/analytics/visit.ts";
 import { buildRecentDayKeys } from "../functions/_lib/analytics.ts";
 
 type PageStatsRow = {
@@ -12,13 +10,6 @@ type PageStatsRow = {
   pageviews: number;
   visits: number;
   updated_at: number;
-};
-
-type PageVisitorRow = {
-  post_slug: string;
-  visitor_id: string;
-  first_seen_at: number;
-  last_seen_at: number;
 };
 
 type PageDailyStatsRow = {
@@ -37,7 +28,6 @@ type AdminSessionRow = {
 
 class MockD1Database {
   pageStats: PageStatsRow[] = [];
-  pageVisitors: PageVisitorRow[] = [];
   pageDailyStats: PageDailyStatsRow[] = [];
   adminSessions: AdminSessionRow[] = [];
   missingPageDailyStatsTable = false;
@@ -62,18 +52,6 @@ class MockD1PreparedStatement {
 
   async first<T>() {
     const sql = this.query.replace(/\s+/g, " ").trim();
-    const values = this.boundValues;
-
-    if (
-      sql.includes(
-        "SELECT pageviews, visits FROM page_stats WHERE post_slug = ?1",
-      )
-    ) {
-      const [postSlug] = values as [string];
-      return (this.database.pageStats.find(
-        (entry) => entry.post_slug === postSlug,
-      ) || null) as T | null;
-    }
 
     if (
       sql.includes("COALESCE(SUM(pageviews), 0) AS pageviews") &&
@@ -96,7 +74,7 @@ class MockD1PreparedStatement {
       sql.includes("SELECT id FROM admin_sessions") &&
       sql.includes("expires_at > ?2")
     ) {
-      const [id, now] = values as [string, number];
+      const [id, now] = this.boundValues as [string, number];
       const session = this.database.adminSessions.find(
         (entry) => entry.id === id && entry.expires_at > now,
       );
@@ -108,7 +86,6 @@ class MockD1PreparedStatement {
 
   async all<T>() {
     const sql = this.query.replace(/\s+/g, " ").trim();
-    const values = this.boundValues;
 
     if (
       sql.includes(
@@ -117,16 +94,17 @@ class MockD1PreparedStatement {
       sql.includes("FROM page_stats") &&
       sql.includes("ORDER BY pageviews DESC, visits DESC, updated_at DESC")
     ) {
-      const [limit] = values as [number];
-      const results = [...this.database.pageStats]
-        .sort(
-          (left, right) =>
-            right.pageviews - left.pageviews ||
-            right.visits - left.visits ||
-            right.updated_at - left.updated_at,
-        )
-        .slice(0, limit);
-      return { results: results as T[] };
+      const [limit] = this.boundValues as [number];
+      return {
+        results: [...this.database.pageStats]
+          .sort(
+            (left, right) =>
+              right.pageviews - left.pageviews ||
+              right.visits - left.visits ||
+              right.updated_at - left.updated_at,
+          )
+          .slice(0, limit) as T[],
+      };
     }
 
     if (
@@ -139,11 +117,8 @@ class MockD1PreparedStatement {
         throw new Error("no such table: page_daily_stats");
       }
 
-      const [firstDay] = values as [string];
-      const grouped = new Map<
-        string,
-        { total_pv: number; total_visits: number }
-      >();
+      const [firstDay] = this.boundValues as [string];
+      const grouped = new Map<string, { total_pv: number; total_visits: number }>();
 
       for (const row of this.database.pageDailyStats) {
         if (row.day < firstDay) {
@@ -175,10 +150,9 @@ class MockD1PreparedStatement {
 
   async run() {
     const sql = this.query.replace(/\s+/g, " ").trim();
-    const values = this.boundValues;
 
     if (sql.startsWith("DELETE FROM admin_sessions WHERE expires_at <= ?1")) {
-      const [now] = values as [number];
+      const [now] = this.boundValues as [number];
       const before = this.database.adminSessions.length;
       this.database.adminSessions = this.database.adminSessions.filter(
         (entry) => entry.expires_at > now,
@@ -188,106 +162,6 @@ class MockD1PreparedStatement {
           changes: before - this.database.adminSessions.length,
         },
       };
-    }
-
-    if (sql.startsWith("INSERT OR IGNORE INTO page_visitors")) {
-      const [postSlug, visitorId, firstSeenAt, lastSeenAt] = values as [
-        string,
-        string,
-        number,
-        number,
-      ];
-      const existing = this.database.pageVisitors.find(
-        (entry) =>
-          entry.post_slug === postSlug && entry.visitor_id === visitorId,
-      );
-      if (existing) {
-        return { meta: { changes: 0 } };
-      }
-
-      this.database.pageVisitors.push({
-        post_slug: postSlug,
-        visitor_id: visitorId,
-        first_seen_at: firstSeenAt,
-        last_seen_at: lastSeenAt,
-      });
-      return { meta: { changes: 1 } };
-    }
-
-    if (sql.startsWith("UPDATE page_visitors SET last_seen_at = ?3")) {
-      const [postSlug, visitorId, lastSeenAt] = values as [
-        string,
-        string,
-        number,
-      ];
-      const existing = this.database.pageVisitors.find(
-        (entry) =>
-          entry.post_slug === postSlug && entry.visitor_id === visitorId,
-      );
-      if (existing) {
-        existing.last_seen_at = lastSeenAt;
-      }
-      return { meta: { changes: existing ? 1 : 0 } };
-    }
-
-    if (sql.startsWith("INSERT INTO page_stats")) {
-      const [postSlug, postUrl, postTitle, visitsToAdd, updatedAt] = values as [
-        string,
-        string,
-        string,
-        number,
-        number,
-      ];
-      const existing = this.database.pageStats.find(
-        (entry) => entry.post_slug === postSlug,
-      );
-      if (existing) {
-        existing.post_url = postUrl;
-        existing.post_title = postTitle;
-        existing.pageviews += 1;
-        existing.visits += visitsToAdd;
-        existing.updated_at = updatedAt;
-      } else {
-        this.database.pageStats.push({
-          post_slug: postSlug,
-          post_url: postUrl,
-          post_title: postTitle,
-          pageviews: 1,
-          visits: visitsToAdd,
-          updated_at: updatedAt,
-        });
-      }
-      return { meta: { changes: 1 } };
-    }
-
-    if (sql.startsWith("INSERT INTO page_daily_stats")) {
-      if (this.database.missingPageDailyStatsTable) {
-        throw new Error("no such table: page_daily_stats");
-      }
-
-      const [postSlug, day, visitsToAdd, updatedAt] = values as [
-        string,
-        string,
-        number,
-        number,
-      ];
-      const existing = this.database.pageDailyStats.find(
-        (entry) => entry.post_slug === postSlug && entry.day === day,
-      );
-      if (existing) {
-        existing.pageviews += 1;
-        existing.visits += visitsToAdd;
-        existing.updated_at = updatedAt;
-      } else {
-        this.database.pageDailyStats.push({
-          post_slug: postSlug,
-          day,
-          pageviews: 1,
-          visits: visitsToAdd,
-          updated_at: updatedAt,
-        });
-      }
-      return { meta: { changes: 1 } };
     }
 
     return { meta: { changes: 0 } };
@@ -300,153 +174,6 @@ function createEnv(database: MockD1Database) {
     COMMENT_ADMIN_PASSWORD: "secret",
   };
 }
-
-function createVisitRequest(
-  postUrl: string,
-  visitorId: string,
-  init?: {
-    referer?: string;
-    contentType?: string;
-    body?: string;
-  },
-) {
-  return new Request("https://chaonous.com/api/analytics/visit", {
-    method: "POST",
-    headers: {
-      origin: "https://chaonous.com",
-      referer: init?.referer || postUrl,
-      "content-type": init?.contentType || "application/json",
-    },
-    body:
-      init?.body ||
-      JSON.stringify({
-        postSlug: postUrl,
-        postUrl,
-        postTitle: "Forecast",
-        visitorId,
-      }),
-  });
-}
-
-test("visit analytics counts unique visitors once and keeps total pageviews", async () => {
-  const database = new MockD1Database();
-  const env = createEnv(database);
-  const postUrl = "https://chaonous.com/posts/btc-analysis/";
-
-  const firstResponse = await onVisitPost({
-    env,
-    request: createVisitRequest(postUrl, "visitor-1"),
-  });
-  const secondResponse = await onVisitPost({
-    env,
-    request: createVisitRequest(postUrl, "visitor-1"),
-  });
-  const thirdResponse = await onVisitPost({
-    env,
-    request: createVisitRequest(postUrl, "visitor-2"),
-  });
-  const statsResponse = await onPageStatsGet({
-    env,
-    request: new Request(
-      `https://chaonous.com/api/analytics/pv?postSlug=${encodeURIComponent(postUrl)}`,
-    ),
-  });
-
-  assert.equal(firstResponse.status, 200);
-  assert.equal(secondResponse.status, 200);
-  assert.equal(thirdResponse.status, 200);
-  assert.equal(statsResponse.status, 200);
-
-  const statsPayload = await statsResponse.json();
-  assert.equal(statsPayload.pageviews, 3);
-  assert.equal(statsPayload.visits, 2);
-  assert.equal(database.pageVisitors.length, 2);
-  assert.equal(database.pageStats[0]?.pageviews, 3);
-  assert.equal(database.pageStats[0]?.visits, 2);
-  assert.equal(database.pageDailyStats[0]?.pageviews, 3);
-  assert.equal(database.pageDailyStats[0]?.visits, 2);
-  assert.ok(
-    database.pageVisitors[0]?.last_seen_at >=
-      database.pageVisitors[0]?.first_seen_at,
-  );
-});
-
-test("visit analytics rejects malformed JSON without touching stored rows", async () => {
-  const database = new MockD1Database();
-  const response = await onVisitPost({
-    env: createEnv(database),
-    request: createVisitRequest(
-      "https://chaonous.com/posts/btc-analysis/",
-      "visitor-1",
-      {
-        body: "{",
-      },
-    ),
-  });
-
-  assert.equal(response.status, 400);
-  assert.equal(database.pageStats.length, 0);
-  assert.equal(database.pageVisitors.length, 0);
-  assert.equal(database.pageDailyStats.length, 0);
-});
-
-test("visit analytics rejects mismatched referers", async () => {
-  const database = new MockD1Database();
-  const response = await onVisitPost({
-    env: createEnv(database),
-    request: createVisitRequest(
-      "https://chaonous.com/posts/btc-analysis/",
-      "visitor-1",
-      {
-        referer: "https://chaonous.com/posts/other-post/",
-      },
-    ),
-  });
-
-  assert.equal(response.status, 400);
-  assert.equal(database.pageStats.length, 0);
-  assert.equal(database.pageVisitors.length, 0);
-});
-
-test("visit analytics still succeeds when page_daily_stats is unavailable", async () => {
-  const database = new MockD1Database();
-  database.missingPageDailyStatsTable = true;
-  const env = createEnv(database);
-  const postUrl = "https://chaonous.com/posts/btc-analysis/";
-
-  const response = await onVisitPost({
-    env,
-    request: createVisitRequest(postUrl, "visitor-1"),
-  });
-  const statsResponse = await onPageStatsGet({
-    env,
-    request: new Request(
-      `https://chaonous.com/api/analytics/pv?postSlug=${encodeURIComponent(postUrl)}`,
-    ),
-  });
-
-  assert.equal(response.status, 200);
-  assert.equal(statsResponse.status, 200);
-
-  const statsPayload = await statsResponse.json();
-  assert.equal(statsPayload.pageviews, 1);
-  assert.equal(statsPayload.visits, 1);
-  assert.equal(database.pageStats[0]?.pageviews, 1);
-  assert.equal(database.pageStats[0]?.visits, 1);
-  assert.equal(database.pageDailyStats.length, 0);
-});
-
-test("page stats endpoint rejects cross-origin post slugs", async () => {
-  const database = new MockD1Database();
-  const response = await onPageStatsGet({
-    env: createEnv(database),
-    request: new Request(
-      "https://chaonous.com/api/analytics/pv?postSlug=https%3A%2F%2Fevil.example%2Fpost",
-    ),
-  });
-
-  assert.equal(response.status, 400);
-});
 
 test("admin analytics trend reads from page_daily_stats and zero-fills missing days", async () => {
   const database = new MockD1Database();
@@ -516,9 +243,7 @@ test("admin analytics trend reads from page_daily_stats and zero-fills missing d
   assert.equal(payload.pages[0]?.postTitle, "BTC");
   assert.equal(payload.recentTrend.length, 14);
   assert.deepEqual(
-    payload.recentTrend.find(
-      (entry: { day: string }) => entry.day === olderDay,
-    ),
+    payload.recentTrend.find((entry: { day: string }) => entry.day === olderDay),
     {
       day: olderDay,
       pageviews: 3,

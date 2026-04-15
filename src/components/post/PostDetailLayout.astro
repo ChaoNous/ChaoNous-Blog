@@ -106,9 +106,6 @@ const { entry, headings = [], jsonLd, canonicalUrl, remarkPluginFrontmatter, } =
 					published={entry.data.published}
 					updated={entry.data.updated}
 					category={entry.data.category || undefined}
-					statsSlug={canonicalUrl}
-					statsUrl={canonicalUrl}
-					statsTitle={entry.data.title}
 				/>
 				{
 					(!entry.data.image ||

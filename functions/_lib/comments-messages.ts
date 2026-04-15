@@ -56,9 +56,5 @@ export const COMMENT_MESSAGES = {
   adminOverviewError: "\u540E\u53F0\u6982\u89C8\u8BFB\u53D6\u5931\u8D25\u3002",
   adminCommentsError: "\u8BC4\u8BBA\u540E\u53F0\u8BFB\u53D6\u5931\u8D25\u3002",
   adminAnalyticsError: "\u8BBF\u95EE\u7EDF\u8BA1\u8BFB\u53D6\u5931\u8D25\u3002",
-  invalidAnalyticsPayload:
-    "\u8BBF\u95EE\u7EDF\u8BA1\u6570\u636E\u65E0\u6548\u3002",
-  analyticsWriteError: "\u8BBF\u95EE\u7EDF\u8BA1\u5199\u5165\u5931\u8D25\u3002",
-  analyticsReadError: "\u8BBF\u95EE\u7EDF\u8BA1\u8BFB\u53D6\u5931\u8D25\u3002",
   bulkDeleteInProgress: "\u6B63\u5728\u6267\u884C\u6279\u91CF\u5220\u9664...",
 } as const;

@@ -100,14 +100,6 @@ export const zh_CN: Translation = {
   [Key.shareOnSocialDescription]:
     "如果这篇文章对你有帮助，欢迎分享给更多人。",
 
-  [Key.profileStatsLoading]: "统计加载中...",
-  [Key.profileStatsPageViews]: "浏览量",
-  [Key.profileStatsVisits]: "访问次数",
-  [Key.profileStatsUnavailable]: "统计不可用",
-
-  [Key.pageViewsLoading]: "统计加载中...",
-  [Key.pageViewsUnavailable]: "统计不可用",
-
   [Key.navLinks]: "链接",
   [Key.navMy]: "我的",
   [Key.navAbout]: "关于",
