@@ -1,15 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
 import { profileConfig } from "../../config";
-import I18nKey from "../../i18n/i18nKey";
-import { i18n } from "../../i18n/translation";
 import { url } from "../../utils/url-utils";
 import ImageWrapper from "../misc/ImageWrapper.astro";
-
-const isHomePage = Astro.url.pathname === "/";
-const profilePageViewsLabel = i18n(I18nKey.profileStatsPageViews);
-const profileVisitsLabel = i18n(I18nKey.profileStatsVisits);
-const profileStatsPlaceholder = `${profilePageViewsLabel} -- · ${profileVisitsLabel} --`;
 ---
 
 <div class="card-base content-panel-card p-3">
@@ -93,32 +86,6 @@ const profileStatsPlaceholder = `${profilePageViewsLabel} -- · ${profileVisitsL
         )
       }
     </div>
-
-    {
-      !isHomePage && (
-        <div
-          class="site-stats-container"
-          data-page-views-label={profilePageViewsLabel}
-          data-visits-label={profileVisitsLabel}
-          data-unavailable-label={i18n(I18nKey.profileStatsUnavailable)}
-          aria-live="polite"
-        >
-          <hr class="my-2 border-none transition-colors duration-150" />
-          <div
-            class="text-base leading-6 text-50 mt-2 text-center transition-colors duration-150"
-          >
-            <Icon
-              name="fa7-solid:eye"
-              class="inline-block mr-1 text-50 text-base align-middle"
-            />
-            <span
-              class="site-stats-display inline-flex min-w-[14rem] justify-center tabular-nums"
-              >{profileStatsPlaceholder}</span
-            >
-          </div>
-        </div>
-      )
-    }
   </div>
 </div>
 

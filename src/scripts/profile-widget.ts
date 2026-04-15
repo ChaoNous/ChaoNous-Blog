@@ -132,68 +132,6 @@ function initTypewritersWhenIdle(): void {
   }, 1800);
 }
 
-async function fetchSiteStats(container: HTMLElement): Promise<void> {
-  const unavailableLabel = container.dataset.unavailableLabel || "Unavailable";
-  const pageViewsLabel = container.dataset.pageViewsLabel || "Views";
-  const visitsLabel = container.dataset.visitsLabel || "Visits";
-  const summaryText = (pageViews: number, visits: number) =>
-    `${pageViewsLabel} ${pageViews} · ${visitsLabel} ${visits}`;
-
-  try {
-    const response = await fetch("/api/analytics/site");
-    if (!response.ok) {
-      throw new Error(`analytics status ${response.status}`);
-    }
-
-    const stats = await response.json();
-    const pageViews = stats.pageviews || 0;
-    const visits = stats.visits || 0;
-
-    container.querySelectorAll(".site-stats-display").forEach((element) => {
-      element.textContent = summaryText(pageViews, visits);
-    });
-  } catch (error) {
-    console.warn("Error fetching site stats:", error);
-    container.querySelectorAll(".site-stats-display").forEach((element) => {
-      element.textContent = unavailableLabel;
-    });
-  }
-}
-
-function fetchSiteStatsWhenVisible(): () => void {
-  const container = document.querySelector(".site-stats-container");
-  if (!(container instanceof HTMLElement)) {
-    return () => {};
-  }
-
-  let fetched = false;
-  const runFetch = (): void => {
-    if (fetched) return;
-    fetched = true;
-    scheduleIdleTask(() => {
-      void fetchSiteStats(container);
-    }, 600);
-  };
-
-  if (!("IntersectionObserver" in window)) {
-    runFetch();
-    return () => {};
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        runFetch();
-        observer.disconnect();
-      }
-    },
-    { rootMargin: "160px 0px" },
-  );
-
-  observer.observe(container);
-  return () => observer.disconnect();
-}
-
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTypewritersWhenIdle, {
     once: true,
@@ -213,14 +151,5 @@ registerPageScript("profile-bio-typewriter", {
     return () => {
       destroyTypewriters();
     };
-  },
-});
-
-registerPageScript("profile-site-stats", {
-  shouldRun() {
-    return document.querySelector(".site-stats-container") !== null;
-  },
-  init() {
-    return fetchSiteStatsWhenVisible();
   },
 });

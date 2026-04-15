@@ -4,6 +4,7 @@ import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import { formatDateToYYYYMMDD } from "../utils/date-utils";
 import { getCategoryUrl } from "../utils/url-utils";
+
 export interface Props {
   published: Date;
   updated?: Date;
@@ -17,23 +18,16 @@ export interface Props {
   words?: number;
   showWordCount?: boolean;
 }
+
 const {
   published,
   updated,
   category,
   hideUpdateDate,
-  isHome,
   className = "",
-  statsSlug,
-  statsUrl,
-  statsTitle,
   words,
   showWordCount = false,
 } = Astro.props;
-const pageViewsLabel = i18n(I18nKey.profileStatsPageViews);
-const visitsLabel = i18n(I18nKey.profileStatsVisits);
-const pageViewsUnavailableLabel = i18n(I18nKey.pageViewsUnavailable);
-const pageViewsPlaceholder = `${pageViewsLabel} -- · ${visitsLabel} --`;
 ---
 
 <div
@@ -94,31 +88,6 @@ const pageViewsPlaceholder = `${pageViewsLabel} -- · ${visitsLabel} --`;
       </div>
     )
   }
-
-  {
-    !isHome && statsSlug && statsUrl && (
-      <div
-        class="flex items-center site-page-views"
-        data-post-slug={statsSlug}
-        data-post-url={statsUrl}
-        data-post-title={statsTitle || ""}
-        data-page-views-label={pageViewsLabel}
-        data-visits-label={visitsLabel}
-        data-unavailable-label={pageViewsUnavailableLabel}
-        aria-live="polite"
-      >
-        <div class="meta-icon">
-          <Icon
-            name="material-symbols:visibility-outline-rounded"
-            class="text-xl"
-          />
-        </div>
-        <span class="text-50 font-medium page-views-display inline-block min-w-[12.5rem] tabular-nums">
-          {pageViewsPlaceholder}
-        </span>
-      </div>
-    )
-  }
 </div>
 
 <style>
@@ -158,9 +127,3 @@ const pageViewsPlaceholder = `${pageViewsLabel} -- · ${visitsLabel} --`;
     }
   }
 </style>
-
-{
-  !isHome && statsSlug && statsUrl && (
-    <script>import "../scripts/post-meta-stats.ts";</script>
-  )
-}
