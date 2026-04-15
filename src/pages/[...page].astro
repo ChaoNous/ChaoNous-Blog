@@ -1,6 +1,5 @@
 ---
 import type { GetStaticPaths } from "astro";
-import HomeHero from "../components/HomeHero.astro";
 import Pagination from "../components/control/Pagination.astro";
 import PostPage from "../components/PostPage.astro";
 import { PAGE_SIZE } from "../constants/constants";
@@ -15,7 +14,6 @@ const len = page.data.length;
 ---
 
 <MainGridLayout>
-	{page.currentPage === 1 && <HomeHero />}
 	<PostPage page={page}></PostPage>
 	<Pagination
 		class="mx-auto onload-animation"
