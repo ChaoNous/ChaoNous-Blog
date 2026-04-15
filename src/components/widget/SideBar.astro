@@ -44,27 +44,39 @@ const desktopStickyComponents = widgetManager.getComponentsByPosition(
   "desktop",
 );
 
+const visibleMobileTopComponents = widgetManager.getVisibleComponentsForPage(
+  mobileTopComponents,
+  isPostPage,
+);
+const visibleMobileStickyComponents = widgetManager.getVisibleComponentsForPage(
+  mobileStickyComponents,
+  isPostPage,
+);
+const visibleTabletTopComponents = widgetManager.getVisibleComponentsForPage(
+  tabletTopComponents,
+  isPostPage,
+);
+const visibleTabletStickyComponents = widgetManager.getVisibleComponentsForPage(
+  tabletStickyComponents,
+  isPostPage,
+);
+const visibleDesktopTopComponents = widgetManager.getVisibleComponentsForPage(
+  desktopTopComponents,
+  isPostPage,
+);
+const visibleDesktopStickyComponents =
+  widgetManager.getVisibleComponentsForPage(
+    desktopStickyComponents,
+    isPostPage,
+  );
+
 type RenderGroup = {
   components: typeof mobileTopComponents;
   wrapperClass: string;
 };
 
 function normalizeComponentsForPage(components: typeof mobileTopComponents) {
-  return components.filter((component) => {
-    if (
-      component.type === "profile" ||
-      component.type === "categories" ||
-      component.type === "site-stats"
-    ) {
-      return !isPostPage;
-    }
-
-    if (component.type === "card-toc") {
-      return isPostPage;
-    }
-
-    return true;
-  });
+  return widgetManager.getVisibleComponentsForPage(components, isPostPage);
 }
 
 function sameComponents(
@@ -158,16 +170,25 @@ const stickyGroups = buildResponsiveGroups(
   class:list={[className, "sidebar-root flex flex-col w-full pt-0"]}
   data-breakpoint-mobile={String(widgetManager.getBreakpoints().mobile)}
   data-breakpoint-tablet={String(widgetManager.getBreakpoints().tablet)}
-  data-show-mobile={widgetManager.shouldShowSidebar("mobile") ? "true" : "false"}
-  data-show-tablet={widgetManager.shouldShowSidebar("tablet") ? "true" : "false"}
-  data-show-desktop={widgetManager.shouldShowSidebar("desktop") ? "true" : "false"}
-  data-has-mobile={mobileTopComponents.length > 0 || mobileStickyComponents.length > 0
+  data-show-mobile={widgetManager.shouldShowSidebar("mobile")
     ? "true"
     : "false"}
-  data-has-tablet={tabletTopComponents.length > 0 || tabletStickyComponents.length > 0
+  data-show-tablet={widgetManager.shouldShowSidebar("tablet")
     ? "true"
     : "false"}
-  data-has-desktop={desktopTopComponents.length > 0 || desktopStickyComponents.length > 0
+  data-show-desktop={widgetManager.shouldShowSidebar("desktop")
+    ? "true"
+    : "false"}
+  data-has-mobile={visibleMobileTopComponents.length > 0 ||
+  visibleMobileStickyComponents.length > 0
+    ? "true"
+    : "false"}
+  data-has-tablet={visibleTabletTopComponents.length > 0 ||
+  visibleTabletStickyComponents.length > 0
+    ? "true"
+    : "false"}
+  data-has-desktop={visibleDesktopTopComponents.length > 0 ||
+  visibleDesktopStickyComponents.length > 0
     ? "true"
     : "false"}
 >

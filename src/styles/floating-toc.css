@@ -130,6 +130,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .floating-toc-wrapper {
+    display: none !important;
+  }
+}
+
 .floating-toc-item {
   display: flex;
   align-items: center;

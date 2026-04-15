@@ -8,57 +8,87 @@ import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
 import { widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
+
+function hasVisibleComponents(
+  topComponents: ReturnType<typeof widgetManager.getComponentsByPosition>,
+  stickyComponents: ReturnType<typeof widgetManager.getComponentsByPosition>,
+  isPostPage: boolean,
+) {
+  return (
+    widgetManager.getVisibleComponentsForPage(topComponents, isPostPage)
+      .length > 0 ||
+    widgetManager.getVisibleComponentsForPage(stickyComponents, isPostPage)
+      .length > 0
+  );
+}
+
 const tocMode = siteConfig.toc.mode || "float";
 const isFloatTOC = tocMode === "float";
 const isSidebarTOC = tocMode === "sidebar";
 interface Props {
-    title?: string;
-    description?: string;
-    lang?: string;
-    setOGTypeArticle?: boolean;
-    postSlug?: string;
-    canonicalUrl?: string;
-    headings?: MarkdownHeading[];
-    isPostPage?: boolean;
+  title?: string;
+  description?: string;
+  lang?: string;
+  setOGTypeArticle?: boolean;
+  postSlug?: string;
+  canonicalUrl?: string;
+  headings?: MarkdownHeading[];
+  isPostPage?: boolean;
 }
-const { title, description, lang, setOGTypeArticle, postSlug, canonicalUrl, headings = [], isPostPage = false, } = Astro.props;
+const {
+  title,
+  description,
+  lang,
+  setOGTypeArticle,
+  postSlug,
+  canonicalUrl,
+  headings = [],
+  isPostPage = false,
+} = Astro.props;
 const hasTOCHeadings = headings.length > 0;
-const hasLeftSidebarComponents = widgetManager.getComponentsByPosition("top", "left", "desktop").length > 0 ||
-    widgetManager.getComponentsByPosition("sticky", "left", "desktop").length >
-        0;
-const hasMobileDrawerComponents = widgetManager.getComponentsByPosition("top", "drawer", "mobile").length > 0 ||
-    widgetManager.getComponentsByPosition("sticky", "drawer", "mobile").length >
-        0;
-const hasTabletLeftSidebarComponents = widgetManager.getComponentsByPosition("top", "left", "tablet").length > 0 ||
-    widgetManager.getComponentsByPosition("sticky", "left", "tablet").length > 0;
+const hasLeftSidebarComponents = hasVisibleComponents(
+  widgetManager.getComponentsByPosition("top", "left", "desktop"),
+  widgetManager.getComponentsByPosition("sticky", "left", "desktop"),
+  isPostPage,
+);
+const hasMobileDrawerComponents = hasVisibleComponents(
+  widgetManager.getComponentsByPosition("top", "drawer", "mobile"),
+  widgetManager.getComponentsByPosition("sticky", "drawer", "mobile"),
+  isPostPage,
+);
+const hasTabletLeftSidebarComponents = hasVisibleComponents(
+  widgetManager.getComponentsByPosition("top", "left", "tablet"),
+  widgetManager.getComponentsByPosition("sticky", "left", "tablet"),
+  isPostPage,
+);
 const mobileShowSidebar = hasMobileDrawerComponents;
 const tabletShowSidebar = hasTabletLeftSidebarComponents;
 const desktopShowLeftSidebar = hasLeftSidebarComponents;
 const desktopGridCols = desktopShowLeftSidebar
-    ? "lg:grid-cols-[21rem_1fr]"
-    : "lg:grid-cols-1";
+  ? "lg:grid-cols-[21rem_1fr]"
+  : "lg:grid-cols-1";
 const gridCols = `
   grid-cols-1
   ${desktopGridCols}
 `
-    .trim()
-    .replace(/\s+/g, " ");
+  .trim()
+  .replace(/\s+/g, " ");
 const sidebarClass = `
   ${mobileShowSidebar && hasMobileDrawerComponents ? "block" : "hidden"}
   ${desktopShowLeftSidebar ? "lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-80 lg:col-start-1 lg:col-end-2 lg:min-w-0" : "lg:hidden"}
 `
-    .trim()
-    .replace(/\s+/g, " ");
+  .trim()
+  .replace(/\s+/g, " ");
 const desktopMainPos = desktopShowLeftSidebar
-    ? "lg:col-start-2 lg:col-end-3"
-    : "lg:col-span-1";
+  ? "lg:col-start-2 lg:col-end-3"
+  : "lg:col-span-1";
 const mainContentClass = `
   transition-swup-fade overflow-hidden w-full min-w-0
   col-span-1 row-start-1 row-end-2
   ${desktopShowLeftSidebar ? desktopMainPos : "lg:col-span-1"}
 `
-    .trim()
-    .replace(/\s+/g, " ");
+  .trim()
+  .replace(/\s+/g, " ");
 ---
 
 <Layout
@@ -77,7 +107,7 @@ const mainContentClass = `
     }}
   >
     window.__mainGridRuntimeConfig = {
-        navbarTransparentMode,
+      navbarTransparentMode,
     };
   </script>
 
@@ -96,10 +126,7 @@ const mainContentClass = `
     </div>
   </div>
 
-  <div
-    id="main-content-shell"
-    class="relative w-full z-30 pointer-events-none"
-  >
+  <div id="main-content-shell" class="relative w-full z-30 pointer-events-none">
     <div class="relative max-w-(--page-width) mx-auto pointer-events-auto">
       <div
         id="main-grid"
@@ -107,7 +134,9 @@ const mainContentClass = `
         data-layout-mode="list"
       >
         {
-          (mobileShowSidebar || tabletShowSidebar || desktopShowLeftSidebar) && (
+          (mobileShowSidebar ||
+            tabletShowSidebar ||
+            desktopShowLeftSidebar) && (
             <div id="left-sidebar-wrapper" class="contents">
               <div
                 id="left-sidebar-column"
@@ -131,8 +160,6 @@ const mainContentClass = `
           class={`${mainContentClass}`}
         >
           <div id="content-wrapper" class="onload-animation">
-            
-            
             <slot />
             <div class="footer col-span-full onload-animation hidden lg:block">
               <Footer />
@@ -142,7 +169,7 @@ const mainContentClass = `
             siteConfig.toc.enable &&
               isFloatTOC &&
               hasTOCHeadings &&
-              !isPostPage && <FloatingTOC />
+              isPostPage && <FloatingTOC />
           }
         </main>
 
@@ -184,7 +211,6 @@ const mainContentClass = `
     )
   }
 
-  
   {
     (!siteConfig.toc.enable || isFloatTOC || !hasTOCHeadings) && (
       <div id="toc-container" class="hidden" />

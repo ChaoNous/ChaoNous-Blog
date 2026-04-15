@@ -133,6 +133,27 @@ export class WidgetManager {
     return this.config.responsive.breakpoints;
   }
 
+  getVisibleComponentsForPage(
+    components: WidgetComponentConfig[],
+    isPostPage: boolean,
+  ): WidgetComponentConfig[] {
+    return components.filter((component) => {
+      if (
+        component.type === "profile" ||
+        component.type === "categories" ||
+        component.type === "site-stats"
+      ) {
+        return !isPostPage;
+      }
+
+      if (component.type === "card-toc") {
+        return isPostPage;
+      }
+
+      return true;
+    });
+  }
+
   updateConfig(newConfig: Partial<SidebarLayoutConfig>): void {
     this.config = { ...this.config, ...newConfig };
   }
