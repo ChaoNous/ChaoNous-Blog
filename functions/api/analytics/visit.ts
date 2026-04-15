@@ -1,72 +1,93 @@
-import { badRequest, json, serverError, type Env } from "../../_lib/comments";
-
-type VisitPayload = {
-	postSlug?: string;
-	postUrl?: string;
-	postTitle?: string;
-	visitorId?: string;
-};
+import {
+  badRequest,
+  buildAnalyticsDayKey,
+  COMMENT_MESSAGES,
+  ensureSameOrigin,
+  json,
+  readJsonBody,
+  serverError,
+  type Env,
+  validateAnalyticsVisit,
+} from "../../_lib/comments";
 
 export const onRequestPost = async ({
-	env,
-	request,
+  env,
+  request,
 }: {
-	env: Env;
-	request: Request;
+  env: Env;
+  request: Request;
 }) => {
-	try {
-		const body = (await request.json()) as VisitPayload;
-		const postSlug = String(body.postSlug || "").trim();
-		const postUrl = String(body.postUrl || "").trim();
-		const postTitle = String(body.postTitle || "").trim();
-		const visitorId = String(body.visitorId || "").trim();
+  try {
+    const sameOriginResponse = ensureSameOrigin(request);
+    if (sameOriginResponse) {
+      return sameOriginResponse;
+    }
 
-		if (!postSlug || !postUrl || !visitorId) {
-			return badRequest("缺少统计参数。");
-		}
+    const contentType = request.headers.get("content-type") || "";
+    if (!contentType.toLowerCase().includes("application/json")) {
+      return badRequest(COMMENT_MESSAGES.invalidContentType);
+    }
 
-		const now = Date.now();
-		const existing = await env.COMMENTS_DB.prepare(
-			`SELECT visitor_id
-			 FROM page_visitors
-			 WHERE post_slug = ?1 AND visitor_id = ?2`,
-		)
-			.bind(postSlug, visitorId)
-			.first<{ visitor_id: string }>();
+    const parsedBody = await readJsonBody(request);
+    if (!parsedBody.ok) {
+      return parsedBody.response;
+    }
 
-		await env.COMMENTS_DB.prepare(
-			`INSERT INTO page_stats (post_slug, post_url, post_title, pageviews, visits, updated_at)
-			 VALUES (?1, ?2, ?3, 1, ?4, ?5)
-			 ON CONFLICT(post_slug) DO UPDATE SET
-			   post_url = excluded.post_url,
-			   post_title = excluded.post_title,
-			   pageviews = page_stats.pageviews + 1,
-			   visits = page_stats.visits + excluded.visits,
-			   updated_at = excluded.updated_at`,
-		)
-			.bind(postSlug, postUrl, postTitle, existing ? 0 : 1, now)
-			.run();
+    const validated = validateAnalyticsVisit(parsedBody.value, request);
+    if (!validated.ok) {
+      return badRequest(validated.message);
+    }
 
-		if (existing) {
-			await env.COMMENTS_DB.prepare(
-				`UPDATE page_visitors
+    const { postSlug, postUrl, postTitle, visitorId } = validated.value;
+    const now = Date.now();
+    const day = buildAnalyticsDayKey(now);
+
+    const insertedVisitor = await env.COMMENTS_DB.prepare(
+      `INSERT OR IGNORE INTO page_visitors (post_slug, visitor_id, first_seen_at, last_seen_at)
+			 VALUES (?1, ?2, ?3, ?4)`,
+    )
+      .bind(postSlug, visitorId, now, now)
+      .run();
+    const isNewVisitor = Number(insertedVisitor.meta.changes || 0) > 0;
+
+    if (!isNewVisitor) {
+      await env.COMMENTS_DB.prepare(
+        `UPDATE page_visitors
 				 SET last_seen_at = ?3
 				 WHERE post_slug = ?1 AND visitor_id = ?2`,
-			)
-				.bind(postSlug, visitorId, now)
-				.run();
-		} else {
-			await env.COMMENTS_DB.prepare(
-				`INSERT INTO page_visitors (post_slug, visitor_id, first_seen_at, last_seen_at)
-				 VALUES (?1, ?2, ?3, ?4)`,
-			)
-				.bind(postSlug, visitorId, now, now)
-				.run();
-		}
+      )
+        .bind(postSlug, visitorId, now)
+        .run();
+    }
 
-		return json({ ok: true });
-	} catch (error) {
-		console.error("analytics:visit", error);
-		return serverError("统计写入失败。");
-	}
+    await Promise.all([
+      env.COMMENTS_DB.prepare(
+        `INSERT INTO page_stats (post_slug, post_url, post_title, pageviews, visits, updated_at)
+				 VALUES (?1, ?2, ?3, 1, ?4, ?5)
+				 ON CONFLICT(post_slug) DO UPDATE SET
+				   post_url = excluded.post_url,
+				   post_title = excluded.post_title,
+				   pageviews = page_stats.pageviews + 1,
+				   visits = page_stats.visits + excluded.visits,
+				   updated_at = excluded.updated_at`,
+      )
+        .bind(postSlug, postUrl, postTitle, isNewVisitor ? 1 : 0, now)
+        .run(),
+      env.COMMENTS_DB.prepare(
+        `INSERT INTO page_daily_stats (post_slug, day, pageviews, visits, updated_at)
+				 VALUES (?1, ?2, 1, ?3, ?4)
+				 ON CONFLICT(post_slug, day) DO UPDATE SET
+				   pageviews = page_daily_stats.pageviews + 1,
+				   visits = page_daily_stats.visits + excluded.visits,
+				   updated_at = excluded.updated_at`,
+      )
+        .bind(postSlug, day, isNewVisitor ? 1 : 0, now)
+        .run(),
+    ]);
+
+    return json({ ok: true });
+  } catch (error) {
+    console.error("analytics:visit", error);
+    return serverError(COMMENT_MESSAGES.analyticsWriteError);
+  }
 };

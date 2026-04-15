@@ -22,7 +22,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "type-check": "tsc --noEmit",
-    "test": "node --test ./tests/comments-threading.test.mjs ./tests/comments-antiabuse.test.mjs ./tests/post-sort.test.mjs ./tests/post-routes.test.mjs ./tests/post-metadata.test.mjs && tsx --test ./tests/comments-api.integration.test.ts ./tests/page-lifecycle.test.ts ./tests/atom-feed.test.ts",
+    "test": "node --test ./tests/comments-threading.test.mjs ./tests/comments-antiabuse.test.mjs ./tests/post-sort.test.mjs ./tests/post-routes.test.mjs ./tests/post-metadata.test.mjs && tsx --test ./tests/comments-api.integration.test.ts ./tests/page-lifecycle.test.ts ./tests/atom-feed.test.ts ./tests/analytics-api.integration.test.ts",
     "verify:content": "node scripts/verify-post-metadata.mjs",
     "verify": "pnpm run test && pnpm run verify:content && pnpm run type-check && pnpm run check",
     "github:commit-files": "node scripts/github-commit-files.mjs",
