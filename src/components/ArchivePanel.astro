@@ -1,0 +1,130 @@
+---
+import { siteConfig } from "@/config";
+import type { PostForList } from "@utils/content-utils";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+
+interface Props {
+  sortedPosts: PostForList[];
+}
+
+type ArchiveGroup = {
+  year: number;
+  posts: PostForList[];
+};
+
+const { sortedPosts = [] } = Astro.props;
+
+const groupsByYear = new Map<number, PostForList[]>();
+
+for (const post of sortedPosts) {
+  const year = post.data.published.getFullYear();
+  const yearPosts = groupsByYear.get(year) ?? [];
+  yearPosts.push(post);
+  groupsByYear.set(year, yearPosts);
+}
+
+const groups: ArchiveGroup[] = [...groupsByYear.entries()]
+  .sort((left, right) => right[0] - left[0])
+  .map(([year, yearPosts]) => ({
+    year,
+    posts: yearPosts,
+  }));
+
+const isChineseSite = (siteConfig.lang || "").toLowerCase().startsWith("zh");
+const emptyStateText = isChineseSite
+  ? "\u5f53\u524d\u7b5b\u9009\u6761\u4ef6\u4e0b\u6682\u65e0\u6587\u7ae0"
+  : "No posts match the current filter.";
+const postCountLabel = i18n(I18nKey.postCount);
+const postsCountLabel = i18n(I18nKey.postsCount);
+
+function formatDate(date: Date) {
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+
+  return `${month}-${day}`;
+}
+
+function getCountLabel(count: number) {
+  return count === 1 ? postCountLabel : postsCountLabel;
+}
+
+function getPostHref(post: PostForList) {
+  return post.url || `/posts/${post.id}/`;
+}
+
+function normalizeCategory(category: string | null | undefined) {
+  return category?.trim() ?? "";
+}
+---
+
+<div
+  id="archive-panel"
+  class="card-base px-8 py-6"
+  data-post-count-label={postCountLabel}
+  data-posts-count-label={postsCountLabel}
+>
+  {
+    groups.map((group) => (
+      <section data-archive-group data-year={String(group.year)}>
+        <div class="flex flex-row w-full items-center h-15">
+          <div class="w-[15%] md:w-[10%] transition text-2xl font-bold text-right text-75">
+            {group.year}
+          </div>
+          <div class="w-[15%] md:w-[10%]">
+            <div
+              class="h-3 w-3 bg-none rounded-full outline outline-(--primary) mx-auto -outline-offset-2 z-50 outline-3"
+            ></div>
+          </div>
+          <div
+            data-archive-count
+            class="w-[70%] md:w-[80%] transition text-left text-50"
+          >
+            {group.posts.length}
+            {getCountLabel(group.posts.length)}
+          </div>
+        </div>
+
+        {
+          group.posts.map((post) => {
+            const category = normalizeCategory(post.data.category);
+            const isUncategorized = category === "";
+
+            return (
+              <a
+                href={getPostHref(post)}
+                aria-label={post.data.title}
+                class="group btn-plain block! h-10 w-full rounded-lg"
+                data-archive-post
+                data-category={category}
+                data-uncategorized={isUncategorized ? "true" : "false"}
+              >
+                <div class="flex flex-row justify-start items-center h-full">
+                  <div class="w-[15%] md:w-[10%] transition text-sm text-right text-50">
+                    {formatDate(post.data.published)}
+                  </div>
+
+                  <div class="w-[15%] md:w-[10%] relative dash-line h-full flex items-center">
+                    <div
+                      class="transition-all mx-auto w-1 h-1 rounded group-hover:h-5 bg-[oklch(0.5_0.05_var(--hue))] group-hover:bg-(--primary) outline outline-4 z-50 outline-(--card-bg) group-hover:outline-(--btn-plain-bg-hover) group-active:outline-(--btn-plain-bg-active)"
+                    ></div>
+                  </div>
+
+                  <div
+                    class="w-[70%] md:w-[80%] text-left font-bold group-hover:translate-x-1 transition-all group-hover:text-(--primary) text-75 pr-8 whitespace-nowrap text-ellipsis overflow-hidden"
+                  >
+                    {post.data.title}
+                  </div>
+                </div>
+              </a>
+            );
+          })
+        }
+      </section>
+    ))
+  }
+
+  <p data-archive-empty class="hidden px-2 py-6 text-center text-50">
+    {emptyStateText}
+  </p>
+</div>
