@@ -2,7 +2,6 @@ import { sidebarLayoutConfig } from "../config";
 import type {
   SidebarLayoutConfig,
   WidgetComponentConfig,
-  WidgetComponentType,
 } from "../types/config";
 
 export class WidgetManager {
@@ -152,34 +151,6 @@ export class WidgetManager {
 
       return true;
     });
-  }
-
-  updateConfig(newConfig: Partial<SidebarLayoutConfig>): void {
-    this.config = { ...this.config, ...newConfig };
-  }
-
-  addComponentToLayout(
-    type: WidgetComponentType,
-    sidebar: "left" | "right" | "drawer" = "left",
-  ): void {
-    const list = this.config.components[sidebar];
-    if (list && !list.includes(type)) {
-      list.push(type);
-    }
-  }
-
-  removeComponentFromLayout(type: WidgetComponentType): void {
-    this.config.components.left = this.config.components.left.filter(
-      (t) => t !== type,
-    );
-    if (this.config.components.right) {
-      this.config.components.right = this.config.components.right.filter(
-        (t) => t !== type,
-      );
-    }
-    this.config.components.drawer = this.config.components.drawer.filter(
-      (t) => t !== type,
-    );
   }
 }
 

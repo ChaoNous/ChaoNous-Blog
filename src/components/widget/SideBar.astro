@@ -11,104 +11,73 @@ interface Props {
 
 const { class: className, headings, isPostPage = false } = Astro.props;
 
-const mobileTopComponents = widgetManager.getComponentsByPosition(
-  "top",
-  "drawer",
-  "mobile",
-);
-const mobileStickyComponents = widgetManager.getComponentsByPosition(
-  "sticky",
-  "drawer",
-  "mobile",
-);
-
-const tabletTopComponents = widgetManager.getComponentsByPosition(
-  "top",
-  "left",
-  "tablet",
-);
-const tabletStickyComponents = widgetManager.getComponentsByPosition(
-  "sticky",
-  "left",
-  "tablet",
-);
-
-const desktopTopComponents = widgetManager.getComponentsByPosition(
-  "top",
-  "left",
-  "desktop",
-);
-const desktopStickyComponents = widgetManager.getComponentsByPosition(
-  "sticky",
-  "left",
-  "desktop",
-);
-
-const visibleMobileTopComponents = widgetManager.getVisibleComponentsForPage(
-  mobileTopComponents,
-  isPostPage,
-);
-const visibleMobileStickyComponents = widgetManager.getVisibleComponentsForPage(
-  mobileStickyComponents,
-  isPostPage,
-);
-const visibleTabletTopComponents = widgetManager.getVisibleComponentsForPage(
-  tabletTopComponents,
-  isPostPage,
-);
-const visibleTabletStickyComponents = widgetManager.getVisibleComponentsForPage(
-  tabletStickyComponents,
-  isPostPage,
-);
-const visibleDesktopTopComponents = widgetManager.getVisibleComponentsForPage(
-  desktopTopComponents,
-  isPostPage,
-);
-const visibleDesktopStickyComponents =
-  widgetManager.getVisibleComponentsForPage(
-    desktopStickyComponents,
+function getVisibleComponents(
+  position: "top" | "sticky",
+  sidebar: "left" | "right" | "drawer",
+  deviceType: "mobile" | "tablet" | "desktop",
+) {
+  return widgetManager.getVisibleComponentsForPage(
+    widgetManager.getComponentsByPosition(position, sidebar, deviceType),
     isPostPage,
   );
+}
+
+const visibleMobileTopComponents = getVisibleComponents(
+  "top",
+  "drawer",
+  "mobile",
+);
+const visibleMobileStickyComponents = getVisibleComponents(
+  "sticky",
+  "drawer",
+  "mobile",
+);
+const visibleTabletTopComponents = getVisibleComponents(
+  "top",
+  "left",
+  "tablet",
+);
+const visibleTabletStickyComponents = getVisibleComponents(
+  "sticky",
+  "left",
+  "tablet",
+);
+const visibleDesktopTopComponents = getVisibleComponents(
+  "top",
+  "left",
+  "desktop",
+);
+const visibleDesktopStickyComponents = getVisibleComponents(
+  "sticky",
+  "left",
+  "desktop",
+);
 
 type RenderGroup = {
-  components: typeof mobileTopComponents;
+  components: typeof visibleMobileTopComponents;
   wrapperClass: string;
 };
 
-function normalizeComponentsForPage(components: typeof mobileTopComponents) {
-  return widgetManager.getVisibleComponentsForPage(components, isPostPage);
-}
-
 function sameComponents(
-  left: typeof mobileTopComponents,
-  right: typeof mobileTopComponents,
+  left: typeof visibleMobileTopComponents,
+  right: typeof visibleMobileTopComponents,
 ) {
-  return (
-    JSON.stringify(normalizeComponentsForPage(left)) ===
-    JSON.stringify(normalizeComponentsForPage(right))
-  );
+  return JSON.stringify(left) === JSON.stringify(right);
 }
 
 function buildResponsiveGroups(
-  mobileComponents: typeof mobileTopComponents,
-  tabletComponents: typeof mobileTopComponents,
-  desktopComponents: typeof mobileTopComponents,
+  mobileComponents: typeof visibleMobileTopComponents,
+  tabletComponents: typeof visibleMobileTopComponents,
+  desktopComponents: typeof visibleMobileTopComponents,
 ): RenderGroup[] {
-  const normalizedMobileComponents =
-    normalizeComponentsForPage(mobileComponents);
-  const normalizedTabletComponents =
-    normalizeComponentsForPage(tabletComponents);
-  const normalizedDesktopComponents =
-    normalizeComponentsForPage(desktopComponents);
-
   if (
-    normalizedMobileComponents.length > 0 &&
-    sameComponents(normalizedMobileComponents, normalizedTabletComponents) &&
-    sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
+    mobileComponents.length > 0 &&
+    sameComponents(mobileComponents, tabletComponents) &&
+    sameComponents(tabletComponents, desktopComponents)
   ) {
     return [
       {
-        components: normalizedMobileComponents,
+        components: mobileComponents,
         wrapperClass: "flex flex-col w-full gap-3",
       },
     ];
@@ -116,35 +85,35 @@ function buildResponsiveGroups(
 
   const groups: RenderGroup[] = [];
 
-  if (normalizedMobileComponents.length > 0) {
+  if (mobileComponents.length > 0) {
     groups.push({
-      components: normalizedMobileComponents,
+      components: mobileComponents,
       wrapperClass: "flex flex-col w-full gap-3 lg:hidden",
     });
   }
 
   if (
-    normalizedTabletComponents.length > 0 &&
-    sameComponents(normalizedTabletComponents, normalizedDesktopComponents)
+    tabletComponents.length > 0 &&
+    sameComponents(tabletComponents, desktopComponents)
   ) {
     groups.push({
-      components: normalizedTabletComponents,
+      components: tabletComponents,
       wrapperClass: "hidden lg:flex flex-col w-full gap-3",
     });
     return groups;
   }
 
-  if (normalizedTabletComponents.length > 0) {
+  if (tabletComponents.length > 0) {
     groups.push({
-      components: normalizedTabletComponents,
+      components: tabletComponents,
       wrapperClass:
         "sidebar-content hidden lg:flex xl:hidden flex-col w-full gap-3",
     });
   }
 
-  if (normalizedDesktopComponents.length > 0) {
+  if (desktopComponents.length > 0) {
     groups.push({
-      components: normalizedDesktopComponents,
+      components: desktopComponents,
       wrapperClass: "sidebar-content hidden xl:flex flex-col w-full gap-3",
     });
   }
@@ -153,15 +122,15 @@ function buildResponsiveGroups(
 }
 
 const topGroups = buildResponsiveGroups(
-  mobileTopComponents,
-  tabletTopComponents,
-  desktopTopComponents,
+  visibleMobileTopComponents,
+  visibleTabletTopComponents,
+  visibleDesktopTopComponents,
 );
 
 const stickyGroups = buildResponsiveGroups(
-  mobileStickyComponents,
-  tabletStickyComponents,
-  desktopStickyComponents,
+  visibleMobileStickyComponents,
+  visibleTabletStickyComponents,
+  visibleDesktopStickyComponents,
 );
 ---
 
@@ -201,7 +170,6 @@ const stickyGroups = buildResponsiveGroups(
         <WidgetGroup
           components={group.components}
           headings={headings}
-          isPostPage={isPostPage}
           wrapperClass={group.wrapperClass}
         />
       ))
@@ -212,7 +180,6 @@ const stickyGroups = buildResponsiveGroups(
         <WidgetGroup
           components={group.components}
           headings={headings}
-          isPostPage={isPostPage}
           wrapperClass={group.wrapperClass}
         />
       ))

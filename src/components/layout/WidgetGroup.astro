@@ -10,36 +10,12 @@ import TOC from "@components/widget/TOC.astro";
 import { widgetManager } from "@utils/widget-manager";
 
 interface Props {
-  id?: string;
   components: WidgetComponentConfig[];
   headings?: MarkdownHeading[];
   wrapperClass?: string;
-  isPostPage?: boolean;
 }
 
-const {
-  id,
-  components,
-  headings,
-  wrapperClass,
-  isPostPage = Astro.url.pathname.startsWith("/posts/"),
-} = Astro.props;
-
-const filteredComponents = components.filter((component) => {
-  if (component.type === "profile") {
-    return !isPostPage;
-  }
-
-  if (component.type === "categories" || component.type === "site-stats") {
-    return !isPostPage;
-  }
-
-  if (component.type === "card-toc") {
-    return isPostPage;
-  }
-
-  return true;
-});
+const { components, headings, wrapperClass } = Astro.props;
 
 const componentMap = {
   profile: Profile,
@@ -51,9 +27,9 @@ const componentMap = {
 };
 ---
 
-<div id={id} class:list={wrapperClass}>
+<div class:list={wrapperClass}>
   {
-    filteredComponents.map((component, index) => {
+    components.map((component, index) => {
       const ComponentToRender = componentMap[
         component.type as keyof typeof componentMap
       ] as any;
@@ -72,10 +48,9 @@ const componentMap = {
 
       return (
         <>
-          {showDivider && <div class="sidebar-divider"></div>}
-          {(
-            component.type === "toc" || component.type === "card-toc"
-          ) && headings ? (
+          {showDivider && <div class="sidebar-divider" />}
+          {(component.type === "toc" || component.type === "card-toc") &&
+          headings ? (
             <ComponentToRender {...sharedProps} headings={headings} />
           ) : (
             <ComponentToRender {...sharedProps} />
