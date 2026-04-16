@@ -7,7 +7,6 @@ declare global {
     }
     interface Window {
         swup: any;
-        closeAnnouncement: () => void;
         pagefind: {
             search: (query: string) => Promise<{
                 results: Array<{
@@ -20,15 +19,7 @@ declare global {
         __pendingLayoutMode?: string;
         __mainGridRuntimeConfig?: Record<string, unknown>;
         __mainGridRuntimeHooksRegistered?: boolean;
-        iconifyLoaded?: boolean;
-        __iconifyLoader?: {
-            load: () => Promise<void>;
-            addToPreloadQueue: (icons: string[]) => void;
-            onLoad: (callback: () => void) => void;
-            isLoaded: boolean;
-        };
         siteConfig: any;
-        __wallpaper_cleanup?: (() => void) | null;
         registerPageScript?: (name: string, options: {
             shouldRun?: () => boolean;
             init: () => void | (() => void) | Promise<void | (() => void)>;
