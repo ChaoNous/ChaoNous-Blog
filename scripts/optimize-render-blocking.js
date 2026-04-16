@@ -22,8 +22,6 @@ const HOMEPAGE_UNUSED_CSS = new Set([
   "markdown",
   "markdown-extend",
   "expressive-code",
-  "Share",
-  "SharePoster",
   "PostDetailLayout",
   "post-detail-layout",
   "site-comments",
