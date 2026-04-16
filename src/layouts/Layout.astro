@@ -127,7 +127,6 @@ const skipToContentLabel = isChineseSite
       document.documentElement.setAttribute("data-shiki-theme", isDark ? "github-dark" : "github-light");
       window.theme = {
           themeValue,
-          getTheme: () => window.theme.themeValue,
           setTheme: (value) => {
               window.theme.themeValue = value;
           },

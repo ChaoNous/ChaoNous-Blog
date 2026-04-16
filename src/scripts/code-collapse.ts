@@ -5,8 +5,6 @@ declare global {
     themeOptimizer?: {
       hideCodeBlocksDuringTransition?: boolean;
     };
-    CodeBlockCollapser?: typeof CodeBlockCollapser;
-    codeBlockCollapser?: CodeBlockCollapser;
   }
 }
 
@@ -14,25 +12,15 @@ class CodeBlockCollapser {
   private _processedBlocks = new WeakSet<Element>();
   private observer: MutationObserver | null;
   private isThemeChanging: boolean;
-  private debug: boolean;
 
   constructor() {
     this.clearProcessedBlocks();
     this.observer = null;
     this.isThemeChanging = false;
-    this.debug = false;
     this.init();
   }
 
-  private log(...args: unknown[]): void {
-    if (this.debug) {
-      console.log("[CodeBlockCollapser]", ...args);
-    }
-  }
-
   init(): void {
-    this.log("Initializing...");
-    this.log("Setting up code blocks");
     this.setupCodeBlocks();
     this.observePageChanges();
     this.setupThemeChangeListener();
@@ -43,7 +31,6 @@ class CodeBlockCollapser {
     this.syncWithThemeOptimizer();
 
     document.addEventListener("themeOptimizerReady", () => {
-      this.log("Theme optimizer ready, syncing code block behavior");
       this.syncWithThemeOptimizer();
     });
   }
@@ -61,18 +48,12 @@ class CodeBlockCollapser {
           shouldHideDuringTransition,
         );
       });
-
-      this.log(
-        `Synced with theme optimizer: hide code blocks during transition = ${shouldHideDuringTransition}`,
-      );
       return;
     }
 
     codeBlocks.forEach((block) => {
       block.classList.add("hide-during-transition");
     });
-
-    this.log("Theme optimizer not available, applied default behavior");
   }
 
   private setupThemeChangeListener(): void {
@@ -127,15 +108,11 @@ class CodeBlockCollapser {
   setupCodeBlocks(): void {
     requestAnimationFrame(() => {
       const codeBlocks = document.querySelectorAll(".expressive-code");
-      this.log(`Found ${codeBlocks.length} code blocks to process`);
 
-      codeBlocks.forEach((codeBlock, index) => {
+      codeBlocks.forEach((codeBlock) => {
         if (!this._processedBlocks.has(codeBlock)) {
-          this.log(`Enhancing code block ${index + 1}`);
           this.enhanceCodeBlock(codeBlock);
           this._processedBlocks.add(codeBlock);
-        } else {
-          this.log(`Code block ${index + 1} already processed`);
         }
       });
     });
@@ -144,16 +121,12 @@ class CodeBlockCollapser {
   private enhanceCodeBlock(codeBlock: Element): void {
     const frame = codeBlock.querySelector(".frame");
     if (!frame) {
-      this.log("No frame found in code block, skipping");
       return;
     }
 
     if (frame.classList.contains("has-title")) {
-      this.log("Code block has title, skipping collapse feature");
       return;
     }
-
-    this.log("Adding collapse feature to code block");
     codeBlock.classList.add("collapsible", "expanded");
 
     const toggleBtn = this.createToggleButton();
@@ -283,26 +256,9 @@ class CodeBlockCollapser {
   clearProcessedBlocks(): void {
     this._processedBlocks = new WeakSet();
   }
-
-  collapseAll(): void {
-    const allBlocks = document.querySelectorAll(".expressive-code.expanded");
-    allBlocks.forEach((block) => {
-      this.toggleCollapse(block);
-    });
-  }
-
-  expandAll(): void {
-    const allBlocks = document.querySelectorAll(".expressive-code.collapsed");
-    allBlocks.forEach((block) => {
-      this.toggleCollapse(block);
-    });
-  }
 }
 
 const codeBlockCollapser = new CodeBlockCollapser();
-
-window.CodeBlockCollapser = CodeBlockCollapser;
-window.codeBlockCollapser = codeBlockCollapser;
 
 registerPageScript("code-collapse", {
   init() {

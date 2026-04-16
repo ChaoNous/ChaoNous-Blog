@@ -89,12 +89,3 @@ class PanelManager {
     }
 }
 export const panelManager = new PanelManager();
-declare global {
-    interface Window {
-        panelManager?: PanelManager;
-    }
-}
-if (typeof window !== "undefined") {
-    window.panelManager = panelManager;
-}
-export default panelManager;
