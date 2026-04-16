@@ -18,7 +18,13 @@ export const siteConfig: SiteConfig = {
   subtitle: "",
   siteURL: "https://chaonous.com/",
   siteStartDate: "2026-03-03",
-  keywords: ["\u535A\u5BA2", "\u6280\u672F", "\u7F16\u7A0B", "\u524D\u7AEF", "Astro"],
+  keywords: [
+    "\u535A\u5BA2",
+    "\u6280\u672F",
+    "\u7F16\u7A0B",
+    "\u524D\u7AEF",
+    "Astro",
+  ],
   timeZone: SITE_TIMEZONE,
   lang: SITE_LANG,
 
@@ -151,7 +157,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
   enable: true,
   mode: "meting",
   meting_api:
-    "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&auth=:auth&r=:r",
+    "/api/music/playlist?server=:server&type=:type&id=:id&auth=:auth&r=:r",
   id: "13556055400",
   server: "netease",
   type: "playlist",
