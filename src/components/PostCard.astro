@@ -10,13 +10,14 @@ interface Props {
     entry: CollectionEntry<"posts">;
     style?: string;
     priority?: boolean;
+    featured?: boolean;
 }
-const { entry, style, priority = false } = Astro.props;
+const { entry, style, priority = false, featured = false } = Astro.props;
 const className = Astro.props.class;
 const { title, published, updated, category, image, description, pinned } = entry.data;
 const url = getPostUrl(entry);
 const hasCover = image !== undefined && image !== null && image !== "";
-const coverWidth = "28%";
+const coverWidth = featured ? "34%" : "28%";
 const { remarkPluginFrontmatter } = await render(entry);
 ---
 
@@ -24,24 +25,47 @@ const { remarkPluginFrontmatter } = await render(entry);
 	class:list={[
 		"card-base post-card-shell flex flex-col w-full rounded-(--radius-large) overflow-hidden relative",
 		className,
+		{
+			"post-card-featured": featured,
+			"post-card-standard": !featured,
+		},
 	]}
 	style={style}
 >
 	<div
-		class="post-card-hover flex flex-col-reverse md:flex-col w-full h-full rounded-(--radius-large) overflow-hidden relative"
+		class:list={[
+			"post-card-hover flex flex-col-reverse md:flex-col w-full h-full rounded-(--radius-large) overflow-hidden relative",
+			{
+				"md:min-h-[20.5rem]": featured,
+			},
+		]}
 	>
 		<div
 			class:list={[
-				"post-card-body pl-6 md:pl-10 pr-6 md:pr-4 pt-6 md:pt-8 pb-6 md:pb-7 relative",
+				"post-card-body relative",
 				{
+					"pl-6 md:pl-12 pr-6 md:pr-6 pt-6 md:pt-10 pb-6 md:pb-8": featured,
+					"pl-6 md:pl-10 pr-6 md:pr-4 pt-6 md:pt-8 pb-6 md:pb-7": !featured,
 					"w-full md:w-[calc(100%-3.25rem-0.75rem)]": !hasCover,
 					"w-full md:w-[calc(100%-var(--coverWidth)-0.75rem)]": hasCover,
 				},
 			]}
 		>
+			{
+				featured && (
+					<div class="post-card-kicker">
+						<span class="post-card-kicker-line"></span>
+						<span class="post-card-kicker-dot"></span>
+						<span class="post-card-kicker-line is-secondary"></span>
+					</div>
+				)
+			}
 			<a
 				href={url}
-				class="post-card-title-link w-full block font-black mb-3 text-3xl text-100"
+				class:list={[
+					"post-card-title-link w-full block font-black text-100",
+					featured ? "mb-4 text-[clamp(2.2rem,2.25rem+0.7vw,3.35rem)]" : "mb-3 text-3xl",
+				]}
 			>
 				<span class="inline-flex items-center gap-2 w-full">
 					{
@@ -72,8 +96,12 @@ const { remarkPluginFrontmatter } = await render(entry);
 
 			<div
 				class:list={[
-					"post-card-excerpt transition text-100 font-bold text-lg leading-8 mb-1 pr-0 md:pr-8",
-					{ "line-clamp-3 md:line-clamp-2": !description },
+					"post-card-excerpt transition text-100 mb-1",
+					{
+						"pr-0 md:pr-10 line-clamp-4 md:line-clamp-3": featured,
+						"pr-0 md:pr-8 line-clamp-3 md:line-clamp-2": !featured && !description,
+						"pr-0 md:pr-8": !featured && description,
+					},
 				]}
 			>
 				{description || remarkPluginFrontmatter.excerpt}
@@ -87,8 +115,12 @@ const { remarkPluginFrontmatter } = await render(entry);
 					aria-label={title}
 					class:list={[
 						"group post-card-cover",
-						"max-h-[28vh] md:max-h-none mx-4 mt-4 -mb-1 md:mb-0 md:mx-0 md:mt-0",
-						"md:w-(--coverWidth) relative md:absolute md:top-4 md:bottom-4 md:right-4 rounded-xl overflow-hidden active:scale-95",
+						featured
+							? "max-h-[32vh] md:max-h-none mx-4 mt-4 -mb-1 md:mb-0 md:mx-0 md:mt-0"
+							: "max-h-[28vh] md:max-h-none mx-4 mt-4 -mb-1 md:mb-0 md:mx-0 md:mt-0",
+						featured
+							? "md:w-(--coverWidth) relative md:absolute md:top-5 md:bottom-5 md:right-5 rounded-[1.25rem] overflow-hidden active:scale-95"
+							: "md:w-(--coverWidth) relative md:absolute md:top-4 md:bottom-4 md:right-4 rounded-xl overflow-hidden active:scale-95",
 					]}
 					style="aspect-ratio: 16/9;"
 				>
@@ -134,22 +166,92 @@ const { remarkPluginFrontmatter } = await render(entry);
 <style define:vars={{ coverWidth }}>
 	.post-card-shell {
 		padding-block: 0.25rem;
-		transition: transform 300ms ease-in-out, box-shadow 300ms ease-in-out;
+		border: 1px solid color-mix(in oklch, var(--text-main) 8%, transparent);
+		background:
+			linear-gradient(
+				180deg,
+				color-mix(in oklch, var(--card-bg) 88%, white 12%) 0%,
+				color-mix(in oklch, var(--card-bg) 96%, transparent) 100%
+			);
+		box-shadow:
+			0 12px 30px rgba(15, 23, 42, 0.06),
+			inset 0 1px 0 rgba(255, 255, 255, 0.28);
+		transition:
+			transform 300ms ease-in-out,
+			box-shadow 300ms ease-in-out,
+			border-color 300ms ease-in-out,
+			background 300ms ease-in-out;
 	}
 
 	.post-card-shell:hover {
 		transform: translateY(-0.25rem);
-		box-shadow: var(--shadow-lg);
+		box-shadow:
+			0 18px 40px rgba(15, 23, 42, 0.1),
+			inset 0 1px 0 rgba(255, 255, 255, 0.32);
+		border-color: color-mix(in oklch, var(--primary) 16%, transparent);
 	}
 
 	.post-card-shell:active {
 		transform: translateY(0);
 	}
 
+	.post-card-featured {
+		background:
+			radial-gradient(
+				circle at top right,
+				color-mix(in oklch, var(--primary) 10%, transparent) 0%,
+				transparent 36%
+			),
+			linear-gradient(
+				180deg,
+				color-mix(in oklch, var(--card-bg) 82%, white 18%) 0%,
+				color-mix(in oklch, var(--card-bg) 95%, transparent) 100%
+			);
+		border-color: color-mix(in oklch, var(--primary) 14%, transparent);
+		box-shadow:
+			0 20px 48px rgba(15, 23, 42, 0.09),
+			inset 0 1px 0 rgba(255, 255, 255, 0.34);
+	}
+
+	:root.dark .post-card-shell {
+		border-color: color-mix(in oklch, white 7%, transparent);
+		background:
+			linear-gradient(
+				180deg,
+				color-mix(in oklch, var(--card-bg) 94%, black 6%) 0%,
+				color-mix(in oklch, var(--card-bg) 98%, transparent) 100%
+			);
+		box-shadow:
+			0 14px 32px rgba(0, 0, 0, 0.24),
+			inset 0 1px 0 rgba(255, 255, 255, 0.04);
+	}
+
+	:root.dark .post-card-shell:hover {
+		box-shadow:
+			0 20px 44px rgba(0, 0, 0, 0.3),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+	}
+
+	:root.dark .post-card-featured {
+		background:
+			radial-gradient(
+				circle at top right,
+				color-mix(in oklch, var(--primary) 14%, transparent) 0%,
+				transparent 38%
+			),
+			linear-gradient(
+				180deg,
+				color-mix(in oklch, var(--card-bg) 96%, black 4%) 0%,
+				color-mix(in oklch, var(--card-bg) 99%, transparent) 100%
+			);
+	}
+
 	@media (max-width: 767px) {
 		.post-card-shell:hover {
 			transform: none;
-			box-shadow: none;
+			box-shadow:
+				0 10px 24px rgba(15, 23, 42, 0.05),
+				inset 0 1px 0 rgba(255, 255, 255, 0.22);
 		}
 	}
 </style>
@@ -161,8 +263,45 @@ const { remarkPluginFrontmatter } = await render(entry);
 		gap: 0.55rem;
 	}
 
+	.post-card-kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+		color: color-mix(in oklch, var(--text-main) 62%, transparent);
+		text-transform: uppercase;
+		letter-spacing: 0.16em;
+		font-size: 0.77rem;
+		font-weight: 650;
+	}
+
+	.post-card-kicker-line {
+		display: inline-block;
+		width: 2.6rem;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			color-mix(in oklch, var(--primary) 55%, transparent) 0%,
+			transparent 100%
+		);
+	}
+
+	.post-card-kicker-line.is-secondary {
+		width: 1.4rem;
+		opacity: 0.75;
+	}
+
+	.post-card-kicker-dot {
+		width: 0.38rem;
+		height: 0.38rem;
+		border-radius: 999px;
+		background: color-mix(in oklch, var(--primary) 52%, white 48%);
+		box-shadow: 0 0 0 0.32rem color-mix(in oklch, var(--primary) 10%, transparent);
+	}
+
 	.post-card-title-link {
 		transition: color 300ms ease-in-out;
+		text-wrap: balance;
 	}
 
 	.post-card-title-link:hover {
@@ -193,6 +332,13 @@ const { remarkPluginFrontmatter } = await render(entry);
 		max-width: 42rem;
 	}
 
+	.post-card-featured .post-card-excerpt {
+		font-size: clamp(1.05rem, 1rem + 0.22vw, 1.22rem);
+		line-height: 1.88;
+		color: color-mix(in oklch, currentColor 78%, transparent);
+		max-width: 44rem;
+	}
+
 	.post-card-cover img {
 		transform: scale(1.01);
 		transition:
@@ -205,16 +351,36 @@ const { remarkPluginFrontmatter } = await render(entry);
 		filter: saturate(1.03) contrast(1.02);
 	}
 
+	.post-card-featured .post-card-cover::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		pointer-events: none;
+	}
+
 
 	@media (max-width: 767px) {
+		.post-card-kicker {
+			font-size: 0.72rem;
+			letter-spacing: 0.14em;
+			margin-bottom: 0.85rem;
+		}
+
 		.post-card-title-arrow {
 			display: none;
 		}
 
-		.post-card-title {
+		.post-card-title-link {
 			font-size: 1.7rem;
 			line-height: 1.12;
 			letter-spacing: -0.02em;
+		}
+
+		.post-card-featured .post-card-title-link {
+			font-size: clamp(1.95rem, 7vw, 2.35rem);
+			line-height: 1.06;
 		}
 
 		.post-card-excerpt {
