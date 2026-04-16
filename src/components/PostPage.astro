@@ -16,24 +16,14 @@ const { page } = Astro.props;
 	data-default-layout="list"
 	data-layout="list"
 >
-	<div class="post-list-ornament" aria-hidden="true">
-		<span class="post-list-ornament-line"></span>
-		<span class="post-list-ornament-dot"></span>
-		<span class="post-list-ornament-line"></span>
-	</div>
 	{
 		page.data.map((entry, index) => (
 			<>
 				{index > 0 && <div class="post-divider"></div>}
 				<PostCard
 					entry={entry}
-					featured={index === 0}
 					priority={index === 0}
-					class:list={[
-						"post-card-item",
-						"onload-animation",
-						index === 0 && "is-featured-post",
-					]}
+					class:list="onload-animation"
 					style={`--i: ${index}; --interval: 50ms;`}
 				/>
 			</>
