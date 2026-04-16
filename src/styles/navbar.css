@@ -156,43 +156,102 @@
 }
 
 #navbar .navbar-brand-text {
+  position: relative;
+  display: inline-block;
   font-family: var(--font-content);
-  font-style: italic;
-  font-size: clamp(2.2rem, 2.35vw, 2.9rem);
-  line-height: 1;
-  letter-spacing: 0.08em;
-  background: linear-gradient(
-    135deg,
-    #6d1f4f 0%,
-    #a11f2f 24%,
-    #d7a437 48%,
-    #f0c84e 63%,
-    #f2b22d 78%,
-    #a02a2d 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-style: normal;
+  font-size: clamp(2.05rem, 2.15vw, 2.65rem);
+  line-height: 0.96;
+  letter-spacing: 0.045em;
+  font-weight: 640;
   text-transform: none;
-  text-shadow:
-    0 1px 0 rgba(255, 236, 178, 0.22),
-    0 2px 8px rgba(83, 17, 33, 0.35),
-    0 0 18px rgba(166, 41, 45, 0.2);
+  white-space: nowrap;
+  font-feature-settings:
+    "liga" 1,
+    "kern" 1;
+  transition:
+    color 280ms ease,
+    text-shadow 280ms ease,
+    opacity 280ms ease;
 }
 
-#navbar.group.scrolled .navbar-brand-text {
+#navbar .navbar-brand-text::after {
+  content: "";
+  position: absolute;
+  left: 0.08em;
+  right: 0.12em;
+  bottom: -0.14em;
+  height: 0.09em;
+  border-radius: 999px;
+  pointer-events: none;
+  transform-origin: left center;
+  transition:
+    opacity 280ms ease,
+    transform 280ms ease;
+}
+
+:root:not(.dark) #navbar .navbar-brand-text {
+  color: color-mix(
+    in oklch,
+    var(--deep-text) 90%,
+    oklch(0.56 0.08 var(--hue)) 10%
+  );
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.36);
+}
+
+:root:not(.dark) #navbar .navbar-brand-text::after {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--primary) 42%, white 58%) 0%,
+    color-mix(in oklch, var(--primary) 18%, transparent 82%) 72%,
+    transparent 100%
+  );
+  opacity: 0.5;
+  transform: scaleX(0.82);
+}
+
+:root:not(.dark) #navbar.group.scrolled .navbar-brand-text {
+  color: color-mix(
+    in oklch,
+    var(--deep-text) 94%,
+    oklch(0.53 0.07 var(--hue)) 6%
+  );
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+:root.dark #navbar .navbar-brand-text {
   background: linear-gradient(
     135deg,
-    #5e1a45 0%,
-    #92202c 24%,
-    #c9952f 48%,
-    #e7bd47 63%,
-    #e1a42a 78%,
-    #8e2429 100%
+    #f0dcc0 0%,
+    #d8b889 34%,
+    #b98758 68%,
+    #edd1aa 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow:
+    0 1px 0 rgba(255, 245, 226, 0.08),
+    0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+:root.dark #navbar .navbar-brand-text::after {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--primary) 72%, white 16%) 0%,
+    color-mix(in oklch, var(--primary) 28%, transparent 72%) 76%,
+    transparent 100%
+  );
+  opacity: 0.62;
+  transform: scaleX(0.88);
+}
+
+#navbar .navbar-brand:hover .navbar-brand-text::after,
+#navbar .navbar-brand:focus-visible .navbar-brand-text::after {
+  opacity: 0.82;
+  transform: scaleX(1);
 }
 
 @media (max-width: 1279px) {
@@ -203,5 +262,10 @@
 
   #navbar .navbar-brand {
     padding-inline: 0.5rem;
+  }
+
+  #navbar .navbar-brand-text {
+    font-size: clamp(1.8rem, 8vw, 2.2rem);
+    letter-spacing: 0.035em;
   }
 }
