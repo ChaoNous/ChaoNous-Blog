@@ -36,16 +36,16 @@ function cssPrefix(filename) {
 }
 async function buildCssManifest() {
   const assetsDir = path.join(distDir, "assets");
-  const byPrefix = new Map();
+  const files = new Set();
   try {
-    const files = await fs.readdir(assetsDir);
-    for (const file of files) {
+    const assetFiles = await fs.readdir(assetsDir);
+    for (const file of assetFiles) {
       if (file.endsWith(".css")) {
-        byPrefix.set(cssPrefix(file), file);
+        files.add(file);
       }
     }
   } catch {}
-  return byPrefix;
+  return files;
 }
 function classifyCss(filename) {
   const prefix = cssPrefix(filename);
@@ -55,10 +55,8 @@ function classifyCss(filename) {
 }
 function canonicalHref(href, cssManifest) {
   const filename = path.posix.basename(href);
-  const prefix = cssPrefix(filename);
-  const canonicalFile = cssManifest.get(prefix);
-  if (!canonicalFile) return null;
-  return `/assets/${canonicalFile}`;
+  if (!cssManifest.has(filename)) return null;
+  return `/assets/${filename}`;
 }
 function isCssLink(link) {
   const rel = link.getAttribute("rel");
@@ -151,8 +149,7 @@ async function removeDuplicateCss(cssManifest) {
     const files = await fs.readdir(astroDir);
     for (const file of files) {
       if (!file.endsWith(".css")) continue;
-      const canonicalFile = cssManifest.get(cssPrefix(file));
-      if (canonicalFile && canonicalFile !== file) {
+      if (cssManifest.has(file)) {
         await fs.unlink(path.join(astroDir, file));
         removed++;
         console.log(`Removed duplicate: _astro/${file}`);
