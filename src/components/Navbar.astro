@@ -13,14 +13,17 @@ import DisplaySettings from "./widget/DisplaySettings.svelte";
 import DropdownMenu from "./widget/DropdownMenu.astro";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 const className = Astro.props.class;
-const navbarTransparentMode = siteConfig.banner?.navbar?.transparentMode || "semi";
+const navbarTransparentMode =
+  siteConfig.banner?.navbar?.transparentMode || "semi";
 const isHomePage = Astro.url.pathname === "/" || Astro.url.pathname === "";
-let links: NavBarLink[] = navBarConfig.links.map((item: NavBarLink | LinkPreset): NavBarLink => {
+let links: NavBarLink[] = navBarConfig.links.map(
+  (item: NavBarLink | LinkPreset): NavBarLink => {
     if (typeof item === "number") {
-        return LinkPresets[item];
+      return LinkPresets[item];
     }
     return item;
-});
+  },
+);
 const rawLogo = siteConfig.navbarTitle?.logo || "assets/home/default-logo.webp";
 const logoSrc = rawLogo;
 const rawIcon = siteConfig.navbarTitle?.icon || "assets/home/home.webp";
@@ -30,14 +33,14 @@ const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
 const isChineseSite = (siteConfig.lang || "").toLowerCase().startsWith("zh");
 const searchLabel = i18n(I18nKey.search);
 const primaryNavigationLabel = isChineseSite
-    ? "\u4e3b\u5bfc\u822a"
-    : "Primary navigation";
+  ? "\u4e3b\u5bfc\u822a"
+  : "Primary navigation";
 const displaySettingsLabel = isChineseSite
-    ? "\u663e\u793a\u8bbe\u7f6e"
-    : "Display settings";
+  ? "\u663e\u793a\u8bbe\u7f6e"
+  : "Display settings";
 const mobileControlsLabel = isChineseSite
-    ? "\u79fb\u52a8\u83dc\u5355"
-    : "Mobile menu";
+  ? "\u79fb\u52a8\u83dc\u5355"
+  : "Mobile menu";
 ---
 
 <nav
@@ -107,7 +110,6 @@ const mobileControlsLabel = isChineseSite
       }
     </div>
     <div class="navbar-actions flex items-center gap-1">
-      
       <div id="search-container" class="hidden lg:block">
         <Search client:media="(min-width: 1024px)" />
       </div>
@@ -123,7 +125,7 @@ const mobileControlsLabel = isChineseSite
           class="navbar-action-icon text-[1.25rem]"
         />
       </button>
-      
+
       {
         !siteConfig.themeColor.fixed && (
           <button
@@ -141,11 +143,11 @@ const mobileControlsLabel = isChineseSite
           </button>
         )
       }
-      
+
       <div class="w-9 h-9 flex items-center justify-center">
         <LightDarkSwitch client:idle />
       </div>
-      
+
       <button
         type="button"
         aria-label={mobileControlsLabel}
@@ -166,5 +168,7 @@ const mobileControlsLabel = isChineseSite
 </nav>
 
 <script>
-  import "../scripts/navbar/index.ts";
+  import "../scripts/navbar/navbar-scroll.ts";
+  import "../scripts/navbar/navbar-panels.ts";
+  import "../scripts/navbar/navbar-pagefind.ts";
 </script>
