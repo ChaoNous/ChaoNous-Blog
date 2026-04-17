@@ -11,8 +11,6 @@ export interface D1Database {
 
 export interface Env {
   COMMENTS_DB: D1Database;
-  COMMENT_ADMIN_PASSWORD?: string;
-  COMMENT_SESSION_SECRET?: string;
 }
 
 export type CommentSubmissionEventRecord = {
@@ -42,20 +40,6 @@ export interface PaginationMeta {
   limit: number;
   total: number;
   totalCount: number;
-}
-
-export interface AdminCommentView {
-  id: number;
-  parentId: number | null;
-  postSlug: string;
-  postUrl: string;
-  postTitle: string;
-  authorName: string;
-  authorEmail: string;
-  authorUrl: string | null;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface NormalizedComment {

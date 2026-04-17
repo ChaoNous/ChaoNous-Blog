@@ -1,8 +1,7 @@
-import { isAdminAuthorized } from "./comments-auth";
 import { COMMENT_SUBMISSION_POLICY, evaluateSubmissionContentPolicy, evaluateSubmissionRateLimit, parseFormLoadedAt, } from "./comments-antiabuse.js";
 import { COMMENT_MESSAGES } from "./comments-messages";
 import { buildNestedComments, paginateNestedComments as paginateNestedCommentsHelper, } from "./comments-threading.js";
-import type { AdminCommentView, ApiErrorPayload, CommentApiErrorCode, CommentRecord, Env, NestedComment, NormalizedComment, PaginationMeta, } from "./comments-types";
+import type { ApiErrorPayload, CommentApiErrorCode, CommentRecord, Env, NestedComment, NormalizedComment, PaginationMeta, } from "./comments-types";
 function errorResponse(code: CommentApiErrorCode, message: string, status: number, headers?: HeadersInit): Response {
     return json({
         ok: false,
@@ -63,21 +62,6 @@ export function normalizeComment(record: CommentRecord): NormalizedComment {
         postUrl: record.post_url,
         postTitle: record.post_title,
         authorName: record.author_name,
-        authorUrl: record.author_url,
-        content: record.content,
-        createdAt: toIso(record.created_at),
-        updatedAt: toIso(record.updated_at),
-    };
-}
-export function toAdminComment(record: CommentRecord): AdminCommentView {
-    return {
-        id: record.id,
-        parentId: record.parent_id,
-        postSlug: record.post_slug,
-        postUrl: record.post_url,
-        postTitle: record.post_title,
-        authorName: record.author_name,
-        authorEmail: record.author_email,
         authorUrl: record.author_url,
         content: record.content,
         createdAt: toIso(record.created_at),
@@ -149,12 +133,6 @@ export async function readJsonBody(request: Request): Promise<{
             response: errorResponse("INVALID_JSON", COMMENT_MESSAGES.invalidJson, 400),
         };
     }
-}
-export async function requireAdminSession(request: Request, env: Env, message: string = COMMENT_MESSAGES.adminUnauthorized): Promise<Response | null> {
-    if (await isAdminAuthorized(request, env)) {
-        return null;
-    }
-    return unauthorized(message);
 }
 export function parsePaginationParams(requestUrl: string, defaultLimit = 20, maxLimit = 100) {
     const url = new URL(requestUrl);
@@ -326,14 +304,6 @@ export async function enforceSubmissionRateLimit(env: Env, input: {
             ? Math.ceil(COMMENT_SUBMISSION_POLICY.duplicateWindowMs / 1000)
             : Math.ceil(COMMENT_SUBMISSION_POLICY.minSubmitIntervalMs / 1000),
     } as const;
-}
-export function sanitizeCommentIds(value: unknown): number[] {
-    if (!Array.isArray(value))
-        return [];
-    const ids = value
-        .map((item) => Number.parseInt(String(item), 10))
-        .filter((item) => Number.isFinite(item) && item > 0);
-    return Array.from(new Set(ids));
 }
 export async function deleteCommentsByIds(env: Env, ids: number[]): Promise<number> {
     const uniqueIds = Array.from(new Set(ids.filter((id) => Number.isFinite(id) && id > 0)));

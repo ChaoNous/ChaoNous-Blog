@@ -40,11 +40,6 @@ export const siteConfig: SiteConfig = {
     logo: "",
   },
 
-  pageScaling: {
-    enable: true,
-    targetWidth: 2000,
-  },
-
   tagStyle: {
     useNewStyle: false,
   },

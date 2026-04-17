@@ -51,11 +51,6 @@ export type SiteConfig = {
     logo?: string;
   };
 
-  pageScaling?: {
-    enable: boolean;
-    targetWidth?: number;
-  };
-
   font: {
     asciiFont: {
       fontFamily: string;
