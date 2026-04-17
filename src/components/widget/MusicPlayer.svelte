@@ -1,582 +1,1004 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import { onDestroy, onMount, tick } from "svelte";
+  import { onMount } from "svelte";
   import { musicPlayerConfig } from "../../config";
   import hitoriCover from "../../assets/music/cover/hitori.webp";
   import Key from "../../i18n/i18nKey";
   import { i18n } from "../../i18n/translation";
-  import {
-    buildLocalPlaylist,
-    getLoadingSong as getInitialLoadingSong,
-  } from "../../scripts/music-player/player-local";
   import { fetchMetingPlaylistSongs } from "../../scripts/music-player/player-meting";
   import {
+    getLoadingSong as getInitialLoadingSong,
+    buildLocalPlaylist,
+  } from "../../scripts/music-player/player-local";
+  import {
     cacheInitialSong,
+    loadStoredVolume,
     restoreCachedInitialSong,
+    saveStoredVolume,
   } from "../../scripts/music-player/player-storage";
+  import {
+    bindAutoplayRecovery,
+    bindPlayerDocumentEvents,
+    scheduleInitialPlaylistLoad,
+  } from "../../scripts/music-player/player-runtime";
   import {
     getAssetPath,
     type Song,
   } from "../../scripts/music-player/player-types";
 
+  // Music player mode: local playlist or Meting API
   let mode = musicPlayerConfig.mode ?? "meting";
-  let metingApi =
+  // Meting API endpoint
+  let meting_api =
     musicPlayerConfig.meting_api ??
     "https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r";
-  let metingId = musicPlayerConfig.id ?? "14164869977";
-  let metingServer = musicPlayerConfig.server ?? "netease";
-  let metingType = musicPlayerConfig.type ?? "playlist";
+  // Meting playlist identifier
+  let meting_id = musicPlayerConfig.id ?? "14164869977";
+  // Meting source provider
+  let meting_server = musicPlayerConfig.server ?? "netease";
+  // Meting source type
+  let meting_type = musicPlayerConfig.type ?? "playlist";
+
+  // Playback state
+  let isPlaying = false;
+  // Whether the player panel is expanded
+  let isExpanded = false;
+  // Whether the player is hidden in orb mode
+  let isHidden = false;
+  // Whether the playlist panel is visible
+  let showPlaylist = false;
+  // Whether the mobile volume popover is visible
+  let showMobileVolumePopover = false;
+  // Current playback position in seconds
+  let currentTime = 0;
+  // Current track duration in seconds
+  let duration = 0;
+
+  // Current volume
+  let volume = 0.7;
+  // Whether audio is muted
+  let isMuted = false;
+  // Whether playlist or track data is loading
+  let isLoading = false;
+  // Whether shuffle mode is enabled
+  let isShuffled = false;
+  // Repeat mode: 1 for single-track repeat, 2 for playlist repeat
+  let isRepeating = 2;
+  // Error message shown in the UI
+  let errorMessage = "";
+  // Whether the error toast is visible
+  let showError = false;
+  // Whether the full music font has been loaded
+  let musicFontLoaded = false;
+  let isMobileViewport = false;
+  let hasMounted = false;
+
+  // Lazy load the full music font only when needed (saves ~4.8MB)
+  function loadMusicFont() {
+    if (musicFontLoaded || typeof document === "undefined") return;
+    musicFontLoaded = true;
+    const fontFace = new FontFace(
+      "Zhuque Fangsong",
+      "url(/assets/fonts/ZhuqueFangsong-Regular.ttf)",
+      { weight: "400", style: "normal", display: "swap" },
+    );
+    fontFace
+      .load()
+      .then((loaded) => {
+        document.fonts.add(loaded);
+        // Force re-render to apply new font
+        playerRoot?.style.setProperty("--font-loaded", "1");
+      })
+      .catch(() => {
+        // Font load failed, UI font fallback will be used
+      });
+  }
 
   const localPlaylist: Song[] = buildLocalPlaylist(hitoriCover);
 
+  function getLoadingSong(): Song {
+    return getInitialLoadingSong(
+      mode,
+      localPlaylist,
+      i18n(Key.musicPlayerLoading),
+      i18n(Key.unknownArtist),
+    );
+  }
+
+  let currentSong: Song = getLoadingSong();
+
   let playlist: Song[] = [];
   let currentIndex = 0;
-  let currentSong: Song = getInitialLoadingSong(
-    mode,
-    localPlaylist,
-    i18n(Key.musicPlayerLoading),
-    i18n(Key.unknownArtist),
-  );
+  let audio: HTMLAudioElement;
+  let progressBar: HTMLElement;
+  let volumeBar: HTMLElement;
+  let playerRoot: HTMLDivElement;
+  let playlistPanel: HTMLDivElement;
 
-  let audio: HTMLAudioElement | null = null;
-  let isLoading = false;
-  let isPlaying = false;
-  let playlistLoaded = false;
-  let pendingAutoplay = false;
-  let isCollapsed = false;
-  let showError = false;
-  let errorMessage = "";
-  let errorTimer: number | undefined;
-
-  function getCoverUrl(song: Song): string {
-    return getAssetPath(song.cover) || hitoriCover;
-  }
-
-  function clearErrorTimer() {
-    if (errorTimer) {
-      window.clearTimeout(errorTimer);
-      errorTimer = undefined;
-    }
-  }
-
-  function showErrorMessage(message: string) {
-    errorMessage = message;
-    showError = true;
-    clearErrorTimer();
-    errorTimer = window.setTimeout(() => {
-      showError = false;
-    }, 2800);
-  }
-
-  function restoreInitialSong() {
+  function restoreCachedInitialSongState() {
     const cachedSong = restoreCachedInitialSong(mode);
     if (cachedSong) {
       currentSong = cachedSong;
     }
   }
 
-  function syncAudioVolume() {
-    if (audio) {
-      audio.volume = 0.7;
-    }
+  // Load volume settings from localStorage
+  function loadVolumeSettings() {
+    volume = loadStoredVolume(volume);
+  }
+  // Persist volume settings to localStorage
+  function saveVolumeSettings() {
+    saveStoredVolume(volume);
   }
 
-  async function syncCurrentSong(autoplay = false) {
-    pendingAutoplay = autoplay;
-    if (!currentSong.url) {
-      isLoading = false;
-      return;
-    }
-
+  async function fetchMetingPlaylist() {
+    if (!meting_api || !meting_id) return;
     isLoading = true;
-    await tick();
-
-    if (!audio) {
-      isLoading = false;
-      return;
-    }
-
-    audio.pause();
-    audio.currentTime = 0;
-    syncAudioVolume();
-    audio.load();
-  }
-
-  async function initializePlaylist(songs: Song[]) {
-    playlist = songs;
-    playlistLoaded = true;
-
-    if (!playlist.length) {
-      isLoading = false;
-      showErrorMessage(i18n(Key.musicPlayerErrorEmpty));
-      return;
-    }
-
-    const cachedIndex = playlist.findIndex(
-      (song) => currentSong.id > 0 && song.id === currentSong.id,
-    );
-    currentIndex = cachedIndex >= 0 ? cachedIndex : 0;
-    currentSong = { ...playlist[currentIndex] };
-
-    if (mode === "meting") {
-      cacheInitialSong(mode, playlist[0]);
-    }
-
-    await syncCurrentSong(false);
-  }
-
-  async function loadPlaylist() {
-    if (playlistLoaded || isLoading) {
-      return;
-    }
-
-    if (mode === "local") {
-      await initializePlaylist(localPlaylist);
-      return;
-    }
-
-    isLoading = true;
-
     try {
-      const songs = await fetchMetingPlaylistSongs({
-        apiTemplate: metingApi,
-        id: metingId,
-        server: metingServer,
-        type: metingType,
+      playlist = await fetchMetingPlaylistSongs({
+        apiTemplate: meting_api,
+        id: meting_id,
+        server: meting_server,
+        type: meting_type,
         unknownSongLabel: i18n(Key.unknownSong),
         unknownArtistLabel: i18n(Key.unknownArtist),
       });
-      await initializePlaylist(songs);
-    } catch {
+      if (playlist.length > 0) {
+        cacheInitialSong(mode, playlist[0]);
+        loadSong(playlist[0]);
+      }
       isLoading = false;
+    } catch (e) {
       showErrorMessage(i18n(Key.musicPlayerErrorPlaylist));
+      isLoading = false;
     }
   }
 
-  async function playSong(index: number, autoplay = true) {
-    if (index < 0 || index >= playlist.length) {
-      return;
+  function togglePlay() {
+    if (!playlistLoaded) {
+      lazyLoadPlaylist();
     }
-
-    currentIndex = index;
-    currentSong = { ...playlist[index] };
-    await syncCurrentSong(autoplay);
-  }
-
-  async function previousSong() {
-    await loadPlaylist();
-    if (playlist.length <= 1) {
-      return;
-    }
-
-    const nextIndex =
-      currentIndex === 0 ? playlist.length - 1 : currentIndex - 1;
-    await playSong(nextIndex, isPlaying);
-  }
-
-  async function nextSong(autoplay = isPlaying) {
-    await loadPlaylist();
-    if (playlist.length <= 1) {
-      return;
-    }
-
-    const nextIndex =
-      currentIndex >= playlist.length - 1 ? 0 : currentIndex + 1;
-    await playSong(nextIndex, autoplay);
-  }
-
-  async function togglePlay() {
-    await loadPlaylist();
-
-    if (!audio || !currentSong.url) {
-      return;
-    }
-
+    if (!audio || !currentSong.url) return;
+    loadMusicFont();
     if (isPlaying) {
       audio.pause();
+    } else {
+      audio.play().catch(() => {});
+    }
+  }
+
+  function toggleExpanded() {
+    if (!playlistLoaded) {
+      lazyLoadPlaylist();
+    }
+    loadMusicFont();
+    isExpanded = !isExpanded;
+    if (isExpanded) {
+      showPlaylist = false;
+      isHidden = false;
+    }
+  }
+
+  function toggleHidden() {
+    isHidden = !isHidden;
+    if (isHidden) {
+      isExpanded = false;
+      showPlaylist = false;
+      showMobileVolumePopover = false;
+    }
+  }
+
+  function togglePlaylist() {
+    if (!playlistLoaded) {
+      lazyLoadPlaylist();
+    }
+    showMobileVolumePopover = false;
+    showPlaylist = !showPlaylist;
+  }
+
+  function closePlaylist() {
+    showPlaylist = false;
+  }
+
+  function toggleRepeat() {
+    if (!isShuffled && isRepeating === 2) {
+      isRepeating = 1;
       return;
     }
 
-    try {
-      await audio.play();
-    } catch {
-      pendingAutoplay = false;
-      showErrorMessage(i18n(Key.musicPlayerErrorSong));
+    if (!isShuffled && isRepeating === 1) {
+      isShuffled = true;
+      isRepeating = 2;
+      return;
+    }
+
+    isShuffled = false;
+    isRepeating = 2;
+  }
+
+  function previousSong() {
+    if (playlist.length <= 1) return;
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : playlist.length - 1;
+    playSong(newIndex);
+  }
+
+  function nextSong(autoPlay: boolean = true) {
+    if (playlist.length <= 1) return;
+
+    let newIndex: number;
+    if (isShuffled) {
+      do {
+        newIndex = Math.floor(Math.random() * playlist.length);
+      } while (newIndex === currentIndex && playlist.length > 1);
+    } else {
+      newIndex = currentIndex < playlist.length - 1 ? currentIndex + 1 : 0;
+    }
+    playSong(newIndex, autoPlay);
+  }
+
+  // Record whether the next track should auto-play after loading
+  let willAutoPlay = false;
+
+  function playSong(index: number, autoPlay = true) {
+    if (index < 0 || index >= playlist.length) return;
+
+    willAutoPlay = autoPlay;
+    currentIndex = index;
+    loadSong(playlist[currentIndex]);
+  }
+
+  function loadSong(song: typeof currentSong) {
+    if (!song) return;
+
+    // Reset the audio element before loading the next track
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+    currentSong = { ...song };
+    if (song.url) {
+      isLoading = true;
+      // Reload the audio element after updating the source
+      setTimeout(() => {
+        if (audio) {
+          audio.load();
+        }
+      }, 50);
+    } else {
+      isLoading = false;
     }
   }
 
-  function toggleCollapsed() {
-    isCollapsed = !isCollapsed;
-  }
+  // Whether autoplay failed due to browser policy
+  let autoplayFailed = false;
 
-  function handleCanPlay() {
+  function handleLoadSuccess() {
     isLoading = false;
-    syncAudioVolume();
-
-    if (!pendingAutoplay || !audio) {
-      return;
+    if (audio?.duration && audio.duration > 1) {
+      duration = Math.floor(audio.duration);
+      if (playlist[currentIndex]) playlist[currentIndex].duration = duration;
+      currentSong.duration = duration;
     }
 
-    pendingAutoplay = false;
-    audio.play().catch(() => {
-      isPlaying = false;
-      showErrorMessage(i18n(Key.musicPlayerErrorSong));
-    });
-  }
-
-  function handleEnded() {
-    if (playlist.length > 1) {
-      void nextSong(true);
-      return;
+    if (willAutoPlay || isPlaying) {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.warn("Autoplay was blocked until user interaction.", error);
+          autoplayFailed = true;
+          isPlaying = false;
+        });
+      }
     }
-
-    isPlaying = false;
   }
 
-  function handleAudioError() {
+  function handleLoadError(_event: Event) {
+    console.error(
+      "[MusicPlayer] Load error for song:",
+      currentSong.title,
+      "URL:",
+      currentSong.url,
+    );
+    if (!currentSong.url) return;
     isLoading = false;
-    pendingAutoplay = false;
     showErrorMessage(
       `${i18n(Key.musicPlayerErrorSong)} - ${currentSong.title}`,
     );
 
+    const shouldContinue = isPlaying || willAutoPlay;
     if (playlist.length > 1) {
-      window.setTimeout(() => {
-        void nextSong(isPlaying);
-      }, 800);
+      setTimeout(() => nextSong(shouldContinue), 1000);
+    } else {
+      showErrorMessage(i18n(Key.musicPlayerErrorEmpty));
     }
   }
 
-  onMount(() => {
-    restoreInitialSong();
+  function handleLoadStart() {}
 
+  function handleAudioEnded() {
+    if (isRepeating === 1) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } else if (isRepeating === 2 || isShuffled) {
+      nextSong(true);
+    } else {
+      isPlaying = false;
+    }
+  }
+
+  function showErrorMessage(message: string) {
+    errorMessage = message;
+    showError = true;
+    setTimeout(() => {
+      showError = false;
+    }, 3000);
+  }
+  function hideError() {
+    showError = false;
+  }
+
+  function setProgress(event: MouseEvent) {
+    if (!audio || !progressBar) return;
+    const rect = progressBar.getBoundingClientRect();
+    const percent = (event.clientX - rect.left) / rect.width;
+    const newTime = percent * duration;
+    audio.currentTime = newTime;
+    currentTime = newTime;
+  }
+
+  let isVolumeDragging = false;
+  let isPointerDown = false;
+  let volumeBarRect: DOMRect | null = null;
+  let rafId: number | null = null;
+
+  function startVolumeDrag(event: PointerEvent) {
+    if (!volumeBar) return;
+    event.preventDefault();
+
+    isPointerDown = true;
+    volumeBar.setPointerCapture(event.pointerId);
+
+    volumeBarRect = volumeBar.getBoundingClientRect();
+    updateVolumeLogic(event.clientY);
+  }
+
+  function handleVolumeMove(event: PointerEvent) {
+    if (!isPointerDown) return;
+    event.preventDefault();
+
+    isVolumeDragging = true;
+    if (rafId) return;
+
+    rafId = requestAnimationFrame(() => {
+      updateVolumeLogic(event.clientY);
+      rafId = null;
+    });
+  }
+
+  function stopVolumeDrag(event: PointerEvent) {
+    if (!isPointerDown) return;
+    isPointerDown = false;
+    isVolumeDragging = false;
+    volumeBarRect = null;
+    if (volumeBar) {
+      volumeBar.releasePointerCapture(event.pointerId);
+    }
+
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    saveVolumeSettings();
+  }
+
+  function updateVolumeLogic(clientY: number) {
+    if (!audio || !volumeBar) return;
+
+    const rect = volumeBarRect || volumeBar.getBoundingClientRect();
+    const percent = Math.max(
+      0,
+      Math.min(1, (rect.bottom - clientY) / rect.height),
+    );
+    volume = percent;
+  }
+
+  function toggleMute() {
+    isMuted = !isMuted;
+  }
+
+  function toggleVolumeControl(event: MouseEvent) {
+    event.stopPropagation();
     if (
       typeof window !== "undefined" &&
       window.matchMedia("(max-width: 768px)").matches
     ) {
-      isCollapsed = true;
+      showMobileVolumePopover = !showMobileVolumePopover;
+      return;
     }
+    toggleMute();
+  }
 
-    const scheduleLoad = () => {
-      void loadPlaylist();
-    };
+  function formatTime(seconds: number): string {
+    if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  }
 
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(scheduleLoad, { timeout: 1500 });
+  // Track whether the playlist has been loaded
+  let playlistLoaded = false;
+
+  // Delay playlist setup until idle time or the first interaction
+  function lazyLoadPlaylist() {
+    if (playlistLoaded) return;
+    playlistLoaded = true;
+
+    if (mode === "meting") {
+      fetchMetingPlaylist();
     } else {
-      window.setTimeout(scheduleLoad, 800);
+      // Use the local playlist without any API request
+      playlist = [...localPlaylist];
+      if (playlist.length > 0) {
+        loadSong(playlist[0]);
+      } else {
+        showErrorMessage("Local playlist is empty.");
+      }
     }
-  });
+  }
 
-  onDestroy(() => {
-    clearErrorTimer();
+  onMount(() => {
+    const cleanups: Array<() => void> = [];
+
+    if (typeof window !== "undefined") {
+      isMobileViewport = window.innerWidth < 768;
+    }
+    if (isMobileViewport) {
+      isHidden = true;
+    }
+    hasMounted = true;
+    loadVolumeSettings();
+    if (!(isMobileViewport && mode === "meting")) {
+      restoreCachedInitialSongState();
+    }
+
+    cleanups.push(
+      bindAutoplayRecovery({
+        getAudio: () => audio,
+        shouldRecover: () => autoplayFailed,
+        onRecovered: () => {
+          autoplayFailed = false;
+        },
+      }),
+    );
+    cleanups.push(
+      bindPlayerDocumentEvents({
+        getPlayerRoot: () => playerRoot,
+        getPlaylistPanel: () => playlistPanel,
+        isPlaylistOpen: () => showPlaylist,
+        closePlaylist,
+        hideMobileVolumePopover: () => {
+          showMobileVolumePopover = false;
+        },
+      }),
+    );
+
+    scheduleInitialPlaylistLoad({
+      enabled: musicPlayerConfig.enable,
+      mode,
+      isMobileViewport,
+      lazyLoadPlaylist,
+    });
+
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+    };
   });
 </script>
 
-{#if musicPlayerConfig.enable}
-  <div class="music-player-shell" class:is-collapsed={isCollapsed}>
-    <audio
-      bind:this={audio}
-      preload="none"
-      src={getAssetPath(currentSong.url)}
-      on:play={() => (isPlaying = true)}
-      on:pause={() => (isPlaying = false)}
-      on:canplay={handleCanPlay}
-      on:ended={handleEnded}
-      on:error={handleAudioError}
-    ></audio>
+<audio
+  bind:this={audio}
+  src={getAssetPath(currentSong.url)}
+  bind:volume
+  bind:muted={isMuted}
+  on:play={() => (isPlaying = true)}
+  on:pause={() => (isPlaying = false)}
+  on:timeupdate={() => (currentTime = audio.currentTime)}
+  on:ended={handleAudioEnded}
+  on:error={handleLoadError}
+  on:loadeddata={handleLoadSuccess}
+  on:loadstart={handleLoadStart}
+  preload="none"
+></audio>
 
-    {#if isCollapsed}
-      <button
-        type="button"
-        class="music-player-dock"
-        aria-label={i18n(Key.musicPlayerShow)}
-        title={i18n(Key.musicPlayerShow)}
-        on:click={toggleCollapsed}
+<svelte:window
+  on:pointermove={handleVolumeMove}
+  on:pointerup={stopVolumeDrag}
+/>
+
+{#if musicPlayerConfig.enable}
+  {#if showError}
+    <div class="fixed bottom-20 right-4 z-60 max-w-sm">
+      <div
+        class="bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-up"
       >
-        {#if isLoading}
-          <Icon icon="eos-icons:loading" class="text-xl" />
-        {:else if isPlaying}
-          <Icon icon="material-symbols:pause" class="text-xl" />
-        {:else}
-          <Icon icon="material-symbols:play-arrow" class="text-2xl" />
-        {/if}
-      </button>
-    {:else}
-      <section class="music-player-card" aria-label={i18n(Key.musicPlayer)}>
+        <Icon icon="material-symbols:error" class="text-xl shrink-0" />
+        <span class="text-sm flex-1">{errorMessage}</span>
         <button
-          type="button"
-          class="music-player-close"
-          aria-label={i18n(Key.musicPlayerCollapse)}
-          title={i18n(Key.musicPlayerCollapse)}
-          on:click={toggleCollapsed}
+          on:click={hideError}
+          class="text-white/80 hover:text-white transition-colors"
         >
           <Icon icon="material-symbols:close" class="text-lg" />
         </button>
+      </div>
+    </div>
+  {/if}
 
-        <div class="music-player-body">
-          <div class="music-player-cover">
-            <img
-              src={getCoverUrl(currentSong)}
-              alt={i18n(Key.musicPlayerCover)}
-              loading="lazy"
-              class:spinning={isPlaying && !isLoading}
-            />
-          </div>
-
-          <div class="music-player-meta">
-            <p class="music-player-title">{currentSong.title}</p>
-            <p class="music-player-artist">{currentSong.artist}</p>
-          </div>
+  <div
+    bind:this={playerRoot}
+    class="music-player fixed bottom-8 right-6 z-50 transition-all duration-300 ease-in-out"
+    class:expanded={isExpanded}
+    class:hidden-mode={isHidden}
+    class:hydrated={hasMounted}
+  >
+    <!-- Orb trigger shown when the player is hidden -->
+    <div
+      class="orb-player rounded-xl cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center"
+      class:opacity-0={!isHidden}
+      class:scale-0={!isHidden}
+      class:pointer-events-none={!isHidden}
+      on:click={toggleHidden}
+      on:keydown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggleHidden();
+        }
+      }}
+      role="button"
+      tabindex="0"
+      aria-label={i18n(Key.musicPlayerShow)}
+    >
+      {#if isLoading}
+        <Icon
+          icon="eos-icons:loading"
+          class="hidden-player-icon text-(--primary) text-3xl"
+        />
+      {:else if isPlaying}
+        <div class="flex space-x-0.5">
+          <div
+            class="hidden-player-bar w-0.5 h-3 rounded-full animate-pulse"
+          ></div>
+          <div
+            class="hidden-player-bar w-0.5 h-4 rounded-full animate-pulse"
+            style="animation-delay: 150ms;"
+          ></div>
+          <div
+            class="hidden-player-bar w-0.5 h-2 rounded-full animate-pulse"
+            style="animation-delay: 300ms;"
+          ></div>
         </div>
-
-        <div class="music-player-controls">
-          <button
-            type="button"
-            class="music-player-button"
-            aria-label={i18n(Key.musicPlayerPrevious)}
-            disabled={playlist.length <= 1 || isLoading}
-            on:click={() => void previousSong()}
-          >
-            <Icon icon="material-symbols:skip-previous" class="text-xl" />
-          </button>
-
-          <button
-            type="button"
-            class="music-player-button music-player-button-primary"
+      {:else}
+        <Icon
+          icon="material-symbols:music-note"
+          class="hidden-player-icon text-(--primary) text-3xl"
+        />
+      {/if}
+    </div>
+    <!-- Mini player shown when collapsed -->
+    <div
+      class="mini-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
+      style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
+      class:opacity-0={isExpanded || isHidden}
+      class:scale-95={isExpanded || isHidden}
+      class:pointer-events-none={isExpanded || isHidden}
+    >
+      <div
+        class="mini-player-surface p-3"
+        style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;"
+      >
+        <div class="flex items-center gap-3">
+          <!-- Cover image area that toggles play and pause -->
+          <div
+            class="cover-container relative w-12 h-12 rounded-full overflow-hidden cursor-pointer"
+            on:click={togglePlay}
+            on:keydown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                togglePlay();
+              }
+            }}
+            role="button"
+            tabindex="0"
             aria-label={isPlaying
               ? i18n(Key.musicPlayerPause)
               : i18n(Key.musicPlayerPlay)}
-            disabled={isLoading && playlist.length === 0}
-            on:click={() => void togglePlay()}
+          >
+            {#if currentSong.cover}
+              <img
+                src={getAssetPath(currentSong.cover)}
+                alt={i18n(Key.musicPlayerCover)}
+                class="w-full h-full object-cover transition-transform duration-300"
+                class:spinning={isPlaying && !isLoading}
+                class:animate-pulse={isLoading}
+              />
+            {:else}
+              <div
+                class="w-full h-full flex items-center justify-center bg-(--btn-regular-bg) text-(--primary)"
+              >
+                <Icon icon="material-symbols:album-outline" class="text-xl" />
+              </div>
+            {/if}
+            <div
+              class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+            >
+              {#if isLoading}
+                <Icon icon="eos-icons:loading" class="text-white text-xl" />
+              {:else if isPlaying}
+                <Icon
+                  icon="material-symbols:pause"
+                  class="text-white text-xl"
+                />
+              {:else}
+                <Icon
+                  icon="material-symbols:play-arrow"
+                  class="text-white text-xl"
+                />
+              {/if}
+            </div>
+          </div>
+          <!-- Track info area that expands the full player -->
+          <div
+            class="flex-1 min-w-0 cursor-pointer"
+            on:click={toggleExpanded}
+            on:keydown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleExpanded();
+              }
+            }}
+            role="button"
+            tabindex="0"
+            aria-label={i18n(Key.musicPlayerExpand)}
+          >
+            <div class="text-sm font-medium text-90 truncate">
+              {currentSong.title}
+            </div>
+            <div class="text-xs text-50 truncate">
+              {currentSong.artist}
+            </div>
+          </div>
+          <div class="flex items-center gap-1">
+            <button
+              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+              aria-label={i18n(Key.musicPlayerHide)}
+              on:click|stopPropagation={toggleHidden}
+              title={i18n(Key.musicPlayerHide)}
+            >
+              <Icon icon="material-symbols:visibility-off" class="text-lg" />
+            </button>
+            <button
+              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+              aria-label={i18n(Key.musicPlayerExpand)}
+              on:click|stopPropagation={toggleExpanded}
+            >
+              <Icon icon="material-symbols:expand-less" class="text-lg" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Full player shown when expanded -->
+    <div
+      class="expanded-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
+      style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
+      class:opacity-0={!isExpanded}
+      class:scale-95={!isExpanded}
+      class:pointer-events-none={!isExpanded}
+    >
+      <div
+        class="expanded-player-surface p-4"
+        style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;"
+      >
+        <div class="flex items-center gap-4 mb-4">
+          <div
+            class="cover-container relative w-16 h-16 rounded-full overflow-hidden shrink-0"
+          >
+            {#if currentSong.cover}
+              <img
+                src={getAssetPath(currentSong.cover)}
+                alt={i18n(Key.musicPlayerCover)}
+                class="w-full h-full object-cover transition-transform duration-300"
+                class:spinning={isPlaying && !isLoading}
+                class:animate-pulse={isLoading}
+              />
+            {:else}
+              <div
+                class="w-full h-full flex items-center justify-center bg-(--btn-regular-bg) text-(--primary)"
+              >
+                <Icon icon="material-symbols:album-outline" class="text-2xl" />
+              </div>
+            {/if}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="song-title text-lg font-bold text-90 truncate mb-1">
+              {currentSong.title}
+            </div>
+            <div class="song-artist text-sm text-50 truncate">
+              {currentSong.artist}
+            </div>
+            <div class="text-xs text-30 mt-1">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </div>
+          </div>
+          <div class="flex items-center gap-1">
+            <button
+              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+              aria-label={i18n(Key.musicPlayerHide)}
+              on:click={toggleHidden}
+              title={i18n(Key.musicPlayerHide)}
+            >
+              <Icon icon="material-symbols:visibility-off" class="text-lg" />
+            </button>
+            <button
+              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+              aria-label={i18n(Key.musicPlayerPlaylist)}
+              class:text-[var(--primary)]={showPlaylist}
+              on:click={togglePlaylist}
+              title={i18n(Key.musicPlayerPlaylist)}
+            >
+              <Icon icon="material-symbols:queue-music" class="text-lg" />
+            </button>
+          </div>
+        </div>
+        <div class="progress-section mb-4">
+          <div
+            class="progress-bar flex-1 h-2 bg-(--btn-regular-bg) rounded-full cursor-pointer"
+            bind:this={progressBar}
+            on:click={setProgress}
+            on:keydown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                const percent = 0.5;
+                const newTime = percent * duration;
+                if (audio) {
+                  audio.currentTime = newTime;
+                  currentTime = newTime;
+                }
+              }
+            }}
+            role="slider"
+            tabindex="0"
+            aria-label={i18n(Key.musicPlayerProgress)}
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow={duration > 0 ? (currentTime / duration) * 100 : 0}
+          >
+            <div
+              class="h-full bg-(--primary) rounded-full transition-all duration-100"
+              style="width: {duration > 0
+                ? (currentTime / duration) * 100
+                : 0}%"
+            ></div>
+          </div>
+        </div>
+        <div class="controls flex items-center justify-center gap-2 mb-4">
+          <button
+            class="btn-plain w-10 h-10 rounded-lg"
+            aria-label={isShuffled
+              ? i18n(Key.musicPlayerShuffle)
+              : isRepeating === 1
+                ? i18n(Key.musicPlayerRepeatOne)
+                : i18n(Key.musicPlayerRepeat)}
+            on:click|stopPropagation={toggleRepeat}
+          >
+            {#if isShuffled}
+              <Icon icon="material-symbols:shuffle" class="text-lg" />
+            {:else if isRepeating === 1}
+              <Icon icon="material-symbols:repeat-one" class="text-lg" />
+            {:else}
+              <Icon icon="material-symbols:repeat" class="text-lg" />
+            {/if}
+          </button>
+          <button
+            class="btn-plain w-10 h-10 rounded-lg"
+            on:click={previousSong}
+            aria-label={i18n(Key.musicPlayerPrevious)}
+            disabled={playlist.length <= 1}
+          >
+            <Icon icon="material-symbols:skip-previous" class="text-xl" />
+          </button>
+          <button
+            class="btn-plain w-10 h-10 rounded-lg"
+            aria-label={isPlaying
+              ? i18n(Key.musicPlayerPause)
+              : i18n(Key.musicPlayerPlay)}
+            class:opacity-50={isLoading}
+            disabled={isLoading}
+            on:click|stopPropagation={togglePlay}
           >
             {#if isLoading}
               <Icon icon="eos-icons:loading" class="text-xl" />
             {:else if isPlaying}
               <Icon icon="material-symbols:pause" class="text-xl" />
             {:else}
-              <Icon icon="material-symbols:play-arrow" class="text-2xl" />
+              <Icon icon="material-symbols:play-arrow" class="text-xl" />
             {/if}
           </button>
-
           <button
-            type="button"
-            class="music-player-button"
+            class="btn-plain w-10 h-10 rounded-lg"
             aria-label={i18n(Key.musicPlayerNext)}
-            disabled={playlist.length <= 1 || isLoading}
-            on:click={() => void nextSong()}
+            on:click={() => nextSong()}
+            disabled={playlist.length <= 1}
           >
             <Icon icon="material-symbols:skip-next" class="text-xl" />
           </button>
+          <div class="volume-control">
+            <button
+              class="btn-plain w-10 h-10 rounded-lg"
+              aria-label={i18n(Key.musicPlayerVolume)}
+              on:click={toggleVolumeControl}
+            >
+              {#if isMuted || volume === 0}
+                <Icon icon="material-symbols:volume-off" class="text-lg" />
+              {:else if volume < 0.5}
+                <Icon icon="material-symbols:volume-down" class="text-lg" />
+              {:else}
+                <Icon icon="material-symbols:volume-up" class="text-lg" />
+              {/if}
+            </button>
+            <div
+              class="volume-popover rounded-2xl card-base overflow-hidden"
+              class:is-open={showMobileVolumePopover}
+              style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
+            >
+              <div
+                class="volume-popover-surface p-3"
+                style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;"
+              >
+                <div
+                  class="volume-bar h-28 w-3 bg-(--btn-regular-bg) rounded-full cursor-pointer touch-none"
+                  bind:this={volumeBar}
+                  on:pointerdown={startVolumeDrag}
+                  on:keydown={(e) => {
+                    if (e.key === "ArrowUp") {
+                      e.preventDefault();
+                      volume = Math.min(1, volume + 0.05);
+                      saveVolumeSettings();
+                    } else if (e.key === "ArrowDown") {
+                      e.preventDefault();
+                      volume = Math.max(0, volume - 0.05);
+                      saveVolumeSettings();
+                    } else if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      if (
+                        typeof window === "undefined" ||
+                        !window.matchMedia("(max-width: 768px)").matches
+                      ) {
+                        toggleMute();
+                      }
+                    }
+                  }}
+                  role="slider"
+                  tabindex="0"
+                  aria-label={i18n(Key.musicPlayerVolume)}
+                  aria-orientation="vertical"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow={volume * 100}
+                >
+                  <div
+                    class="volume-fill absolute bottom-0 left-0 right-0 bg-(--primary) rounded-full transition-all"
+                    class:duration-100={!isVolumeDragging}
+                    class:duration-0={isVolumeDragging}
+                    style="height: {volume * 100}%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="btn-plain w-10 h-10 rounded-lg flex items-center justify-center"
+            aria-label={i18n(Key.musicPlayerCollapse)}
+            on:click={toggleExpanded}
+            title={i18n(Key.musicPlayerCollapse)}
+          >
+            <Icon icon="material-symbols:expand-more" class="text-lg" />
+          </button>
         </div>
-      </section>
-    {/if}
-
-    {#if showError}
-      <div class="music-player-toast">{errorMessage}</div>
+      </div>
+    </div>
+    {#if showPlaylist}
+      <div
+        bind:this={playlistPanel}
+        class="playlist-panel animate-slide-up float-panel fixed bottom-20 right-6 w-80 max-h-96 overflow-hidden z-50"
+        style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border-radius: var(--radius-large);"
+      >
+        <div
+          class="playlist-panel-surface"
+          style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit; overflow: hidden;"
+        >
+          <div
+            class="playlist-header flex items-center justify-between p-4 border-b border-(--line-divider)"
+          >
+            <h3 class="text-lg font-semibold text-90">
+              {i18n(Key.musicPlayerPlaylist)}
+            </h3>
+            <button
+              class="btn-plain w-8 h-8 rounded-lg"
+              aria-label={i18n(Key.musicPlayerHide)}
+              on:click={togglePlaylist}
+            >
+              <Icon icon="material-symbols:close" class="text-lg" />
+            </button>
+          </div>
+          <div class="playlist-content overflow-y-auto max-h-80 hide-scrollbar">
+            {#each playlist as song, index}
+              <div
+                class="playlist-item flex items-center gap-3 p-3 hover:bg-(--btn-plain-bg-hover) cursor-pointer transition-colors"
+                class:bg-[var(--btn-plain-bg)]={index === currentIndex}
+                class:text-[var(--primary)]={index === currentIndex}
+                on:click={() => playSong(index)}
+                on:keydown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    playSong(index);
+                  }
+                }}
+                role="button"
+                tabindex="0"
+                aria-label={`Play ${song.title} - ${song.artist}`}
+              >
+                <div class="w-6 h-6 flex items-center justify-center">
+                  {#if index === currentIndex && isPlaying}
+                    <Icon
+                      icon="material-symbols:graphic-eq"
+                      class="text-(--primary) animate-pulse"
+                    />
+                  {:else if index === currentIndex}
+                    <Icon
+                      icon="material-symbols:pause"
+                      class="text-(--primary)"
+                    />
+                  {:else}
+                    <span class="text-sm text-(--content-meta)"
+                      >{index + 1}</span
+                    >
+                  {/if}
+                </div>
+                <div
+                  class="w-10 h-10 rounded-lg overflow-hidden bg-(--btn-regular-bg) shrink-0"
+                >
+                  <img
+                    src={getAssetPath(song.cover)}
+                    alt={song.title}
+                    loading="lazy"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div
+                    class="font-medium truncate"
+                    class:text-[var(--primary)]={index === currentIndex}
+                    class:text-90={index !== currentIndex}
+                  >
+                    {song.title}
+                  </div>
+                  <div
+                    class="text-sm text-(--content-meta) truncate"
+                    class:text-[var(--primary)]={index === currentIndex}
+                  >
+                    {song.artist}
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
+      </div>
     {/if}
   </div>
+
+  <style>
+    @import "../../styles/music-player.css";
+  </style>
 {/if}
-
-<style>
-  .music-player-shell {
-    position: fixed;
-    right: 1.25rem;
-    bottom: 1.25rem;
-    z-index: 45;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.75rem;
-  }
-
-  .music-player-card,
-  .music-player-dock,
-  .music-player-toast {
-    border: 1px solid color-mix(in oklch, var(--line-divider) 88%, white);
-    background: color-mix(in oklch, var(--card-bg) 90%, white);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
-  }
-
-  .music-player-card {
-    position: relative;
-    width: min(19rem, calc(100vw - 2.5rem));
-    padding: 1rem;
-    border-radius: 1.25rem;
-  }
-
-  .music-player-close {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border: none;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition:
-      background-color 160ms ease,
-      color 160ms ease;
-  }
-
-  .music-player-close:hover {
-    background: var(--btn-plain-bg-hover);
-    color: var(--text-main);
-  }
-
-  .music-player-body {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    min-width: 0;
-    padding-right: 2rem;
-  }
-
-  .music-player-cover {
-    width: 3.25rem;
-    height: 3.25rem;
-    flex-shrink: 0;
-    overflow: hidden;
-    border-radius: 1rem;
-    background: var(--btn-regular-bg);
-  }
-
-  .music-player-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .music-player-cover img.spinning {
-    animation: music-player-rotate 12s linear infinite;
-  }
-
-  .music-player-meta {
-    min-width: 0;
-  }
-
-  .music-player-title,
-  .music-player-artist {
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .music-player-title {
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: var(--text-main);
-  }
-
-  .music-player-artist {
-    margin-top: 0.3rem;
-    font-size: 0.86rem;
-    color: var(--text-secondary);
-  }
-
-  .music-player-controls {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.625rem;
-    margin-top: 0.9rem;
-  }
-
-  .music-player-button,
-  .music-player-dock {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    color: var(--text-main);
-    cursor: pointer;
-    transition:
-      transform 160ms ease,
-      background-color 160ms ease,
-      opacity 160ms ease;
-  }
-
-  .music-player-button {
-    height: 2.8rem;
-    border-radius: 0.95rem;
-    background: var(--btn-regular-bg);
-  }
-
-  .music-player-button:hover:not(:disabled),
-  .music-player-dock:hover {
-    transform: translateY(-1px);
-    background: var(--btn-regular-bg-hover);
-  }
-
-  .music-player-button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
-
-  .music-player-button-primary {
-    background: color-mix(in oklch, var(--primary) 88%, white);
-    color: white;
-  }
-
-  .music-player-button-primary:hover:not(:disabled) {
-    background: color-mix(in oklch, var(--primary) 94%, white);
-  }
-
-  .music-player-dock {
-    width: 3.4rem;
-    height: 3.4rem;
-    border-radius: 999px;
-  }
-
-  .music-player-toast {
-    max-width: min(20rem, calc(100vw - 2.5rem));
-    padding: 0.75rem 0.95rem;
-    border-radius: 1rem;
-    color: var(--text-main);
-    font-size: 0.88rem;
-    line-height: 1.45;
-  }
-
-  @keyframes music-player-rotate {
-    from {
-      transform: rotate(0deg);
-    }
-
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .music-player-shell {
-      right: 0.9rem;
-      bottom: 0.9rem;
-    }
-
-    .music-player-card {
-      width: min(17rem, calc(100vw - 1.8rem));
-      padding: 0.9rem;
-    }
-
-    .music-player-dock {
-      width: 3.15rem;
-      height: 3.15rem;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .music-player-cover img.spinning,
-    .music-player-button,
-    .music-player-dock {
-      animation: none !important;
-      transition: none;
-    }
-  }
-</style>
