@@ -5,7 +5,6 @@ export const zh_CN: Translation = {
   [Key.home]: "首页",
   [Key.archive]: "归档",
   [Key.search]: "搜索",
-
   [Key.tags]: "标签",
   [Key.categories]: "分类",
   [Key.recentPosts]: "最新文章",
@@ -14,32 +13,25 @@ export const zh_CN: Translation = {
   [Key.untitled]: "无标题",
   [Key.uncategorized]: "未分类",
   [Key.noTags]: "无标签",
-
   [Key.wordCount]: "字",
   [Key.wordsCount]: "字",
   [Key.minuteCount]: "分钟",
   [Key.minutesCount]: "分钟",
   [Key.postCount]: "篇文章",
   [Key.postsCount]: "篇文章",
-
   [Key.themeColor]: "主题色",
-
   [Key.lightMode]: "浅色",
   [Key.darkMode]: "深色",
   [Key.systemMode]: "跟随系统",
-
   [Key.more]: "更多",
-
   [Key.author]: "作者",
   [Key.publishedAt]: "发布于",
   [Key.license]: "许可协议",
   [Key.comments]: "评论",
-
   [Key.notFound]: "404",
   [Key.notFoundTitle]: "页面未找到",
-  [Key.notFoundDescription]: "抱歉，你访问的页面不存在或已经被移动。",
+  [Key.notFoundDescription]: "抱歉，你访问的页面不存在或已被移动。",
   [Key.backToHome]: "返回首页",
-
   [Key.musicPlayer]: "音乐播放器",
   [Key.musicPlayerShow]: "显示音乐播放器",
   [Key.musicPlayerHide]: "隐藏音乐播放器",
@@ -62,7 +54,6 @@ export const zh_CN: Translation = {
   [Key.musicPlayerErrorEmpty]: "播放列表中没有可用歌曲",
   [Key.unknownSong]: "未知歌曲",
   [Key.unknownArtist]: "未知艺术家",
-
   [Key.albums]: "相册",
   [Key.albumsSubtitle]: "记录生活中的美好瞬间",
   [Key.albumsEmpty]: "暂无内容",
@@ -70,26 +61,11 @@ export const zh_CN: Translation = {
   [Key.albumsBackToList]: "返回相册列表",
   [Key.albumsPhotoCount]: "张照片",
   [Key.albumsPhotosCount]: "张照片",
-
   [Key.siteStats]: "站点统计",
   [Key.siteStatsPostCount]: "文章",
-  [Key.siteStatsCategoryCount]: "分类",
-  [Key.siteStatsTagCount]: "标签",
   [Key.siteStatsTotalWords]: "字数",
   [Key.siteStatsRunningDays]: "运行天数",
-  [Key.siteStatsDaysAgo]: "{days} 天前",
   [Key.siteStatsDays]: "{days} 天",
-
-  [Key.shareArticle]: "分享",
-  [Key.generatingPoster]: "正在生成海报...",
-  [Key.copied]: "已复制",
-  [Key.copyLink]: "复制链接",
-  [Key.savePoster]: "保存海报",
-  [Key.scanToRead]: "扫码阅读",
-  [Key.shareOnSocial]: "分享",
-  [Key.shareOnSocialDescription]:
-    "如果这篇文章对你有帮助，欢迎分享给更多人。",
-
   [Key.navLinks]: "链接",
   [Key.navMy]: "我的",
   [Key.navAbout]: "关于",
