@@ -99,7 +99,6 @@ export const navBarConfig: NavBarConfig = {
       url: "/albums/",
       icon: "material-symbols:photo-library",
     },
-    LinkPreset.Friends,
   ],
 };
 

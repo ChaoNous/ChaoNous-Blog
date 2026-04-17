@@ -63,19 +63,6 @@
 			return;
 		}
 
-		if (window.swup) {
-			try {
-				if (options?.replace) {
-					window.swup.navigate(nextUrl, { history: false });
-				} else {
-					window.swup.navigate(nextUrl);
-				}
-				return;
-			} catch (error) {
-				console.error("Swup navigation failed:", error);
-			}
-		}
-
 		if (options?.replace) {
 			window.location.replace(nextUrl);
 		} else {

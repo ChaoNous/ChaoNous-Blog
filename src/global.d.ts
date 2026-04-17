@@ -6,7 +6,6 @@ declare global {
         };
     }
     interface Window {
-        swup: any;
         pagefind: {
             search: (query: string) => Promise<{
                 results: Array<{

@@ -1,15 +1,11 @@
-import {
-  revealBanner,
-  applyLayout,
-  syncDesktopLayoutState,
-  syncBannerHeightExtend,
-  removePostPageActionButtons,
-  scheduleIdleTask,
-  setup,
-} from "./layout-runtime/swup-setup";
+import { applyLayout, syncDesktopLayoutState } from "./main-grid-runtime";
+import { revealBanner, syncBannerHeightExtend } from "./layout-runtime/banner-runtime";
 import { initCustomScrollbar } from "./layout-runtime/katex-scrollbar";
 import { initFancybox, checkKatex } from "./layout-runtime/fancybox-runtime";
+import { removePostPageActionButtons } from "./layout-runtime/post-page-cleanup";
+import { initializeArticleToc } from "./layout-runtime/toc-runtime";
 import { initializePanelManager } from "./panel-init";
+
 function runOnDocumentReady(callback: () => void | Promise<void>) {
   if (document.readyState === "loading") {
     document.addEventListener(
@@ -23,23 +19,18 @@ function runOnDocumentReady(callback: () => void | Promise<void>) {
   }
   void callback();
 }
-void initializePanelManager();
-scheduleIdleTask(initCustomScrollbar);
-if (window?.swup?.hooks) {
-  scheduleIdleTask(() => {
-    void initFancybox();
-  });
-  checkKatex();
-  setup();
-} else {
-  document.addEventListener("swup:enable", setup);
-  runOnDocumentReady(() => {
-    scheduleIdleTask(() => {
-      void initFancybox();
-    });
-    checkKatex();
-  });
+
+function scheduleIdleTask(task: () => void, timeout = 3000): void {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(task);
+    return;
+  }
+
+  globalThis.setTimeout(task, timeout);
 }
+
+void initializePanelManager();
+
 function handleResize() {
   syncBannerHeightExtend();
   applyLayout();
@@ -48,6 +39,12 @@ function handleResize() {
 window.addEventListener("resize", handleResize);
 handleResize();
 runOnDocumentReady(async () => {
+  scheduleIdleTask(() => {
+    void initFancybox();
+  });
+  scheduleIdleTask(initCustomScrollbar);
+  checkKatex();
+  initializeArticleToc();
   revealBanner();
   applyLayout();
   removePostPageActionButtons();

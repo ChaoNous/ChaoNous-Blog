@@ -83,7 +83,7 @@ const desktopMainPos = desktopShowLeftSidebar
   ? "lg:col-start-2 lg:col-end-3"
   : "lg:col-span-1";
 const mainContentClass = `
-  transition-swup-fade overflow-hidden w-full min-w-0
+  overflow-hidden w-full min-w-0
   col-span-1 row-start-1 row-end-2
   ${desktopShowLeftSidebar ? desktopMainPos : "lg:col-span-1"}
 `
@@ -154,9 +154,8 @@ const mainContentClass = `
         }
 
         <main
-          id="swup-container"
+          id="main-content"
           data-is-post-page={isPostPage ? "true" : "false"}
-          data-swup-transition
           tabindex="-1"
           class={`${mainContentClass} scroll-mt-24 focus:outline-none`}
         >
@@ -201,7 +200,7 @@ const mainContentClass = `
             >
               <div
                 id="toc-container"
-                class="h-full w-full transition-swup-fade"
+                class="h-full w-full"
               >
                 <TOC headings={headings} />
               </div>

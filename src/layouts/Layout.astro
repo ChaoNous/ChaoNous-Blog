@@ -194,7 +194,7 @@ const skipToContentLabel = isChineseSite
       },
     ]}
   >
-    <a href="#swup-container" class="skip-to-content">{skipToContentLabel}</a>
+    <a href="#main-content" class="skip-to-content">{skipToContentLabel}</a>
     <script>
       import "../scripts/page-lifecycle.ts";
     </script>
@@ -308,7 +308,6 @@ const skipToContentLabel = isChineseSite
       const updateViewportHeight = window.__cncUpdateViewportHeight;
       if (typeof applyDesktopScale === "function") {
           window.addEventListener("resize", applyDesktopScale);
-          document.addEventListener("swup:page:view", applyDesktopScale);
           window.addEventListener("orientationchange", applyDesktopScale);
       }
       if (typeof updateViewportHeight === "function") {

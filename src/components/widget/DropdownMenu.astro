@@ -17,7 +17,6 @@ const navTitleMap: Record<string, I18nKey> = {
     Others: I18nKey.navOthers,
     Diary: I18nKey.diary,
     Gallery: I18nKey.albums,
-    Friends: I18nKey.friends,
 };
 const getLocalizedName = (name: string): string => {
     return name in navTitleMap ? i18n(navTitleMap[name]) : name;

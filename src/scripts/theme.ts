@@ -1,6 +1,10 @@
 import { DARK_MODE, LIGHT_MODE } from "@constants/constants";
 import type { LIGHT_DARK_MODE } from "@/types/config";
-import { applyThemeToDocument, getStoredThemePreference, resolveThemePreference, } from "@utils/theme-utils";
+import {
+    applyThemeToDocument,
+    getStoredThemePreference,
+    resolveThemePreference,
+} from "@utils/theme-utils";
 declare global {
     interface Window {
         theme?: {
@@ -34,11 +38,6 @@ else {
     };
 }
 reflectPreference();
-document.addEventListener("swup:page:view", () => {
-    const resolvedTheme = getStoredThemePreference() ?? themeValue;
-    syncThemeValue(resolvedTheme);
-    reflectPreference();
-});
 mediaQuery.addEventListener("change", ({ matches }) => {
     if (getStoredThemePreference()) {
         return;

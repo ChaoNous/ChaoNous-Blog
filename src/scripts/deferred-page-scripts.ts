@@ -86,5 +86,4 @@ if (!idleWindow.__cncDeferredPageScriptsInitialized) {
   }
 
   document.addEventListener("astro:page-load", scheduleDeferredPageScripts);
-  document.addEventListener("swup:page:view", scheduleDeferredPageScripts);
 }

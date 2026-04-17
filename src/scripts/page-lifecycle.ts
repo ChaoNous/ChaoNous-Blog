@@ -8,7 +8,6 @@ export interface PageLifecycleRecord {
 export interface PageLifecycleState {
     records: Map<string, PageLifecycleRecord>;
     isSetup: boolean;
-    hasSwupHooks: boolean;
 }
 declare global {
     interface Window {
@@ -20,7 +19,6 @@ declare global {
 const lifecycleState: PageLifecycleState = window.__pageLifecycleState || {
     records: new Map<string, PageLifecycleRecord>(),
     isSetup: false,
-    hasSwupHooks: false,
 };
 window.__pageLifecycleState = lifecycleState;
 function safeCall<T>(fn: () => T, label: string): T | undefined {
@@ -92,27 +90,12 @@ function cleanupAll(): void {
         invalidateRecord(record);
     });
 }
-function attachSwupHooks(): boolean {
-    if (!window.swup?.hooks || lifecycleState.hasSwupHooks) {
-        return false;
-    }
-    window.swup.hooks.on("content:replace", cleanupAll);
-    window.swup.hooks.on("page:view", runAll);
-    lifecycleState.hasSwupHooks = true;
-    return true;
-}
 function setupPageLifecycle(): void {
     if (lifecycleState.isSetup) {
         return;
     }
     lifecycleState.isSetup = true;
     document.addEventListener("DOMContentLoaded", runAll, { once: true });
-    if (attachSwupHooks()) {
-        return;
-    }
-    document.addEventListener("swup:enable", () => {
-        attachSwupHooks();
-    }, { once: true });
 }
 export function registerPageScript(name: string, options: {
     shouldRun?: () => boolean;

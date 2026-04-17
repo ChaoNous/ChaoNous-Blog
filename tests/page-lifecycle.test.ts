@@ -45,24 +45,7 @@ class FakeEventTarget {
   }
 }
 
-class FakeSwupHooks {
-  private listeners = new Map<string, Set<() => void>>();
-
-  on(type: string, listener: () => void) {
-    const listeners = this.listeners.get(type) || new Set();
-    listeners.add(listener);
-    this.listeners.set(type, listeners);
-  }
-
-  emit(type: string) {
-    this.listeners.get(type)?.forEach((listener) => {
-      listener();
-    });
-  }
-}
-
 class FakeWindow extends FakeEventTarget {
-  swup?: { hooks: FakeSwupHooks };
   __pageLifecycleState?: unknown;
   registerPageScript?: unknown;
   cleanupPageScripts?: unknown;
@@ -79,15 +62,9 @@ async function loadPageLifecycleModule(label: string) {
   return import(`${moduleUrl}?test=${label}-${Date.now()}-${Math.random()}`);
 }
 
-function setupFakeDom(options: { withSwup?: boolean } = {}) {
+function setupFakeDom() {
   const fakeWindow = new FakeWindow();
   const fakeDocument = new FakeDocument();
-
-  if (options.withSwup) {
-    fakeWindow.swup = {
-      hooks: new FakeSwupHooks(),
-    };
-  }
 
   Object.assign(globalThis, {
     window: fakeWindow,
@@ -102,9 +79,9 @@ async function flushAsyncWork() {
   await Promise.resolve();
 }
 
-test("page lifecycle runs registered scripts once per Swup navigation", async () => {
-  const { fakeWindow, fakeDocument } = setupFakeDom({ withSwup: true });
-  const { registerPageScript } = await loadPageLifecycleModule("swup");
+test("page lifecycle runs registered scripts immediately when document is ready", async () => {
+  setupFakeDom();
+  const { registerPageScript } = await loadPageLifecycleModule("ready");
 
   let initCalls = 0;
   registerPageScript("test-script", {
@@ -114,11 +91,6 @@ test("page lifecycle runs registered scripts once per Swup navigation", async ()
   });
 
   assert.equal(initCalls, 1);
-
-  fakeWindow.swup?.hooks.emit("page:view");
-  fakeDocument.dispatchEvent(new Event("astro:page-load"));
-
-  assert.equal(initCalls, 2);
 });
 
 test("page lifecycle disposes stale async initializers when they resolve late", async () => {

@@ -1,6 +1,6 @@
 export function isCurrentPostPage(): boolean {
   return (
-    document.querySelector('#swup-container[data-is-post-page="true"]') !== null
+    document.querySelector('#main-content[data-is-post-page="true"]') !== null
   );
 }
 

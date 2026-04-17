@@ -3,7 +3,6 @@ import svelte, { vitePreprocess } from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
-import swup from "@swup/astro";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
@@ -34,24 +33,6 @@ export default defineConfig({
         concurrency: 4,
     },
     integrations: [
-        swup({
-            theme: false,
-            animationClass: "transition-swup-",
-            containers: ["#main-grid"],
-            animationSelector: "[data-swup-transition]",
-            smoothScrolling: false,
-            cache: true,
-            preload: false,
-            accessibility: true,
-            updateHead: true,
-            updateBodyClass: true,
-            globalInstance: true,
-            resolveUrl: (url) => url,
-            animateHistoryBrowsing: false,
-            skipPopStateHandling: (event) => {
-                return event.state?.url?.includes("#");
-            },
-        }),
         icon(),
         expressiveCode({
             themes: ["github-light", "github-dark"],
@@ -177,8 +158,6 @@ export default defineConfig({
                         if (id.includes("node_modules")) {
                             if (id.includes("svelte"))
                                 return "vendor-svelte";
-                            if (id.includes("swup"))
-                                return "vendor-swup";
                             if (id.includes("fancyapps"))
                                 return "vendor-fancybox";
                             if (id.includes("katex"))
