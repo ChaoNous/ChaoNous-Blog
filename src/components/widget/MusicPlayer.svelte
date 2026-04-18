@@ -439,25 +439,6 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-1">
-            <button
-              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
-              aria-label={i18n(Key.musicPlayerHide)}
-              on:click={toggleHidden}
-              title={i18n(Key.musicPlayerHide)}
-            >
-              <Icon icon="material-symbols:visibility-off" class="text-lg" />
-            </button>
-            <button
-              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
-              aria-label={i18n(Key.musicPlayerPlaylist)}
-              class:text-[var(--primary)]={showPlaylist}
-              on:click={togglePlaylist}
-              title={i18n(Key.musicPlayerPlaylist)}
-            >
-              <Icon icon="material-symbols:queue-music" class="text-lg" />
-            </button>
-          </div>
         </div>
 
         <div class="progress-section mb-4">
@@ -549,7 +530,17 @@
 
           <button
             class="btn-plain w-10 h-10 rounded-lg flex items-center justify-center"
+            aria-label={i18n(Key.musicPlayerHide)}
+            on:click={toggleHidden}
+            title={i18n(Key.musicPlayerHide)}
+          >
+            <Icon icon="material-symbols:visibility-off" class="text-lg" />
+          </button>
+
+          <button
+            class="btn-plain w-10 h-10 rounded-lg flex items-center justify-center"
             aria-label={i18n(Key.musicPlayerPlaylist)}
+            class:text-[var(--primary)]={showPlaylist}
             on:click={togglePlaylist}
             title={i18n(Key.musicPlayerPlaylist)}
           >
