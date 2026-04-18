@@ -439,17 +439,6 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-1">
-            <button
-              class="btn-plain w-7 h-7 rounded-lg flex items-center justify-center"
-              aria-label={i18n(Key.musicPlayerHide)}
-              on:click={toggleHidden}
-              title={i18n(Key.musicPlayerHide)}
-            >
-              <Icon icon="material-symbols:visibility-off" class="text-base" />
-            </button>
-          </div>
-
         </div>
 
         <div class="progress-section mb-3">
@@ -484,9 +473,9 @@
           </div>
         </div>
 
-        <div class="controls flex items-center justify-center gap-1">
+        <div class="controls flex items-center justify-between gap-0.5 px-1">
           <button
-            class="btn-plain w-9 h-9 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg shrink-0"
             aria-label={isShuffled
               ? i18n(Key.musicPlayerShuffle)
               : isRepeating === 1
@@ -507,7 +496,7 @@
           </button>
 
           <button
-            class="btn-plain w-9 h-9 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg shrink-0"
             on:click={previousSong}
             aria-label={i18n(Key.musicPlayerPrevious)}
             disabled={playlist.length <= 1}
@@ -516,7 +505,7 @@
           </button>
 
           <button
-            class="btn-plain w-9 h-9 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg shrink-0"
             aria-label={isPlaying
               ? i18n(Key.musicPlayerPause)
               : i18n(Key.musicPlayerPlay)}
@@ -534,7 +523,7 @@
           </button>
 
           <button
-            class="btn-plain w-9 h-9 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg shrink-0"
             aria-label={i18n(Key.musicPlayerNext)}
             on:click={() => nextSong()}
             disabled={playlist.length <= 1}
@@ -543,13 +532,22 @@
           </button>
 
           <button
-            class="btn-plain w-9 h-9 rounded-lg flex items-center justify-center"
+            class="btn-plain w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
             aria-label={i18n(Key.musicPlayerPlaylist)}
             class:text-[var(--primary)]={showPlaylist}
             on:click={togglePlaylist}
             title={i18n(Key.musicPlayerPlaylist)}
           >
             <Icon icon="material-symbols:queue-music" class="text-base" />
+          </button>
+
+          <button
+            class="btn-plain w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+            aria-label={i18n(Key.musicPlayerHide)}
+            on:click={toggleHidden}
+            title={i18n(Key.musicPlayerHide)}
+          >
+            <Icon icon="material-symbols:visibility-off" class="text-base" />
           </button>
         </div>
       </div>
