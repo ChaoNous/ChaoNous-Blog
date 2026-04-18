@@ -7,17 +7,7 @@
     right: 1rem !important;
   }
 
-  .mini-player {
-    left: auto !important;
-    right: 0 !important;
-    width: 100% !important;
-    min-width: var(--mobile-player-width) !important;
-    max-width: var(--mobile-player-width) !important;
-  }
-
   .expanded-player {
-    left: auto !important;
-    right: 0 !important;
     width: 100% !important;
     min-width: var(--mobile-player-width) !important;
     max-width: var(--mobile-player-width) !important;

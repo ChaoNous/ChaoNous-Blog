@@ -9,19 +9,11 @@
 
 .music-player {
   max-width: 20rem;
+  width: 20rem;
   user-select: none;
   --mobile-player-width: 75dvw;
 }
 
-.mini-player {
-  width: 17.5rem;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  box-sizing: border-box;
-}
-
-.mini-player-surface,
 .expanded-player-surface {
   width: 100%;
   box-sizing: border-box;
@@ -29,9 +21,6 @@
 
 .expanded-player {
   width: 20rem;
-  position: absolute;
-  bottom: 0;
-  right: 0;
   box-sizing: border-box;
 }
 

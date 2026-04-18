@@ -24,7 +24,6 @@
   let meting_type = musicPlayerConfig.type ?? "playlist";
 
   let isPlaying = false;
-  let isExpanded = false;
   let showPlaylist = false;
   let currentTime = 0;
   let duration = 0;
@@ -95,23 +94,11 @@
     audio.play().catch(() => {});
   }
 
-  function toggleExpanded() {
-    if (!playlistLoaded) {
-      lazyLoadPlaylist();
-    }
-
-    isExpanded = !isExpanded;
-    if (!isExpanded) {
-      showPlaylist = false;
-    }
-  }
-
   function togglePlaylist() {
     if (!playlistLoaded) {
       lazyLoadPlaylist();
     }
 
-    isExpanded = true;
     showPlaylist = !showPlaylist;
   }
 
@@ -342,22 +329,18 @@
   <div
     bind:this={playerRoot}
     class="music-player fixed bottom-8 right-6 z-50 transition-all duration-300 ease-in-out"
-    class:expanded={isExpanded}
   >
     <div
-      class="mini-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
+      class="expanded-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
       style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
-      class:opacity-0={isExpanded}
-      class:scale-95={isExpanded}
-      class:pointer-events-none={isExpanded}
     >
       <div
-        class="mini-player-surface p-3"
+        class="expanded-player-surface p-4"
         style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;"
       >
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4 mb-4">
           <div
-            class="cover-container relative w-12 h-12 rounded-full overflow-hidden cursor-pointer"
+            class="cover-container relative w-16 h-16 rounded-full overflow-hidden shrink-0 cursor-pointer"
             on:click={togglePlay}
             on:keydown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -370,87 +353,6 @@
             aria-label={isPlaying
               ? i18n(Key.musicPlayerPause)
               : i18n(Key.musicPlayerPlay)}
-          >
-            {#if currentSong.cover}
-              <img
-                src={getAssetPath(currentSong.cover)}
-                alt={i18n(Key.musicPlayerCover)}
-                class="w-full h-full object-cover transition-transform duration-300"
-                class:spinning={isPlaying && !isLoading}
-                class:animate-pulse={isLoading}
-              />
-            {:else}
-              <div
-                class="w-full h-full flex items-center justify-center bg-(--btn-regular-bg) text-(--primary)"
-              >
-                <Icon icon="material-symbols:album-outline" class="text-xl" />
-              </div>
-            {/if}
-            <div
-              class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
-            >
-              {#if isLoading}
-                <Icon icon="eos-icons:loading" class="text-white text-xl" />
-              {:else if isPlaying}
-                <Icon
-                  icon="material-symbols:pause"
-                  class="text-white text-xl"
-                />
-              {:else}
-                <Icon
-                  icon="material-symbols:play-arrow"
-                  class="text-white text-xl"
-                />
-              {/if}
-            </div>
-          </div>
-
-          <div
-            class="flex-1 min-w-0 cursor-pointer"
-            on:click={toggleExpanded}
-            on:keydown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                toggleExpanded();
-              }
-            }}
-            role="button"
-            tabindex="0"
-            aria-label={i18n(Key.musicPlayerExpand)}
-          >
-            <div class="text-sm font-medium text-90 truncate">
-              {currentSong.title}
-            </div>
-            <div class="text-xs text-50 truncate">
-              {currentSong.artist}
-            </div>
-          </div>
-
-          <button
-            class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
-            aria-label={i18n(Key.musicPlayerExpand)}
-            on:click|stopPropagation={toggleExpanded}
-          >
-            <Icon icon="material-symbols:expand-less" class="text-lg" />
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="expanded-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
-      style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
-      class:opacity-0={!isExpanded}
-      class:scale-95={!isExpanded}
-      class:pointer-events-none={!isExpanded}
-    >
-      <div
-        class="expanded-player-surface p-4"
-        style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;"
-      >
-        <div class="flex items-center gap-4 mb-4">
-          <div
-            class="cover-container relative w-16 h-16 rounded-full overflow-hidden shrink-0"
           >
             {#if currentSong.cover}
               <img
@@ -583,11 +485,16 @@
 
           <button
             class="btn-plain w-10 h-10 rounded-lg flex items-center justify-center"
-            aria-label={i18n(Key.musicPlayerCollapse)}
-            on:click={toggleExpanded}
-            title={i18n(Key.musicPlayerCollapse)}
+            aria-label={i18n(Key.musicPlayerPlaylist)}
+            on:click={togglePlaylist}
+            title={i18n(Key.musicPlayerPlaylist)}
           >
-            <Icon icon="material-symbols:expand-more" class="text-lg" />
+            <Icon
+              icon={showPlaylist
+                ? "material-symbols:playlist-remove"
+                : "material-symbols:playlist-add"}
+              class="text-lg"
+            />
           </button>
         </div>
       </div>
