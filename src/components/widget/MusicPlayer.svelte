@@ -391,12 +391,12 @@
       class:pointer-events-none={isHidden}
     >
       <div
-        class="expanded-player-surface p-4"
+        class="expanded-player-surface p-3"
         style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;"
       >
-        <div class="flex items-center gap-4 mb-4">
+        <div class="flex items-center gap-3 mb-3">
           <div
-            class="cover-container relative w-16 h-16 rounded-full overflow-hidden shrink-0 cursor-pointer"
+            class="cover-container relative w-13 h-13 rounded-full overflow-hidden shrink-0 cursor-pointer"
             on:click={togglePlay}
             on:keydown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -428,33 +428,33 @@
           </div>
 
           <div class="flex-1 min-w-0">
-            <div class="song-title text-lg font-bold text-90 truncate mb-1">
+            <div class="song-title text-base font-bold text-90 truncate mb-0.5">
               {currentSong.title}
             </div>
             <div class="song-artist text-sm text-50 truncate">
               {currentSong.artist}
             </div>
-            <div class="text-xs text-30 mt-1">
+            <div class="text-[0.7rem] text-30 mt-0.5">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
           </div>
 
           <div class="flex items-center gap-1">
             <button
-              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+              class="btn-plain w-7 h-7 rounded-lg flex items-center justify-center"
               aria-label={i18n(Key.musicPlayerHide)}
               on:click={toggleHidden}
               title={i18n(Key.musicPlayerHide)}
             >
-              <Icon icon="material-symbols:visibility-off" class="text-lg" />
+              <Icon icon="material-symbols:visibility-off" class="text-base" />
             </button>
           </div>
 
         </div>
 
-        <div class="progress-section mb-4">
+        <div class="progress-section mb-3">
           <div
-            class="progress-bar flex-1 h-2 bg-(--btn-regular-bg) rounded-full cursor-pointer"
+            class="progress-bar flex-1 h-1.5 bg-(--btn-regular-bg) rounded-full cursor-pointer"
             bind:this={progressBar}
             on:click={setProgress}
             on:keydown={(e) => {
@@ -484,9 +484,9 @@
           </div>
         </div>
 
-        <div class="controls flex items-center justify-center gap-2">
+        <div class="controls flex items-center justify-center gap-1">
           <button
-            class="btn-plain w-10 h-10 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg"
             aria-label={isShuffled
               ? i18n(Key.musicPlayerShuffle)
               : isRepeating === 1
@@ -495,25 +495,28 @@
             on:click|stopPropagation={toggleRepeat}
           >
             {#if isShuffled}
-              <Icon icon="material-symbols:shuffle" class="text-lg" />
+              <Icon icon="material-symbols:shuffle" class="text-[1.05rem]" />
             {:else if isRepeating === 1}
-              <Icon icon="material-symbols:repeat-one" class="text-lg" />
+              <Icon
+                icon="material-symbols:repeat-one"
+                class="text-[1.05rem]"
+              />
             {:else}
-              <Icon icon="material-symbols:repeat" class="text-lg" />
+              <Icon icon="material-symbols:repeat" class="text-[1.05rem]" />
             {/if}
           </button>
 
           <button
-            class="btn-plain w-10 h-10 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg"
             on:click={previousSong}
             aria-label={i18n(Key.musicPlayerPrevious)}
             disabled={playlist.length <= 1}
           >
-            <Icon icon="material-symbols:skip-previous" class="text-xl" />
+            <Icon icon="material-symbols:skip-previous" class="text-lg" />
           </button>
 
           <button
-            class="btn-plain w-10 h-10 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg"
             aria-label={isPlaying
               ? i18n(Key.musicPlayerPause)
               : i18n(Key.musicPlayerPlay)}
@@ -522,31 +525,31 @@
             on:click|stopPropagation={togglePlay}
           >
             {#if isLoading}
-              <Icon icon="eos-icons:loading" class="text-xl" />
+              <Icon icon="eos-icons:loading" class="text-lg" />
             {:else if isPlaying}
-              <Icon icon="material-symbols:pause" class="text-xl" />
+              <Icon icon="material-symbols:pause" class="text-lg" />
             {:else}
-              <Icon icon="material-symbols:play-arrow" class="text-xl" />
+              <Icon icon="material-symbols:play-arrow" class="text-lg" />
             {/if}
           </button>
 
           <button
-            class="btn-plain w-10 h-10 rounded-lg"
+            class="btn-plain w-9 h-9 rounded-lg"
             aria-label={i18n(Key.musicPlayerNext)}
             on:click={() => nextSong()}
             disabled={playlist.length <= 1}
           >
-            <Icon icon="material-symbols:skip-next" class="text-xl" />
+            <Icon icon="material-symbols:skip-next" class="text-lg" />
           </button>
 
           <button
-            class="btn-plain w-10 h-10 rounded-lg flex items-center justify-center"
+            class="btn-plain w-9 h-9 rounded-lg flex items-center justify-center"
             aria-label={i18n(Key.musicPlayerPlaylist)}
             class:text-[var(--primary)]={showPlaylist}
             on:click={togglePlaylist}
             title={i18n(Key.musicPlayerPlaylist)}
           >
-            <Icon icon="material-symbols:queue-music" class="text-lg" />
+            <Icon icon="material-symbols:queue-music" class="text-base" />
           </button>
         </div>
       </div>
@@ -555,7 +558,7 @@
     {#if showPlaylist}
       <div
         bind:this={playlistPanel}
-        class="playlist-panel animate-slide-up float-panel fixed bottom-20 right-6 w-80 max-h-96 overflow-hidden z-50"
+        class="playlist-panel animate-slide-up float-panel fixed bottom-19 right-6 w-72 max-h-96 overflow-hidden z-50"
         style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border-radius: var(--radius-large);"
       >
         <div

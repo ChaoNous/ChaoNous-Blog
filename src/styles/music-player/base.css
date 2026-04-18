@@ -41,10 +41,10 @@
 }
 
 .music-player {
-  max-width: 20rem;
-  width: 20rem;
+  max-width: 18rem;
+  width: 18rem;
   user-select: none;
-  --mobile-player-width: 75dvw;
+  --mobile-player-width: 72dvw;
 }
 
 .music-player.hidden-mode {
@@ -62,7 +62,7 @@
 }
 
 .expanded-player {
-  width: 20rem;
+  width: 18rem;
   position: absolute;
   bottom: 0;
   right: 0;
