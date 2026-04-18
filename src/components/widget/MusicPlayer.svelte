@@ -544,12 +544,7 @@
             on:click={togglePlaylist}
             title={i18n(Key.musicPlayerPlaylist)}
           >
-            <Icon
-              icon={showPlaylist
-                ? "material-symbols:playlist-remove"
-                : "material-symbols:playlist-add"}
-              class="text-lg"
-            />
+            <Icon icon="material-symbols:queue-music" class="text-lg" />
           </button>
         </div>
       </div>
