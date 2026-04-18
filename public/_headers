@@ -37,10 +37,6 @@
 /assets/posts/*
   Cache-Control: public, max-age=2592000
 
-# Pagefind search index - medium cache
-/pagefind/*
-  Cache-Control: public, max-age=3600
-
 # JS files in public - medium cache
 /js/*
   Cache-Control: public, max-age=86400

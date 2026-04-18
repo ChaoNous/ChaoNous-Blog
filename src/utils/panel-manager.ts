@@ -1,4 +1,4 @@
-export type PanelId = "display-setting" | "nav-menu-panel" | "search-panel";
+export type PanelId = "display-setting" | "nav-menu-panel";
 class PanelManager {
     private activePanels: Set<PanelId> = new Set();
     private panelStack: PanelId[] = [];

@@ -2,13 +2,10 @@
 import { Icon } from "astro-icon/components";
 import { navBarConfig, siteConfig } from "../config";
 import { LinkPresets } from "../constants/link-presets";
-import I18nKey from "../i18n/i18nKey";
-import { i18n } from "../i18n/translation";
 import { LinkPreset, type NavBarLink } from "../types/config";
 import { url } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
 import LightDarkSwitch from "./LightDarkSwitch.svelte";
-import Search from "./Search.svelte";
 import DisplaySettings from "./widget/DisplaySettings.svelte";
 import DropdownMenu from "./widget/DropdownMenu.astro";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
@@ -31,7 +28,6 @@ const iconSrc = rawIcon;
 const hasNavbarIcon = Boolean(siteConfig.navbarTitle?.icon);
 const navbarBrandText = siteConfig.navbarTitle?.text || siteConfig.title;
 const isChineseSite = (siteConfig.lang || "").toLowerCase().startsWith("zh");
-const searchLabel = i18n(I18nKey.search);
 const primaryNavigationLabel = isChineseSite
   ? "\u4e3b\u5bfc\u822a"
   : "Primary navigation";
@@ -110,22 +106,6 @@ const mobileControlsLabel = isChineseSite
       }
     </div>
     <div class="navbar-actions flex items-center gap-1">
-      <div id="search-container" class="hidden lg:block">
-        <Search client:media="(min-width: 1024px)" />
-      </div>
-      <button
-        type="button"
-        aria-label={searchLabel}
-        aria-controls="search-panel"
-        class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90 lg:hidden"
-        id="mobile-search-switch"
-      >
-        <Icon
-          name="material-symbols:search"
-          class="navbar-action-icon text-[1.25rem]"
-        />
-      </button>
-
       {
         !siteConfig.themeColor.fixed && (
           <button
@@ -170,5 +150,4 @@ const mobileControlsLabel = isChineseSite
 <script>
   import "../scripts/navbar/navbar-scroll.ts";
   import "../scripts/navbar/navbar-panels.ts";
-  import "../scripts/navbar/navbar-pagefind.ts";
 </script>

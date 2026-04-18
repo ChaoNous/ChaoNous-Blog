@@ -38,11 +38,6 @@ export async function initializePanelManager(): Promise<unknown> {
             "nav-menu-panel",
             "nav-menu-switch",
           ]);
-          setClickOutsideToClose("search-panel", [
-            "search-panel",
-            "search-bar",
-            "search-switch",
-          ]);
         }
 
         return panelManager;

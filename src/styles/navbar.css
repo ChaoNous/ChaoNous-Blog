@@ -114,8 +114,7 @@
 #navbar :is(
   .dropdown-container > a,
   .dropdown-container > button,
-  .navbar-actions .btn-plain,
-  #search-bar
+  .navbar-actions .btn-plain
 ) {
   transition:
     background-color 300ms ease-in-out,
@@ -132,12 +131,6 @@
   transition:
     transform 300ms ease-in-out,
     opacity 300ms ease-in-out !important;
-}
-
-#navbar.is-searching .navbar-links {
-  opacity: 0;
-  transform: translateY(-0.35rem);
-  pointer-events: none;
 }
 
 #navbar .dropdown-item,

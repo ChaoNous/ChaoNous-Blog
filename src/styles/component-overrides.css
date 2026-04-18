@@ -100,8 +100,7 @@
   .is-theme-transitioning .dropdown-content,
   .is-theme-transitioning .float-panel,
   .is-theme-transitioning #display-setting,
-  .is-theme-transitioning #nav-menu-panel,
-  .is-theme-transitioning #search-panel {
+  .is-theme-transitioning #nav-menu-panel {
     transition: none !important;
     backdrop-filter: none !important;
   }
@@ -176,10 +175,6 @@
 
   .float-panel-closed {
     @apply -translate-y-1 opacity-0 pointer-events-none;
-  }
-
-  .search-panel mark {
-    @apply bg-transparent text-(--primary);
   }
 
   .btn-card {
@@ -379,8 +374,7 @@
 .float-panel,
 .dropdown-content,
 #display-setting,
-#nav-menu-panel,
-#search-panel {
+#nav-menu-panel {
   background: var(--panel-bg) !important;
   backdrop-filter: var(--panel-blur) !important;
   box-shadow: var(--shadow-lg) !important;

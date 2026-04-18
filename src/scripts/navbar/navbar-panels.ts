@@ -32,37 +32,6 @@ function wirePanelButton(
 	cleanups.push(() => button.removeEventListener("click", handleClick));
 }
 
-function wireMobileSearchButton(cleanups: Array<() => void>) {
-	const mobileSearchBtn = document.getElementById("mobile-search-switch");
-	if (!(mobileSearchBtn instanceof HTMLElement)) return;
-
-	const focusMobileSearchInput = () => {
-		requestAnimationFrame(() => {
-			const searchInput = document.getElementById("search-input-mobile");
-			if (searchInput instanceof HTMLInputElement) {
-				searchInput.focus();
-			}
-		});
-	};
-
-	const handleMobileSearch = async (event: MouseEvent) => {
-		event.preventDefault();
-		event.stopPropagation();
-		try {
-			const { panelManager } = await import("../../utils/panel-manager");
-			await panelManager.togglePanel("search-panel", true);
-			focusMobileSearchInput();
-		} catch (error) {
-			console.error("Failed to open search panel:", error);
-		}
-	};
-
-	mobileSearchBtn.addEventListener("click", handleMobileSearch);
-	cleanups.push(() =>
-		mobileSearchBtn.removeEventListener("click", handleMobileSearch),
-	);
-}
-
 registerPageScript("navbar-interactions", {
 	shouldRun() {
 		return document.getElementById("navbar") !== null;
@@ -72,7 +41,6 @@ registerPageScript("navbar-interactions", {
 
 		wirePanelButton("display-settings-switch", "display-setting", cleanups);
 		wirePanelButton("nav-menu-switch", "nav-menu-panel", cleanups);
-		wireMobileSearchButton(cleanups);
 
 		const cleanupSemifullScrollDetection = initSemifullScrollDetection();
 		cleanups.push(cleanupSemifullScrollDetection);
