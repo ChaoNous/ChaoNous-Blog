@@ -11,13 +11,19 @@
   position: relative;
   width: 100%;
   height: 100%;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--primary);
   background: var(--card-bg);
   border: 1px solid var(--line-divider);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   opacity: 0.85;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .orb-player::before {
@@ -74,6 +80,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .orb-player {
+    transition-duration: 0.01ms !important;
+  }
+
   .cover-container img {
     animation: none !important;
   }

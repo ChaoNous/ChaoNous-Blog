@@ -341,7 +341,7 @@
     class:hidden-mode={isHidden}
   >
     <div
-      class="orb-player rounded-xl cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center"
+      class="orb-player rounded-xl flex items-center justify-center"
       class:opacity-0={!isHidden}
       class:scale-0={!isHidden}
       class:pointer-events-none={!isHidden}
