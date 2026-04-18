@@ -7,6 +7,15 @@
     right: 1rem !important;
   }
 
+  .music-player.hidden-mode {
+    width: 3rem !important;
+    height: 3rem !important;
+    min-width: 3rem !important;
+    max-width: 3rem !important;
+    min-height: 3rem !important;
+    max-height: 3rem !important;
+  }
+
   .expanded-player {
     width: 100% !important;
     min-width: var(--mobile-player-width) !important;

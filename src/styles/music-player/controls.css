@@ -2,6 +2,7 @@
 .music-player [role="button"],
 .progress-bar,
 .playlist-item,
+.orb-player,
 .expanded-player,
 .playlist-panel,
 .cover-container {
@@ -30,6 +31,7 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .orb-player:hover,
   .expanded-player:hover,
   .playlist-panel:hover {
     transform: translateY(-2px);

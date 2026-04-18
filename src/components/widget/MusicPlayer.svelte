@@ -24,6 +24,7 @@
   let meting_type = musicPlayerConfig.type ?? "playlist";
 
   let isPlaying = false;
+  let isHidden = false;
   let showPlaylist = false;
   let currentTime = 0;
   let duration = 0;
@@ -100,6 +101,13 @@
     }
 
     showPlaylist = !showPlaylist;
+  }
+
+  function toggleHidden() {
+    isHidden = !isHidden;
+    if (isHidden) {
+      showPlaylist = false;
+    }
   }
 
   function closePlaylist() {
@@ -264,6 +272,7 @@
     const cleanups: Array<() => void> = [];
     const isMobileViewport =
       typeof window !== "undefined" && window.innerWidth < 768;
+    isHidden = isMobileViewport;
 
     cleanups.push(
       bindAutoplayRecovery({
@@ -329,10 +338,57 @@
   <div
     bind:this={playerRoot}
     class="music-player fixed bottom-8 right-6 z-50 transition-all duration-300 ease-in-out"
+    class:hidden-mode={isHidden}
   >
+    <div
+      class="orb-player rounded-xl cursor-pointer transition-all duration-500 ease-in-out flex items-center justify-center"
+      class:opacity-0={!isHidden}
+      class:scale-0={!isHidden}
+      class:pointer-events-none={!isHidden}
+      on:click={toggleHidden}
+      on:keydown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggleHidden();
+        }
+      }}
+      role="button"
+      tabindex="0"
+      aria-label={i18n(Key.musicPlayerShow)}
+    >
+      {#if isLoading}
+        <Icon
+          icon="eos-icons:loading"
+          class="hidden-player-icon text-(--primary) text-3xl"
+        />
+      {:else if isPlaying}
+        <div class="flex space-x-0.5">
+          <div
+            class="hidden-player-bar w-0.5 h-3 rounded-full animate-pulse"
+          ></div>
+          <div
+            class="hidden-player-bar w-0.5 h-4 rounded-full animate-pulse"
+            style="animation-delay: 150ms;"
+          ></div>
+          <div
+            class="hidden-player-bar w-0.5 h-2 rounded-full animate-pulse"
+            style="animation-delay: 300ms;"
+          ></div>
+        </div>
+      {:else}
+        <Icon
+          icon="material-symbols:music-note"
+          class="hidden-player-icon text-(--primary) text-3xl"
+        />
+      {/if}
+    </div>
+
     <div
       class="expanded-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
       style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
+      class:opacity-0={isHidden}
+      class:scale-95={isHidden}
+      class:pointer-events-none={isHidden}
     >
       <div
         class="expanded-player-surface p-4"
@@ -384,6 +440,14 @@
           </div>
 
           <div class="flex items-center gap-1">
+            <button
+              class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+              aria-label={i18n(Key.musicPlayerHide)}
+              on:click={toggleHidden}
+              title={i18n(Key.musicPlayerHide)}
+            >
+              <Icon icon="material-symbols:visibility-off" class="text-lg" />
+            </button>
             <button
               class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
               aria-label={i18n(Key.musicPlayerPlaylist)}
