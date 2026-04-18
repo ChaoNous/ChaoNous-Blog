@@ -231,10 +231,3 @@ export type SidebarLayoutConfig = {
     };
   };
 };
-
-
-export type CommentConfig = {
-  enable: boolean;
-  apiBasePath?: string;
-  lang?: string;
-};

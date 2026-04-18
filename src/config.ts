@@ -1,5 +1,4 @@
 import type {
-  CommentConfig,
   ExpressiveCodeConfig,
   LicenseConfig,
   MusicPlayerConfig,
@@ -155,12 +154,6 @@ export const musicPlayerConfig: MusicPlayerConfig = {
   id: "13556055400",
   server: "netease",
   type: "playlist",
-};
-
-export const commentConfig: CommentConfig = {
-  enable: true,
-  apiBasePath: "/api/comments",
-  lang: "zh-CN",
 };
 
 export const sidebarLayoutConfig: SidebarLayoutConfig = {

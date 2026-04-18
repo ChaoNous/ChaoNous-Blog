@@ -26,7 +26,6 @@ export const en: Translation = {
     [Key.author]: "Author",
     [Key.publishedAt]: "Published at",
     [Key.license]: "License",
-    [Key.comments]: "Comments",
     [Key.notFound]: "404",
     [Key.notFoundTitle]: "Page Not Found",
     [Key.notFoundDescription]: "Sorry, the page you visited does not exist or has been moved.",

@@ -24,7 +24,6 @@ enum I18nKey {
     author = "author",
     publishedAt = "publishedAt",
     license = "license",
-    comments = "comments",
     notFound = "notFound",
     notFoundTitle = "notFoundTitle",
     notFoundDescription = "notFoundDescription",

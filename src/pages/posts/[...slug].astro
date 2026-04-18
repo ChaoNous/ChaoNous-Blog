@@ -1,13 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
-import Cnc from "@components/comment/Cnc.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import PostDetailLayout from "@components/post/PostDetailLayout.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import { getPostUrl } from "@utils/url-utils";
 import { getAllPostSlugs } from "@utils/post-routes.js";
-import { commentConfig } from "src/config";
 import { profileConfig, siteConfig } from "../../config";
 import { buildBlogPostingJsonLd } from "../../utils/blog-schema";
 
@@ -77,18 +75,4 @@ const jsonLd = buildBlogPostingJsonLd({
   <Markdown class="mb-6 markdown-content onload-animation">
     <Content />
   </Markdown>
-
-  {
-    commentConfig.enable && (
-      <div slot="post-actions" class="comment-wrapper">
-        <Cnc
-          apiBasePath={commentConfig.apiBasePath}
-          lang={commentConfig.lang}
-          postSlug={canonicalUrl}
-          postUrl={canonicalUrl}
-          postTitle={entry.data.title}
-        />
-      </div>
-    )
-  }
 </PostDetailLayout>
