@@ -181,7 +181,6 @@ export type ExpressiveCodeConfig = {
 
 export type MusicPlayerConfig = {
   enable: boolean;
-  mode: "meting" | "local";
   meting_api: string;
   id: string;
   server: string;

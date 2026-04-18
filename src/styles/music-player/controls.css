@@ -1,7 +1,6 @@
 .music-player button,
 .music-player [role="button"],
 .progress-bar,
-.volume-bar,
 .playlist-item,
 .mini-player,
 .expanded-player,
@@ -22,7 +21,6 @@
 .music-player button:focus-visible,
 .music-player [role="button"]:focus-visible,
 .progress-bar:focus-visible,
-.volume-bar:focus-visible,
 .playlist-item:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
@@ -53,8 +51,7 @@
     color: var(--primary);
   }
 
-  .progress-bar:hover,
-  .volume-bar:hover {
+  .progress-bar:hover {
     box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent);
   }
 }
@@ -81,54 +78,4 @@
 
 .progress-section div:hover {
   transition: transform 0.2s ease;
-}
-
-.volume-control {
-  position: relative;
-  width: fit-content;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.volume-popover {
-  position: absolute;
-  bottom: calc(100% + 0.125rem);
-  left: 50%;
-  width: max-content;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-50%) translateY(8px);
-  pointer-events: none;
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease,
-    visibility 0.18s ease;
-  z-index: 5;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .volume-control:hover .volume-popover,
-  .volume-control:focus-within .volume-popover {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-    pointer-events: auto;
-  }
-}
-
-.volume-popover.is-open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
-}
-
-.volume-bar {
-  position: relative;
-  overflow: hidden;
-}
-
-.volume-fill {
-  min-height: 0.25rem;
 }

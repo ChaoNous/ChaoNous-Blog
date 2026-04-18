@@ -148,7 +148,6 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 
 export const musicPlayerConfig: MusicPlayerConfig = {
   enable: true,
-  mode: "meting",
   meting_api:
     "/api/music/playlist?server=:server&type=:type&id=:id&auth=:auth&r=:r",
   id: "13556055400",

@@ -9,7 +9,6 @@ type BindPlayerDocumentEventsOptions = {
 	getPlaylistPanel: () => HTMLElement | null;
 	isPlaylistOpen: () => boolean;
 	closePlaylist: () => void;
-	hideMobileVolumePopover: () => void;
 };
 
 const interactionEvents = ["click", "keydown", "touchstart"] as const;
@@ -52,19 +51,14 @@ export function bindPlayerDocumentEvents(
 		getPlaylistPanel,
 		isPlaylistOpen,
 		closePlaylist,
-		hideMobileVolumePopover,
 	} = options;
 
 	const handleDocumentClick = (event: MouseEvent) => {
 		const target = event.target;
-		const playerRoot = getPlayerRoot();
-		if (target instanceof Node && !playerRoot?.contains(target)) {
-			hideMobileVolumePopover();
-		}
-
 		if (!isPlaylistOpen()) return;
 		if (!(target instanceof Node)) return;
 
+		const playerRoot = getPlayerRoot();
 		const playlistPanel = getPlaylistPanel();
 		if (playlistPanel?.contains(target) || playerRoot?.contains(target)) return;
 		closePlaylist();
@@ -87,7 +81,6 @@ export function bindPlayerDocumentEvents(
 
 type ScheduleInitialPlaylistLoadOptions = {
 	enabled: boolean;
-	mode: string;
 	isMobileViewport: boolean;
 	lazyLoadPlaylist: () => void;
 };
@@ -95,15 +88,15 @@ type ScheduleInitialPlaylistLoadOptions = {
 export function scheduleInitialPlaylistLoad(
 	options: ScheduleInitialPlaylistLoadOptions,
 ) {
-	const { enabled, mode, isMobileViewport, lazyLoadPlaylist } = options;
+	const { enabled, isMobileViewport, lazyLoadPlaylist } = options;
 	if (!enabled) return;
 
-	if (mode === "meting" && !isMobileViewport) {
+	if (!isMobileViewport) {
 		lazyLoadPlaylist();
 		return;
 	}
 
-	if (mode !== "meting" && "requestIdleCallback" in window) {
+	if ("requestIdleCallback" in window) {
 		requestIdleCallback(
 			() => {
 				lazyLoadPlaylist();
@@ -113,7 +106,5 @@ export function scheduleInitialPlaylistLoad(
 		return;
 	}
 
-	if (mode !== "meting") {
-		setTimeout(lazyLoadPlaylist, 3000);
-	}
+	setTimeout(lazyLoadPlaylist, 3000);
 }
