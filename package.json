@@ -17,7 +17,7 @@
     "dev": "astro dev",
     "start": "astro preview",
     "check": "astro check",
-    "build": "node scripts/compress-images.js && node scripts/compress-fonts.js && astro build && node scripts/optimize-render-blocking.js",
+    "build": "astro build && node scripts/optimize-render-blocking.js",
     "preview": "astro preview",
     "astro": "astro",
     "type-check": "tsc --noEmit",
@@ -25,9 +25,7 @@
     "verify:content": "node scripts/verify-post-metadata.mjs",
     "verify": "pnpm run test && pnpm run verify:content && pnpm run type-check && pnpm run check",
     "format": "prettier --write ./src",
-    "preinstall": "npx only-allow pnpm",
-    "compress-images": "node scripts/compress-images.js",
-    "compress-fonts": "node scripts/compress-fonts.js"
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
@@ -75,7 +73,6 @@
     "@iconify-json/mdi": "^1.2.3",
     "@types/hast": "^3.0.4",
     "@types/mdast": "^4.0.4",
-    "cn-font-split": "^7.4.1",
     "postcss-import": "^16.1.1",
     "postcss-nesting": "^14.0.0",
     "prettier": "^3.8.1",
@@ -89,7 +86,6 @@
       "@emmetio/css-parser": "https://codeload.github.com/ramya-rao-a/css-parser/tar.gz/370c480ac103bd17c7bcfb34bf5d577dc40d3660"
     },
     "onlyBuiltDependencies": [
-      "cn-font-split",
       "koffi",
       "protobufjs"
     ]

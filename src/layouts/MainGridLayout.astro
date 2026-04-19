@@ -3,7 +3,6 @@ import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
-import { siteConfig } from "../config";
 import { widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
 
@@ -93,18 +92,6 @@ const mainContentClass = `
   postSlug={postSlug}
   canonicalUrl={canonicalUrl}
 >
-  <script
-    is:inline
-    define:vars={{
-      navbarTransparentMode:
-        siteConfig.banner?.navbar?.transparentMode || "semi",
-    }}
-  >
-    window.__mainGridRuntimeConfig = {
-      navbarTransparentMode,
-    };
-  </script>
-
   <slot slot="head" name="head" />
 
   <div
@@ -167,5 +154,4 @@ const mainContentClass = `
       </div>
     </div>
   </div>
-
 </Layout>

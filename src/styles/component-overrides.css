@@ -24,19 +24,28 @@
   }
 
   @keyframes theme-fade-out {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 
   @keyframes theme-fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 
   .transition,
   [class*="border"],
   [class*="transition"] {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.15s;
   }
@@ -88,11 +97,7 @@
     fill: currentColor;
   }
 
-  .is-theme-transitioning:not(.use-view-transition) #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode] > div,
-  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode].scrolled > div,
-  .is-theme-transitioning:not(.use-view-transition) #navbar > div,
-  .is-theme-transitioning:not(.use-view-transition) #navbar[data-transparent-mode] > div {
+  .is-theme-transitioning:not(.use-view-transition) #navbar > div {
     transition: none !important;
     backdrop-filter: none !important;
   }
@@ -113,7 +118,25 @@
     contain: layout style;
   }
 
-  h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a,
+  span,
+  li,
+  ul,
+  ol,
+  blockquote,
+  code,
+  pre,
+  table,
+  th,
+  td,
+  strong {
     @apply transition-colors duration-150;
   }
 
@@ -190,7 +213,9 @@
     @apply transition-colors duration-150 relative flex items-center justify-center bg-none hover:text-(--primary);
     background: transparent;
     color: var(--text-main);
-    transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+    transition:
+      background-color 300ms ease-in-out,
+      color 300ms ease-in-out;
   }
 
   .btn-plain:hover {
@@ -337,7 +362,13 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, color-mix(in oklch, currentColor 10%, transparent) 14%, color-mix(in oklch, currentColor 10%, transparent) 86%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklch, currentColor 10%, transparent) 14%,
+    color-mix(in oklch, currentColor 10%, transparent) 86%,
+    transparent 100%
+  );
 }
 
 .float-panel,
@@ -348,7 +379,10 @@
   backdrop-filter: var(--panel-blur) !important;
   box-shadow: var(--shadow-lg) !important;
   border: none !important;
-  transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease !important;
+  transition:
+    background 0.3s ease,
+    backdrop-filter 0.3s ease,
+    box-shadow 0.3s ease !important;
 }
 
 #display-setting {
@@ -369,32 +403,4 @@
   backdrop-filter: none !important;
   box-shadow: none !important;
   color: var(--navbar-foreground) !important;
-}
-
-#navbar[data-transparent-mode="full"] > div {
-  --nav-bg: transparent;
-  --nav-blur: none;
-  --nav-shadow: none;
-  --navbar-foreground: var(--navbar-overlay-foreground);
-}
-
-#navbar[data-transparent-mode="semifull"]:not(.scrolled) > div {
-  --nav-bg: transparent;
-  --nav-blur: none;
-  --nav-shadow: none;
-  --navbar-foreground: var(--navbar-overlay-foreground);
-}
-
-#navbar[data-transparent-mode="semi"] > div,
-#navbar[data-transparent-mode="semifull"].scrolled > div {
-  background: transparent !important;
-  border-radius: 0 !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-}
-
-:root.dark #navbar[data-transparent-mode="semi"] > div,
-:root.dark #navbar[data-transparent-mode="semifull"].scrolled > div {
-  background: transparent !important;
-  box-shadow: none !important;
 }

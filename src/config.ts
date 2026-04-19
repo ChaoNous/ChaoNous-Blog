@@ -38,21 +38,6 @@ export const siteConfig: SiteConfig = {
     logo: "",
   },
 
-  banner: {
-    src: {
-      desktop: [],
-      mobile: [],
-    },
-    position: "center",
-    carousel: {
-      enable: false,
-      interval: 4,
-    },
-    navbar: {
-      transparentMode: "semi",
-    },
-  },
-
   toc: {
     depth: 2,
   },
@@ -60,21 +45,6 @@ export const siteConfig: SiteConfig = {
   showCoverInContent: true,
   generateOgImages: true,
   favicon: [],
-
-  font: {
-    asciiFont: {
-      fontFamily: "'Crimson Pro'",
-      fontWeight: "400",
-      localFonts: [],
-      enableCompress: false,
-    },
-    cjkFont: {
-      fontFamily: "'Zhuque Fangsong UI'",
-      fontWeight: "400",
-      localFonts: ["ZhuqueFangsong-Regular.ttf"],
-      enableCompress: true,
-    },
-  },
 };
 
 export const navBarConfig: NavBarConfig = {
@@ -129,7 +99,6 @@ export const profileConfig: ProfileConfig = {
 };
 
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
-  theme: "github-dark",
   hideDuringThemeTransition: true,
 };
 

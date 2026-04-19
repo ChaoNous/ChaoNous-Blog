@@ -1,10 +1,5 @@
-
 .onload-animation {
   animation: fade-in-scale 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.onload-animation-fade-in {
-  animation: simple-fade-in 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes fade-in-scale {
@@ -17,16 +12,6 @@
     transform: scale(1);
   }
 }
-
-@keyframes simple-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 
 .card-animation {
   opacity: 0;
@@ -67,16 +52,13 @@
   transform: scale(1);
 }
 
-
 .onload-animation,
 .card-animation {
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-
 @media (max-width: 768px) {
-  
   .onload-animation,
   .card-animation {
     -webkit-transform: translateZ(0);
@@ -87,7 +69,6 @@
     perspective: 1000;
   }
 }
-
 
 @media (prefers-reduced-motion: reduce) {
   .onload-animation,

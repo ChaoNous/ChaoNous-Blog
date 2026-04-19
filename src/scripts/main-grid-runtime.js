@@ -1,5 +1,3 @@
-const runtimeConfig = window.__mainGridRuntimeConfig || {};
-const navbarTransparentMode = runtimeConfig.navbarTransparentMode || "semi";
 export function syncDesktopLayoutState() {
   const mainGrid = document.getElementById("main-grid");
   if (mainGrid) {
@@ -19,18 +17,5 @@ export function syncDesktopLayoutState() {
       "lg:grid-cols-2",
       "gap-6",
     );
-  }
-}
-export function applyLayout() {
-  const navbar = document.getElementById("navbar");
-  if (navbar) {
-    navbar.removeAttribute("data-dynamic-transparent");
-    navbar.setAttribute("data-transparent-mode", navbarTransparentMode);
-    if (
-      navbarTransparentMode === "semifull" &&
-      window.initSemifullScrollDetection
-    ) {
-      window.initSemifullScrollDetection();
-    }
   }
 }

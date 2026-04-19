@@ -36,55 +36,68 @@ body {
   line-height: 1.7;
   color: var(--text-main);
   background:
-    linear-gradient(180deg, transparent 0%, transparent 42%, var(--page-bg-vignette) 100%),
-    var(--page-bg-weave-primary),
-    var(--page-bg-weave-secondary),
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 42%,
+      var(--page-bg-vignette) 100%
+    ),
+    var(--page-bg-weave-primary), var(--page-bg-weave-secondary),
     var(--page-bg-weave-fine),
-    linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
+    linear-gradient(
+      180deg,
+      var(--page-bg-top) 0%,
+      var(--page-bg) 52%,
+      var(--page-bg-bottom) 100%
+    );
   background-blend-mode: normal, soft-light, soft-light, soft-light, normal;
   background-attachment: fixed;
-  transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
+  transition:
+    background-color 0.2s ease,
+    background-image 0.2s ease,
+    color 0.15s ease;
 }
 
-body :where(
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  a,
-  span,
-  strong,
-  em,
-  small,
-  blockquote,
-  cite,
-  li,
-  dt,
-  dd,
-  figcaption,
-  label,
-  button,
-  input,
-  textarea,
-  select,
-  option,
-  summary,
-  legend,
-  table,
-  thead,
-  tbody,
-  tfoot,
-  tr,
-  th,
-  td,
-  code,
-  pre,
-  kbd,
-  samp
-) {
+body
+  :where(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    a,
+    span,
+    strong,
+    em,
+    small,
+    blockquote,
+    cite,
+    li,
+    dt,
+    dd,
+    figcaption,
+    label,
+    button,
+    input,
+    textarea,
+    select,
+    option,
+    summary,
+    legend,
+    table,
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    th,
+    td,
+    code,
+    pre,
+    kbd,
+    samp
+  ) {
   font-family: var(--font-content);
 }
 
@@ -194,11 +207,6 @@ body::-webkit-scrollbar {
   contain-intrinsic-size: 0 500px;
 }
 
-.carousel-item,
-.banner-item {
-  will-change: transform, opacity;
-}
-
 .overflow-auto,
 .overflow-scroll,
 .overflow-x-auto,
@@ -213,10 +221,6 @@ video,
 canvas {
   display: block;
   max-width: 100%;
-}
-
-.carousel-item {
-  contain: layout style;
 }
 
 @media (max-width: 1023px) {

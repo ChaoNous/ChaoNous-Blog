@@ -1,7 +1,4 @@
-import type {
-  DARK_MODE,
-  LIGHT_MODE,
-} from "../constants/constants";
+import type { DARK_MODE, LIGHT_MODE } from "../constants/constants";
 
 export type SiteConfig = {
   title: string;
@@ -51,49 +48,6 @@ export type SiteConfig = {
     logo?: string;
   };
 
-  font: {
-    asciiFont: {
-      fontFamily: string;
-      fontWeight: string | number;
-      localFonts: string[];
-      enableCompress: boolean;
-    };
-    cjkFont: {
-      fontFamily: string;
-      fontWeight: string | number;
-      localFonts: string[];
-      enableCompress: boolean;
-    };
-  };
-
-  banner: {
-    src:
-      | string
-      | string[]
-      | {
-          desktop?: string | string[];
-          mobile?: string | string[];
-        };
-    position?: "top" | "center" | "bottom";
-    carousel?: {
-      enable: boolean;
-      interval: number;
-    };
-    homeText?: {
-      enable: boolean;
-      title?: string;
-      subtitle?: string | string[];
-      typewriter?: {
-        enable: boolean;
-        speed: number;
-        deleteSpeed: number;
-        pauseTime: number;
-      };
-    };
-    navbar?: {
-      transparentMode?: "semi" | "full" | "semifull";
-    };
-  };
   toc: {
     depth: 1 | 2 | 3;
   };
@@ -144,7 +98,6 @@ export type ProfileConfig = {
 
 export type LIGHT_DARK_MODE = typeof LIGHT_MODE | typeof DARK_MODE;
 
-
 export type BlogPostData = {
   body: string;
   title: string;
@@ -162,7 +115,6 @@ export type BlogPostData = {
 };
 
 export type ExpressiveCodeConfig = {
-  theme: string;
   hideDuringThemeTransition?: boolean;
 };
 

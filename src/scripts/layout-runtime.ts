@@ -1,4 +1,4 @@
-import { applyLayout, syncDesktopLayoutState } from "./main-grid-runtime";
+import { syncDesktopLayoutState } from "./main-grid-runtime";
 import { initCustomScrollbar } from "./layout-runtime/katex-scrollbar";
 import { initFancybox, checkKatex } from "./layout-runtime/fancybox-runtime";
 import { initializePanelManager } from "./panel-init";
@@ -29,7 +29,6 @@ function scheduleIdleTask(task: () => void, timeout = 3000): void {
 void initializePanelManager();
 
 function handleResize() {
-  applyLayout();
   syncDesktopLayoutState();
 }
 window.addEventListener("resize", handleResize);
@@ -40,7 +39,6 @@ runOnDocumentReady(async () => {
   });
   scheduleIdleTask(initCustomScrollbar);
   checkKatex();
-  applyLayout();
   syncDesktopLayoutState();
   await initializePanelManager();
 });
