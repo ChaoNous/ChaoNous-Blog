@@ -182,24 +182,35 @@ const skipToContentLabel = isChineseSite
           
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.5 0.02"
-            numOctaves="3"
-            seed="1"
+            baseFrequency="0.72 0.022"
+            numOctaves="2"
+            seed="11"
             result="warp"></feTurbulence>
           
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.02 0.5"
-            numOctaves="3"
-            seed="2"
+            baseFrequency="0.022 0.68"
+            numOctaves="2"
+            seed="17"
             result="weft"></feTurbulence>
           
-          <feBlend mode="screen" in="warp" in2="weft" result="fabric"></feBlend>
+          <feBlend mode="multiply" in="warp" in2="weft" result="threads"></feBlend>
+          
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.012"
+            numOctaves="3"
+            seed="29"
+            result="fiber"></feTurbulence>
+          
+          <feBlend mode="screen" in="threads" in2="fiber" result="fabric"></feBlend>
+          
+          <feBlend mode="soft-light" in="SourceGraphic" in2="fabric" result="woven"></feBlend>
           
           <feColorMatrix
             type="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
-            in="fabric"></feColorMatrix>
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.24 0"
+            in="woven"></feColorMatrix>
         </filter>
       </defs>
     </svg>

@@ -40,8 +40,9 @@ body {
     var(--page-bg-weave-primary),
     var(--page-bg-weave-secondary),
     var(--page-bg-weave-fine),
+    var(--page-bg-weave-micro),
     linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
-  background-blend-mode: normal, soft-light, soft-light, soft-light, normal;
+  background-blend-mode: normal, soft-light, soft-light, overlay, overlay, normal;
   background-attachment: fixed;
   transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
 }
