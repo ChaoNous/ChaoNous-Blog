@@ -427,27 +427,33 @@
             {/if}
           </div>
 
-          <div class="flex-1 min-w-0 flex items-end justify-between gap-2">
-            <div class="min-w-0 flex-1">
-              <div class="song-title text-base font-bold text-90 truncate mb-0.5">
-                {currentSong.title}
-              </div>
-              <div class="song-artist text-sm text-50 truncate">
-                {currentSong.artist}
-              </div>
-              <div class="text-[0.7rem] text-30 mt-0.5">
-                {formatTime(currentTime)} / {formatTime(duration)}
-              </div>
+          <div class="flex-1 min-w-0">
+            <div class="song-title text-base font-bold text-90 mb-1 leading-tight break-words">
+              {currentSong.title}
             </div>
 
-            <button
-              class="btn-plain w-7 h-7 rounded-lg flex items-center justify-center shrink-0 self-end"
-              aria-label={i18n(Key.musicPlayerHide)}
-              on:click={toggleHidden}
-              title={i18n(Key.musicPlayerHide)}
-            >
-              <Icon icon="material-symbols:visibility-off" class="text-base" />
-            </button>
+            <div class="flex items-end justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="song-artist text-sm text-50 truncate">
+                  {currentSong.artist}
+                </div>
+                <div class="text-[0.7rem] text-30 mt-0.5">
+                  {formatTime(currentTime)} / {formatTime(duration)}
+                </div>
+              </div>
+
+              <button
+                class="btn-plain w-7 h-7 rounded-lg border border-(--line-divider) flex items-center justify-center shrink-0 self-end"
+                aria-label={i18n(Key.musicPlayerHide)}
+                on:click={toggleHidden}
+                title={i18n(Key.musicPlayerHide)}
+              >
+                <Icon
+                  icon="material-symbols:visibility-off"
+                  class="text-[0.95rem]"
+                />
+              </button>
+            </div>
           </div>
 
         </div>
