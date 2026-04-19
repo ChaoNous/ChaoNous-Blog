@@ -40,7 +40,6 @@ enum I18nKey {
     musicPlayerShuffle = "musicPlayerShuffle",
     musicPlayerRepeat = "musicPlayerRepeat",
     musicPlayerRepeatOne = "musicPlayerRepeatOne",
-    musicPlayerVolume = "musicPlayerVolume",
     musicPlayerProgress = "musicPlayerProgress",
     musicPlayerCover = "musicPlayerCover",
     musicPlayerPlaylist = "musicPlayerPlaylist",

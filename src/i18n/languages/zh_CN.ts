@@ -43,7 +43,6 @@ export const zh_CN: Translation = {
   [Key.musicPlayerShuffle]: "随机播放",
   [Key.musicPlayerRepeat]: "列表循环",
   [Key.musicPlayerRepeatOne]: "单曲循环",
-  [Key.musicPlayerVolume]: "音量控制",
   [Key.musicPlayerProgress]: "播放进度",
   [Key.musicPlayerCover]: "封面",
   [Key.musicPlayerPlaylist]: "播放列表",

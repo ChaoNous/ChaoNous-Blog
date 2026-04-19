@@ -66,11 +66,6 @@ export type SiteConfig = {
     };
   };
 
-  tagStyle?: {
-    useNewStyle?: boolean;
-  };
-
-
   banner: {
     src:
       | string
@@ -147,12 +142,6 @@ export type ProfileConfig = {
   };
 };
 
-export type LicenseConfig = {
-  enable: boolean;
-  name: string;
-  url: string;
-};
-
 export type LIGHT_DARK_MODE = typeof LIGHT_MODE | typeof DARK_MODE;
 
 
@@ -190,9 +179,7 @@ export type WidgetComponentType =
   | "categories"
   | "card-toc"
   | "music-player"
-  | "site-stats"
-  | "calendar"
-  | "custom";
+  | "site-stats";
 
 export type WidgetComponentConfig = {
   type: WidgetComponentType;
@@ -204,14 +191,12 @@ export type WidgetComponentConfig = {
     hidden?: ("mobile" | "tablet" | "desktop")[];
     collapseThreshold?: number;
   };
-  customProps?: Record<string, any>;
 };
 
 export type SidebarLayoutConfig = {
   properties: WidgetComponentConfig[];
   components: {
     left: WidgetComponentType[];
-    right?: WidgetComponentType[];
     drawer: WidgetComponentType[];
   };
   defaultAnimation: {

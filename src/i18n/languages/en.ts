@@ -42,7 +42,6 @@ export const en: Translation = {
     [Key.musicPlayerShuffle]: "Shuffle",
     [Key.musicPlayerRepeat]: "Repeat All",
     [Key.musicPlayerRepeatOne]: "Repeat One",
-    [Key.musicPlayerVolume]: "Volume Control",
     [Key.musicPlayerProgress]: "Playback Progress",
     [Key.musicPlayerCover]: "Cover",
     [Key.musicPlayerPlaylist]: "Playlist",

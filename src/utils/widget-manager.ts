@@ -17,7 +17,7 @@ export class WidgetManager {
 
   getComponentsByPosition(
     position: "top" | "sticky",
-    sidebar: "left" | "right" | "drawer" = "left",
+    sidebar: "left" | "drawer" = "left",
     deviceType: "mobile" | "tablet" | "desktop" = "desktop",
   ): WidgetComponentConfig[] {
     let activeSidebar = sidebar;
@@ -25,14 +25,7 @@ export class WidgetManager {
     if (deviceType === "mobile") {
       activeSidebar = "drawer";
     } else if (deviceType === "tablet") {
-      if (sidebar === "right") {
-        return [];
-      }
-
-      if (sidebar === "left") {
-        activeSidebar =
-          this.config.components.left.length > 0 ? "left" : "right";
-      }
+      activeSidebar = "left";
     }
 
     const componentTypes = this.config.components[activeSidebar] || [];
@@ -122,10 +115,7 @@ export class WidgetManager {
       return this.config.components.drawer.length > 0;
     }
 
-    return (
-      this.config.components.left.length > 0 ||
-      (this.config.components.right?.length || 0) > 0
-    );
+    return this.config.components.left.length > 0;
   }
 
   getBreakpoints(): SidebarLayoutConfig["responsive"]["breakpoints"] {

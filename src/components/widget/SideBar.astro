@@ -13,7 +13,7 @@ const { class: className, headings, isPostPage = false } = Astro.props;
 
 function getVisibleComponents(
   position: "top" | "sticky",
-  sidebar: "left" | "right" | "drawer",
+  sidebar: "left" | "drawer",
   deviceType: "mobile" | "tablet" | "desktop",
 ) {
   return widgetManager.getVisibleComponentsForPage(

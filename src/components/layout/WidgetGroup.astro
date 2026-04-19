@@ -39,7 +39,6 @@ const componentMap = {
       const sharedProps = {
         class: widgetManager.getComponentClass(component, index),
         style: widgetManager.getComponentStyle(component, index),
-        ...component.customProps,
       };
 
       const showDivider = index > 0;

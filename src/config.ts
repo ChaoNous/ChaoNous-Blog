@@ -1,6 +1,5 @@
 import type {
   ExpressiveCodeConfig,
-  LicenseConfig,
   MusicPlayerConfig,
   NavBarConfig,
   ProfileConfig,
@@ -37,10 +36,6 @@ export const siteConfig: SiteConfig = {
     text: "ChaoNous",
     icon: "",
     logo: "",
-  },
-
-  tagStyle: {
-    useNewStyle: false,
   },
 
   banner: {
@@ -131,12 +126,6 @@ export const profileConfig: ProfileConfig = {
       url: "https://discord.com/users/1248814878656041003",
     },
   ],
-};
-
-export const licenseConfig: LicenseConfig = {
-  enable: true,
-  name: "CC BY-NC-SA 4.0",
-  url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
 
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
