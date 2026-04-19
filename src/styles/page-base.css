@@ -36,7 +36,7 @@ body {
   line-height: 1.7;
   color: var(--text-main);
   background:
-    linear-gradient(145deg, transparent 0%, transparent 42%, var(--page-bg-vignette) 100%),
+    linear-gradient(180deg, transparent 0%, transparent 42%, var(--page-bg-vignette) 100%),
     var(--page-bg-weave-primary),
     var(--page-bg-weave-secondary),
     var(--page-bg-weave-fine),

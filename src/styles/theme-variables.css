@@ -19,9 +19,9 @@
   --page-bg-bottom: oklch(0.76 0.05 var(--hue));
   --page-bg-paper-grain: color-mix(in oklch, oklch(0.88 0.065 var(--hue)) 80%, oklch(0.82 0.055 var(--hue)) 20%);
   --page-bg-vignette: color-mix(in oklch, black 28%, transparent);
-  --page-bg-weave-primary: repeating-linear-gradient(18deg, transparent 0 10px, color-mix(in oklch, var(--page-bg-paper-grain) 40%, transparent) 10px 11px, transparent 11px 24px);
-  --page-bg-weave-secondary: repeating-linear-gradient(104deg, transparent 0 14px, color-mix(in oklch, var(--page-bg-paper-grain) 26%, transparent) 14px 15px, transparent 15px 31px);
-  --page-bg-weave-fine: repeating-linear-gradient(62deg, transparent 0 3px, color-mix(in oklch, var(--page-bg-paper-grain) 12%, transparent) 3px 4px, transparent 4px 8px);
+  --page-bg-weave-primary: repeating-linear-gradient(0deg, transparent 0 7px, color-mix(in oklch, var(--page-bg-paper-grain) 34%, transparent) 7px 8px, transparent 8px 18px);
+  --page-bg-weave-secondary: repeating-linear-gradient(90deg, transparent 0 9px, color-mix(in oklch, var(--page-bg-paper-grain) 22%, transparent) 9px 10px, transparent 10px 22px);
+  --page-bg-weave-fine: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in oklch, var(--page-bg-paper-grain) 9%, transparent) 2px 3px, transparent 3px 5px);
   --card-bg: oklch(0.90 0.022 var(--hue));
   --card-bg-transparent: oklch(0.90 0.022 var(--hue) / 0.88);
   --btn-content: oklch(0.45 0.15 var(--hue));
@@ -69,10 +69,6 @@
   --page-bg-top: oklch(0.38 0.07 var(--hue));
   --page-bg-bottom: oklch(0.32 0.05 var(--hue));
   --page-bg-paper-grain: color-mix(in oklch, oklch(0.44 0.065 var(--hue)) 80%, oklch(0.38 0.055 var(--hue)) 20%);
-  --page-bg-vignette: color-mix(in oklch, black 28%, transparent);
-  --page-bg-weave-primary: repeating-linear-gradient(18deg, transparent 0 10px, color-mix(in oklch, var(--page-bg-paper-grain) 40%, transparent) 10px 11px, transparent 11px 24px);
-  --page-bg-weave-secondary: repeating-linear-gradient(104deg, transparent 0 14px, color-mix(in oklch, var(--page-bg-paper-grain) 26%, transparent) 14px 15px, transparent 15px 31px);
-  --page-bg-weave-fine: repeating-linear-gradient(62deg, transparent 0 3px, color-mix(in oklch, var(--page-bg-paper-grain) 12%, transparent) 3px 4px, transparent 4px 8px);
   --card-bg: oklch(0.40 0.055 var(--hue));
   --card-bg-transparent: oklch(0.40 0.055 var(--hue) / 0.88);
   --btn-content: oklch(0.75 0.08 var(--hue));
