@@ -97,50 +97,54 @@ const mobileControlsLabel = isChineseSite
     </a>
     <div
       id="navbar-links-container"
-      class="navbar-links hidden lg:flex items-center justify-center gap-1 transition-all duration-300"
+      class="navbar-links hidden lg:flex items-center justify-center transition-all duration-300"
     >
-      {
-        links.map((l) => {
-          return <DropdownMenu link={l} />;
-        })
-      }
-    </div>
-    <div class="navbar-actions flex items-center gap-1">
-      {
-        !siteConfig.themeColor.fixed && (
-          <button
-            type="button"
-            aria-label={displaySettingsLabel}
-            aria-controls="display-setting"
-            aria-haspopup="dialog"
-            class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90"
-            id="display-settings-switch"
-          >
-            <Icon
-              name="material-symbols:palette-outline"
-              class="navbar-action-icon text-[1.25rem]"
-            />
-          </button>
-        )
-      }
-
-      <div class="w-9 h-9 flex items-center justify-center">
-        <LightDarkSwitch client:idle />
+      <div class="navbar-links-rail flex items-center gap-1 px-2 py-1.5">
+        {
+          links.map((l) => {
+            return <DropdownMenu link={l} />;
+          })
+        }
       </div>
+    </div>
+    <div class="navbar-actions flex items-center">
+      <div class="navbar-action-cluster flex items-center gap-1 px-1.5 py-1.5 rounded-2xl">
+        {
+          !siteConfig.themeColor.fixed && (
+            <button
+              type="button"
+              aria-label={displaySettingsLabel}
+              aria-controls="display-setting"
+              aria-haspopup="dialog"
+              class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90"
+              id="display-settings-switch"
+            >
+              <Icon
+                name="material-symbols:palette-outline"
+                class="navbar-action-icon text-[1.25rem]"
+              />
+            </button>
+          )
+        }
 
-      <button
-        type="button"
-        aria-label={mobileControlsLabel}
-        aria-controls="nav-menu-panel"
-        aria-haspopup="menu"
-        class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90 lg:hidden"
-        id="nav-menu-switch"
-      >
-        <Icon
-          name="material-symbols:unfold-more"
-          class="navbar-action-icon text-[1.25rem]"
-        />
-      </button>
+        <div class="w-9 h-9 flex items-center justify-center">
+          <LightDarkSwitch client:idle />
+        </div>
+
+        <button
+          type="button"
+          aria-label={mobileControlsLabel}
+          aria-controls="nav-menu-panel"
+          aria-haspopup="menu"
+          class="btn-plain scale-animation rounded-lg w-9 h-9 active:scale-90 lg:hidden"
+          id="nav-menu-switch"
+        >
+          <Icon
+            name="material-symbols:unfold-more"
+            class="navbar-action-icon text-[1.25rem]"
+          />
+        </button>
+      </div>
     </div>
     <NavMenuPanel links={links} />
     <DisplaySettings client:idle />

@@ -4,7 +4,7 @@ import { LinkPresets } from "../../constants/link-presets";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
 import type { NavBarLink } from "../../types/config";
-import { url } from "../../utils/url-utils";
+import { pathsEqual, url } from "../../utils/url-utils";
 interface Props {
     link: NavBarLink;
     class?: string;
@@ -23,15 +23,23 @@ const getLocalizedName = (name: string): string => {
 };
 const children = link.children?.map((child) => typeof child === "number" ? LinkPresets[child] : child) ?? [];
 const hasChildren = children.length > 0;
+const currentPath = Astro.url.pathname;
+const isLinkCurrent = !link.external && pathsEqual(currentPath, link.url);
+const isChildCurrent = children.some((child) => !child.external && pathsEqual(currentPath, child.url));
+const isCurrent = isLinkCurrent || isChildCurrent;
 ---
 
-<div class:list={["dropdown-container group", className]} data-dropdown>
+<div
+	class:list={["dropdown-container group", className]}
+	data-dropdown
+	data-current={isCurrent ? "true" : "false"}
+>
 	{
 		hasChildren ? (
 			<>
 				<button
 					aria-label={getLocalizedName(link.name)}
-					class="btn-plain scale-animation rounded-lg h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 dropdown-trigger flex items-center justify-center lg:justify-start whitespace-nowrap"
+					class="btn-plain navbar-link-btn scale-animation rounded-xl h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 dropdown-trigger flex items-center justify-center lg:justify-start whitespace-nowrap"
 					aria-expanded="false"
 					aria-haspopup="true"
 					data-dropdown-trigger
@@ -93,7 +101,7 @@ const hasChildren = children.length > 0;
 				href={link.external ? link.url : url(link.url)}
 				target={link.external ? "_blank" : null}
 				rel={link.external ? "noopener noreferrer" : null}
-				class="btn-plain scale-animation rounded-lg h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 flex items-center justify-center lg:justify-start whitespace-nowrap"
+				class="btn-plain navbar-link-btn scale-animation rounded-xl h-11 font-bold w-11 lg:w-auto lg:px-5 active:scale-95 flex items-center justify-center lg:justify-start whitespace-nowrap"
 			>
 					{link.icon && (
 						<Icon
