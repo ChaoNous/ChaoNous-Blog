@@ -41,15 +41,11 @@ body {
   line-height: 1.7;
   color: var(--text-main);
   background:
-    radial-gradient(circle at 12% 14%, var(--page-bg-accent-soft) 0%, transparent 30%),
-    radial-gradient(circle at 82% 10%, var(--page-bg-accent) 0%, transparent 26%),
-    radial-gradient(circle at 50% 118%, var(--page-bg-accent-strong) 0%, transparent 36%),
-    radial-gradient(circle at 50% -12%, var(--page-bg-lustre) 0%, transparent 44%),
-    linear-gradient(145deg, color-mix(in oklch, var(--page-bg-lustre) 52%, transparent) 0%, transparent 42%, var(--page-bg-vignette) 100%),
+    linear-gradient(145deg, transparent 0%, transparent 42%, var(--page-bg-vignette) 100%),
     repeating-linear-gradient(0deg, transparent 0 15px, color-mix(in oklch, var(--page-bg-paper-grain) 72%, transparent) 15px 16px),
     repeating-linear-gradient(90deg, transparent 0 15px, color-mix(in oklch, var(--page-bg-paper-grain) 58%, transparent) 15px 16px),
     linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
-  background-blend-mode: normal, normal, normal, screen, normal, soft-light, soft-light, normal;
+  background-blend-mode: normal, soft-light, soft-light, normal;
   background-attachment: fixed;
   transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
 }
