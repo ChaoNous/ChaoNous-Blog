@@ -14,15 +14,15 @@
 :root {
   --radius-large: 1rem;
   --primary: oklch(0.65 0.20 var(--hue));
-  --page-bg: oklch(0.78 0.04 var(--hue));
-  --page-bg-top: oklch(0.81 0.045 var(--hue));
-  --page-bg-bottom: oklch(0.75 0.035 var(--hue));
-  --page-bg-accent-soft: color-mix(in oklch, oklch(0.76 0.08 var(--hue)) 40%, transparent);
-  --page-bg-accent: color-mix(in oklch, oklch(0.72 0.10 var(--hue)) 32%, transparent);
-  --page-bg-accent-strong: color-mix(in oklch, oklch(0.67 0.12 var(--hue)) 22%, transparent);
-  --page-bg-paper-grain: color-mix(in oklch, oklch(0.82 0.03 var(--hue)) 84%, oklch(0.76 0.025 var(--hue)) 16%);
-  --page-bg-lustre: color-mix(in oklch, white 18%, transparent);
-  --page-bg-vignette: color-mix(in oklch, black 10%, transparent);
+  --page-bg: oklch(0.77 0.045 var(--hue));
+  --page-bg-top: oklch(0.81 0.055 var(--hue));
+  --page-bg-bottom: oklch(0.72 0.05 var(--hue));
+  --page-bg-accent-soft: color-mix(in oklch, oklch(0.74 0.10 var(--hue)) 48%, transparent);
+  --page-bg-accent: color-mix(in oklch, oklch(0.69 0.12 var(--hue)) 40%, transparent);
+  --page-bg-accent-strong: color-mix(in oklch, oklch(0.64 0.14 var(--hue)) 30%, transparent);
+  --page-bg-paper-grain: color-mix(in oklch, oklch(0.74 0.045 var(--hue)) 84%, oklch(0.68 0.04 var(--hue)) 16%);
+  --page-bg-lustre: color-mix(in oklch, white 24%, transparent);
+  --page-bg-vignette: color-mix(in oklch, black 18%, transparent);
   --card-bg: oklch(0.90 0.022 var(--hue));
   --card-bg-transparent: oklch(0.90 0.022 var(--hue) / 0.88);
   --btn-content: oklch(0.45 0.15 var(--hue));
