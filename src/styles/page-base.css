@@ -26,11 +26,6 @@ html {
   }
 }
 
-html.dark,
-html.dark body {
-  background: var(--page-bg);
-}
-
 body {
   font-family: var(--font-content);
   scrollbar-width: none;

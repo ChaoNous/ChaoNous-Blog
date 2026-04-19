@@ -37,7 +37,6 @@ body::after {
 }
 
 .dark body::before {
-  filter: url(#silk-weave);
   background:
     radial-gradient(ellipse 80% 70% at 45% 40%,
       rgba(45, 38, 32, 0.7) 0%,
