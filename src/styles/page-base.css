@@ -42,10 +42,11 @@ body {
   color: var(--text-main);
   background:
     linear-gradient(145deg, transparent 0%, transparent 42%, var(--page-bg-vignette) 100%),
-    repeating-linear-gradient(24deg, transparent 0 9px, color-mix(in oklch, var(--page-bg-paper-grain) 44%, transparent) 9px 10px),
-    repeating-linear-gradient(112deg, transparent 0 13px, color-mix(in oklch, var(--page-bg-paper-grain) 28%, transparent) 13px 14px),
+    repeating-linear-gradient(18deg, transparent 0 10px, color-mix(in oklch, var(--page-bg-paper-grain) 40%, transparent) 10px 11px, transparent 11px 24px),
+    repeating-linear-gradient(104deg, transparent 0 14px, color-mix(in oklch, var(--page-bg-paper-grain) 26%, transparent) 14px 15px, transparent 15px 31px),
+    repeating-linear-gradient(62deg, transparent 0 3px, color-mix(in oklch, var(--page-bg-paper-grain) 12%, transparent) 3px 4px, transparent 4px 8px),
     linear-gradient(180deg, var(--page-bg-top) 0%, var(--page-bg) 52%, var(--page-bg-bottom) 100%);
-  background-blend-mode: normal, soft-light, soft-light, normal;
+  background-blend-mode: normal, soft-light, soft-light, soft-light, normal;
   background-attachment: fixed;
   transition: background-color 0.2s ease, background-image 0.2s ease, color 0.15s ease;
 }
