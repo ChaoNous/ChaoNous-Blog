@@ -35,7 +35,6 @@
   .expanded-player:hover,
   .playlist-panel:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
   }
 
   .music-player button:hover:not(:disabled),
@@ -63,9 +62,6 @@
     var(--primary) 16%,
     var(--btn-plain-bg)
   );
-  box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--primary) 42%, transparent),
-    inset 0 0 0 999px color-mix(in oklab, var(--primary) 10%, transparent);
   color: var(--primary);
 }
 
