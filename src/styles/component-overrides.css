@@ -212,11 +212,6 @@
     @apply transition-colors duration-150 underline decoration-2 decoration-dashed decoration-(--link-underline) hover:decoration-(--link-hover) active:decoration-(--link-active) underline-offset-[0.25rem];
   }
 
-  .toc-hide,
-  .toc-not-ready {
-    @apply opacity-0 pointer-events-none;
-  }
-
   .hide-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -234,32 +229,6 @@
   .text-30,
   .text-25 {
     color: var(--text-main);
-  }
-
-  .floating-toc-item {
-    @apply flex items-center gap-2 py-2 px-2 rounded-lg leading-relaxed hover:bg-(--btn-plain-bg-hover) hover:text-(--primary) transition-all duration-150;
-    color: color-mix(in oklch, var(--text-main) 88%, transparent);
-    text-decoration: none;
-  }
-
-  .floating-toc-item[data-level="0"] {
-    @apply font-semibold;
-  }
-
-  .floating-toc-badge {
-    @apply inline-flex items-center justify-center shrink-0 min-w-5 h-5 px-1 rounded-md bg-(--toc-badge-bg) text-(--btn-content) text-base font-semibold;
-  }
-
-  .floating-toc-dot {
-    @apply inline-block shrink-0 ml-1.5 w-2 h-2 rounded-sm bg-(--toc-badge-bg);
-  }
-
-  .floating-toc-dot-small {
-    @apply inline-block shrink-0 ml-1.5 w-1.5 h-1.5 rounded-sm bg-black/10 dark:bg-white/15;
-  }
-
-  .floating-toc-text {
-    @apply overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0;
   }
 
   .dropdown-container {

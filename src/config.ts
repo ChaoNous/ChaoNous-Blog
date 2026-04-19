@@ -59,8 +59,6 @@ export const siteConfig: SiteConfig = {
   },
 
   toc: {
-    enable: true,
-    mode: "float",
     depth: 2,
   },
 

@@ -173,8 +173,6 @@ const headingsJson = JSON.stringify(headings);
 		private content: HTMLElement | null;
 		private headings: HTMLElement[] = [];
 		private tocItems: HTMLElement[] = [];
-
-		private observer: MutationObserver | null = null;
 		private readonly handleScroll = () => this.updateActive();
 		private readonly handleResize = () => this.updateActive();
 		private readonly handleClick = (event: Event) => {
@@ -198,27 +196,26 @@ const headingsJson = JSON.stringify(headings);
 		}
 
 		private init() {
-			const headingsAttr = this.wrapper.dataset.headings;
-			if (headingsAttr) {
-				try {
-					const headingsData: HeadingData[] = JSON.parse(headingsAttr);
-					if (headingsData.length > 0) {
-						this.generateTOCFromHeadingsData(headingsData);
-						this.bindEvents();
-						return;
-					}
-				} catch (error) {
-					console.warn("Failed to parse headings data:", error);
-				}
+			try {
+				const headingsData: HeadingData[] = JSON.parse(
+					this.wrapper.dataset.headings || "[]",
+				);
+				this.generateTOC(headingsData);
+				this.bindEvents();
+			} catch (error) {
+				console.warn("Failed to parse headings data:", error);
+				this.wrapper.classList.add("hidden");
 			}
-
-			this.generateTOC();
-			this.bindEvents();
-			this.observeContent();
 		}
 
-		private generateTOCFromHeadingsData(headingsData: HeadingData[]) {
+		private generateTOC(headingsData: HeadingData[]) {
 			if (!this.content) return;
+			if (headingsData.length === 0) {
+				this.wrapper.classList.add("hidden");
+				this.headings = [];
+				this.render("");
+				return;
+			}
 
 			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
 			const minLevel = getMinLevel(headingsData);
@@ -257,74 +254,6 @@ const headingsJson = JSON.stringify(headings);
 			this.updateActive();
 		}
 
-		private observeContent() {
-			const contentWrapper = document.getElementById("post-container");
-			if (!contentWrapper) return;
-
-			this.observer = new MutationObserver(() => {
-				this.generateTOC();
-			});
-
-			this.observer.observe(contentWrapper, {
-				childList: true,
-				subtree: true,
-			});
-		}
-
-		private generateTOC() {
-			const container = document.getElementById("post-container");
-			if (!container) {
-				this.wrapper.classList.add("hidden");
-				return;
-			}
-
-			const allHeadings = container.querySelectorAll(
-				"h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]",
-			);
-
-			if (allHeadings.length === 0) {
-				this.wrapper.classList.add("hidden");
-				this.headings = [];
-				this.render("");
-				return;
-			}
-
-			const depthLevels = parseInt(this.wrapper.dataset.depth || "3", 10);
-			const headingArray = Array.from(allHeadings) as HTMLElement[];
-			const minLevel = getMinLevel(headingArray);
-			const maxVisibleDepth = minLevel + depthLevels;
-
-			this.headings = [];
-			let html = "";
-			let h1Count = 0;
-
-			headingArray.forEach((heading) => {
-				const level = parseInt(heading.tagName[1], 10);
-				if (level >= maxVisibleDepth) return;
-
-				this.headings.push(heading);
-
-				const indent = level - minLevel;
-				let badge = "";
-
-				if (level === minLevel) {
-					h1Count++;
-					badge = `<span class="card-toc-badge">${h1Count}</span>`;
-				} else if (level === minLevel + 1) {
-					badge = '<span class="card-toc-dot"></span>';
-				} else {
-					badge = '<span class="card-toc-dot-small"></span>';
-				}
-
-				const text = (heading.textContent || "").replace(/#+\s*$/, "");
-				html += `<div class="card-toc-item" style="padding-left: ${0.5 + indent}rem" data-heading-id="${heading.id}">${badge}<span class="card-toc-text">${text}</span></div>`;
-			});
-
-			this.render(html);
-			this.wrapper.classList.remove("hidden");
-			this.updateActive();
-		}
-
 		private render(html: string) {
 			if (!this.content) return;
 
@@ -348,7 +277,6 @@ const headingsJson = JSON.stringify(headings);
 			window.removeEventListener("scroll", this.handleScroll);
 			window.removeEventListener("resize", this.handleResize);
 			this.content?.removeEventListener("click", this.handleClick);
-			this.observer?.disconnect();
 		}
 	}
 

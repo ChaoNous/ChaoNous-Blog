@@ -6,7 +6,6 @@ import Categories from "@components/widget/Categories.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import Profile from "@components/widget/Profile.astro";
 import SiteStats from "@components/widget/SiteStats.astro";
-import TOC from "@components/widget/TOC.astro";
 import { widgetManager } from "@utils/widget-manager";
 
 interface Props {
@@ -20,7 +19,6 @@ const { components, headings, wrapperClass } = Astro.props;
 const componentMap = {
   profile: Profile,
   categories: Categories,
-  toc: TOC,
   "card-toc": CardTOC,
   "music-player": MusicPlayer,
   "site-stats": SiteStats,
@@ -49,8 +47,7 @@ const componentMap = {
       return (
         <>
           {showDivider && <div class="sidebar-divider" />}
-          {(component.type === "toc" || component.type === "card-toc") &&
-          headings ? (
+          {component.type === "card-toc" && headings ? (
             <ComponentToRender {...sharedProps} headings={headings} />
           ) : (
             <ComponentToRender {...sharedProps} />

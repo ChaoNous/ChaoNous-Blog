@@ -14,7 +14,6 @@ export type HeadingData = {
 
 export type HeadingLike = HeadingElement | HeadingData;
 
-export function getHeadingsFromContainer(containerId: string): HeadingElement[];
 export function getMinLevel(headings: HeadingLike[]): number;
 export function updateActiveHeading(
   headings: HeadingElement[],
@@ -22,4 +21,3 @@ export function updateActiveHeading(
   scrollY: number,
   offsetTop?: number,
 ): number;
-export function headingsToData(headings: HeadingElement[]): HeadingData[];

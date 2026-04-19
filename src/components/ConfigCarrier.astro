@@ -11,17 +11,3 @@ import { expressiveCodeConfig, siteConfig } from "../config";
     : "false"}
 >
 </div>
-
-<script
-  is:inline
-  define:vars={{
-    tocEnable: siteConfig.toc.enable,
-    tocDepth: siteConfig.toc.depth,
-  }}
->
-  window.siteConfig = window.siteConfig || {};
-  window.siteConfig.toc = {
-      enable: tocEnable,
-      depth: tocDepth,
-  };
-</script>

@@ -100,8 +100,6 @@ export type SiteConfig = {
     };
   };
   toc: {
-    enable: boolean;
-    mode: "float" | "sidebar";
     depth: 1 | 2 | 3;
   };
   showCoverInContent: boolean;
@@ -190,7 +188,6 @@ export type MusicPlayerConfig = {
 export type WidgetComponentType =
   | "profile"
   | "categories"
-  | "toc"
   | "card-toc"
   | "music-player"
   | "site-stats"
