@@ -137,7 +137,7 @@ const themeColorLabel = i18n(I18nKey.themeColor);
             aria-label={displaySettingsLabel}
             aria-controls="display-setting"
             aria-haspopup="dialog"
-            class="mobile-display-settings btn-plain scale-animation rounded-lg h-8 px-2.5 lg:w-9 lg:h-9 lg:px-0 active:scale-90 flex items-center justify-center"
+            class="mobile-display-settings btn-plain scale-animation rounded-lg w-8 h-8 lg:w-9 lg:h-9 active:scale-90 flex items-center justify-center"
             id="display-settings-switch"
             title={themeColorLabel}
           >
@@ -145,7 +145,6 @@ const themeColorLabel = i18n(I18nKey.themeColor);
               name="material-symbols:palette-outline"
               class="navbar-action-icon mobile-nav-link-icon text-[1rem] lg:text-[1.25rem]"
             />
-            <span class="mobile-nav-label lg:hidden">{themeColorLabel}</span>
           </button>
         )
       }
