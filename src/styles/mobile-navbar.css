@@ -43,7 +43,7 @@
 
   .navbar-actions {
     margin-left: auto !important;
-    gap: 0.2rem !important;
+    gap: 0.25rem !important;
     width: max-content !important;
     justify-content: flex-end !important;
     justify-items: end !important;
@@ -51,27 +51,44 @@
     padding-right: 0 !important;
   }
 
-  .mobile-navbar-icons {
+  .mobile-navbar-links {
     display: flex !important;
+    align-items: center !important;
     width: max-content !important;
     height: auto !important;
-    gap: 0.2rem !important;
+    gap: 0.25rem !important;
     margin-right: 0.15rem;
     flex-shrink: 0;
   }
 
-  .mobile-nav-icon,
-  .navbar-actions > .btn-plain,
+  .mobile-nav-link,
+  .mobile-display-settings {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.28rem !important;
+    height: 2rem !important;
+    min-width: max-content !important;
+    padding-inline: 0.45rem !important;
+    flex: 0 0 auto;
+    white-space: nowrap !important;
+  }
+
   .theme-switch-wrap {
     width: 2rem !important;
     height: 2rem !important;
     flex: 0 0 2rem;
   }
 
-  .mobile-nav-icon .navbar-link-icon,
-  .navbar-actions .navbar-action-icon,
+  .mobile-nav-link-icon,
   .navbar-actions .theme-switch-glyph {
-    font-size: 1.05rem !important;
+    font-size: 0.98rem !important;
+  }
+
+  .mobile-nav-label {
+    font-size: 0.72rem !important;
+    line-height: 1 !important;
+    font-weight: 600 !important;
   }
 
   .theme-switch-btn {
