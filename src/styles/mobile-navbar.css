@@ -52,15 +52,20 @@
   }
 
   .mobile-navbar-icons {
+    display: flex !important;
+    width: max-content !important;
+    height: auto !important;
     gap: 0.2rem !important;
     margin-right: 0.15rem;
+    flex-shrink: 0;
   }
 
   .mobile-nav-icon,
   .navbar-actions > .btn-plain,
-  .navbar-actions > div {
+  .theme-switch-wrap {
     width: 2rem !important;
     height: 2rem !important;
+    flex: 0 0 2rem;
   }
 
   .mobile-nav-icon .navbar-link-icon,

@@ -100,7 +100,9 @@ const displaySettingsLabel = isChineseSite
       }
     </div>
     <div class="navbar-actions flex items-center gap-1">
-      <div class="mobile-navbar-icons flex items-center gap-1 lg:hidden">
+      <div
+        class="mobile-navbar-icons flex items-center gap-1 shrink-0 lg:hidden"
+      >
         {
           mobileLinks.map((link) => (
             <a
@@ -140,7 +142,9 @@ const displaySettingsLabel = isChineseSite
         )
       }
 
-      <div class="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center">
+      <div
+        class="theme-switch-wrap w-8 h-8 md:w-9 md:h-9 flex items-center justify-center shrink-0"
+      >
         <LightDarkSwitch client:idle />
       </div>
     </div>
