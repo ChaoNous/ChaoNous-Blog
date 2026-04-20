@@ -11,7 +11,10 @@ export async function initializePanelManager(): Promise<unknown> {
           __panelManagerOutsideClickBound?: boolean;
         };
 
-        function setClickOutsideToClose(panel: string, ignores: string[]): void {
+        function setClickOutsideToClose(
+          panel: string,
+          ignores: string[],
+        ): void {
           document.addEventListener("click", async (event) => {
             const target = event.target;
             if (!(target instanceof Node)) return;
@@ -33,10 +36,6 @@ export async function initializePanelManager(): Promise<unknown> {
           setClickOutsideToClose("display-setting", [
             "display-setting",
             "display-settings-switch",
-          ]);
-          setClickOutsideToClose("nav-menu-panel", [
-            "nav-menu-panel",
-            "nav-menu-switch",
           ]);
         }
 

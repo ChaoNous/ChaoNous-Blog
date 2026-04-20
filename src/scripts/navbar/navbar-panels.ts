@@ -1,6 +1,6 @@
 import { registerPageScript } from "../page-lifecycle.ts";
 
-type NavbarPanelId = "display-setting" | "nav-menu-panel";
+type NavbarPanelId = "display-setting";
 
 async function togglePanel(panelId: NavbarPanelId) {
   const { panelManager } = await import("../../utils/panel-manager");
@@ -39,7 +39,6 @@ registerPageScript("navbar-interactions", {
     const cleanups: Array<() => void> = [];
 
     wirePanelButton("display-settings-switch", "display-setting", cleanups);
-    wirePanelButton("nav-menu-switch", "nav-menu-panel", cleanups);
 
     return () => {
       cleanups.forEach((cleanup) => cleanup());

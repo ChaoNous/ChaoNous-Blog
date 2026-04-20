@@ -1,26 +1,20 @@
-
-
 .float-panel {
   z-index: 50;
   will-change: transform, opacity;
   backface-visibility: hidden;
 
-  
   transform-origin: top center;
 }
-
 
 .float-panel:not(.float-panel-closed) {
   transform: scaleY(1) scaleX(1);
   pointer-events: auto;
 }
 
-
 .float-panel-closed {
   transform: scaleY(0) scaleX(0.8);
   pointer-events: none;
 }
-
 
 #display-setting {
   transform-origin: top right;
@@ -30,21 +24,11 @@
   transform: scaleY(0) scaleX(0.6);
 }
 
-#nav-menu-panel {
-  transform-origin: top right;
-}
-
-#nav-menu-panel.float-panel-closed {
-  transform: scaleY(0) scaleX(0.65);
-}
-
-
 @media (max-width: 768px) {
   .float-panel-closed {
     transform: scaleY(0) scaleX(0.85);
   }
 }
-
 
 @media (hover: none) and (pointer: coarse) {
   .float-panel {

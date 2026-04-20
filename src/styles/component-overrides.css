@@ -104,8 +104,7 @@
 
   .is-theme-transitioning .dropdown-content,
   .is-theme-transitioning .float-panel,
-  .is-theme-transitioning #display-setting,
-  .is-theme-transitioning #nav-menu-panel {
+  .is-theme-transitioning #display-setting {
     transition: none !important;
     backdrop-filter: none !important;
   }
@@ -294,18 +293,6 @@
     @apply rounded-b-[calc(var(--radius-large)-0.5rem)];
   }
 
-  .mobile-submenu {
-    @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
-  }
-
-  .mobile-dropdown[data-expanded="true"] .mobile-submenu {
-    @apply max-h-96;
-  }
-
-  .mobile-dropdown[data-expanded="true"] .mobile-dropdown-arrow {
-    @apply rotate-180;
-  }
-
   @media (max-width: 1023px) {
     .dropdown-container {
       @apply hidden;
@@ -313,10 +300,6 @@
   }
 
   .dropdown-item:focus {
-    @apply outline-none;
-  }
-
-  .mobile-dropdown button:focus {
     @apply outline-none;
   }
 
@@ -373,8 +356,7 @@
 
 .float-panel,
 .dropdown-content,
-#display-setting,
-#nav-menu-panel {
+#display-setting {
   background: var(--panel-bg) !important;
   backdrop-filter: var(--panel-blur) !important;
   box-shadow: var(--shadow-lg) !important;
