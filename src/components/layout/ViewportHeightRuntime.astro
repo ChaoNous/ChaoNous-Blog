@@ -1,0 +1,8 @@
+<script is:inline>
+  (function () {
+    const updateViewportHeight = window.__cncUpdateViewportHeight;
+    if (typeof updateViewportHeight === "function") {
+      window.addEventListener("orientationchange", updateViewportHeight);
+    }
+  })();
+</script>

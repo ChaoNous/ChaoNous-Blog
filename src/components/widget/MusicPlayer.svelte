@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
   import { musicPlayerConfig } from "../../config";
   import Key from "../../i18n/i18nKey";
@@ -15,59 +14,62 @@
     getAssetPath,
     type Song,
   } from "../../scripts/music-player/player-types";
+  import CollapsedPlayer from "./music-player/CollapsedPlayer.svelte";
+  import ErrorToast from "./music-player/ErrorToast.svelte";
+  import ExpandedPlayer from "./music-player/ExpandedPlayer.svelte";
+  import PlaylistPanel from "./music-player/PlaylistPanel.svelte";
 
-  let meting_api =
+  const metingApi =
     musicPlayerConfig.meting_api ??
     "https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r";
-  let meting_id = musicPlayerConfig.id ?? "14164869977";
-  let meting_server = musicPlayerConfig.server ?? "netease";
-  let meting_type = musicPlayerConfig.type ?? "playlist";
+  const metingId = musicPlayerConfig.id ?? "14164869977";
+  const metingServer = musicPlayerConfig.server ?? "netease";
+  const metingType = musicPlayerConfig.type ?? "playlist";
 
-  let isPlaying = false;
-  let isHidden = false;
-  let showPlaylist = false;
-  let currentTime = 0;
-  let duration = 0;
-  let isLoading = false;
-  let isShuffled = false;
-  let isRepeating = 2;
-  let errorMessage = "";
-  let showError = false;
+  let audio: HTMLAudioElement;
+  let playerRoot: HTMLDivElement;
+  let playlistPanel: HTMLDivElement;
+
   let autoplayFailed = false;
-  let willAutoPlay = false;
-  let playlistLoaded = false;
-
+  let currentIndex = 0;
   let currentSong: Song = createSong({
     title: i18n(Key.musicPlayerLoading),
     artist: i18n(Key.unknownArtist),
   });
+  let currentTime = 0;
+  let duration = 0;
+  let errorMessage = "";
+  let isHidden = false;
+  let isLoading = false;
+  let isPlaying = false;
+  let isRepeating = 2;
+  let isShuffled = false;
   let playlist: Song[] = [];
-  let currentIndex = 0;
-
-  let audio: HTMLAudioElement;
-  let progressBar: HTMLElement;
-  let playerRoot: HTMLDivElement;
-  let playlistPanel: HTMLDivElement;
+  let playlistLoaded = false;
+  let showError = false;
+  let showPlaylist = false;
+  let willAutoPlay = false;
 
   async function fetchMetingPlaylist() {
-    if (!meting_api || !meting_id) return;
+    if (!metingApi || !metingId) return;
 
     isLoading = true;
     try {
       playlist = await fetchMetingPlaylistSongs({
-        apiTemplate: meting_api,
-        id: meting_id,
-        server: meting_server,
-        type: meting_type,
+        apiTemplate: metingApi,
+        id: metingId,
+        server: metingServer,
+        type: metingType,
         unknownSongLabel: i18n(Key.unknownSong),
         unknownArtistLabel: i18n(Key.unknownArtist),
       });
 
       if (playlist.length > 0) {
         loadSong(playlist[0]);
-      } else {
-        showErrorMessage(i18n(Key.musicPlayerErrorEmpty));
+        return;
       }
+
+      showErrorMessage(i18n(Key.musicPlayerErrorEmpty));
     } catch (_error) {
       showErrorMessage(i18n(Key.musicPlayerErrorPlaylist));
     } finally {
@@ -78,7 +80,7 @@
   function lazyLoadPlaylist() {
     if (playlistLoaded) return;
     playlistLoaded = true;
-    fetchMetingPlaylist();
+    void fetchMetingPlaylist();
   }
 
   function togglePlay() {
@@ -175,9 +177,7 @@
     if (song.url) {
       isLoading = true;
       setTimeout(() => {
-        if (audio) {
-          audio.load();
-        }
+        audio?.load();
       }, 50);
       return;
     }
@@ -247,25 +247,12 @@
     }, 3000);
   }
 
-  function hideError() {
-    showError = false;
-  }
+  function seekToPercent(percent: number) {
+    if (!audio || duration <= 0) return;
 
-  function setProgress(event: MouseEvent) {
-    if (!audio || !progressBar || duration <= 0) return;
-
-    const rect = progressBar.getBoundingClientRect();
-    const percent = (event.clientX - rect.left) / rect.width;
     const newTime = percent * duration;
     audio.currentTime = newTime;
     currentTime = newTime;
-  }
-
-  function formatTime(seconds: number): string {
-    if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
   }
 
   onMount(() => {
@@ -319,20 +306,7 @@
 
 {#if musicPlayerConfig.enable}
   {#if showError}
-    <div class="fixed bottom-20 right-4 z-60 max-w-sm">
-      <div
-        class="bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-up"
-      >
-        <Icon icon="material-symbols:error" class="text-xl shrink-0" />
-        <span class="text-sm flex-1">{errorMessage}</span>
-        <button
-          on:click={hideError}
-          class="text-white/80 hover:text-white transition-colors"
-        >
-          <Icon icon="material-symbols:close" class="text-lg" />
-        </button>
-      </div>
-    </div>
+    <ErrorToast message={errorMessage} onDismiss={() => (showError = false)} />
   {/if}
 
   <div
@@ -340,316 +314,42 @@
     class="music-player fixed bottom-8 right-6 z-50 transition-all duration-300 ease-in-out"
     class:hidden-mode={isHidden}
   >
-    <div
-      class="orb-player rounded-xl flex items-center justify-center"
-      class:opacity-0={!isHidden}
-      class:scale-0={!isHidden}
-      class:pointer-events-none={!isHidden}
-      on:click={toggleHidden}
-      on:keydown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          toggleHidden();
-        }
-      }}
-      role="button"
-      tabindex="0"
-      aria-label={i18n(Key.musicPlayerShow)}
-    >
-      {#if isLoading}
-        <Icon
-          icon="eos-icons:loading"
-          class="hidden-player-icon text-(--primary) text-3xl"
-        />
-      {:else if isPlaying}
-        <div class="flex space-x-0.5">
-          <div
-            class="hidden-player-bar w-0.5 h-3 rounded-full animate-pulse"
-          ></div>
-          <div
-            class="hidden-player-bar w-0.5 h-4 rounded-full animate-pulse"
-            style="animation-delay: 150ms;"
-          ></div>
-          <div
-            class="hidden-player-bar w-0.5 h-2 rounded-full animate-pulse"
-            style="animation-delay: 300ms;"
-          ></div>
-        </div>
-      {:else}
-        <Icon
-          icon="material-symbols:music-note"
-          class="hidden-player-icon text-(--primary) text-3xl"
-        />
-      {/if}
-    </div>
+    <CollapsedPlayer
+      {isHidden}
+      {isLoading}
+      {isPlaying}
+      onToggleHidden={toggleHidden}
+    />
 
-    <div
-      class="expanded-player card-base rounded-2xl transition-all duration-500 ease-in-out overflow-hidden"
-      style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);"
-      class:opacity-0={isHidden}
-      class:scale-95={isHidden}
-      class:pointer-events-none={isHidden}
-    >
-      <div
-        class="expanded-player-surface p-3"
-        style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit;"
-      >
-        <div class="flex items-center gap-3 mb-3">
-          <div
-            class="cover-container relative w-13 h-13 rounded-full overflow-hidden shrink-0 cursor-pointer"
-            on:click={togglePlay}
-            on:keydown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                togglePlay();
-              }
-            }}
-            role="button"
-            tabindex="0"
-            aria-label={isPlaying
-              ? i18n(Key.musicPlayerPause)
-              : i18n(Key.musicPlayerPlay)}
-          >
-            {#if currentSong.cover}
-              <img
-                src={getAssetPath(currentSong.cover)}
-                alt={i18n(Key.musicPlayerCover)}
-                class="w-full h-full object-cover transition-transform duration-300"
-                class:spinning={isPlaying && !isLoading}
-                class:animate-pulse={isLoading}
-              />
-            {:else}
-              <div
-                class="w-full h-full flex items-center justify-center bg-(--btn-regular-bg) text-(--primary)"
-              >
-                <Icon icon="material-symbols:album-outline" class="text-2xl" />
-              </div>
-            {/if}
-          </div>
-
-          <div class="flex-1 min-w-0">
-            <div class="song-title text-base font-bold text-90 truncate mb-0.5">
-              {currentSong.title}
-            </div>
-            <div class="song-artist text-sm text-50 truncate">
-              {currentSong.artist}
-            </div>
-            <div class="text-[0.7rem] text-30 mt-0.5">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </div>
-          </div>
-
-          <div class="flex items-center gap-1">
-            <button
-              class="btn-plain w-7 h-7 rounded-lg flex items-center justify-center"
-              aria-label={i18n(Key.musicPlayerHide)}
-              on:click={toggleHidden}
-              title={i18n(Key.musicPlayerHide)}
-            >
-              <Icon icon="material-symbols:visibility-off" class="text-base" />
-            </button>
-          </div>
-        </div>
-
-        <div class="progress-section mb-3">
-          <div
-            class="progress-bar flex-1 h-1.5 bg-(--btn-regular-bg) rounded-full cursor-pointer"
-            bind:this={progressBar}
-            on:click={setProgress}
-            on:keydown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                const percent = 0.5;
-                const newTime = percent * duration;
-                if (audio) {
-                  audio.currentTime = newTime;
-                  currentTime = newTime;
-                }
-              }
-            }}
-            role="slider"
-            tabindex="0"
-            aria-label={i18n(Key.musicPlayerProgress)}
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-valuenow={duration > 0 ? (currentTime / duration) * 100 : 0}
-          >
-            <div
-              class="h-full bg-(--primary) rounded-full transition-all duration-100"
-              style="width: {duration > 0
-                ? (currentTime / duration) * 100
-                : 0}%"
-            ></div>
-          </div>
-        </div>
-
-        <div class="controls flex items-center justify-between gap-0.5 px-1">
-          <button
-            class="btn-plain w-9 h-9 rounded-lg shrink-0"
-            aria-label={isShuffled
-              ? i18n(Key.musicPlayerShuffle)
-              : isRepeating === 1
-                ? i18n(Key.musicPlayerRepeatOne)
-                : i18n(Key.musicPlayerRepeat)}
-            on:click|stopPropagation={toggleRepeat}
-          >
-            {#if isShuffled}
-              <Icon icon="material-symbols:shuffle" class="text-[1.05rem]" />
-            {:else if isRepeating === 1}
-              <Icon
-                icon="material-symbols:repeat-one"
-                class="text-[1.05rem]"
-              />
-            {:else}
-              <Icon icon="material-symbols:repeat" class="text-[1.05rem]" />
-            {/if}
-          </button>
-
-          <button
-            class="btn-plain w-9 h-9 rounded-lg shrink-0"
-            on:click={previousSong}
-            aria-label={i18n(Key.musicPlayerPrevious)}
-            disabled={playlist.length <= 1}
-          >
-            <Icon icon="material-symbols:skip-previous" class="text-lg" />
-          </button>
-
-          <button
-            class="btn-plain w-9 h-9 rounded-lg shrink-0"
-            aria-label={isPlaying
-              ? i18n(Key.musicPlayerPause)
-              : i18n(Key.musicPlayerPlay)}
-            class:opacity-50={isLoading}
-            disabled={isLoading}
-            on:click|stopPropagation={togglePlay}
-          >
-            {#if isLoading}
-              <Icon icon="eos-icons:loading" class="text-lg" />
-            {:else if isPlaying}
-              <Icon icon="material-symbols:pause" class="text-lg" />
-            {:else}
-              <Icon icon="material-symbols:play-arrow" class="text-lg" />
-            {/if}
-          </button>
-
-          <button
-            class="btn-plain w-9 h-9 rounded-lg shrink-0"
-            aria-label={i18n(Key.musicPlayerNext)}
-            on:click={() => nextSong()}
-            disabled={playlist.length <= 1}
-          >
-            <Icon icon="material-symbols:skip-next" class="text-lg" />
-          </button>
-
-          <button
-            class="btn-plain w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-            aria-label={i18n(Key.musicPlayerPlaylist)}
-            class:text-[var(--primary)]={showPlaylist}
-            on:click={togglePlaylist}
-            title={i18n(Key.musicPlayerPlaylist)}
-          >
-            <Icon icon="material-symbols:queue-music" class="text-base" />
-          </button>
-
-        </div>
-      </div>
-    </div>
+    <ExpandedPlayer
+      {currentSong}
+      {currentTime}
+      {duration}
+      {isHidden}
+      {isLoading}
+      {isPlaying}
+      {isRepeating}
+      {isShuffled}
+      {showPlaylist}
+      playlistLength={playlist.length}
+      onNextSong={() => nextSong()}
+      onPreviousSong={previousSong}
+      onSeekPercent={seekToPercent}
+      onToggleHidden={toggleHidden}
+      onTogglePlay={togglePlay}
+      onTogglePlaylist={togglePlaylist}
+      onToggleRepeat={toggleRepeat}
+    />
 
     {#if showPlaylist}
-      <div
-        bind:this={playlistPanel}
-        class="playlist-panel animate-slide-up float-panel fixed bottom-19 right-6 w-72 max-h-96 overflow-hidden z-50"
-        style="background: var(--display-panel-bg); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border-radius: var(--radius-large);"
-      >
-        <div
-          class="playlist-panel-surface"
-          style="background: var(--panel-bg); border: 1px solid var(--display-panel-border); box-shadow: var(--shadow-lg); border-radius: inherit; overflow: hidden;"
-        >
-          <div
-            class="playlist-header flex items-center justify-between p-4 border-b border-(--line-divider)"
-          >
-            <h3 class="text-lg font-semibold text-90">
-              {i18n(Key.musicPlayerPlaylist)}
-            </h3>
-            <button
-              class="btn-plain w-8 h-8 rounded-lg"
-              aria-label={i18n(Key.musicPlayerPlaylist)}
-              on:click={togglePlaylist}
-            >
-              <Icon icon="material-symbols:close" class="text-lg" />
-            </button>
-          </div>
-
-          <div class="playlist-content overflow-y-auto max-h-80 hide-scrollbar">
-            {#each playlist as song, index}
-              <div
-                class="playlist-item flex items-center gap-3 p-3 hover:bg-(--btn-plain-bg-hover) cursor-pointer transition-colors"
-                class:bg-[var(--btn-plain-bg)]={index === currentIndex}
-                class:text-[var(--primary)]={index === currentIndex}
-                on:click={() => playSong(index)}
-                on:keydown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    playSong(index);
-                  }
-                }}
-                role="button"
-                tabindex="0"
-                aria-label={`Play ${song.title} - ${song.artist}`}
-              >
-                <div class="w-6 h-6 flex items-center justify-center">
-                  {#if index === currentIndex && isPlaying}
-                    <Icon
-                      icon="material-symbols:graphic-eq"
-                      class="text-(--primary) animate-pulse"
-                    />
-                  {:else if index === currentIndex}
-                    <Icon
-                      icon="material-symbols:pause"
-                      class="text-(--primary)"
-                    />
-                  {:else}
-                    <span class="text-sm text-(--content-meta)"
-                      >{index + 1}</span
-                    >
-                  {/if}
-                </div>
-
-                <div
-                  class="w-10 h-10 rounded-lg overflow-hidden bg-(--btn-regular-bg) shrink-0"
-                >
-                  <img
-                    src={getAssetPath(song.cover)}
-                    alt={song.title}
-                    loading="lazy"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-
-                <div class="flex-1 min-w-0">
-                  <div
-                    class="font-medium truncate"
-                    class:text-[var(--primary)]={index === currentIndex}
-                    class:text-90={index !== currentIndex}
-                  >
-                    {song.title}
-                  </div>
-                  <div
-                    class="text-sm text-(--content-meta) truncate"
-                    class:text-[var(--primary)]={index === currentIndex}
-                  >
-                    {song.artist}
-                  </div>
-                </div>
-              </div>
-            {/each}
-          </div>
-        </div>
-      </div>
+      <PlaylistPanel
+        bind:panelElement={playlistPanel}
+        {currentIndex}
+        {isPlaying}
+        {playlist}
+        onPlaySong={playSong}
+        onTogglePlaylist={togglePlaylist}
+      />
     {/if}
   </div>
-
-  <style>
-    @import "../../styles/music-player.css";
-  </style>
 {/if}

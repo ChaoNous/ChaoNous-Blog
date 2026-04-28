@@ -1,0 +1,82 @@
+---
+import {
+  DARK_MODE,
+  DEFAULT_THEME,
+  LIGHT_MODE,
+  PAGE_WIDTH,
+} from "../../constants/constants";
+
+interface Props {
+  configHue: number;
+}
+
+const { configHue } = Astro.props;
+---
+
+<script
+  is:inline
+  define:vars={{
+    DEFAULT_THEME,
+    LIGHT_MODE,
+    DARK_MODE,
+    PAGE_WIDTH,
+    configHue,
+  }}
+>
+  const storedTheme = localStorage.getItem("theme");
+  const initialColorScheme =
+    DEFAULT_THEME === LIGHT_MODE || DEFAULT_THEME === DARK_MODE
+      ? DEFAULT_THEME
+      : "";
+  function getPreferredTheme() {
+    if (storedTheme === LIGHT_MODE || storedTheme === DARK_MODE) {
+      return storedTheme;
+    }
+    if (initialColorScheme) {
+      return initialColorScheme;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? DARK_MODE
+      : LIGHT_MODE;
+  }
+  const themeValue = getPreferredTheme();
+  const isDark = themeValue === DARK_MODE;
+  document.documentElement.setAttribute(
+    "data-theme",
+    isDark ? DARK_MODE : LIGHT_MODE,
+  );
+  document.documentElement.setAttribute(
+    "data-color-scheme",
+    isDark ? "dark" : "light",
+  );
+  document.documentElement.setAttribute(
+    "data-shiki-theme",
+    isDark ? "github-dark" : "github-light",
+  );
+  window.theme = {
+    themeValue,
+    setTheme: (value) => {
+      window.theme.themeValue = value;
+    },
+  };
+  const hue = localStorage.getItem("hue") || configHue;
+  document.documentElement.style.setProperty("--hue", hue);
+  document.documentElement.setAttribute("data-theme-material", "silk");
+  (function () {
+    function updateViewportHeightVar() {
+      document.documentElement.style.setProperty(
+        "--vh",
+        `${window.innerHeight * 0.01}px`,
+      );
+    }
+    updateViewportHeightVar();
+    window.__cncUpdateViewportHeight = updateViewportHeightVar;
+  })();
+</script>
+
+<style
+  define:vars={{
+    configHue,
+    "page-width": `${PAGE_WIDTH}rem`,
+  }}
+></style>
