@@ -3,7 +3,6 @@ import type { MarkdownHeading } from "astro";
 import type { WidgetComponentConfig } from "../../types/config";
 import CardTOC from "@components/widget/CardTOC.astro";
 import Categories from "@components/widget/Categories.astro";
-import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import Profile from "@components/widget/Profile.astro";
 import SiteStats from "@components/widget/SiteStats.astro";
 import { widgetManager } from "@utils/widget-manager";
@@ -20,7 +19,6 @@ const componentMap = {
   profile: Profile,
   categories: Categories,
   "card-toc": CardTOC,
-  "music-player": MusicPlayer,
   "site-stats": SiteStats,
 };
 ---

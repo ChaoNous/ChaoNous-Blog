@@ -130,7 +130,6 @@ export type WidgetComponentType =
   | "profile"
   | "categories"
   | "card-toc"
-  | "music-player"
   | "site-stats";
 
 export type WidgetComponentConfig = {
