@@ -3,9 +3,11 @@ import test from "node:test";
 import { onRequestGet } from "../functions/api/music/playlist.ts";
 
 const originalFetch = globalThis.fetch;
+const originalConsoleError = console.error;
 
 test.afterEach(() => {
   globalThis.fetch = originalFetch;
+  console.error = originalConsoleError;
 });
 
 test("music playlist api maps a netease playlist into player tracks", async () => {
@@ -34,6 +36,10 @@ test("music playlist api maps a netease playlist into player tracks", async () =
                 picUrl: "http://p1.music.126.net/example.jpg",
               },
               duration: 82383,
+            },
+            {
+              id: 0,
+              name: "Broken Song",
             },
           ],
         },
@@ -89,6 +95,36 @@ test("music playlist api rejects unsupported sources", async () => {
   assert.equal(payload.code, "UNSUPPORTED_SOURCE");
 });
 
+test("music playlist api rejects missing playlist ids", async () => {
+  const response = await onRequestGet({
+    request: new Request(
+      "https://chaonous.com/api/music/playlist?server=netease&type=playlist",
+    ),
+  });
+
+  assert.equal(response.status, 400);
+
+  const payload = await response.json();
+  assert.equal(payload.ok, false);
+  assert.equal(payload.code, "BAD_REQUEST");
+  assert.equal(payload.message, "Missing playlist id.");
+});
+
+test("music playlist api rejects non-numeric playlist ids", async () => {
+  const response = await onRequestGet({
+    request: new Request(
+      "https://chaonous.com/api/music/playlist?server=netease&type=playlist&id=playlist-demo",
+    ),
+  });
+
+  assert.equal(response.status, 400);
+
+  const payload = await response.json();
+  assert.equal(payload.ok, false);
+  assert.equal(payload.code, "BAD_REQUEST");
+  assert.equal(payload.message, "Playlist id must be a positive integer.");
+});
+
 test("music playlist api surfaces upstream failures", async () => {
   globalThis.fetch = async () =>
     new Response("upstream error", {
@@ -106,4 +142,27 @@ test("music playlist api surfaces upstream failures", async () => {
   const payload = await response.json();
   assert.equal(payload.ok, false);
   assert.equal(payload.code, "UPSTREAM_ERROR");
+});
+
+test("music playlist api falls back to a generic upstream error on fetch rejection", async () => {
+  console.error = () => {};
+  globalThis.fetch = async () => {
+    throw new Error("socket hang up");
+  };
+
+  const response = await onRequestGet({
+    request: new Request(
+      "https://chaonous.com/api/music/playlist?server=netease&type=playlist&id=123",
+    ),
+  });
+
+  assert.equal(response.status, 502);
+
+  const payload = await response.json();
+  assert.equal(payload.ok, false);
+  assert.equal(payload.code, "UPSTREAM_ERROR");
+  assert.equal(
+    payload.message,
+    "Failed to fetch playlist from music upstream.",
+  );
 });
