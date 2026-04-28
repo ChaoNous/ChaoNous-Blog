@@ -26,18 +26,60 @@ test("music playlist api maps a netease playlist into player tracks", async () =
     requestHeaders.push(new Headers(init?.headers));
 
     if (requestedUrl.includes("/api/song/enhance/player/url")) {
+      const isFallbackRequest = requestedUrl.includes("31260546");
+
+      return new Response(
+        JSON.stringify({
+          data: isFallbackRequest
+            ? [
+                {
+                  id: 31260546,
+                  url: "http://m10.music.126.net/fallback-song.mp3",
+                  code: 200,
+                },
+              ]
+            : [
+                {
+                  id: 1417453801,
+                  url: "http://m10.music.126.net/test-song.mp3",
+                  code: 200,
+                },
+                {
+                  id: 33789445,
+                  url: null,
+                  code: 404,
+                },
+                {
+                  id: 3319151600,
+                  url: null,
+                  code: 404,
+                },
+              ],
+        }),
+        {
+          status: 200,
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      );
+    }
+
+    if (requestedUrl.startsWith("https://api.deezer.com/search")) {
       return new Response(
         JSON.stringify({
           data: [
             {
-              id: 1417453801,
-              url: "http://m10.music.126.net/test-song.mp3",
-              code: 200,
-            },
-            {
-              id: 33789445,
-              url: null,
-              code: 404,
+              title: "Flower Gardens",
+              preview: "https://cdnt-preview.dzcdn.net/flower-gardens.mp3",
+              artist: {
+                name: "Magnus Ringblom",
+              },
+              album: {
+                cover_xl: "https://e-cdns-images.dzcdn.net/flower-xl.jpg",
+                cover_medium:
+                  "https://e-cdns-images.dzcdn.net/flower-medium.jpg",
+              },
             },
           ],
         }),
@@ -70,6 +112,12 @@ test("music playlist api maps a netease playlist into player tracks", async () =
               duration: 154128,
             },
             {
+              id: 3319151600,
+              name: "Flower Gardens",
+              artists: [{ name: "Magnus Ringblom" }],
+              duration: 178200,
+            },
+            {
               id: 0,
               name: "Broken Song",
             },
@@ -100,8 +148,14 @@ test("music playlist api maps a netease playlist into player tracks", async () =
     requestedUrls[1],
     /^https:\/\/music\.163\.com\/api\/song\/enhance\/player\/url\?ids=/,
   );
+  assert.match(
+    requestedUrls[2],
+    /^https:\/\/music\.163\.com\/api\/song\/enhance\/player\/url\?ids=/,
+  );
+  assert.match(requestedUrls[3], /^https:\/\/api\.deezer\.com\/search\?/);
   assert.equal(requestHeaders[0]?.get("referer"), "https://music.163.com/");
   assert.equal(requestHeaders[1]?.get("referer"), "https://music.163.com/");
+  assert.equal(requestHeaders[2]?.get("referer"), "https://music.163.com/");
   assert.match(response.headers.get("cache-control") ?? "", /s-maxage=300/);
 
   const payload = await response.json();
@@ -114,6 +168,24 @@ test("music playlist api maps a netease playlist into player tracks", async () =
       pic: "https://p1.music.126.net/example.jpg",
       url: "https://m10.music.126.net/test-song.mp3",
       duration: 82383,
+    },
+    {
+      id: 33789445,
+      name: "\u957f\u5b89\u96c6\u5e02",
+      artist: "\u7fa4\u661f",
+      author: "\u7fa4\u661f",
+      pic: "https://p1.music.126.net/Oa2QHByL-f14TRsgIeLG2w==/7817527674131673.jpg",
+      url: "https://m10.music.126.net/fallback-song.mp3",
+      duration: 142000,
+    },
+    {
+      id: 3319151600,
+      name: "Flower Gardens",
+      artist: "Magnus Ringblom",
+      author: "Magnus Ringblom",
+      pic: "https://e-cdns-images.dzcdn.net/flower-xl.jpg",
+      url: "https://cdnt-preview.dzcdn.net/flower-gardens.mp3",
+      duration: 30000,
     },
   ]);
 });

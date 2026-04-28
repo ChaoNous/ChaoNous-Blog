@@ -1,4 +1,10 @@
 import type { MusicTrack } from "./types.ts";
+import {
+  getMusicPlayableFallback,
+  resolveDeezerPreviewFallback,
+  type MusicPlayableFallback,
+  type ResolvedPlayableTrack,
+} from "./playable-fallbacks.ts";
 
 type UpstreamArtist = {
   name?: string;
@@ -80,7 +86,7 @@ function getTrackDuration(track: UpstreamTrack): number {
 
 function mapTrack(
   track: UpstreamTrack,
-  playableUrls: Map<number, string>,
+  playableTracks: Map<number, ResolvedPlayableTrack>,
 ): MusicTrack | null {
   const id = Number(track.id ?? 0);
 
@@ -88,21 +94,22 @@ function mapTrack(
     return null;
   }
 
-  const playableUrl = playableUrls.get(id);
-  if (!playableUrl) {
+  const playableTrack = playableTracks.get(id);
+  if (!playableTrack?.url) {
     return null;
   }
 
   const artist = getArtistNames(track);
+  const resolvedArtist = playableTrack.artist ?? artist;
 
   return {
     id,
-    name: track.name?.trim() || "Unknown Song",
-    artist: artist || "Unknown Artist",
-    author: artist || "Unknown Artist",
-    pic: getCoverUrl(track),
-    url: playableUrl,
-    duration: getTrackDuration(track),
+    name: playableTrack.name ?? track.name?.trim() ?? "Unknown Song",
+    artist: resolvedArtist || "Unknown Artist",
+    author: resolvedArtist || "Unknown Artist",
+    pic: playableTrack.pic ?? getCoverUrl(track),
+    url: playableTrack.url,
+    duration: playableTrack.duration ?? getTrackDuration(track),
   };
 }
 
@@ -113,12 +120,13 @@ function isMusicTrack(track: MusicTrack | null): track is MusicTrack {
 async function fetchNeteasePlayableUrls(
   trackIds: number[],
 ): Promise<Map<number, string>> {
-  if (trackIds.length === 0) {
+  const uniqueTrackIds = [...new Set(trackIds)];
+  if (uniqueTrackIds.length === 0) {
     return new Map();
   }
 
   const url = new URL("https://music.163.com/api/song/enhance/player/url");
-  url.searchParams.set("ids", `[${trackIds.join(",")}]`);
+  url.searchParams.set("ids", `[${uniqueTrackIds.join(",")}]`);
   url.searchParams.set("br", "128000");
 
   const response = await fetch(url, {
@@ -149,6 +157,80 @@ async function fetchNeteasePlayableUrls(
   return playableUrls;
 }
 
+function getTrackId(track: UpstreamTrack): number {
+  const id = Number(track.id ?? 0);
+  return Number.isFinite(id) && id > 0 ? id : 0;
+}
+
+async function resolvePreviewFallback(
+  fallback: MusicPlayableFallback,
+): Promise<ResolvedPlayableTrack | null> {
+  if (fallback.kind === "direct-preview") {
+    return fallback;
+  }
+
+  if (fallback.kind === "deezer-preview") {
+    return resolveDeezerPreviewFallback(fallback);
+  }
+
+  return null;
+}
+
+async function resolvePlayableTracks(
+  tracks: UpstreamTrack[],
+): Promise<Map<number, ResolvedPlayableTrack>> {
+  const trackIds = tracks.map(getTrackId).filter((id) => id > 0);
+  const playableUrls = await fetchNeteasePlayableUrls(trackIds);
+  const playableTracks = new Map<number, ResolvedPlayableTrack>();
+
+  for (const [trackId, url] of playableUrls) {
+    playableTracks.set(trackId, { url });
+  }
+
+  const missingFallbacks = new Map<number, MusicPlayableFallback>();
+  for (const track of tracks) {
+    const trackId = getTrackId(track);
+    if (trackId <= 0 || playableTracks.has(trackId)) {
+      continue;
+    }
+
+    const fallback = getMusicPlayableFallback(trackId);
+    if (fallback) {
+      missingFallbacks.set(trackId, fallback);
+    }
+  }
+
+  const fallbackSongIds = [...missingFallbacks.values()]
+    .filter((fallback) => fallback.kind === "netease-song")
+    .map((fallback) => fallback.songId);
+  const fallbackPlayableUrls = await fetchNeteasePlayableUrls(fallbackSongIds);
+
+  const previewFallbacks = await Promise.all(
+    [...missingFallbacks].map(async ([trackId, fallback]) => {
+      return [trackId, await resolvePreviewFallback(fallback)] as const;
+    }),
+  );
+
+  for (const [trackId, fallback] of missingFallbacks) {
+    if (fallback.kind !== "netease-song") {
+      continue;
+    }
+
+    const url = fallbackPlayableUrls.get(fallback.songId);
+    if (url) {
+      playableTracks.set(trackId, { ...fallback, url });
+    }
+  }
+
+  for (const [trackId, fallbackTrack] of previewFallbacks) {
+    if (fallbackTrack?.url) {
+      playableTracks.set(trackId, fallbackTrack);
+    }
+  }
+
+  return playableTracks;
+}
+
 export async function fetchNeteasePlaylistTracks(
   playlistId: string,
 ): Promise<MusicTrack[]> {
@@ -168,12 +250,9 @@ export async function fetchNeteasePlaylistTracks(
 
   const payload = (await upstreamResponse.json()) as UpstreamPlaylistPayload;
   const tracks = payload.result?.tracks ?? [];
-  const trackIds = tracks
-    .map((track) => Number(track.id ?? 0))
-    .filter((id) => Number.isFinite(id) && id > 0);
-  const playableUrls = await fetchNeteasePlayableUrls(trackIds);
+  const playableTracks = await resolvePlayableTracks(tracks);
 
   return tracks
-    .map((track) => mapTrack(track, playableUrls))
+    .map((track) => mapTrack(track, playableTracks))
     .filter(isMusicTrack);
 }
