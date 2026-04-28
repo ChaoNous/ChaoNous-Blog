@@ -25,7 +25,7 @@ export const onRequestGet = async ({ request }: RequestContext) => {
       status: 200,
       headers: {
         "cache-control":
-          "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
+          "public, max-age=120, s-maxage=300, stale-while-revalidate=600",
       },
     });
   } catch (error) {

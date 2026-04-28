@@ -11,18 +11,44 @@ test.afterEach(() => {
 });
 
 test("music playlist api maps a netease playlist into player tracks", async () => {
-  let requestedUrl = "";
-  let requestHeaders: Headers | undefined;
+  const requestedUrls: string[] = [];
+  const requestHeaders: Headers[] = [];
 
   globalThis.fetch = async (
     input: string | URL | Request,
     init?: RequestInit,
   ) => {
-    requestedUrl =
+    const requestedUrl =
       typeof input === "string" || input instanceof URL
         ? input.toString()
         : input.url;
-    requestHeaders = new Headers(init?.headers);
+    requestedUrls.push(requestedUrl);
+    requestHeaders.push(new Headers(init?.headers));
+
+    if (requestedUrl.includes("/api/song/enhance/player/url")) {
+      return new Response(
+        JSON.stringify({
+          data: [
+            {
+              id: 1417453801,
+              url: "http://m10.music.126.net/test-song.mp3",
+              code: 200,
+            },
+            {
+              id: 33789445,
+              url: null,
+              code: 404,
+            },
+          ],
+        }),
+        {
+          status: 200,
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      );
+    }
 
     return new Response(
       JSON.stringify({
@@ -36,6 +62,12 @@ test("music playlist api maps a netease playlist into player tracks", async () =
                 picUrl: "http://p1.music.126.net/example.jpg",
               },
               duration: 82383,
+            },
+            {
+              id: 33789445,
+              name: "Unavailable Song",
+              artists: [{ name: "Hidden Artist" }],
+              duration: 154128,
             },
             {
               id: 0,
@@ -61,11 +93,16 @@ test("music playlist api maps a netease playlist into player tracks", async () =
 
   assert.equal(response.status, 200);
   assert.match(
-    requestedUrl,
+    requestedUrls[0],
     /^https:\/\/music\.163\.com\/api\/playlist\/detail\?id=13556055400$/,
   );
-  assert.equal(requestHeaders?.get("referer"), "https://music.163.com/");
-  assert.match(response.headers.get("cache-control") ?? "", /s-maxage=3600/);
+  assert.match(
+    requestedUrls[1],
+    /^https:\/\/music\.163\.com\/api\/song\/enhance\/player\/url\?ids=/,
+  );
+  assert.equal(requestHeaders[0]?.get("referer"), "https://music.163.com/");
+  assert.equal(requestHeaders[1]?.get("referer"), "https://music.163.com/");
+  assert.match(response.headers.get("cache-control") ?? "", /s-maxage=300/);
 
   const payload = await response.json();
   assert.deepEqual(payload, [
@@ -75,7 +112,7 @@ test("music playlist api maps a netease playlist into player tracks", async () =
       artist: "Test Artist",
       author: "Test Artist",
       pic: "https://p1.music.126.net/example.jpg",
-      url: "https://music.163.com/song/media/outer/url?id=1417453801.mp3",
+      url: "https://m10.music.126.net/test-song.mp3",
       duration: 82383,
     },
   ]);

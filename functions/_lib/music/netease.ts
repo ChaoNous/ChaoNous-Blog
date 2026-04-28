@@ -26,6 +26,16 @@ type UpstreamPlaylistPayload = {
   };
 };
 
+type UpstreamSongUrl = {
+  id?: number;
+  url?: string | null;
+  code?: number;
+};
+
+type UpstreamSongUrlPayload = {
+  data?: UpstreamSongUrl[];
+};
+
 export class MusicUpstreamResponseError extends Error {
   readonly upstreamStatus: number;
 
@@ -68,10 +78,18 @@ function getTrackDuration(track: UpstreamTrack): number {
   return Number.isFinite(duration) && duration > 0 ? duration : 0;
 }
 
-function mapTrack(track: UpstreamTrack): MusicTrack | null {
+function mapTrack(
+  track: UpstreamTrack,
+  playableUrls: Map<number, string>,
+): MusicTrack | null {
   const id = Number(track.id ?? 0);
 
   if (!Number.isFinite(id) || id <= 0) {
+    return null;
+  }
+
+  const playableUrl = playableUrls.get(id);
+  if (!playableUrl) {
     return null;
   }
 
@@ -83,13 +101,52 @@ function mapTrack(track: UpstreamTrack): MusicTrack | null {
     artist: artist || "Unknown Artist",
     author: artist || "Unknown Artist",
     pic: getCoverUrl(track),
-    url: `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
+    url: playableUrl,
     duration: getTrackDuration(track),
   };
 }
 
 function isMusicTrack(track: MusicTrack | null): track is MusicTrack {
   return track !== null;
+}
+
+async function fetchNeteasePlayableUrls(
+  trackIds: number[],
+): Promise<Map<number, string>> {
+  if (trackIds.length === 0) {
+    return new Map();
+  }
+
+  const url = new URL("https://music.163.com/api/song/enhance/player/url");
+  url.searchParams.set("ids", `[${trackIds.join(",")}]`);
+  url.searchParams.set("br", "128000");
+
+  const response = await fetch(url, {
+    headers: {
+      accept: "application/json, text/plain, */*",
+      referer: "https://music.163.com/",
+    },
+  });
+
+  if (!response.ok) {
+    throw new MusicUpstreamResponseError(response.status);
+  }
+
+  const payload = (await response.json()) as UpstreamSongUrlPayload;
+  const playableUrls = new Map<number, string>();
+
+  for (const songUrl of payload.data ?? []) {
+    const id = Number(songUrl.id ?? 0);
+    if (!Number.isFinite(id) || id <= 0) {
+      continue;
+    }
+
+    if (songUrl.code === 200 && songUrl.url) {
+      playableUrls.set(id, normalizeUrlProtocol(songUrl.url));
+    }
+  }
+
+  return playableUrls;
 }
 
 export async function fetchNeteasePlaylistTracks(
@@ -111,6 +168,12 @@ export async function fetchNeteasePlaylistTracks(
 
   const payload = (await upstreamResponse.json()) as UpstreamPlaylistPayload;
   const tracks = payload.result?.tracks ?? [];
+  const trackIds = tracks
+    .map((track) => Number(track.id ?? 0))
+    .filter((id) => Number.isFinite(id) && id > 0);
+  const playableUrls = await fetchNeteasePlayableUrls(trackIds);
 
-  return tracks.map(mapTrack).filter(isMusicTrack);
+  return tracks
+    .map((track) => mapTrack(track, playableUrls))
+    .filter(isMusicTrack);
 }
