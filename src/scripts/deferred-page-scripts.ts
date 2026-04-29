@@ -19,11 +19,6 @@ const deferredPageScripts: DeferredPageScript[] = [
     load: () => import("./asset-demystification-calculator.ts"),
   },
   {
-    key: "btc-analysis-chart",
-    selector: "#btc-main-chart, #btc-mini-chart, #btc-table-wrap",
-    load: () => import("./btc-analysis-chart.ts"),
-  },
-  {
     key: "code-collapse",
     selector: ".expressive-code",
     load: () => import("./code-collapse.ts"),
