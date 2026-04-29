@@ -22,7 +22,7 @@
 	}
 </script>
 
-<div class="relative z-50">
+<div class="relative z-50 h-full w-full">
 	<button
 		aria-label="Light/Dark Mode"
 		class="relative btn-plain scale-animation rounded-lg h-full w-full active:scale-90 theme-switch-btn"
