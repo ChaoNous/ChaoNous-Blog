@@ -190,17 +190,36 @@
 
 :root:not(.dark) #navbar .navbar-brand-text,
 :root:not(.dark) #navbar.group.scrolled .navbar-brand-text {
-  background: none;
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  color: oklch(0.24 0.12 var(--hue));
-  -webkit-text-fill-color: currentColor;
+  background: linear-gradient(
+    135deg,
+    #4f153b 0%,
+    #861720 24%,
+    #a66b12 48%,
+    #bd8717 63%,
+    #a6650d 78%,
+    #76181d 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.22px rgba(78, 18, 30, 0.32);
   font-weight: 800;
-  text-shadow: none;
+  text-shadow: 0 1px 0 rgba(255, 246, 225, 0.18);
 }
 
 :root:not(.dark) #navbar .navbar-brand:hover .navbar-brand-text {
-  color: oklch(0.2 0.14 var(--hue));
+  background: linear-gradient(
+    135deg,
+    #3f102f 0%,
+    #74131b 24%,
+    #935d0e 48%,
+    #aa7511 63%,
+    #93570a 78%,
+    #641318 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 @media (max-width: 1279px) {
