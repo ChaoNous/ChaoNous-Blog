@@ -13,17 +13,36 @@
 
 :root {
   --radius-large: 1rem;
-  --primary: oklch(0.65 0.20 var(--hue));
-  --page-bg: oklch(0.66 0.06 var(--hue));
-  --page-bg-top: oklch(0.69 0.07 var(--hue));
-  --page-bg-bottom: oklch(0.63 0.05 var(--hue));
-  --page-bg-paper-grain: color-mix(in oklch, oklch(0.75 0.065 var(--hue)) 80%, oklch(0.69 0.055 var(--hue)) 20%);
-  --page-bg-vignette: color-mix(in oklch, black 28%, transparent);
-  --page-bg-weave-primary: repeating-linear-gradient(0deg, transparent 0 7px, color-mix(in oklch, var(--page-bg-paper-grain) 34%, transparent) 7px 8px, transparent 8px 18px);
-  --page-bg-weave-secondary: repeating-linear-gradient(90deg, transparent 0 9px, color-mix(in oklch, var(--page-bg-paper-grain) 22%, transparent) 9px 10px, transparent 10px 22px);
-  --page-bg-weave-fine: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in oklch, var(--page-bg-paper-grain) 9%, transparent) 2px 3px, transparent 3px 5px);
-  --card-bg: oklch(0.90 0.022 var(--hue));
-  --card-bg-transparent: oklch(0.90 0.022 var(--hue) / 0.88);
+  --primary: oklch(0.65 0.2 var(--hue));
+  --page-bg: oklch(0.82 0.04 var(--hue));
+  --page-bg-top: oklch(0.88 0.045 var(--hue));
+  --page-bg-bottom: oklch(0.77 0.035 var(--hue));
+  --page-bg-paper-grain: color-mix(
+    in oklch,
+    oklch(0.92 0.045 var(--hue)) 82%,
+    oklch(0.82 0.035 var(--hue)) 18%
+  );
+  --page-bg-vignette: color-mix(in oklch, black 10%, transparent);
+  --page-bg-weave-primary: repeating-linear-gradient(
+    0deg,
+    transparent 0 7px,
+    color-mix(in oklch, var(--page-bg-paper-grain) 34%, transparent) 7px 8px,
+    transparent 8px 18px
+  );
+  --page-bg-weave-secondary: repeating-linear-gradient(
+    90deg,
+    transparent 0 9px,
+    color-mix(in oklch, var(--page-bg-paper-grain) 22%, transparent) 9px 10px,
+    transparent 10px 22px
+  );
+  --page-bg-weave-fine: repeating-linear-gradient(
+    0deg,
+    transparent 0 2px,
+    color-mix(in oklch, var(--page-bg-paper-grain) 9%, transparent) 2px 3px,
+    transparent 3px 5px
+  );
+  --card-bg: oklch(0.9 0.022 var(--hue));
+  --card-bg-transparent: oklch(0.9 0.022 var(--hue) / 0.88);
   --btn-content: oklch(0.45 0.15 var(--hue));
   --btn-regular-bg: oklch(0.86 0.04 var(--hue));
   --btn-regular-bg-hover: oklch(0.81 0.06 var(--hue));
@@ -44,7 +63,7 @@
   --codeblock-bg: oklch(0.86 0.015 var(--hue));
   --codeblock-topbar-bg: oklch(0.82 0.018 var(--hue));
   --link-underline: oklch(0.82 0.07 var(--hue));
-  --link-hover: oklch(0.78 0.10 var(--hue));
+  --link-hover: oklch(0.78 0.1 var(--hue));
   --link-active: oklch(0.75 0.12 var(--hue));
   --float-panel-bg: oklch(0.88 0.01 var(--hue));
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -68,14 +87,18 @@
   --page-bg: oklch(0.35 0.06 var(--hue));
   --page-bg-top: oklch(0.38 0.07 var(--hue));
   --page-bg-bottom: oklch(0.32 0.05 var(--hue));
-  --page-bg-paper-grain: color-mix(in oklch, oklch(0.44 0.065 var(--hue)) 80%, oklch(0.38 0.055 var(--hue)) 20%);
-  --card-bg: oklch(0.40 0.055 var(--hue));
-  --card-bg-transparent: oklch(0.40 0.055 var(--hue) / 0.88);
+  --page-bg-paper-grain: color-mix(
+    in oklch,
+    oklch(0.44 0.065 var(--hue)) 80%,
+    oklch(0.38 0.055 var(--hue)) 20%
+  );
+  --card-bg: oklch(0.4 0.055 var(--hue));
+  --card-bg-transparent: oklch(0.4 0.055 var(--hue) / 0.88);
   --btn-content: oklch(0.75 0.08 var(--hue));
   --btn-regular-bg: oklch(0.42 0.05 var(--hue));
   --btn-regular-bg-hover: oklch(0.46 0.06 var(--hue));
-  --btn-regular-bg-active: oklch(0.50 0.07 var(--hue));
-  --btn-plain-bg-hover: oklch(0.40 0.05 var(--hue));
+  --btn-regular-bg-active: oklch(0.5 0.07 var(--hue));
+  --btn-plain-bg-hover: oklch(0.4 0.05 var(--hue));
   --btn-plain-bg-active: oklch(0.38 0.045 var(--hue));
   --btn-card-bg-hover: oklch(0.38 0.045 var(--hue));
   --btn-card-bg-active: oklch(0.44 0.055 var(--hue));
@@ -93,11 +116,11 @@
   --link-underline: oklch(0.42 0.08 var(--hue));
   --link-hover: oklch(0.46 0.08 var(--hue));
   --link-active: oklch(0.38 0.05 var(--hue));
-  --float-panel-bg: oklch(0.30 0.02 var(--hue));
+  --float-panel-bg: oklch(0.3 0.02 var(--hue));
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
   --display-panel-bg: oklch(0.32 0.025 var(--hue) / 0.82);
-  --display-panel-border: rgba(255, 255, 255, 0.10);
+  --display-panel-border: rgba(255, 255, 255, 0.1);
   --display-panel-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
   --navbar-overlay-foreground: oklch(0.88 0.01 var(--hue));
 }
