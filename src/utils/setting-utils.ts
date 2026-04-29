@@ -2,7 +2,7 @@ import type { LIGHT_DARK_MODE } from "@/types/config";
 import { setThemePreference } from "./theme-utils";
 
 const UI_TO_HUE_MULTIPLIER = 1;
-const DEFAULT_HUE = 10;
+const DEFAULT_HUE = 0;
 const HUE_STORAGE_KEY = "hue";
 
 function parseHue(value: string | null | undefined, fallback: number): number {
