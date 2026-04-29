@@ -1,16 +1,6 @@
-:root {
-  --layout-sidebar-width: 300px;
-  --layout-main-width: 900px;
-  --layout-grid-chrome-width: 3rem;
-  --page-width: calc(
-    var(--layout-sidebar-width) + var(--layout-main-width) +
-      var(--layout-grid-chrome-width)
-  );
-}
-
 #main-grid {
   align-items: start;
-  gap: 1rem;
+  gap: clamp(1.4rem, 2vw, 2.2rem);
 }
 
 #left-sidebar-column {

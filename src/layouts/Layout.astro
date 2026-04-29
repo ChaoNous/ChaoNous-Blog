@@ -1,23 +1,20 @@
 ---
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import BackToTop from "@components/control/BackToTop.astro";
-import GlobalStyles from "@components/layout/GlobalStyles.astro";
-import SilkWeaveFilter from "@components/layout/SilkWeaveFilter.astro";
-import SkipToContent from "@components/layout/SkipToContent.astro";
-import ThemeBootstrap from "@components/layout/ThemeBootstrap.astro";
-import ViewportHeightRuntime from "@components/layout/ViewportHeightRuntime.astro";
-import HeadMeta from "@components/seo/HeadMeta.astro";
 import JsonLd from "@components/seo/JsonLd.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import { musicPlayerConfig, profileConfig, siteConfig } from "@/config";
+import { DARK_MODE, DEFAULT_THEME, LIGHT_MODE, PAGE_WIDTH, } from "../constants/constants";
+import { defaultFavicons } from "../constants/icon";
+import type { Favicon } from "../types/config";
 import { pathsEqual, url } from "../utils/url-utils";
 interface Props {
-  title?: string;
-  description?: string;
-  lang?: string;
-  setOGTypeArticle?: boolean;
-  postSlug?: string;
-  canonicalUrl?: string;
+    title?: string;
+    description?: string;
+    lang?: string;
+    setOGTypeArticle?: boolean;
+    postSlug?: string;
+    canonicalUrl?: string;
 }
 let { title, description, lang, setOGTypeArticle, postSlug } = Astro.props;
 const canonicalUrl = Astro.props.canonicalUrl || Astro.url.toString();
@@ -25,37 +22,132 @@ const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
 const configHue = siteConfig.themeColor.hue;
 let pageTitle: string;
 if (title) {
-  pageTitle = `${title} - ${siteConfig.title}`;
-} else {
-  pageTitle = siteConfig.subtitle
-    ? `${siteConfig.title} - ${siteConfig.subtitle}`
-    : siteConfig.title;
+    pageTitle = `${title} - ${siteConfig.title}`;
+}
+else {
+    pageTitle = siteConfig.subtitle
+        ? `${siteConfig.title} - ${siteConfig.subtitle}`
+        : siteConfig.title;
 }
 let ogImageUrl: string | undefined;
 if (siteConfig.generateOgImages && postSlug) {
-  ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
+    ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
 }
+const favicons: Favicon[] = siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 if (!lang) {
-  lang = `${siteConfig.lang}`;
+    lang = `${siteConfig.lang}`;
 }
 const siteLang = lang.replace("_", "-");
 const isChineseSite = siteLang.toLowerCase().startsWith("zh");
 const skipToContentLabel = isChineseSite
-  ? "\u8df3\u8f6c\u5230\u6b63\u6587"
-  : "Skip to content";
+    ? "\u8df3\u8f6c\u5230\u6b63\u6587"
+    : "Skip to content";
 ---
 
 <!doctype html>
 <html lang={siteLang} class="bg-(--page-bg) text-[13px] md:text-[16px]">
   <head>
-    <HeadMeta
-      canonicalUrl={canonicalUrl}
-      description={description}
-      ogImageUrl={ogImageUrl}
-      pageTitle={pageTitle}
-      setOGTypeArticle={setOGTypeArticle}
-    />
-    <ThemeBootstrap configHue={configHue} />
+    <title>{pageTitle}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="description" content={description || pageTitle} />
+    <meta name="google" content="notranslate" />
+    <meta name="googlebot" content="notranslate" />
+
+    {
+      siteConfig.keywords && siteConfig.keywords.length > 0 && (
+        <meta name="keywords" content={siteConfig.keywords.join(", ")} />
+      )
+    }
+    <meta name="author" content={profileConfig.name} />
+    <meta property="og:site_name" content={siteConfig.title} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description || pageTitle} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta property="og:image:width" content="1200" />}
+    {ogImageUrl && <meta property="og:image:height" content="630" />}
+    {ogImageUrl && <meta property="og:image:alt" content={pageTitle} />}
+    {
+      setOGTypeArticle ? (
+        <meta property="og:type" content="article" />
+      ) : (
+        <meta property="og:type" content="website" />
+      )
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description || pageTitle} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta name="twitter:image:alt" content={pageTitle} />}
+    {
+      favicons.map((favicon) => (
+        <link
+          rel="icon"
+          href={favicon.src.startsWith("/") ? url(favicon.src) : favicon.src}
+          sizes={favicon.sizes}
+          media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
+        />
+      ))
+    }
+
+    
+    <script
+      is:inline
+      define:vars={{
+        DEFAULT_THEME,
+        LIGHT_MODE,
+        DARK_MODE,
+        PAGE_WIDTH,
+        configHue,
+      }}
+    >
+      const storedTheme = localStorage.getItem("theme");
+      const initialColorScheme = DEFAULT_THEME === LIGHT_MODE || DEFAULT_THEME === DARK_MODE
+          ? DEFAULT_THEME
+          : "";
+      function getPreferredTheme() {
+          if (storedTheme === LIGHT_MODE || storedTheme === DARK_MODE) {
+              return storedTheme;
+          }
+          if (initialColorScheme) {
+              return initialColorScheme;
+          }
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? DARK_MODE
+              : LIGHT_MODE;
+      }
+      const themeValue = getPreferredTheme();
+      const isDark = themeValue === DARK_MODE;
+      document.documentElement.setAttribute("data-theme", isDark ? DARK_MODE : LIGHT_MODE);
+      document.documentElement.setAttribute("data-color-scheme", isDark ? "dark" : "light");
+      document.documentElement.setAttribute("data-shiki-theme", isDark ? "github-dark" : "github-light");
+      window.theme = {
+          themeValue,
+          setTheme: (value) => {
+              window.theme.themeValue = value;
+          },
+      };
+      const hue = localStorage.getItem("hue") || configHue;
+      document.documentElement.style.setProperty("--hue", hue);
+      document.documentElement.setAttribute("data-theme-material", "silk");
+      (function () {
+          function updateViewportHeightVar() {
+              document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+          }
+          updateViewportHeightVar();
+          window.__cncUpdateViewportHeight = updateViewportHeightVar;
+      })();
+    </script>
+    <style
+      define:vars={{
+        configHue,
+        "page-width": `${PAGE_WIDTH}rem`,
+      }}
+    ></style>
+    
     <slot name="head" />
 
     <link
@@ -65,6 +157,7 @@ const skipToContentLabel = isChineseSite
       href={`${Astro.site}rss.xml`}
     />
 
+    
     <JsonLd type={setOGTypeArticle ? "article" : "website"} />
   </head>
   <body
@@ -75,11 +168,41 @@ const skipToContentLabel = isChineseSite
       },
     ]}
   >
-    <SkipToContent label={skipToContentLabel} />
+    <a href="#main-content" class="skip-to-content">{skipToContentLabel}</a>
     <script>
       import "../scripts/page-lifecycle.ts";
     </script>
-    <SilkWeaveFilter />
+    
+    <svg
+      style="position: absolute; width: 0; height: 0; overflow: hidden;"
+      aria-hidden="true"
+    >
+      <defs>
+        <filter id="silk-weave" color-interpolation-filters="sRGB">
+          
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.5 0.02"
+            numOctaves="3"
+            seed="1"
+            result="warp"></feTurbulence>
+          
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.02 0.5"
+            numOctaves="3"
+            seed="2"
+            result="weft"></feTurbulence>
+          
+          <feBlend mode="screen" in="warp" in2="weft" result="fabric"></feBlend>
+          
+          <feColorMatrix
+            type="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0"
+            in="fabric"></feColorMatrix>
+        </filter>
+      </defs>
+    </svg>
     <ConfigCarrier />
     <slot />
     <BackToTop />
@@ -87,19 +210,81 @@ const skipToContentLabel = isChineseSite
       import "../scripts/theme.ts";
     </script>
 
+    
     {musicPlayerConfig.enable && <MusicPlayer client:idle />}
 
+    
     <div id="page-height-extend" class="hidden h-[300vh]"></div>
   </body>
 </html>
 
-<GlobalStyles configHue={configHue} />
+<style
+  is:global
+  define:vars={{
+    hue: configHue,
+  }}
+>
+  @import "../styles/main.css";
+
+  :root {
+    --hue: var(--hue, ${configHue});
+  }
+
+  
+  .goog-te-banner-frame,
+  .goog-te-menu-frame,
+  .goog-te-balloon-frame,
+  #goog-gt-tt,
+  .goog-tooltip,
+  .goog-text-highlight {
+    display: none !important;
+  }
+
+  body {
+    top: 0 !important;
+  }
+
+  .skip-to-content {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 70;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklch, var(--primary) 20%, transparent);
+    background: color-mix(in oklch, var(--card-bg) 92%, white);
+    color: var(--text-main);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-180%);
+    transition: transform 180ms ease;
+  }
+
+  .skip-to-content:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+
+  @layer components {
+    .navbar-hidden {
+      @apply opacity-0 -translate-y-16;
+    }
+  }
+</style>
 
 <script>
   import "../scripts/layout-runtime.ts";
 </script>
 
-<ViewportHeightRuntime />
+<script is:inline>
+  (function () {
+      const updateViewportHeight = window.__cncUpdateViewportHeight;
+      if (typeof updateViewportHeight === "function") {
+          window.addEventListener("orientationchange", updateViewportHeight);
+      }
+  })();
+</script>
+
 
 <script>
   import "../scripts/deferred-page-scripts.ts";

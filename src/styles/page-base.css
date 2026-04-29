@@ -14,6 +14,18 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+@media (min-width: 768px) {
+  html {
+    font-size: 106%;
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 112%;
+  }
+}
+
 body {
   font-family: var(--font-content);
   scrollbar-width: none;
