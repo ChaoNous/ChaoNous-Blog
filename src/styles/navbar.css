@@ -121,6 +121,15 @@
     color 300ms ease-in-out;
 }
 
+#navbar .navbar-actions .btn-plain {
+  cursor: pointer;
+}
+
+#navbar .navbar-actions .btn-plain:hover {
+  background-color: color-mix(in oklch, var(--primary) 6%, transparent);
+  color: var(--primary);
+}
+
 #navbar .navbar-arrow {
   transition:
     transform 300ms ease-in-out,
