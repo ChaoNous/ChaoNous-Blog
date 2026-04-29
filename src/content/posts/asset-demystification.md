@@ -44,13 +44,13 @@ $$\Large NOI = \text{年租金收入} - \text{空置损失} - \text{持有成本
 
 在实际分析中，`NOI` 是最容易被高估的变量。许多粗略判断仅以名义租金为依据，而忽略空置、维护和交易摩擦，从而导致估值偏高。
 
-### 2. 无风险利率 <span class="text-[var(--primary)]"><span class="font-serif italic">r</span><sub>f</sub></span>
+### 2. 无风险利率 <span class="font-serif italic">r</span><sub>f</sub>
 
-<span class="text-[var(--primary)]"><span class="font-serif italic">r</span><sub>f</sub></span> 表示无风险利率，可理解为低风险资金的基准回报要求。实务中通常参考长期国债收益率。其经济含义在于：如果资金可以在接近无风险的资产中获得某一确定回报，那么房产作为风险更高、流动性更差的资产，至少应在此基础上提供足够补偿。
+<span class="font-serif italic">r</span><sub>f</sub> 表示无风险利率，可理解为低风险资金的基准回报要求。实务中通常参考长期国债收益率。其经济含义在于：如果资金可以在接近无风险的资产中获得某一确定回报，那么房产作为风险更高、流动性更差的资产，至少应在此基础上提供足够补偿。
 
-### 3. 风险溢价 <span class="text-[var(--primary)]"><span class="font-serif italic">r</span><sub>p</sub></span>
+### 3. 风险溢价 <span class="font-serif italic">r</span><sub>p</sub>
 
-<span class="text-[var(--primary)]"><span class="font-serif italic">r</span><sub>p</sub></span> 表示风险溢价，用于补偿房产相对于无风险资产所承担的额外风险。房产风险并不只来自价格波动，也包括：
+<span class="font-serif italic">r</span><sub>p</sub> 表示风险溢价，用于补偿房产相对于无风险资产所承担的额外风险。房产风险并不只来自价格波动，也包括：
 
 - 流动性较差
 - 成交周期较长
