@@ -3,8 +3,21 @@
 }
 
 .post-article-card {
-  max-width: 100%;
+  --post-reading-width: 42rem;
+  --post-reading-card-width: 50rem;
+
+  max-width: min(100%, var(--post-reading-card-width));
   margin-inline: auto;
+}
+
+.post-article-card :where(.post-reading-meta, .post-article-title, #post-cover),
+.post-article-card .custom-md {
+  max-width: min(100%, var(--post-reading-width)) !important;
+  margin-inline: auto;
+}
+
+.post-article-card .custom-md {
+  width: 100%;
 }
 
 .post-reading-meta {
