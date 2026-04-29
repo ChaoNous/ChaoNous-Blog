@@ -2,10 +2,12 @@
 import {
   DARK_MODE,
   DEFAULT_THEME,
+  LAYOUT_GRID_CHROME_WIDTH_REM,
+  LAYOUT_MAIN_WIDTH_PX,
+  LAYOUT_SIDEBAR_WIDTH_PX,
   LIGHT_MODE,
   PAGE_SCALING_MIN_SCALE,
   PAGE_SCALING_TARGET_WIDTH,
-  PAGE_WIDTH,
 } from "../../constants/constants";
 
 interface Props {
@@ -13,6 +15,9 @@ interface Props {
 }
 
 const { configHue } = Astro.props;
+const layoutSidebarWidth = `${LAYOUT_SIDEBAR_WIDTH_PX}px`;
+const layoutMainWidth = `${LAYOUT_MAIN_WIDTH_PX}px`;
+const pageWidth = `calc(${LAYOUT_SIDEBAR_WIDTH_PX + LAYOUT_MAIN_WIDTH_PX}px + ${LAYOUT_GRID_CHROME_WIDTH_REM}rem)`;
 ---
 
 <script
@@ -21,9 +26,11 @@ const { configHue } = Astro.props;
     DEFAULT_THEME,
     LIGHT_MODE,
     DARK_MODE,
+    layoutSidebarWidth,
+    layoutMainWidth,
     PAGE_SCALING_MIN_SCALE,
     PAGE_SCALING_TARGET_WIDTH,
-    PAGE_WIDTH,
+    pageWidth,
     configHue,
   }}
 >
@@ -65,7 +72,15 @@ const { configHue } = Astro.props;
   };
   const hue = localStorage.getItem("hue") || configHue;
   document.documentElement.style.setProperty("--hue", hue);
-  document.documentElement.style.setProperty("--page-width", `${PAGE_WIDTH}rem`);
+  document.documentElement.style.setProperty(
+    "--layout-sidebar-width",
+    layoutSidebarWidth,
+  );
+  document.documentElement.style.setProperty(
+    "--layout-main-width",
+    layoutMainWidth,
+  );
+  document.documentElement.style.setProperty("--page-width", pageWidth);
   document.documentElement.setAttribute("data-theme-material", "silk");
   (function () {
     function updateViewportHeightVar() {
@@ -112,6 +127,8 @@ const { configHue } = Astro.props;
 <style
   define:vars={{
     configHue,
-    "page-width": `${PAGE_WIDTH}rem`,
+    pageWidth,
+    layoutSidebarWidth,
+    layoutMainWidth,
   }}
 ></style>
