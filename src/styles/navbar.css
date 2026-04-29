@@ -188,6 +188,21 @@
   color: transparent;
 }
 
+:root:not(.dark) #navbar .navbar-brand-text,
+:root:not(.dark) #navbar.group.scrolled .navbar-brand-text {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: oklch(0.24 0.12 var(--hue));
+  -webkit-text-fill-color: currentColor;
+  font-weight: 800;
+  text-shadow: none;
+}
+
+:root:not(.dark) #navbar .navbar-brand:hover .navbar-brand-text {
+  color: oklch(0.2 0.14 var(--hue));
+}
+
 @media (max-width: 1279px) {
   #navbar .navbar-shell {
     display: flex;
