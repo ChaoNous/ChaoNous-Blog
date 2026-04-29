@@ -58,7 +58,7 @@ const mobileShowSidebar = hasMobileDrawerComponents;
 const tabletShowSidebar = hasTabletLeftSidebarComponents;
 const desktopShowLeftSidebar = hasLeftSidebarComponents;
 const desktopGridCols = desktopShowLeftSidebar
-  ? "lg:grid-cols-[21rem_1fr]"
+  ? "lg:grid-cols-[17.5rem_1fr]"
   : "lg:grid-cols-1";
 const gridCols = `
   grid-cols-1
@@ -68,7 +68,7 @@ const gridCols = `
   .replace(/\s+/g, " ");
 const sidebarClass = `
   ${mobileShowSidebar && hasMobileDrawerComponents ? "block" : "hidden"}
-  ${desktopShowLeftSidebar ? "lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-80 lg:col-start-1 lg:col-end-2 lg:min-w-0" : "lg:hidden"}
+  ${desktopShowLeftSidebar ? "lg:block lg:mb-4 lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] lg:col-start-1 lg:col-end-2 lg:min-w-0" : "lg:hidden"}
 `
   .trim()
   .replace(/\s+/g, " ");
@@ -111,7 +111,7 @@ const mainContentClass = `
     <div class="relative max-w-(--page-width) mx-auto pointer-events-auto">
       <div
         id="main-grid"
-        class={`w-full left-0 right-0 grid ${gridCols} grid-rows-none md:grid-rows-[auto] md:items-start mx-auto gap-8 px-1 md:px-4 ${!mobileShowSidebar || !hasMobileDrawerComponents ? "mobile-no-sidebar" : ""}`}
+        class={`w-full left-0 right-0 grid ${gridCols} grid-rows-none md:grid-rows-[auto] md:items-start mx-auto gap-4 px-1 md:px-4 ${!mobileShowSidebar || !hasMobileDrawerComponents ? "mobile-no-sidebar" : ""}`}
         data-layout-mode="list"
       >
         {

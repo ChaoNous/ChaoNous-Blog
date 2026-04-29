@@ -3,6 +3,8 @@ import {
   DARK_MODE,
   DEFAULT_THEME,
   LIGHT_MODE,
+  PAGE_SCALING_MIN_SCALE,
+  PAGE_SCALING_TARGET_WIDTH,
   PAGE_WIDTH,
 } from "../../constants/constants";
 
@@ -19,6 +21,8 @@ const { configHue } = Astro.props;
     DEFAULT_THEME,
     LIGHT_MODE,
     DARK_MODE,
+    PAGE_SCALING_MIN_SCALE,
+    PAGE_SCALING_TARGET_WIDTH,
     PAGE_WIDTH,
     configHue,
   }}
@@ -61,6 +65,7 @@ const { configHue } = Astro.props;
   };
   const hue = localStorage.getItem("hue") || configHue;
   document.documentElement.style.setProperty("--hue", hue);
+  document.documentElement.style.setProperty("--page-width", `${PAGE_WIDTH}rem`);
   document.documentElement.setAttribute("data-theme-material", "silk");
   (function () {
     function updateViewportHeightVar() {
@@ -71,6 +76,36 @@ const { configHue } = Astro.props;
     }
     updateViewportHeightVar();
     window.__cncUpdateViewportHeight = updateViewportHeightVar;
+  })();
+  (function () {
+    function adjustPageScale() {
+      const isTouch =
+        (window.matchMedia &&
+          (window.matchMedia("(pointer: coarse)").matches ||
+            window.matchMedia("(hover: none)").matches)) ||
+        "ontouchstart" in window;
+      const isPortrait =
+        window.matchMedia &&
+        window.matchMedia("(orientation: portrait)").matches;
+      if (isTouch || isPortrait || window.innerWidth <= 1280) {
+        document.documentElement.style.fontSize = "";
+        return;
+      }
+
+      const targetWidth = PAGE_SCALING_TARGET_WIDTH || 2000;
+      const minScale = PAGE_SCALING_MIN_SCALE || 0.85;
+      const viewportWidth = document.documentElement.clientWidth;
+      const scale = Math.min(
+        1,
+        Math.max(minScale, viewportWidth / targetWidth),
+      );
+      document.documentElement.style.fontSize = `${scale * 100}%`;
+    }
+
+    adjustPageScale();
+    window.addEventListener("resize", adjustPageScale);
+    window.addEventListener("orientationchange", adjustPageScale);
+    document.addEventListener("swup:page:view", adjustPageScale);
   })();
 </script>
 

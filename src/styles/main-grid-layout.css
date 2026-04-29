@@ -1,6 +1,6 @@
 #main-grid {
   align-items: start;
-  gap: clamp(1.4rem, 2vw, 2.2rem);
+  gap: 1rem;
 }
 
 #left-sidebar-column {
