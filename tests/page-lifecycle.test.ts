@@ -62,9 +62,10 @@ async function loadPageLifecycleModule(label: string) {
   return import(`${moduleUrl}?test=${label}-${Date.now()}-${Math.random()}`);
 }
 
-function setupFakeDom() {
+function setupFakeDom(readyState: DocumentReadyState = "complete") {
   const fakeWindow = new FakeWindow();
   const fakeDocument = new FakeDocument();
+  fakeDocument.readyState = readyState;
 
   Object.assign(globalThis, {
     window: fakeWindow,
@@ -89,6 +90,83 @@ test("page lifecycle runs registered scripts immediately when document is ready"
       initCalls += 1;
     },
   });
+
+  assert.equal(initCalls, 1);
+});
+
+test("page lifecycle runs loading-state scripts once on dom ready", async () => {
+  const { fakeDocument } = setupFakeDom("loading");
+  const { registerPageScript } = await loadPageLifecycleModule("dom-ready");
+
+  let initCalls = 0;
+  registerPageScript("test-script", {
+    init() {
+      initCalls += 1;
+    },
+  });
+
+  assert.equal(initCalls, 0);
+
+  fakeDocument.readyState = "interactive";
+  fakeDocument.dispatchEvent(new Event("DOMContentLoaded"));
+  fakeDocument.dispatchEvent(new Event("DOMContentLoaded"));
+
+  assert.equal(initCalls, 1);
+});
+
+test("page lifecycle ignores duplicate script registration on the same page", async () => {
+  setupFakeDom();
+  const { registerPageScript, cleanupPageScripts } =
+    await loadPageLifecycleModule("duplicate-registration");
+
+  let initCalls = 0;
+  let cleanupCalls = 0;
+  registerPageScript("category-widget", {
+    init() {
+      initCalls += 1;
+      return () => {
+        cleanupCalls += 1;
+      };
+    },
+  });
+  const disposeDuplicate = registerPageScript("category-widget", {
+    init() {
+      initCalls += 1;
+      return () => {
+        cleanupCalls += 1;
+      };
+    },
+  });
+
+  disposeDuplicate();
+  assert.equal(cleanupCalls, 0);
+
+  cleanupPageScripts();
+
+  assert.equal(initCalls, 1);
+  assert.equal(cleanupCalls, 1);
+});
+
+test("page lifecycle keeps duplicate loading-state registrations to one run", async () => {
+  const { fakeDocument } = setupFakeDom("loading");
+  const { registerPageScript } = await loadPageLifecycleModule(
+    "duplicate-loading-registration",
+  );
+
+  let initCalls = 0;
+  registerPageScript("category-widget", {
+    init() {
+      initCalls += 1;
+    },
+  });
+  registerPageScript("category-widget", {
+    init() {
+      initCalls += 1;
+    },
+  });
+
+  fakeDocument.readyState = "interactive";
+  fakeDocument.dispatchEvent(new Event("DOMContentLoaded"));
 
   assert.equal(initCalls, 1);
 });
