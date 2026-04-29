@@ -26,60 +26,23 @@ test("music playlist api maps a netease playlist into player tracks", async () =
     requestHeaders.push(new Headers(init?.headers));
 
     if (requestedUrl.includes("/api/song/enhance/player/url")) {
-      const isFallbackRequest = requestedUrl.includes("31260546");
-
-      return new Response(
-        JSON.stringify({
-          data: isFallbackRequest
-            ? [
-                {
-                  id: 31260546,
-                  url: "http://m10.music.126.net/fallback-song.mp3",
-                  code: 200,
-                },
-              ]
-            : [
-                {
-                  id: 1417453801,
-                  url: "http://m10.music.126.net/test-song.mp3",
-                  code: 200,
-                },
-                {
-                  id: 33789445,
-                  url: null,
-                  code: 404,
-                },
-                {
-                  id: 3319151600,
-                  url: null,
-                  code: 404,
-                },
-              ],
-        }),
-        {
-          status: 200,
-          headers: {
-            "content-type": "application/json",
-          },
-        },
-      );
-    }
-
-    if (requestedUrl.startsWith("https://api.deezer.com/search")) {
       return new Response(
         JSON.stringify({
           data: [
             {
-              title: "Flower Gardens",
-              preview: "https://cdnt-preview.dzcdn.net/flower-gardens.mp3",
-              artist: {
-                name: "Magnus Ringblom",
-              },
-              album: {
-                cover_xl: "https://e-cdns-images.dzcdn.net/flower-xl.jpg",
-                cover_medium:
-                  "https://e-cdns-images.dzcdn.net/flower-medium.jpg",
-              },
+              id: 1417453801,
+              url: "http://m10.music.126.net/test-song.mp3",
+              code: 200,
+            },
+            {
+              id: 33789445,
+              url: null,
+              code: 404,
+            },
+            {
+              id: 3319151600,
+              url: null,
+              code: 404,
             },
           ],
         }),
@@ -148,14 +111,9 @@ test("music playlist api maps a netease playlist into player tracks", async () =
     requestedUrls[1],
     /^https:\/\/music\.163\.com\/api\/song\/enhance\/player\/url\?ids=/,
   );
-  assert.match(
-    requestedUrls[2],
-    /^https:\/\/music\.163\.com\/api\/song\/enhance\/player\/url\?ids=/,
-  );
-  assert.match(requestedUrls[3], /^https:\/\/api\.deezer\.com\/search\?/);
+  assert.equal(requestedUrls.length, 2);
   assert.equal(requestHeaders[0]?.get("referer"), "https://music.163.com/");
   assert.equal(requestHeaders[1]?.get("referer"), "https://music.163.com/");
-  assert.equal(requestHeaders[2]?.get("referer"), "https://music.163.com/");
   assert.match(response.headers.get("cache-control") ?? "", /s-maxage=300/);
 
   const payload = await response.json();
@@ -171,23 +129,135 @@ test("music playlist api maps a netease playlist into player tracks", async () =
     },
     {
       id: 33789445,
-      name: "\u957f\u5b89\u96c6\u5e02",
-      artist: "\u7fa4\u661f",
-      author: "\u7fa4\u661f",
-      pic: "https://p1.music.126.net/Oa2QHByL-f14TRsgIeLG2w==/7817527674131673.jpg",
-      url: "https://m10.music.126.net/fallback-song.mp3",
-      duration: 142000,
+      name: "Unavailable Song",
+      artist: "Hidden Artist",
+      author: "Hidden Artist",
+      pic: "",
+      url: "https://music.163.com/song/media/outer/url?id=33789445.mp3",
+      duration: 154128,
     },
     {
       id: 3319151600,
       name: "Flower Gardens",
       artist: "Magnus Ringblom",
       author: "Magnus Ringblom",
-      pic: "https://e-cdns-images.dzcdn.net/flower-xl.jpg",
-      url: "https://cdnt-preview.dzcdn.net/flower-gardens.mp3",
-      duration: 30000,
+      pic: "",
+      url: "https://music.163.com/song/media/outer/url?id=3319151600.mp3",
+      duration: 178200,
     },
   ]);
+});
+
+test("music playlist api keeps songs when playable url lookup fails", async () => {
+  console.error = () => {};
+
+  globalThis.fetch = async (
+    input: string | URL | Request,
+    init?: RequestInit,
+  ) => {
+    const requestedUrl =
+      typeof input === "string" || input instanceof URL
+        ? input.toString()
+        : input.url;
+
+    if (requestedUrl.includes("/api/song/enhance/player/url")) {
+      assert.equal(
+        new Headers(init?.headers).get("referer"),
+        "https://music.163.com/",
+      );
+
+      return new Response("upstream error", {
+        status: 503,
+      });
+    }
+
+    return new Response(
+      JSON.stringify({
+        result: {
+          tracks: [
+            {
+              id: 33789445,
+              name: "Unavailable Song",
+              artists: [{ name: "Hidden Artist" }],
+              duration: 154128,
+            },
+          ],
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    );
+  };
+
+  const response = await onRequestGet({
+    request: new Request(
+      "https://chaonous.com/api/music/playlist?server=netease&type=playlist&id=13556055400",
+    ),
+  });
+
+  assert.equal(response.status, 200);
+
+  const payload = await response.json();
+  assert.deepEqual(payload, [
+    {
+      id: 33789445,
+      name: "Unavailable Song",
+      artist: "Hidden Artist",
+      author: "Hidden Artist",
+      pic: "",
+      url: "https://music.163.com/song/media/outer/url?id=33789445.mp3",
+      duration: 154128,
+    },
+  ]);
+});
+
+test("music playlist api uses static metadata when the configured playlist is empty upstream", async () => {
+  globalThis.fetch = async (input: string | URL | Request) => {
+    const requestedUrl =
+      typeof input === "string" || input instanceof URL
+        ? input.toString()
+        : input.url;
+
+    if (requestedUrl.includes("/api/song/enhance/player/url")) {
+      return new Response(JSON.stringify({ data: [] }), {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+    }
+
+    return new Response(JSON.stringify({ result: { tracks: [] } }), {
+      status: 200,
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+  };
+
+  const response = await onRequestGet({
+    request: new Request(
+      "https://chaonous.com/api/music/playlist?server=netease&type=playlist&id=13556055400",
+    ),
+  });
+
+  assert.equal(response.status, 200);
+
+  const payload = await response.json();
+  assert.equal(payload.length, 8);
+  assert.deepEqual(payload[0], {
+    id: 1417453801,
+    name: "\u5929\u6daf",
+    artist: "\u5f6d\u7b54\uff08\u7b54\u7b54\uff09",
+    author: "\u5f6d\u7b54\uff08\u7b54\u7b54\uff09",
+    pic: "https://p2.music.126.net/dJYDn4g8Bg-QaNNjT_GV4g==/109951164635341476.jpg",
+    url: "https://music.163.com/song/media/outer/url?id=1417453801.mp3",
+    duration: 82383,
+  });
 });
 
 test("music playlist api rejects unsupported sources", async () => {

@@ -1,10 +1,4 @@
 import type { MusicTrack } from "./types.ts";
-import {
-  getMusicPlayableFallback,
-  resolveDeezerPreviewFallback,
-  type MusicPlayableFallback,
-  type ResolvedPlayableTrack,
-} from "./playable-fallbacks.ts";
 
 type UpstreamArtist = {
   name?: string;
@@ -41,6 +35,97 @@ type UpstreamSongUrl = {
 type UpstreamSongUrlPayload = {
   data?: UpstreamSongUrl[];
 };
+
+const STATIC_NETEASE_PLAYLISTS = new Map<string, UpstreamTrack[]>([
+  [
+    "13556055400",
+    [
+      {
+        id: 1417453801,
+        name: "\u5929\u6daf",
+        artists: [{ name: "\u5f6d\u7b54\uff08\u7b54\u7b54\uff09" }],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/dJYDn4g8Bg-QaNNjT_GV4g==/109951164635341476.jpg",
+        },
+        duration: 82383,
+      },
+      {
+        id: 33789445,
+        name: "\u957f\u5b89",
+        artists: [{ name: "\u7fa4\u661f" }],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/ha8VMt0hPiuidPxPImbBWQ==/7982454419372972.jpg",
+        },
+        duration: 154128,
+      },
+      {
+        id: 1817410059,
+        name: "\u5c18\u4e16\u95f2\u6e38 Rex Incognito",
+        artists: [{ name: "\u9648\u81f4\u9038" }, { name: "HOYO-MiX" }],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/hwxZS2Bv9Dht_8chjLLR-Q==/109951165690591384.jpg",
+        },
+        duration: 108827,
+      },
+      {
+        id: 441120082,
+        name: "China (The Atomic Era)",
+        artists: [{ name: "Geoff Knorr" }],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/VgiTkud1GVT8kGJM53hfvw==/18815942487303147.jpg",
+        },
+        duration: 199281,
+      },
+      {
+        id: 417594093,
+        name: "\u963f\u91cc\u90ce\uff08\u7eaf\u97f3\u4e50\uff09",
+        artists: [{ name: "SaxyBar" }],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/nZ1nCYSWO5MVvylNNJ4EoA==/18030891183939033.jpg",
+        },
+        duration: 127002,
+      },
+      {
+        id: 3319151600,
+        name: "Flower Gardens",
+        artists: [{ name: "Magnus Ringblom" }],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/rEqVqZnjOmfWiD40HdrYHA==/109951172306592526.jpg",
+        },
+        duration: 178200,
+      },
+      {
+        id: 1357785684,
+        name: "\u60ca\u9e3f",
+        artists: [{ name: "Forbearance ye" }],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/Daz0Z7zeSkJvwhu-TQbN1A==/109951163988273611.jpg",
+        },
+        duration: 150000,
+      },
+      {
+        id: 29722369,
+        name: "The Stonemasons (From the Europa Universalis IV Soundtrack)",
+        artists: [
+          { name: "Paradox Interactive" },
+          { name: "Andreas Waldetoft" },
+        ],
+        album: {
+          picUrl:
+            "https://p2.music.126.net/Q3s90qB6VYpbonkBOubFhg==/109951164071976757.jpg",
+        },
+        duration: 232381,
+      },
+    ],
+  ],
+]);
 
 export class MusicUpstreamResponseError extends Error {
   readonly upstreamStatus: number;
@@ -86,7 +171,7 @@ function getTrackDuration(track: UpstreamTrack): number {
 
 function mapTrack(
   track: UpstreamTrack,
-  playableTracks: Map<number, ResolvedPlayableTrack>,
+  playableUrls: Map<number, string>,
 ): MusicTrack | null {
   const id = Number(track.id ?? 0);
 
@@ -94,22 +179,18 @@ function mapTrack(
     return null;
   }
 
-  const playableTrack = playableTracks.get(id);
-  if (!playableTrack?.url) {
-    return null;
-  }
-
   const artist = getArtistNames(track);
-  const resolvedArtist = playableTrack.artist ?? artist;
 
   return {
     id,
-    name: playableTrack.name ?? track.name?.trim() ?? "Unknown Song",
-    artist: resolvedArtist || "Unknown Artist",
-    author: resolvedArtist || "Unknown Artist",
-    pic: playableTrack.pic ?? getCoverUrl(track),
-    url: playableTrack.url,
-    duration: playableTrack.duration ?? getTrackDuration(track),
+    name: track.name?.trim() || "Unknown Song",
+    artist: artist || "Unknown Artist",
+    author: artist || "Unknown Artist",
+    pic: getCoverUrl(track),
+    url:
+      playableUrls.get(id) ??
+      `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
+    duration: getTrackDuration(track),
   };
 }
 
@@ -162,73 +243,23 @@ function getTrackId(track: UpstreamTrack): number {
   return Number.isFinite(id) && id > 0 ? id : 0;
 }
 
-async function resolvePreviewFallback(
-  fallback: MusicPlayableFallback,
-): Promise<ResolvedPlayableTrack | null> {
-  if (fallback.kind === "direct-preview") {
-    return fallback;
-  }
+async function resolvePlayableUrls(
+  tracks: UpstreamTrack[],
+): Promise<Map<number, string>> {
+  const trackIds = tracks.map(getTrackId).filter((id) => id > 0);
 
-  if (fallback.kind === "deezer-preview") {
-    return resolveDeezerPreviewFallback(fallback);
+  try {
+    return await fetchNeteasePlayableUrls(trackIds);
+  } catch (error) {
+    console.error("music.playlist.playable_urls", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return new Map();
   }
-
-  return null;
 }
 
-async function resolvePlayableTracks(
-  tracks: UpstreamTrack[],
-): Promise<Map<number, ResolvedPlayableTrack>> {
-  const trackIds = tracks.map(getTrackId).filter((id) => id > 0);
-  const playableUrls = await fetchNeteasePlayableUrls(trackIds);
-  const playableTracks = new Map<number, ResolvedPlayableTrack>();
-
-  for (const [trackId, url] of playableUrls) {
-    playableTracks.set(trackId, { url });
-  }
-
-  const missingFallbacks = new Map<number, MusicPlayableFallback>();
-  for (const track of tracks) {
-    const trackId = getTrackId(track);
-    if (trackId <= 0 || playableTracks.has(trackId)) {
-      continue;
-    }
-
-    const fallback = getMusicPlayableFallback(trackId);
-    if (fallback) {
-      missingFallbacks.set(trackId, fallback);
-    }
-  }
-
-  const fallbackSongIds = [...missingFallbacks.values()]
-    .filter((fallback) => fallback.kind === "netease-song")
-    .map((fallback) => fallback.songId);
-  const fallbackPlayableUrls = await fetchNeteasePlayableUrls(fallbackSongIds);
-
-  const previewFallbacks = await Promise.all(
-    [...missingFallbacks].map(async ([trackId, fallback]) => {
-      return [trackId, await resolvePreviewFallback(fallback)] as const;
-    }),
-  );
-
-  for (const [trackId, fallback] of missingFallbacks) {
-    if (fallback.kind !== "netease-song") {
-      continue;
-    }
-
-    const url = fallbackPlayableUrls.get(fallback.songId);
-    if (url) {
-      playableTracks.set(trackId, { ...fallback, url });
-    }
-  }
-
-  for (const [trackId, fallbackTrack] of previewFallbacks) {
-    if (fallbackTrack?.url) {
-      playableTracks.set(trackId, fallbackTrack);
-    }
-  }
-
-  return playableTracks;
+function getStaticPlaylistTracks(playlistId: string): UpstreamTrack[] {
+  return STATIC_NETEASE_PLAYLISTS.get(playlistId) ?? [];
 }
 
 export async function fetchNeteasePlaylistTracks(
@@ -237,22 +268,52 @@ export async function fetchNeteasePlaylistTracks(
   const upstreamUrl = new URL("https://music.163.com/api/playlist/detail");
   upstreamUrl.searchParams.set("id", playlistId);
 
-  const upstreamResponse = await fetch(upstreamUrl, {
-    headers: {
-      accept: "application/json, text/plain, */*",
-      referer: "https://music.163.com/",
-    },
-  });
+  let upstreamResponse: Response;
+
+  try {
+    upstreamResponse = await fetch(upstreamUrl, {
+      headers: {
+        accept: "application/json, text/plain, */*",
+        referer: "https://music.163.com/",
+      },
+    });
+  } catch (error) {
+    const staticTracks = getStaticPlaylistTracks(playlistId);
+    if (staticTracks.length > 0) {
+      console.error("music.playlist.static_fallback", {
+        playlistId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      const playableUrls = await resolvePlayableUrls(staticTracks);
+      return staticTracks
+        .map((track) => mapTrack(track, playableUrls))
+        .filter(isMusicTrack);
+    }
+
+    throw error;
+  }
 
   if (!upstreamResponse.ok) {
+    const staticTracks = getStaticPlaylistTracks(playlistId);
+    if (staticTracks.length > 0) {
+      const playableUrls = await resolvePlayableUrls(staticTracks);
+      return staticTracks
+        .map((track) => mapTrack(track, playableUrls))
+        .filter(isMusicTrack);
+    }
+
     throw new MusicUpstreamResponseError(upstreamResponse.status);
   }
 
   const payload = (await upstreamResponse.json()) as UpstreamPlaylistPayload;
-  const tracks = payload.result?.tracks ?? [];
-  const playableTracks = await resolvePlayableTracks(tracks);
+  const upstreamTracks = payload.result?.tracks ?? [];
+  const tracks =
+    upstreamTracks.length > 0
+      ? upstreamTracks
+      : getStaticPlaylistTracks(playlistId);
+  const playableUrls = await resolvePlayableUrls(tracks);
 
   return tracks
-    .map((track) => mapTrack(track, playableTracks))
+    .map((track) => mapTrack(track, playableUrls))
     .filter(isMusicTrack);
 }
