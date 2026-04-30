@@ -18,7 +18,7 @@ const className = Astro.props.class;
 <widget-layout
   data-id={id}
   data-is-collapsed={String(isCollapsed)}
-  class={"pb-4 card-base " + className}
+  class:list={["pb-4 card-base", className]}
   style={style}
 >
   {
@@ -60,6 +60,11 @@ const className = Astro.props.class;
   widget-layout {
     content-visibility: auto;
     contain-intrinsic-size: 18rem;
+  }
+
+  :global(widget-layout[data-id="categories"]) {
+    content-visibility: visible;
+    contain-intrinsic-size: none;
   }
 
   .collapsed {

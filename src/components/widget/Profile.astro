@@ -42,10 +42,10 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
 
     <div
       class="text-[1.05rem] leading-relaxed text-center font-medium mb-4 transition whitespace-pre-line"
-      style="color: var(--text-main);"
+      style="color: var(--text-main); min-height: 6.5em;"
     >
       <span
-        class="typewriter inline-block min-h-[3.2em]"
+        class="typewriter block min-h-[6.5em]"
         data-profile-bio
         data-text={JSON.stringify([profileConfig.bio ?? ""])}
         data-speed={String(profileConfig.typewriter?.speed ?? 100)}

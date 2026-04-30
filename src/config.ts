@@ -122,8 +122,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
     {
       type: "categories",
       position: "sticky",
-      class: "onload-animation",
-      animationDelay: 250,
       responsive: {
         collapseThreshold: 5,
       },
