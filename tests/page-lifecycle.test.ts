@@ -43,16 +43,50 @@ class FakeEventTarget {
     });
     return true;
   }
+
+  listenerCount(type: string) {
+    return this.listeners.get(type)?.size ?? 0;
+  }
 }
 
 class FakeWindow extends FakeEventTarget {
   __pageLifecycleState?: unknown;
   registerPageScript?: unknown;
   cleanupPageScripts?: unknown;
+  requestIdleCallback?: (
+    callback: () => void,
+    options?: { timeout: number },
+  ) => number;
+  setTimeout = globalThis.setTimeout;
+  clearTimeout = globalThis.clearTimeout;
 }
 
 class FakeDocument extends FakeEventTarget {
   readyState: DocumentReadyState = "complete";
+  private querySelectors = new Map<string, unknown>();
+  private querySelectorLists = new Map<string, unknown[]>();
+
+  setQuerySelector(selector: string, element: unknown) {
+    this.querySelectors.set(selector, element);
+  }
+
+  setQuerySelectorAll(selector: string, elements: unknown[]) {
+    this.querySelectorLists.set(selector, elements);
+  }
+
+  querySelector(selector: string) {
+    return this.querySelectors.get(selector) ?? null;
+  }
+
+  querySelectorAll(selector: string) {
+    return this.querySelectorLists.get(selector) ?? [];
+  }
+}
+
+class FakeHTMLElement extends FakeEventTarget {
+  dataset: Record<string, string> = {};
+  textContent = "";
+  innerHTML = "";
 }
 
 async function loadPageLifecycleModule(label: string) {
@@ -70,6 +104,7 @@ function setupFakeDom(readyState: DocumentReadyState = "complete") {
   Object.assign(globalThis, {
     window: fakeWindow,
     document: fakeDocument,
+    HTMLElement: FakeHTMLElement,
   });
 
   return { fakeWindow, fakeDocument };
@@ -194,4 +229,34 @@ test("page lifecycle disposes stale async initializers when they resolve late", 
   await flushAsyncWork();
 
   assert.equal(cleanupCalls, 1);
+});
+
+test("profile widget uses page lifecycle as its only load trigger", async () => {
+  const { fakeWindow, fakeDocument } = setupFakeDom();
+  const typewriter = new FakeHTMLElement();
+  typewriter.dataset.text = JSON.stringify(["Profile bio"]);
+
+  fakeDocument.setQuerySelector(".typewriter", typewriter);
+  fakeDocument.setQuerySelectorAll(".typewriter", [typewriter]);
+
+  let idleCalls = 0;
+  fakeWindow.requestIdleCallback = (callback) => {
+    idleCalls += 1;
+    callback();
+    return idleCalls;
+  };
+
+  const moduleUrl = pathToFileURL(
+    path.resolve("src/scripts/profile-widget.ts"),
+  ).href;
+  await import(`${moduleUrl}?test=profile-widget-${Date.now()}`);
+
+  assert.equal(fakeDocument.listenerCount("DOMContentLoaded"), 0);
+  assert.equal(fakeDocument.listenerCount("astro:page-load"), 0);
+  assert.equal(idleCalls, 1);
+
+  fakeDocument.dispatchEvent(new Event("DOMContentLoaded"));
+  fakeDocument.dispatchEvent(new Event("astro:page-load"));
+
+  assert.equal(idleCalls, 1);
 });

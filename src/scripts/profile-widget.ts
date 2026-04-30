@@ -116,8 +116,10 @@ class ProfileTypewriter {
 }
 
 let activeTypewriters: ProfileTypewriter[] = [];
+let scheduledInitVersion = 0;
 
 function destroyTypewriters(): void {
+  scheduledInitVersion += 1;
   activeTypewriters.forEach((instance) => instance.destroy());
   activeTypewriters = [];
 }
@@ -133,22 +135,19 @@ function initTypewriters(): void {
 }
 
 function initTypewritersWhenIdle(): void {
+  const initVersion = scheduledInitVersion + 1;
+  scheduledInitVersion = initVersion;
+
   scheduleIdleTask(() => {
+    if (initVersion !== scheduledInitVersion) {
+      return;
+    }
+
     if (document.querySelector(".typewriter")) {
       initTypewriters();
     }
   }, 1800);
 }
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initTypewritersWhenIdle, {
-    once: true,
-  });
-} else {
-  initTypewritersWhenIdle();
-}
-
-document.addEventListener("astro:page-load", initTypewritersWhenIdle);
 
 registerPageScript("profile-bio-typewriter", {
   shouldRun() {
