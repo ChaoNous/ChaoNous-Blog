@@ -1,8 +1,14 @@
 @reference "tailwindcss";
 
+:root {
+  --site-scale: 0.8;
+  --site-root-font-mobile: calc(13px * var(--site-scale));
+  --site-root-font-desktop: calc(16px * var(--site-scale));
+}
+
 html {
   @apply scroll-smooth;
-  font-size: 100%;
+  font-size: var(--site-root-font-mobile);
   scrollbar-width: none;
   -ms-overflow-style: none;
   background-color: var(--page-bg);
@@ -16,13 +22,7 @@ html {
 
 @media (min-width: 768px) {
   html {
-    font-size: 106%;
-  }
-}
-
-@media (min-width: 1280px) {
-  html {
-    font-size: 112%;
+    font-size: var(--site-root-font-desktop);
   }
 }
 
