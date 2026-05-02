@@ -45,7 +45,7 @@ const skipToContentLabel = isChineseSite
 ---
 
 <!doctype html>
-<html lang={siteLang} class="bg-(--page-bg) text-[10.4px] md:text-[12.8px]">
+<html lang={siteLang} class="bg-(--page-bg)">
   <head>
     <title>{pageTitle}</title>
     <meta charset="UTF-8" />
@@ -228,6 +228,19 @@ const skipToContentLabel = isChineseSite
 
   :root {
     --hue: var(--hue, ${configHue});
+    --site-scale: 0.8;
+    --site-root-font-mobile: calc(13px * var(--site-scale));
+    --site-root-font-desktop: calc(16px * var(--site-scale));
+  }
+
+  html {
+    font-size: var(--site-root-font-mobile);
+  }
+
+  @media (min-width: 768px) {
+    html {
+      font-size: var(--site-root-font-desktop);
+    }
   }
 
   
