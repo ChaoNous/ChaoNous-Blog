@@ -63,12 +63,6 @@ export const profileConfig: ProfileConfig = {
   avatar: "assets/images/avatar.webp",
   name: "ChaoNous",
   bio: "\u884C\u8DEF\u96BE\uFF01\u884C\u8DEF\u96BE\uFF01\u591A\u6B67\u8DEF\uFF0C\u4ECA\u5B89\u5728\uFF1F\n\u957F\u98CE\u7834\u6D6A\u4F1A\u6709\u65F6\uFF0C\u76F4\u6302\u4E91\u5E06\u6D4E\u6CA7\u6D77\u3002",
-  typewriter: {
-    enable: true,
-    speed: 100,
-    deleteSpeed: 50,
-    pauseTime: 2000,
-  },
   links: [
     {
       name: "Bilibili",
