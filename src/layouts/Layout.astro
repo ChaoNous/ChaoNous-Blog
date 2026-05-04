@@ -228,19 +228,6 @@ const skipToContentLabel = isChineseSite
 
   :root {
     --hue: var(--hue, ${configHue});
-    --site-scale: 0.8;
-    --site-root-font-mobile: calc(13px * var(--site-scale));
-    --site-root-font-desktop: calc(16px * var(--site-scale));
-  }
-
-  html {
-    font-size: var(--site-root-font-mobile);
-  }
-
-  @media (min-width: 768px) {
-    html {
-      font-size: var(--site-root-font-desktop);
-    }
   }
 
   
