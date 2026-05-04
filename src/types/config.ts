@@ -88,12 +88,6 @@ export type ProfileConfig = {
     url: string;
     icon: string;
   }[];
-  typewriter?: {
-    enable: boolean;
-    speed?: number;
-    deleteSpeed?: number;
-    pauseTime?: number;
-  };
 };
 
 export type LIGHT_DARK_MODE = typeof LIGHT_MODE | typeof DARK_MODE;
