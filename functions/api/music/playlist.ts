@@ -92,6 +92,10 @@ function getTrackDuration(track: UpstreamTrack): number {
   return Number.isFinite(duration) && duration > 0 ? duration : 0;
 }
 
+function getAudioProxyUrl(id: number): string {
+  return `/api/music/audio?id=${id}`;
+}
+
 function mapTrack(track: UpstreamTrack) {
   const id = Number(track.id ?? 0);
   if (!Number.isFinite(id) || id <= 0) {
@@ -106,7 +110,7 @@ function mapTrack(track: UpstreamTrack) {
     artist: artist || "Unknown Artist",
     author: artist || "Unknown Artist",
     pic: getCoverUrl(track),
-    url: `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
+    url: getAudioProxyUrl(id),
     duration: getTrackDuration(track),
   };
 }
