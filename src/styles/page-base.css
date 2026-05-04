@@ -1,7 +1,7 @@
 @reference "tailwindcss";
 
 :root {
-  --site-scale: 0.8;
+  --site-scale: 0.88;
   --site-root-font-mobile: calc(13px * var(--site-scale));
   --site-root-font-desktop: calc(16px * var(--site-scale));
 }
