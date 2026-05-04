@@ -44,16 +44,7 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
       class="text-[1.05rem] leading-relaxed text-center font-medium mb-4 transition whitespace-pre-line"
       style="color: var(--text-main); min-height: 6.5em;"
     >
-      <span
-        class="typewriter block min-h-[6.5em]"
-        data-profile-bio
-        data-text={JSON.stringify([profileConfig.bio ?? ""])}
-        data-speed={String(profileConfig.typewriter?.speed ?? 100)}
-        data-delete-speed={String(profileConfig.typewriter?.deleteSpeed ?? 50)}
-        data-pause-time={String(profileConfig.typewriter?.pauseTime ?? 2000)}
-      >
-        {profileConfig.bio}
-      </span>
+      <span class="block min-h-[6.5em]">{profileConfig.bio}</span>
     </div>
 
     <div class="flex flex-wrap gap-2 justify-center mb-1">
@@ -88,7 +79,3 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
     </div>
   </div>
 </div>
-
-<script>
-  import "../../scripts/profile-widget.ts";
-</script>
