@@ -38,6 +38,24 @@ function createUpstreamUrl(songId: string): URL {
   return upstreamUrl;
 }
 
+function normalizeAudioLocation(location: string): string {
+  if (location.startsWith("http://")) {
+    return `https://${location.slice("http://".length)}`;
+  }
+
+  return location;
+}
+
+function createRedirectResponse(location: string): Response {
+  return new Response(null, {
+    status: 302,
+    headers: {
+      location: normalizeAudioLocation(location),
+      "cache-control": "no-store",
+    },
+  });
+}
+
 function createProxyHeaders(upstreamResponse: Response): Headers {
   const headers = new Headers();
   const passthroughHeaders = [
@@ -64,10 +82,18 @@ function createProxyHeaders(upstreamResponse: Response): Headers {
     "cache-control",
     upstreamResponse.status === 206
       ? "public, max-age=300, s-maxage=300"
-      : "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+      : "public, max-age=3600, s-maxage=3600",
   );
 
   return headers;
+}
+
+function isAudioResponse(response: Response): boolean {
+  const contentType = response.headers.get("content-type") ?? "";
+  return (
+    contentType.startsWith("audio/") ||
+    contentType.includes("application/octet-stream")
+  );
 }
 
 async function handleAudioRequest(request: Request): Promise<Response> {
@@ -83,7 +109,7 @@ async function handleAudioRequest(request: Request): Promise<Response> {
     referer: "https://music.163.com/",
     "user-agent":
       request.headers.get("user-agent") ||
-      "Mozilla/5.0 (compatible; ChaoNousMusicProxy/1.0)",
+      "Mozilla/5.0 (compatible; ChaoNousMusicResolver/1.0)",
   });
   const range = request.headers.get("range");
 
@@ -93,16 +119,29 @@ async function handleAudioRequest(request: Request): Promise<Response> {
 
   try {
     const upstreamResponse = await fetch(createUpstreamUrl(songId), {
-      method: request.method,
+      method: request.method === "HEAD" ? "GET" : request.method,
       headers: upstreamHeaders,
-      redirect: "follow",
+      redirect: "manual",
     });
+    const redirectLocation = upstreamResponse.headers.get("location");
+
+    if (redirectLocation) {
+      return createRedirectResponse(redirectLocation);
+    }
 
     if (!upstreamResponse.ok && upstreamResponse.status !== 206) {
       return errorResponse(
         502,
         "UPSTREAM_ERROR",
         `Music upstream returned ${upstreamResponse.status}.`,
+      );
+    }
+
+    if (!isAudioResponse(upstreamResponse)) {
+      return errorResponse(
+        502,
+        "UPSTREAM_ERROR",
+        "Music upstream did not return an audio response.",
       );
     }
 
