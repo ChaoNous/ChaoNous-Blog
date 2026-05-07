@@ -32,10 +32,27 @@ function errorResponse(
   );
 }
 
-function createUpstreamUrl(songId: string): URL {
+function createNeteaseOuterUrl(songId: string): URL {
   const upstreamUrl = new URL("https://music.163.com/song/media/outer/url");
   upstreamUrl.searchParams.set("id", `${songId}.mp3`);
   return upstreamUrl;
+}
+
+function createMetingResolverUrl(baseUrl: string, songId: string): URL {
+  const resolverUrl = new URL(baseUrl);
+  resolverUrl.searchParams.set("server", "netease");
+  resolverUrl.searchParams.set("type", "url");
+  resolverUrl.searchParams.set("id", songId);
+  return resolverUrl;
+}
+
+function createResolverUrls(songId: string): URL[] {
+  return [
+    createNeteaseOuterUrl(songId),
+    createMetingResolverUrl("https://api.injahow.cn/meting/", songId),
+    createMetingResolverUrl("https://api.amarea.cn/meting/", songId),
+    createMetingResolverUrl("https://metingapi.nanorocky.top/", songId),
+  ];
 }
 
 function normalizeAudioLocation(location: string): string {
@@ -44,6 +61,23 @@ function normalizeAudioLocation(location: string): string {
   }
 
   return location;
+}
+
+function isUsableAudioLocation(location: string): boolean {
+  try {
+    const audioUrl = new URL(normalizeAudioLocation(location));
+    if (audioUrl.protocol !== "https:") return false;
+    if (audioUrl.hostname === "music.163.com" && audioUrl.pathname === "/404") {
+      return false;
+    }
+
+    return (
+      audioUrl.hostname.endsWith("music.126.net") ||
+      /\.(mp3|flac|m4a|aac)(?:$|[?#])/i.test(audioUrl.href)
+    );
+  } catch {
+    return false;
+  }
 }
 
 function createRedirectResponse(location: string): Response {
@@ -96,6 +130,43 @@ function isAudioResponse(response: Response): boolean {
   );
 }
 
+async function resolveAudioResponse(
+  resolverUrl: URL,
+  request: Request,
+  upstreamHeaders: Headers,
+): Promise<Response | null> {
+  const upstreamResponse = await fetch(resolverUrl, {
+    method: request.method === "HEAD" ? "GET" : request.method,
+    headers: upstreamHeaders,
+    redirect: "manual",
+  });
+  const redirectLocation = upstreamResponse.headers.get("location");
+
+  if (redirectLocation && isUsableAudioLocation(redirectLocation)) {
+    return createRedirectResponse(redirectLocation);
+  }
+
+  if (isAudioResponse(upstreamResponse)) {
+    return new Response(
+      request.method === "HEAD" ? null : upstreamResponse.body,
+      {
+        status: upstreamResponse.status,
+        headers: createProxyHeaders(upstreamResponse),
+      },
+    );
+  }
+
+  if (upstreamResponse.ok) {
+    const responseText = await upstreamResponse.text();
+    const trimmedText = responseText.trim();
+    if (isUsableAudioLocation(trimmedText)) {
+      return createRedirectResponse(trimmedText);
+    }
+  }
+
+  return null;
+}
+
 async function handleAudioRequest(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const songId = url.searchParams.get("id")?.trim() ?? "";
@@ -118,46 +189,29 @@ async function handleAudioRequest(request: Request): Promise<Response> {
   }
 
   try {
-    const upstreamResponse = await fetch(createUpstreamUrl(songId), {
-      method: request.method === "HEAD" ? "GET" : request.method,
-      headers: upstreamHeaders,
-      redirect: "manual",
-    });
-    const redirectLocation = upstreamResponse.headers.get("location");
-
-    if (redirectLocation) {
-      return createRedirectResponse(redirectLocation);
-    }
-
-    if (!upstreamResponse.ok && upstreamResponse.status !== 206) {
-      return errorResponse(
-        502,
-        "UPSTREAM_ERROR",
-        `Music upstream returned ${upstreamResponse.status}.`,
+    for (const resolverUrl of createResolverUrls(songId)) {
+      const resolvedResponse = await resolveAudioResponse(
+        resolverUrl,
+        request,
+        upstreamHeaders,
       );
+
+      if (resolvedResponse) {
+        return resolvedResponse;
+      }
     }
 
-    if (!isAudioResponse(upstreamResponse)) {
-      return errorResponse(
-        502,
-        "UPSTREAM_ERROR",
-        "Music upstream did not return an audio response.",
-      );
-    }
-
-    return new Response(
-      request.method === "HEAD" ? null : upstreamResponse.body,
-      {
-        status: upstreamResponse.status,
-        headers: createProxyHeaders(upstreamResponse),
-      },
+    return errorResponse(
+      502,
+      "UPSTREAM_ERROR",
+      "No music resolver returned a playable audio URL.",
     );
   } catch (error) {
     console.error("music:audio", error);
     return errorResponse(
       502,
       "UPSTREAM_ERROR",
-      "Failed to fetch audio from music upstream.",
+      "Failed to resolve audio from music upstream.",
     );
   }
 }
