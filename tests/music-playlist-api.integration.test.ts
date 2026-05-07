@@ -69,7 +69,7 @@ test("music playlist api maps a netease playlist into player tracks", async () =
       artist: "Test Artist",
       author: "Test Artist",
       pic: "https://p1.music.126.net/example.jpg",
-      url: "https://music.163.com/song/media/outer/url?id=1417453801.mp3",
+      url: "/api/music/audio?id=1417453801",
       duration: 82383,
     },
   ]);
