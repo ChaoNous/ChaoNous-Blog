@@ -2,7 +2,7 @@
 
 :root {
   --site-scale: 0.88;
-  --site-root-font-mobile: calc(13px * var(--site-scale));
+  --site-root-font-mobile: 13px;
   --site-root-font-desktop: calc(16px * var(--site-scale));
 }
 
